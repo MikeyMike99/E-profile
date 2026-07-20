@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHITECT_OS // SURGICAL_TRAY</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/surgical_tray.css') }}">
+</head>
+
+<body data-project="{{ project_name }}" data-initial-file="{{ initial_file }}">
+
+    <div id="surgical-tray">
+        <div class="header-tray">
+            <span class="status-label">ACTIVE_NODE: {{ project_name|upper }}</span>
+
+            <select id="surgical-portal" class="tech-input" aria-label="Select File or Block">
+            </select>
+
+            <button class="btn-close" onclick="closeAndSave()">[ EXIT ]</button>
+        </div>
+
+        <textarea id="surgical-editor" spellcheck="false" placeholder="INITIALIZING_NEURAL_LINK..."
+            data-current-target="">{{ initial_content }}</textarea>
+
+        <div id="surgical-console">> SYSTEM_READY_FOR_RECONSTRUCTION</div>
+
+        <div class="action-bar">
+            <button onclick="executeSurgery()" class="btn-apply">
+                APPLY_RECONSTRUCTION [CTRL+S]
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/surgical_tray.js') }}"></script>
+
+</body>
+
+</html>

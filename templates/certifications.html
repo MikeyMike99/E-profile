@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/certifications.css') }}">
+
+<div class="cert-dashboard">
+    <div class="cert-header">
+        <h1>Professional Certifications</h1>
+        <p>A timeline of continuous learning and skill verification.</p>
+        {% if is_admin %}
+            <div class="admin-badge">Admin Mode: Drag to Reorder</div>
+        {% endif %}
+    </div>
+
+    <div id="live-status-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"
+        style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">
+    </div>
+
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <ul id="cert-timeline" class="timeline-list">
+            {% for cert in certs %}
+            <li class="timeline-item" data-id="{{ cert.id }}">
+                <div class="timeline-dot"></div>
+                <div class="cert-card glass-panel">
+                    <div class="cert-meta">
+                        <span class="provider-badge">{{ cert.provider }}</span>
+                        <span class="cert-type">{{ cert.ext[1:] | upper }}</span>
+                    </div>
+                    <h3 class="cert-title">{{ cert.name }}</h3>
+                    {% if cert.description_html %}
+                    <div class="cert-description">
+                        {{ cert.description_html | safe }}
+                    </div>
+                    {% endif %}
+                    <div class="cert-actions" style="display: flex; justify-content: space-between; align-items: center;">
+                        <a href="{{ cert.file_path }}" target="_blank" class="view-btn">View Certificate</a>
+                        {% if is_admin %}
+                        <div class="admin-controls" style="display: flex; gap: 5px;">
+                            <button class="view-btn" style="padding: 5px 10px;" onclick="moveCert(this, -1, '{{ cert.name }}')" aria-label="Move {{ cert.name }} up">▲</button>
+                            <button class="view-btn" style="padding: 5px 10px;" onclick="moveCert(this, 1, '{{ cert.name }}')" aria-label="Move {{ cert.name }} down">▼</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% if is_admin %}
+<script>
+function announce(message) {
+    const announcer = document.getElementById('live-status-announcer');
+    if(announcer) {
+        announcer.textContent = message;
+    }
+}
+
+function moveCert(button, direction, certName) {
+    const listItem = button.closest('.timeline-item');
+    const list = document.getElementById('cert-timeline');
+    
+    if (direction === -1 && listItem.previousElementSibling) {
+        // Move UP
+        list.insertBefore(listItem, listItem.previousElementSibling);
+        announce("Moved " + certName + " up.");
+    } else if (direction === 1 && listItem.nextElementSibling) {
+        // Move DOWN
+        list.insertBefore(listItem.nextElementSibling, listItem);
+        announce("Moved " + certName + " down.");
+    } else {
+        announce("Cannot move " + certName + " further.");
+        return; // No movement possible
+    }
+    
+    button.focus(); // Retain focus for screen reader user
+    
+    // Save new order to backend
+    const items = list.querySelectorAll('.timeline-item');
+    const newOrder = Array.from(items).map(item => item.getAttribute('data-id'));
+    
+    fetch('/api/certifications/reorder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order: newOrder })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status !== 'success') {
+            console.error('Failed to save order');
+            announce("Error saving order for " + certName);
+        }
+    });
+}
+</script>
+{% endif %}
+
+{% endblock %}

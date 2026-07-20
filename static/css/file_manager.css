@@ -1,0 +1,178 @@
+/* WORKSTATION_ARCHITECTURE // v.2.8.5_LOCKED_DATA_VIEW */
+
+* {
+    box-sizing: border-box;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff41;
+    border-radius: 3px;
+}
+
+body {
+    background: #050505;
+    color: #00ff41;
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 1. HEADER */
+.workstation-header {
+    height: 60px;
+    background: #0a0a0a;
+    border-bottom: 2px solid #00ff41;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+/* 2. THE FILE SYSTEM */
+#explorer-view {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 10;
+}
+
+.directory-tab {
+    margin-bottom: 10px;
+    border: 1px solid rgba(0, 255, 65, 0.1);
+}
+
+.folder-header {
+    background: rgba(0, 255, 65, 0.05);
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    user-select: none;
+}
+
+.file-unroll-zone {
+    display: none;
+    padding: 10px 0 10px 30px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.directory-tab.open .file-unroll-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* --- FILE NODES (Metadata View) --- */
+.file-node {
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    /* Keeps metadata on the right */
+    align-items: center;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+    outline: none;
+    /* Clean focus for keyboard navigation */
+}
+
+.file-node:hover,
+.file-node:focus {
+    background: rgba(0, 255, 65, 0.1);
+    border-left: 2px solid #00ff41;
+}
+
+.file-main {
+    flex-shrink: 0;
+}
+
+/* Metadata hidden until focused/hovered to prevent clutter */
+.file-details {
+    font-size: 0.8em;
+    color: #008f11;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.file-node:hover .file-details,
+.file-node:focus .file-details {
+    opacity: 1;
+}
+
+.root-files-divider {
+    margin: 20px 0 10px 0;
+    padding: 5px 10px;
+    font-size: 0.7em;
+    color: rgba(0, 255, 65, 0.4);
+    border-bottom: 1px dashed rgba(0, 255, 65, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* 3. TERMINAL */
+#terminal-overlay {
+    display: none;
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 35vh;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid #00ff41;
+    z-index: 9999;
+    flex-direction: column;
+    padding: 15px;
+    box-shadow: 0 0 40px #000;
+}
+
+#terminal-output {
+    flex-grow: 1;
+    overflow-y: auto;
+    font-size: 0.9em;
+    color: #00ff41;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.terminal-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: #00ff41;
+    font-family: inherit;
+    flex-grow: 1;
+    outline: none;
+}
+
+/* 4. FOOTER */
+.footer {
+    height: 30px;
+    background: #0a0a0a;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    align-items: center;
+    font-size: 0.8em;
+    flex-shrink: 0;
+}

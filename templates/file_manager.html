@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHITECT_OS // WORKSTATION</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/file_manager.css') }}">
+</head>
+
+<body data-project="{{ project_name }}">
+
+    <header class="workstation-header">
+        <div class="path-display">
+            <span class="label">SYSTEM_PATH:</span>
+            <strong id="current-path-display">/{{ project_name }}</strong>
+        </div>
+        <div class="system-status">
+            <span class="pulse-icon"></span>
+            <span class="hint">CTRL+ALT+T // CLI_ACCESS</span>
+        </div>
+    </header>
+
+    <main class="scroll-container" id="explorer-view">
+        <div class="loading-state">INITIALIZING_FS_STREAM...</div>
+    </main>
+
+    <div id="terminal-overlay">
+        <div id="terminal-output"></div>
+        <div class="terminal-input-row">
+            <span id="terminal-prompt">root@architect:~$</span>
+            <input type="text" id="terminal-input" spellcheck="false" autocomplete="off">
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="auth-info">
+            ENCRYPTED_SESSION_ACTIVE // {{ 'ADMIN' if session.get('is_admin') else 'EMPLOYER' }}
+        </div>
+        <div class="version-info">BUILD_v2.8.5.LOCKED</div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/file_manager.js') }}"></script>
+</body>
+
+</html>

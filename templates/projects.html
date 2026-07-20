@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
+
+<div class="projects-container">
+    <div id="live-status-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"
+        style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">
+    </div>
+
+    <div class="search-sector" style="margin-bottom: 25px;">
+        <input type="text" id="project-search" class="cyber-input-pill main-search"
+            placeholder="SEARCH_PROJECT_NODES..." onkeyup="filterProjects()" aria-label="Search projects by name">
+    </div>
+
+    {% if session.is_admin %}
+    <div class="top-nav-tray">
+        <ul class="global-tools" style="display: flex; list-style: none; padding: 0; margin: 0; gap: 10px;">
+            <li><button onclick="openExplorer('root')" class="tool-pill">GLOBAL_FILES</button></li>
+            <li><button onclick="openSurgery('root')" class="tool-pill heart-btn">SYSTEM_HEART</button></li>
+            <li><button onclick="autoSortByStatus()" class="tool-pill">AUTO_SORT_STATUS</button></li>
+        </ul>
+
+        <section class="builder-box-mini">
+            <div class="builder-input-group">
+                <input type="text" id="new-project-name" class="cyber-input-pill" placeholder="INITIALIZE_NEW_NODE...">
+                <button class="tool-pill" onclick="buildProject()">[INITIALIZE]</button>
+            </div>
+        </section>
+    </div>
+    {% endif %}
+
+    <div id="project-list" role="feed" aria-label="Project Engine Nodes">
+        {% for project in projects %}
+        {% set is_admin_js = 'true' if session.is_admin else 'false' %}
+
+        <article class="project-card" id="card-{{ project.name }}">
+            <div class="entry-wrapper single-row-glow">
+
+                <div class="project-info-block" onclick="toggleProject('{{ project.name }}')" role="button" tabindex="0"
+                    aria-expanded="false" aria-controls="details-{{ project.name }}">
+
+                    <div class="name-stack">
+                        <h2 class="project-name" style="font-size: 1.4rem; margin-bottom: 4px;">{{ project.name | upper
+                            }}</h2>
+                        <div class="expand-label" id="label-{{ project.name }}">
+                            <span class="symbol">[ + ]</span> VIEW_NODE_DETAILS
+                        </div>
+                        <span class="project-preview" style="font-size: 1rem; display: block; margin-top: 5px;">{{
+                            project.preview }}</span>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-launch-pill status-{{ project.status }}"
+                    id="test-btn-{{ project.name }}"
+                    onclick="event.stopPropagation(); lockTestButton(this, '{{ project.name }}', {{ is_admin_js }}, '{{ project.status }}')">
+                    <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
+                    {{ project.label }}
+                </button>
+
+                <div class="action-tray-unified" onclick="event.stopPropagation();" style="position: relative;">
+                    <div class="vote-wrapper-mini" id="vote-area-{{ project.name }}" style="display: flex; gap: 8px;">
+                        <button class="v-btn-round" onclick="initVote('{{ project.name }}', 'up')">👍</button>
+                        <button class="v-btn-round" onclick="initVote('{{ project.name }}', 'down')">👎</button>
+                    </div>
+
+                    <input type="text" class="edit-box-pill" id="edit-{{ project.name }}"
+                        style="display: none; position: absolute; right: 0; z-index: 10;"
+                        placeholder="ADD NOTE (Enter to send, Esc to cancel)..."
+                        onkeydown="handleFeedbackKey(event, '{{ project.name }}', {{ is_admin_js }})">
+                </div>
+
+                {% if session.is_admin %}
+                <ul class="admin-inline-tools"
+                    style="display: flex; list-style: none; padding: 0; margin: 0; gap: 5px; align-items: center;">
+                    <li><input type="number" id="pos-input-{{ project.name }}" class="tool-pill pos-input"
+                            value="{{ loop.index }}" onchange="manualJump('{{ project.name }}', this.value)"
+                            style="width: 50px; text-align: center;"></li>
+                    <li><button onclick="openExplorer('{{ project.name }}')" class="tool-pill">FILES</button></li>
+                    <li><button onclick="openSurgery('{{ project.name }}')"
+                            class="tool-pill surgery-link">SURGERY</button></li>
+                    <li><button onclick="deleteProject('{{ project.name }}')"
+                            class="tool-pill delete-link">DELETE</button></li>
+                </ul>
+                {% endif %}
+
+            </div>
+
+            <div id="details-{{ project.name }}" class="details-content-glass" style="display:none;" role="region">
+                <div class="content-padding">
+                    {{ project.description | safe }}
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/projects.js') }}"></script>
+{% endblock %}

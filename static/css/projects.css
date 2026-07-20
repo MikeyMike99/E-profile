@@ -1,0 +1,415 @@
+:root {
+    /* Palette from Prompt */
+    --page-bg: #070A0F;
+    --panel-bg: #0F141B;
+    --card-bg: #141C26;
+
+    /* Borders */
+    --border-default: #2A3542;
+    --border-strong: #3B4B5C;
+
+    /* Text Hierarchy */
+    --text-primary: #E8F0FF;
+    --text-secondary: #B8C4D6;
+    --text-tertiary: #8A97AB;
+
+    /* Interactive & Disabled */
+    --accent-teal: #22D3EE;
+    --disabled-bg: #10161F;
+    --disabled-border: #26313D;
+    --disabled-text: #627089;
+    --disabled-icon: #58677F;
+}
+
+/* --- GLOBAL RESET --- */
+body {
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* --- TOP LEVEL LAYOUT --- */
+.top-nav-tray {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 20px;
+}
+
+.global-tools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 10px;
+}
+
+#project-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- BUILDER BOX (ADMIN) --- */
+.builder-box-mini {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-default);
+    border-radius: 50px;
+    padding: 5px 15px;
+    backdrop-filter: blur(10px);
+}
+
+.builder-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cyber-input-pill {
+    background: transparent;
+    border: none;
+    color: var(--accent-teal);
+    font-family: monospace;
+    outline: none;
+    padding: 8px;
+    width: 200px;
+}
+
+/* --- SEARCH SECTOR --- */
+.search-sector {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.main-search {
+    width: 100%;
+    max-width: 600px;
+    background: var(--page-bg) !important;
+    border: 1px solid var(--border-default) !important;
+    padding: 14px 25px !important;
+    font-size: 1.1rem !important;
+    border-radius: 50px !important;
+    transition: all 0.3s ease;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.main-search:focus {
+    border-color: var(--accent-teal) !important;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+    outline: none;
+}
+
+/* --- THE SINGLE ROW SHELL --- */
+.entry-wrapper.single-row-glow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 25px;
+    padding: 18px 30px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-default);
+    border-radius: 50px;
+    backdrop-filter: blur(15px);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    margin-bottom: 15px;
+    min-height: 60px;
+}
+
+/* --- ENHANCED CLICKABLE STATE --- */
+.clickable-node {
+    cursor: pointer;
+    outline: none;
+}
+
+.clickable-node:hover,
+.clickable-node:focus {
+    background: rgba(34, 211, 238, 0.05);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.15);
+}
+
+/* --- ZONE 1: IDENTITY (THE LEFT "WING") --- */
+.project-info-block {
+    display: flex;
+    align-items: center;
+    min-width: 240px;
+    padding: 10px 15px;
+    flex: 1;
+    /* Occupies all space until the action buttons */
+}
+
+.cyber-chevron {
+    color: var(--accent-teal);
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 12px;
+    transition: transform 0.3s ease;
+}
+
+.project-name {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+}
+
+/* --- NEW: THE INTERACTIVE PILL LABEL --- */
+.expand-label {
+    font-size: 0.75rem;
+    font-family: monospace;
+    color: var(--text-tertiary);
+    font-weight: bold;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.state-text {
+    display: inline-block;
+    padding: 2px 10px;
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid var(--accent-teal);
+    border-radius: 4px;
+    color: var(--accent-teal);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+/* Interaction feedback for the pill */
+.clickable-node:hover .state-text {
+    background: var(--accent-teal);
+    color: #000;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+}
+
+/* --- ZONE 2: PRIMARY ACTION BUTTONS --- */
+.btn-launch-pill {
+    appearance: none;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+    z-index: 5;
+}
+
+.status-active {
+    color: var(--accent-teal) !important;
+    border-color: var(--accent-teal) !important;
+}
+
+.status-active:hover {
+    background: var(--accent-teal) !important;
+    color: #000 !important;
+}
+
+/* --- ZONE 3: REACTIONS (MIDDLE ZONE) --- */
+.action-tray-unified {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.v-btn-round {
+    background: transparent;
+    border: 1px solid var(--border-default);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: 0.2s;
+    z-index: 5;
+}
+
+.v-btn-round:hover:not(:disabled) {
+    border-color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- ZONE 4: TRAILING INDICATOR (THE RIGHT "GUTTER") --- */
+.expansion-indicator {
+    margin-left: 10px;
+    padding: 10px 0 10px 20px;
+    color: var(--text-tertiary);
+    font-size: 1rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+    border-left: 1px solid var(--border-default);
+    /* The Vertical Gutter */
+}
+
+/* State Change for Open Card */
+.project-card.is-open .expansion-indicator {
+    transform: rotate(180deg);
+    color: var(--accent-teal);
+    border-left-color: transparent;
+    /* Clean up the look when open */
+}
+
+.project-card.is-open .state-text {
+    background: transparent;
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+/* --- ZONE 5: ADMIN TOOLS --- */
+.admin-inline-tools {
+    display: flex;
+    gap: 8px;
+    margin-left: 20px;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    z-index: 5;
+}
+
+.tool-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-default);
+    border-radius: 15px;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    cursor: pointer;
+}
+
+/* --- NESTED DETAILS (BRANCHING) --- */
+.details-content-glass {
+    display: none;
+    padding: 30px 40px;
+    background: var(--panel-bg);
+    border-radius: 0 0 25px 25px;
+    margin-left: 35px;
+    margin-top: -1px;
+    margin-bottom: 25px;
+    color: var(--text-secondary);
+    border-left: 3px solid var(--accent-teal);
+    border-right: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- CONTENT RENDERING (MARKDOWN/HTML) --- */
+.content-padding {
+    padding: 20px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.content-padding h1,
+.content-padding h2,
+.content-padding h3 {
+    color: var(--accent-teal);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-default);
+    padding-bottom: 5px;
+}
+
+.content-padding p {
+    margin-bottom: 1rem;
+}
+
+.content-padding code {
+    background: rgba(34, 211, 238, 0.1);
+    color: var(--accent-teal);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+}
+
+.content-padding ul {
+    list-style-type: square;
+    padding-left: 20px;
+    margin-bottom: 1rem;
+}
+
+.content-padding a {
+    color: var(--accent-teal);
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.content-padding a:hover {
+    color: var(--text-primary);
+}
+
+/* --- FEEDBACK OVERLAY (Restored) --- */
+.edit-box-pill {
+    background: var(--panel-bg);
+    border: 1px solid var(--accent-teal);
+    border-radius: 20px;
+    color: var(--text-primary);
+    padding: 6px 15px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    outline: none;
+    width: 250px;
+    /* Gives enough room to type */
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+    transition: all 0.3s ease;
+}
+
+.edit-box-pill:focus {
+    border-color: #fff;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+/* --- ANIMATION FOR REORDERING (Admin) --- */
+.project-card.moving {
+    border-color: var(--accent-teal);
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.3);
+    z-index: 100;
+}
+
+/* --- CONTENT SPACING --- */
+.content-padding {
+    padding: 10px 5px;
+    line-height: 1.6;
+}
+
+/* Ensures the action tray stays aligned even when the input appears */
+.action-tray-unified {
+    min-width: 120px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}

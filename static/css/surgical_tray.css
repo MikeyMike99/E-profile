@@ -1,0 +1,166 @@
+/**
+ * ARCHITECT_OS // SURGICAL_TRAY_STYLING v.2.8.7
+ * UI Concept: High-Contrast Cyber-Medical Interface
+ */
+
+:root {
+    --bg-deep: #050505;
+    --bg-panel: #0a0a0a;
+    --accent-red: #ff0055;
+    --accent-cyan: #00f2ff;
+    --accent-green: #00ff88;
+    --text-dim: #555;
+    --border-glow: rgba(255, 0, 85, 0.3);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--bg-deep);
+    color: var(--accent-green);
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+}
+
+#surgical-tray {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    border-top: 2px solid var(--accent-red);
+    box-sizing: border-box;
+}
+
+/* --- HEADER / PORTAL SELECTOR --- */
+.header-tray {
+    padding: 12px 20px;
+    background: #111;
+    border-bottom: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+#surgical-portal {
+    flex-grow: 1;
+    background: black;
+    color: var(--accent-cyan);
+    border: 1px solid #333;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.3s;
+}
+
+#surgical-portal:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+}
+
+/* --- THE EDITOR --- */
+#surgical-editor {
+    flex-grow: 1;
+    width: 100%;
+    background: black;
+    color: #0f0;
+    border: none;
+    padding: 25px;
+    font-size: 15px;
+    line-height: 1.6;
+    font-family: 'Consolas', 'Monaco', monospace;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#surgical-editor::placeholder {
+    color: #222;
+    font-style: italic;
+}
+
+/* --- CONSOLE / STATUS --- */
+#surgical-console {
+    height: 40px;
+    background: #080808;
+    color: var(--accent-green);
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    letter-spacing: 1px;
+}
+
+/* --- ACTION BAR --- */
+.action-bar {
+    padding: 15px 20px;
+    background: #050505;
+    display: flex;
+    gap: 15px;
+    border-top: 1px solid #222;
+}
+
+.btn-apply {
+    flex-grow: 1;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.btn-apply:hover {
+    background: #ff2266;
+    box-shadow: 0 0 20px var(--border-glow);
+}
+
+.btn-apply:active {
+    transform: scale(0.98);
+}
+
+.btn-close {
+    background: #222;
+    color: #888;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.btn-close:hover {
+    background: #333;
+    color: white;
+}
+
+.status-label {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+/* --- SCROLLBAR STYLING --- */
+#surgical-editor::-webkit-scrollbar {
+    width: 8px;
+}
+
+#surgical-editor::-webkit-scrollbar-track {
+    background: #050505;
+}
+
+#surgical-editor::-webkit-scrollbar-thumb {
+    background: #222;
+}
+
+#surgical-editor::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-red);
+}

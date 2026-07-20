@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else "Cyber-Shell" }}</title>
+    <style>
+        /* --- THEME LOCK --- */
+        :root {
+            --accent: #19e6ff;
+            --accent-glow: rgba(25, 230, 255, 0.4);
+            --bg-deep: #05070a;
+            --card-bg: #0d1117;
+            --text-bright: #eaf2ff;
+            --text-dim: rgba(234, 242, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --danger-glow: rgba(255, 77, 77, 0.4);
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-deep) !important;
+            color: var(--text-bright) !important;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- LOGOUT BUTTON --- */
+        .hero-logout {
+            position: fixed !important;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            padding: 12px 24px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: monospace;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: var(--text-dim) !important;
+            background: rgba(5, 7, 10, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .hero-logout:hover {
+            color: #ff7878 !important;
+            border-color: #ff4d4d;
+            box-shadow: 0 0 15px var(--danger-glow);
+        }
+
+        /* --- SYNC BUTTON --- */
+        .hero-sync {
+            position: fixed !important;
+            top: 20px;
+            left: 130px; /* Offset from LOG_OUT */
+            z-index: 9999;
+            padding: 12px 24px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: monospace;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: var(--text-dim) !important;
+            background: rgba(5, 7, 10, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .hero-sync:hover {
+            color: #00ff88 !important;
+            border-color: #00cc6a;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        /* --- HERO SECTION (TEXTURE CONFINED HERE) --- */
+        .hero-header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            position: relative;
+            z-index: 1;
+            /* Ensure halo renders below other UI */
+
+            /* Texture Logic strictly for Hero */
+            background-image: linear-gradient(rgba(5, 7, 10, 0) 70%, var(--bg-deep) 100%),
+            /* Fades texture into black */
+            url("{{ url_for('static', filename='img/texture.png') }}");
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-container {
+            width: 100px;
+            height: 130px;
+            border: 2px solid var(--accent);
+            border-radius: 50% / 40%;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            background: #000;
+            /* Solid base behind image */
+            position: relative;
+
+            /* THE FIX: OVAL DARK HALO FOR CRISP EDGE */
+            /* Using a large, dark drop-shadow to create the halo/shadow layer */
+            filter: drop-shadow(0 0 15px rgba(0, 0, 0, 1)) drop-shadow(0 0 5px rgba(0, 0, 0, 1));
+
+            /* Keeping the distinct accent glow separated */
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .operator-id {
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 5px;
+            font-size: 1.7rem;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* --- NAVIGATION --- */
+        .cyber-nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 30px 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: var(--text-dim) !important;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 24px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.75rem;
+            font-family: monospace;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link.active {
+            color: var(--text-bright) !important;
+            border-color: var(--accent);
+            background: rgba(25, 230, 255, 0.1);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* --- CONTENT SECTION --- */
+        .content-shell {
+            padding: 0 20px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        .glass-card {
+            background: var(--card-bg) !important;
+            border: 1px solid var(--border);
+            border-top: 1px solid rgba(25, 230, 255, 0.2);
+            border-radius: 12px;
+            padding: 50px;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .stream-label {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 0.6rem;
+            font-family: monospace;
+            color: var(--accent);
+            letter-spacing: 3px;
+            opacity: 0.6;
+        }
+
+        /* --- FOOTER --- */
+        .cyber-footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.3);
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .footer-accent {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* --- LOGS --- */
+        .admin-console {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-left: 2px solid var(--accent);
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/logout" class="hero-logout">LOG_OUT</a>
+    {% if session.get('is_admin') %}
+    <button id="btn-sync" onclick="syncGit()" class="hero-sync">GIT_SYNC</button>
+    {% endif %}
+
+    <header class="hero-header">
+        <div class="profile-container">
+            <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="ID" class="profile-img">
+        </div>
+        <h1 class="operator-id">LOGAN_ARCHITECT</h1>
+    </header>
+
+    <nav class="cyber-nav">
+        {% for tab in config.TABS %}
+        <a href="/{{ '' if tab == 'home' else tab }}" class="nav-link {{ 'active' if active_tab == tab }}">
+            {{ tab | upper }}
+        </a>
+        {% endfor %}
+    </nav>
+
+    <main class="content-shell">
+        <section class="glass-card">
+            <div class="stream-label">ENCRYPTED_DATA_STREAM</div>
+            <article class="content-viewport">
+                {% block content %}
+                {{ content | safe }}
+                {% endblock %}
+            </article>
+
+            {% if admin_stats %}
+            <aside class="admin-console">
+                <p style="color: var(--accent); margin-bottom: 12px;">[SYSTEM_LOGS]</p>
+                {% for log in admin_stats %}
+                <div style="color: var(--text-dim); margin-bottom: 4px;">>> {{ log }}</div>
+                {% endfor %}
+            </aside>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer class="cyber-footer">
+        <p>SYSTEM_STATUS: <span class="footer-accent">STABLE</span> | ARCHITECT_OS v.2.6.0</p>
+        <p>&copy; 2026 LOGAN_ARCHITECT // [ENCRYPTED_SESSION_ACTIVE]</p>
+    </footer>
+
+    {% if session.get('is_admin') %}
+    <script>
+        async function syncGit() {
+            const btn = document.getElementById('btn-sync');
+            const originalText = btn.innerText;
+            btn.innerText = "SYNCING...";
+            btn.style.color = "#00f3ff";
+            
+            try {
+                const response = await fetch('/api/projects/explorer_logic/git_sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                
+                if (response.ok && data.output && !data.output.includes("EXCEPTION:")) {
+                    btn.innerText = "SYNC_OK";
+                    btn.style.color = "#00ff88";
+                    alert(data.output);
+                } else {
+                    btn.innerText = "SYNC_ERR";
+                    btn.style.color = "#ff4d4d";
+                    alert("Git Sync Error:\n" + (data.output || "Unknown error"));
+                }
+            } catch (err) {
+                btn.innerText = "SYNC_ERR";
+                btn.style.color = "#ff4d4d";
+                alert("Connection failed: " + err);
+            }
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.color = "";
+            }, 3000);
+        }
+    </script>
+    {% endif %}
+
+</body>
+
+</html>
