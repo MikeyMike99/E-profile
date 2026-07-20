@@ -100,15 +100,15 @@ def terminal_command():
     def run_safe_cmd(cmd_list):
         nonlocal output_log
         try:
-            use_shell = (os.name == 'nt')
-            cmd_to_run = " ".join(cmd_list) if use_shell else cmd_list
+            exe_path = shutil.which(cmd_list[0])
+            if exe_path:
+                cmd_list[0] = exe_path
             
             process = subprocess.run(
-                cmd_to_run,
+                cmd_list,
                 cwd=str(target),
                 capture_output=True,
                 text=True,
-                shell=use_shell,
                 timeout=30
             )
             output_log += f"$ {' '.join(cmd_list)}\n"
@@ -176,15 +176,17 @@ def git_sync():
     def run_safe_cmd(cmd_list):
         nonlocal output_log
         try:
-            use_shell = (os.name == 'nt')
-            cmd_to_run = " ".join(cmd_list) if use_shell else cmd_list
+            # We resolve the executable explicitly so we can safely use a list-based subprocess
+            # without needing shell=True on Windows, ensuring arguments with spaces remain intact.
+            exe_path = shutil.which(cmd_list[0])
+            if exe_path:
+                cmd_list[0] = exe_path
             
             process = subprocess.run(
-                cmd_to_run,
+                cmd_list,
                 cwd=str(target),
                 capture_output=True,
                 text=True,
-                shell=use_shell,
                 timeout=45
             )
             output_log += f"$ {' '.join(cmd_list)}\n"
@@ -209,20 +211,23 @@ def git_sync():
     run_safe_cmd(['git', 'push', 'origin', 'main'])
     
     # 5. Reload Server if PythonAnywhere
-    output_log += "\n[System] Sync complete. Attempting to reload PythonAnywhere server...\n"
-    try:
-        wsgi_dir = Path("/var/www/")
-        if wsgi_dir.exists():
-            reloaded = False
-            for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
-                wsgi_file.touch()
-                output_log += f"[System] Touched {wsgi_file.name}\n"
-                reloaded = True
-            if not reloaded:
-                output_log += "[System] Warning: No *_wsgi.py files found in /var/www/\n"
-        else:
-            output_log += "[System] Warning: /var/www/ not found. Are you running locally?\n"
-    except Exception as e:
-        output_log += f"[System] Error touching WSGI: {e}\n"
+    if os.name == 'nt':
+        output_log += "\n[System] Local Windows environment detected. Skipping WSGI reload.\n"
+    else:
+        output_log += "\n[System] Sync complete. Attempting to reload PythonAnywhere server...\n"
+        try:
+            wsgi_dir = Path("/var/www/")
+            if wsgi_dir.exists():
+                reloaded = False
+                for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                    wsgi_file.touch()
+                    output_log += f"[System] Touched {wsgi_file.name}\n"
+                    reloaded = True
+                if not reloaded:
+                    output_log += "[System] Warning: No *_wsgi.py files found in /var/www/\n"
+            else:
+                output_log += "[System] Warning: /var/www/ not found.\n"
+        except Exception as e:
+            output_log += f"[System] Error touching WSGI: {e}\n"
 
     return jsonify({"output": output_log})
