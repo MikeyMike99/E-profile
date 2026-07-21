@@ -181,7 +181,7 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Pulls remote changes, commits local changes, and pushes."""
+    """Two-way sync: Pulls remote changes first, then commits local changes and pushes."""
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
@@ -225,14 +225,18 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 1. Add local changes
+    # 0. Ensure git identity is configured for commits
+    run_safe_cmd(['git', 'config', 'user.name', 'MikeyMike99'])
+    run_safe_cmd(['git', 'config', 'user.email', 'mikeymike@server.local'])
+
+    # 1. PULL FIRST: Get latest remote changes from GitHub before touching local commits
+    run_safe_cmd(['git', 'pull', remote_url, 'main', '--no-edit', '--allow-unrelated-histories'])
+
+    # 2. Add local changes
     run_safe_cmd(['git', 'add', '.'])
     
-    # 2. Commit local changes
+    # 3. Commit local changes
     run_safe_cmd(['git', 'commit', '-m', 'Auto-sync update'])
-    
-    # 3. Pull remote updates
-    run_safe_cmd(['git', 'pull', remote_url, 'main', '--no-edit'])
     
     # 4. Push combined changes
     run_safe_cmd(['git', 'push', remote_url, 'main'])
