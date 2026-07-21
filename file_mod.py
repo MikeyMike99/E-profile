@@ -181,7 +181,7 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Authenticated pull first, commit local updates, and push."""
+    """Two-way sync: Guaranteed token injection for pull and push."""
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
@@ -229,20 +229,20 @@ def git_sync():
     run_safe_cmd(['git', 'config', 'user.name', 'MikeyMike99'])
     run_safe_cmd(['git', 'config', 'user.email', 'mikeymike@server.local'])
 
-    # 0.5 Detect active local branch (defaults to master on PythonAnywhere)
+    # 0.5 Detect active local branch
     branch_process = subprocess.run(['git', 'branch', '--show-current'], cwd=str(target), capture_output=True, text=True)
     current_branch = branch_process.stdout.strip() or 'master'
 
-    # 1. PULL FIRST using the fully authenticated remote URL and correct branch
+    # 1. PULL FIRST using remote_url (Injects token properly)
     run_safe_cmd(['git', 'pull', remote_url, current_branch, '--no-edit', '--allow-unrelated-histories'])
 
     # 2. Add local changes
     run_safe_cmd(['git', 'add', '.'])
     
-    # 3. Commit local changes (Safe even if working tree is clean)
+    # 3. Commit local changes
     run_safe_cmd(['git', 'commit', '-m', 'Auto-sync update'])
     
-    # 4. Push combined changes using the fully authenticated remote URL
+    # 4. PUSH using remote_url (Injects token properly)
     run_safe_cmd(['git', 'push', remote_url, current_branch])
     
     # 5. Reload Server if PythonAnywhere
