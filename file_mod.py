@@ -1,4 +1,3 @@
-
 import os
 import subprocess
 import shutil
@@ -246,7 +245,8 @@ def git_sync():
         
         run_git_cmd(['add', '.'])
         run_git_cmd(['commit', '-m', 'Auto-sync update'])
-        run_git_cmd(['pull', authenticated_url, 'main', '--no-edit'])
+        # FIX APPLIED HERE: Added merge strategy to prevent conflict markers locally
+        run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '-X', 'ours'])
         run_git_cmd(['push', authenticated_url, 'main'])
 
     else:
@@ -276,6 +276,3 @@ def git_sync():
             output_log += f"[System] Error touching WSGI: {e}\n"
 
     return jsonify({"output": output_log})
-
-
-"http://127.0.0.1:5000"
