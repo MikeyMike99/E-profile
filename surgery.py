@@ -16,7 +16,7 @@ def get_project_path(project_name):
     name = str(project_name).strip().lower()
 
     if name in ['root', 'system_core']:
-        # This points to the e_profile_v2 folder where app.py lives
+        # This points to the e_profile_v2 folder where server.py lives
         base = Path(__file__).resolve().parent 
     else:
         # Prevent traversal in the project name itself
@@ -70,7 +70,7 @@ def get_block_source():
         return jsonify({"status": "error", "message": "FORBIDDEN"}), 403
 
     project = request.args.get('project')
-    filename = request.args.get('file', 'app.py')
+    filename = request.args.get('file', 'server.py')
     target = request.args.get('target')
     
     path_root = get_project_path(project)
@@ -144,7 +144,7 @@ def apply_patch():
         return jsonify({"status": "error", "message": "FORBIDDEN"}), 403
     data = request.json or {}
     project = data.get('project')
-    filename = data.get('file', 'app.py')
+    filename = data.get('file', 'server.py')
     target = data.get('target')
     new_code = data.get('code')
     path = get_project_path(project) / filename

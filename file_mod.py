@@ -96,6 +96,14 @@ def terminal_command():
 
     target, _ = get_safe_path(project, path)
     output_log = ""
+    
+    # Load token for auto-auth
+    token = ""
+    token_file = Path.cwd() / "gethub_token.txt"
+    if token_file.exists():
+        token = token_file.read_text().strip()
+        
+    remote_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git" if token else "origin"
 
     def run_safe_cmd(cmd_list):
         nonlocal output_log
@@ -111,16 +119,23 @@ def terminal_command():
                 text=True,
                 timeout=30
             )
-            output_log += f"$ {' '.join(cmd_list)}\n"
-            if process.stdout: output_log += process.stdout + "\n"
-            if process.stderr: output_log += process.stderr + "\n"
+            # Mask token in output
+            safe_cmd_list = [c.replace(token, '***') if token else c for c in cmd_list]
+            output_log += f"$ {' '.join(safe_cmd_list)}\n"
+            
+            stdout = process.stdout.replace(token, '***') if process.stdout and token else process.stdout
+            stderr = process.stderr.replace(token, '***') if process.stderr and token else process.stderr
+            
+            if stdout: output_log += stdout + "\n"
+            if stderr: output_log += stderr + "\n"
             return process.returncode == 0
         except Exception as e:
-            output_log += f"EXCEPTION: {str(e)}\n"
+            err_msg = str(e).replace(token, '***') if token else str(e)
+            output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
     if raw_cmd == 'setup -get':
-        success = run_safe_cmd(['git', 'pull', 'origin', 'main'])
+        success = run_safe_cmd(['git', 'pull', remote_url, 'main'])
         if success:
             output_log += "\n[System] Pull successful. Attempting to reload PythonAnywhere server...\n"
             try:
@@ -172,12 +187,18 @@ def git_sync():
 
     target = Path.cwd()
     output_log = "[System] Starting 2-Way Git Sync...\n"
+    
+    # Load token for auto-auth
+    token = ""
+    token_file = target / "gethub_token.txt"
+    if token_file.exists():
+        token = token_file.read_text().strip()
+        
+    remote_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git" if token else "origin"
 
     def run_safe_cmd(cmd_list):
         nonlocal output_log
         try:
-            # We resolve the executable explicitly so we can safely use a list-based subprocess
-            # without needing shell=True on Windows, ensuring arguments with spaces remain intact.
             exe_path = shutil.which(cmd_list[0])
             if exe_path:
                 cmd_list[0] = exe_path
@@ -189,26 +210,32 @@ def git_sync():
                 text=True,
                 timeout=45
             )
-            output_log += f"$ {' '.join(cmd_list)}\n"
-            if process.stdout: output_log += process.stdout + "\n"
-            if process.stderr: output_log += process.stderr + "\n"
+            # Mask token in output
+            safe_cmd_list = [c.replace(token, '***') if token else c for c in cmd_list]
+            output_log += f"$ {' '.join(safe_cmd_list)}\n"
+            
+            stdout = process.stdout.replace(token, '***') if process.stdout and token else process.stdout
+            stderr = process.stderr.replace(token, '***') if process.stderr and token else process.stderr
+            
+            if stdout: output_log += stdout + "\n"
+            if stderr: output_log += stderr + "\n"
             return process.returncode == 0
         except Exception as e:
-            output_log += f"EXCEPTION: {str(e)}\n"
+            err_msg = str(e).replace(token, '***') if token else str(e)
+            output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
     # 1. Add local changes
     run_safe_cmd(['git', 'add', '.'])
     
     # 2. Commit local changes
-    # Note: If there's nothing to commit, this returns non-zero, which is fine, we just log it.
     run_safe_cmd(['git', 'commit', '-m', 'Auto-sync update'])
     
-    # 3. Pull remote updates (now that local is staged/committed)
-    run_safe_cmd(['git', 'pull', 'origin', 'main', '--no-edit'])
+    # 3. Pull remote updates
+    run_safe_cmd(['git', 'pull', remote_url, 'main', '--no-edit'])
     
     # 4. Push combined changes
-    run_safe_cmd(['git', 'push', 'origin', 'main'])
+    run_safe_cmd(['git', 'push', remote_url, 'main'])
     
     # 5. Reload Server if PythonAnywhere
     if os.name == 'nt':

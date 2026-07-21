@@ -48,11 +48,14 @@ def get_certifications_data():
                     except:
                         pass
 
+                # Fixed: Handle backslash conversion outside of the dictionary/f-string
+                rel_path_str = str(rel_path).replace('\\', '/')
+
                 certs.append({
-                    'id': str(rel_path).replace('\\', '/'),
+                    'id': rel_path_str,
                     'name': path.stem.replace('-', ' ').title(),
                     'provider': provider,
-                    'file_path': f"/api/certifications/files/{str(rel_path).replace('\\', '/')}",
+                    'file_path': f"/api/certifications/files/{rel_path_str}",
                     'ext': path.suffix.lower(),
                     'description_html': description_html
                 })

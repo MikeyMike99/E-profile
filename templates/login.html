@@ -256,18 +256,40 @@
         <div class="vault-grid"></div>
 
         <header class="header">
-            <h1 class="title">[ACCESS_RESTRICTED]</h1>
-            <p class="subtitle">AWAITING ENCRYPTION KEY…</p>
+            <h1 class="title">{% if is_setup %}[INITIAL_SETUP]{% else %}[ACCESS_RESTRICTED]{% endif %}</h1>
+            <p class="subtitle">{% if is_setup %}CREATE ADMIN PROFILE{% else %}AWAITING ENCRYPTION KEY…{% endif %}</p>
         </header>
 
         <form action="/login" method="POST">
+            {% if error %}
+            <div style="color: var(--magenta); font-size: 0.8rem; text-align: center; margin-bottom: 20px; font-weight: bold; letter-spacing: 0.1em;">[{{ error }}]</div>
+            {% endif %}
+
+            {% if is_setup %}
+            <input type="hidden" name="action" value="setup">
+            <div class="field-group">
+                <label for="role" class="label-tab">INITIAL_ROLE</label>
+                <select id="role" name="role" class="cyber-input" style="appearance: none;" required>
+                    <option value="admin">ADMIN (Recommended)</option>
+                    <option value="employer">EMPLOYER</option>
+                    <option value="user">USER</option>
+                </select>
+            </div>
+            {% else %}
+            <input type="hidden" name="action" value="login">
+            {% endif %}
+
+            <div class="field-group">
+                <label for="username" class="label-tab">IDENTITY</label>
+                <input type="text" id="username" name="username" class="cyber-input" required autofocus>
+            </div>
             <div class="field-group">
                 <label for="cyber_key" class="label-tab">LOCKED</label>
-                <input type="password" id="cyber_key" name="cyber_key" class="cyber-input" required autofocus>
+                <input type="password" id="cyber_key" name="cyber_key" class="cyber-input" required>
             </div>
             <span class="micro-meta">KEY_LENGTH: 256-BIT • RATE_LIMIT: ENABLED</span>
 
-            <button type="submit" class="btn-auth">AUTH_LINK</button>
+            <button type="submit" class="btn-auth">{% if is_setup %}PROVISION_IDENTITY{% else %}AUTH_LINK{% endif %}</button>
         </form>
 
         <footer class="status-row">

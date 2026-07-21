@@ -44,7 +44,7 @@ def open_surgery_interface(name):
     # 3. Smart Selection: Pick the best file to show first
     initial_file = request.args.get('file')
     if not initial_file or not (path_root / initial_file).exists():
-        if "app.py" in all_files: initial_file = "app.py"
+        if "server.py" in all_files: initial_file = "server.py"
         elif "main.py" in all_files: initial_file = "main.py"
         elif all_files: initial_file = all_files[0]
         else: initial_file = "README.md"
@@ -97,7 +97,7 @@ def get_projects_data():
     sorted_dirs = sorted(all_dirs, key=lambda x: (int(order_data.get(x.name, current_max + 1)), x.name))
 
     for d in sorted_dirs:
-        is_ready = (d / "main.py").exists() or (d / "app.py").exists()
+        is_ready = (d / "main.py").exists() or (d / "server.py").exists()
         desc_path = d / "content" / "index.md"
         description = "<p>[NODE_READY_FOR_DATA_STREAM]</p>"
         preview = "CLICK_TO_EXPAND_NODE_DETAILS"
@@ -166,7 +166,7 @@ def submit_feedback():
 @projects_bp.route('/execute/<name>')
 def execute_project(name):
     proj_path = PROJECTS_DIR / name
-    executable = next((proj_path / f for f in ["main.py", "app.py"] if (proj_path / f).exists()), None)
+    executable = next((proj_path / f for f in ["main.py", "server.py"] if (proj_path / f).exists()), None)
     if executable:
         subprocess.Popen(["python", str(executable)], cwd=str(proj_path))
         return f"INITIALIZED: {name}"
