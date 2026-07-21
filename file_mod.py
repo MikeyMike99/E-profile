@@ -181,20 +181,18 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Guaranteed token injection for pull and push."""
+    """Two-way sync: Permanent git remote URL configuration for zero-friction auth."""
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
     target = config.ROOT_DIR
     output_log = "[System] Starting 2-Way Git Sync...\n"
     
-    # Load token for auto-auth
+    # 1. Load token
     token = ""
     token_file = target / "gethub_token.txt"
     if token_file.exists():
         token = token_file.read_text().strip()
-        
-    remote_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git" if token else "origin"
 
     def run_safe_cmd(cmd_list):
         nonlocal output_log
@@ -210,8 +208,8 @@ def git_sync():
                 text=True,
                 timeout=45
             )
-            # Mask token in output logs
-            safe_cmd_list = [c.replace(token, '***') if token else c for c in cmd_list]
+            # Mask token in output logs if present
+            safe_cmd_list = [c.replace(token, '***') if token and token in c else c for c in cmd_list]
             output_log += f"$ {' '.join(safe_cmd_list)}\n"
             
             stdout = process.stdout.replace(token, '***') if process.stdout and token else process.stdout
@@ -221,31 +219,37 @@ def git_sync():
             if stderr: output_log += stderr + "\n"
             return process.returncode == 0
         except Exception as e:
-            err_msg = str(e).replace(token, '***') if token else str(e)
+            err_msg = str(e).replace(token, '***') if token and token in str(e) else str(e)
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 0. Ensure local git identity is configured
+    # 2. Ensure local git identity is configured
     run_safe_cmd(['git', 'config', 'user.name', 'MikeyMike99'])
     run_safe_cmd(['git', 'config', 'user.email', 'mikeymike@server.local'])
 
-    # 0.5 Detect active local branch
+    # 3. PERMANENTLY configure the remote URL with the token embedded inside it
+    if token:
+        authenticated_origin = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git"
+        run_safe_cmd(['git', 'remote', 'set-url', 'origin', authenticated_origin])
+        output_log += "[System] Repository origin permanently bound with token authentication.\n"
+
+    # 4. Detect active local branch
     branch_process = subprocess.run(['git', 'branch', '--show-current'], cwd=str(target), capture_output=True, text=True)
     current_branch = branch_process.stdout.strip() or 'master'
 
-    # 1. PULL FIRST using remote_url (Injects token properly)
-    run_safe_cmd(['git', 'pull', remote_url, current_branch, '--no-edit', '--allow-unrelated-histories'])
+    # 5. PULL FIRST using standard origin (now fully authenticated via config)
+    run_safe_cmd(['git', 'pull', 'origin', current_branch, '--no-edit', '--allow-unrelated-histories'])
 
-    # 2. Add local changes
+    # 6. Add local changes
     run_safe_cmd(['git', 'add', '.'])
     
-    # 3. Commit local changes
+    # 7. Commit local changes
     run_safe_cmd(['git', 'commit', '-m', 'Auto-sync update'])
     
-    # 4. PUSH using remote_url (Injects token properly)
-    run_safe_cmd(['git', 'push', remote_url, current_branch])
+    # 8. PUSH using standard origin
+    run_safe_cmd(['git', 'push', 'origin', current_branch])
     
-    # 5. Reload Server if PythonAnywhere
+    # 9. Reload Server if PythonAnywhere
     if os.name == 'nt':
         output_log += "\n[System] Local Windows environment detected. Skipping WSGI reload.\n"
     else:
