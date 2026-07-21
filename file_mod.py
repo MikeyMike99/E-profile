@@ -181,7 +181,7 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Pulls remote changes first, then commits local changes and pushes."""
+    """Two-way sync: Pulls remote changes first, handles conflicts, and pushes."""
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
@@ -210,7 +210,6 @@ def git_sync():
                 text=True,
                 timeout=45
             )
-            # Mask token in output
             safe_cmd_list = [c.replace(token, '***') if token else c for c in cmd_list]
             output_log += f"$ {' '.join(safe_cmd_list)}\n"
             
@@ -225,23 +224,31 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 0. Ensure git identity is configured for commits
+    # 0. Ensure git identity is configured
     run_safe_cmd(['git', 'config', 'user.name', 'MikeyMike99'])
     run_safe_cmd(['git', 'config', 'user.email', 'mikeymike@server.local'])
 
-    # 1. PULL FIRST: Get latest remote changes from GitHub before touching local commits
-    run_safe_cmd(['git', 'pull', remote_url, 'main', '--no-edit', '--allow-unrelated-histories'])
+    # 0.5 Detect active local branch name (master vs main)
+    branch_process = subprocess.run(['git', 'branch', '--show-current'], cwd=str(target), capture_output=True, text=True)
+    current_branch = branch_process.stdout.strip() or 'master'
 
-    # 2. Add local changes
+    # 1. Stash any uncommitted local edits so pull doesn't abort
+    run_safe_cmd(['git', 'stash'])
+
+    # 2. PULL FIRST using explicit authenticated remote_url and correct branch
+    run_safe_cmd(['git', 'pull', remote_url, current_branch, '--no-edit', '--allow-unrelated-histories'])
+
+    # 3. Pop stashed changes back
+    run_safe_cmd(['git', 'stash', 'pop'])
+
+    # 4. Add and commit local changes
     run_safe_cmd(['git', 'add', '.'])
-    
-    # 3. Commit local changes
     run_safe_cmd(['git', 'commit', '-m', 'Auto-sync update'])
     
-    # 4. Push combined changes
-    run_safe_cmd(['git', 'push', remote_url, 'main'])
+    # 5. Push using the correct branch
+    run_safe_cmd(['git', 'push', remote_url, current_branch])
     
-    # 5. Reload Server if PythonAnywhere
+    # 6. Reload Server if PythonAnywhere
     if os.name == 'nt':
         output_log += "\n[System] Local Windows environment detected. Skipping WSGI reload.\n"
     else:
