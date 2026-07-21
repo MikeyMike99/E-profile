@@ -99,7 +99,7 @@ def terminal_command():
     
     # Load token for auto-auth
     token = ""
-    token_file = Path.cwd() / "gethub_token.txt"
+    token_file = config.ROOT_DIR / "gethub_token.txt"
     if token_file.exists():
         token = token_file.read_text().strip()
         
@@ -185,7 +185,7 @@ def git_sync():
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
-    target = Path.cwd()
+    target = config.ROOT_DIR
     output_log = "[System] Starting 2-Way Git Sync...\n"
     
     # Load token for auto-auth
