@@ -1,2 +1,0 @@
-# CERTIFICATIONS
-Initialized.
