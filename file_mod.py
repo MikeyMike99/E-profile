@@ -519,17 +519,17 @@ def git_sync():
         # --- PYTHONANYWHERE SERVER ENVIRONMENT ---
         output_log += "[System] PythonAnywhere server environment detected. Using master-to-main mapping...\n"
         
-        # Pull first
-        run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '--allow-unrelated-histories'])
-
-        # Add and commit local changes
+        # 1. Add and commit local changes FIRST so working tree is clean before pulling
         run_git_cmd(['add', '.'])
         run_git_cmd(['commit', '-m', 'Auto-sync update'])
         
-        # Push mapping master to main
+        # 2. Pull remote updates (using ours strategy to safely handle any file merge collisions)
+        run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '--allow-unrelated-histories', '-X', 'ours'])
+        
+        # 3. Push mapping master to main
         run_git_cmd(['push', authenticated_url, 'master:main'])
         
-        # Reload WSGI server
+        # 4. Reload WSGI server
         output_log += "\n[System] Sync complete. Attempting to reload PythonAnywhere server...\n"
         try:
             wsgi_dir = Path("/var/www/")
@@ -547,4 +547,6 @@ def git_sync():
             output_log += f"[System] Error touching WSGI: {e}\n"
 
     return jsonify({"output": output_log})
+
+
 "http://127.0.0.1:5000"
