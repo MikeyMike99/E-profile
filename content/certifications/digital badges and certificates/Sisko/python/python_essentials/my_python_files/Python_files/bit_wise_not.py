@@ -1,0 +1,24 @@
+
+#here we are practicing, how bionary values is working for read, write  and excecute
+#lets remove the write premision here 
+rd=4
+w=2
+x=1
+
+user_premision=rd | w 
+
+
+
+
+
+print(f"your premision value is: {user_premision}")
+print(bin(user_premision))#converst values to bionary to save space inmemory
+
+
+#lets add excecute to the use permistion.
+user_premision |= x
+print(f"your new premision value is: {user_premision}")
+
+#lets remove the write permistion 
+user_premision ^= x
+print(f"now that you can excecute you may not write, the value is: {user_premision}")

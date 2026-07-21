@@ -1,0 +1,48 @@
+# Audio sample
+
+Welcome to my first blog post!
+
+Here’s an audio clip you can play:
+
+<audio controls>
+  <source src="/static/audio/conversation_output_1_v5.wav" type="audio/wav">
+  Your browser does not support the audio element.
+</audio>
+
+---
+
+Thanks for listening!
+ selected🌟 Get to Know Me: My Journey 
+Hey! By now, you’ve already explored my bio and certifications. Now, you’re about to get to know me better by reading this long, perhaps annoying, post—but I promise I’ll try to make it as engaging as possible. I won't be posting this frequently, so please check in every once in a while for new updates or new certifications you may see on my profile. This isn't meant for entertainment, but for you, the reader, to learn more about me as a person and to understand the life experiences that have shaped me. To start, I'm going to share a bit about my life.
+
+## The Search for Solid Ground
+I first went to school when I was only six years old. Life as a child wasn't stable; I was in about seven different schools in one single year. It’s hard to remember all the details; this is just a highlight reel, so please bear with me.  
+In Grade Two, I was still moving between different schools, though things were a bit more stable—except that I only attended school for half of that year. For the rest of the year, I was shipped off to my grandparents. My father was a long-distance driver; he operated the big rigs in South Africa. He didn't just know the main roads; he knew every route, every little town, big and small, across the country. As I write this post, he is 52 years old. He is my step-dad; he started raising me when I was just seven months old. My mother was 17 when I was born. I’ll share more about them in time.
+
+## A Turning Point in Childhood
+Spending more than half the year on the farm without school was certainly memorable. My sister, my two nephews, and I were all staying with my grandparents. That time was truly fun. My nephews did go to school, while my grandfather and I stayed on the farm. Meanwhile, my grandmother, nephews, and sister stayed in a place in town so they could attend school. When that year was over, I went back to school, and my two nephews returned to their parents. A year later, one of them had an accident and tragically died in a house fire. I never saw them again.  
+My sister was four years younger than me. As time passed, I had a great time staying in the hostel. Eventually, my sister reached school age. She came to the hostel with me and was enrolled in the same school. She finished Grade 1. We had just started the new year—I was entering Grade Four, my sister Grade Two—when the worst thing happened to us. That was in 2010.  
+My sister and I were suddenly transferred to a children's home that housed 64 other children, ranging from ages three up to Grade 12. It was an agricultural school. I matriculated there. My sister grew up and left for another institution in 2017. I stayed and matriculated in 2018. You can find my results under the Certifications tab. If they aren't there yet, I'm still building the website and will upload them soon.
+
+## Starting from Nothing: The R800 Challenge
+Well, that’s a summary of the early events. After school, I got a job on a farm. I loved the work, but deep down, I felt there was no future in it for me. I felt like I had so much more to offer in life than just working for this farmer. He didn't pay me any money. I got a place to stay: first a room, then he moved me outside to the granny flat. I ate and lived with them as if I were part of their family.  
+They had told me I would be the manager and handle everything, but their activities involved shooting wildlife on a large scale—no less than 100 antelopes in one night. I went on one hunt, but my heart wasn't in it. I realized this was not my path. I felt I could do so much more than work and not get paid. Although I learned a lot and gained valuable experience, I eventually made the tough decision to leave the farm for the city with only R800 to my name.  
+I was truly starting from zero. People helped me with a place to stay and said I didn't need to pay rent, but I was responsible for myself. I sat there: no work, no money. I got one food parcel from the children's home, which lasted about a week. I didn't want to ask the children's home for anything because I felt like I had messed up in life and let everyone down. They didn't even know how desperate my financial situation was.  
+I walked from business to business, begging for work. My first option was Spur. A few weeks later, I got a job there. I worked the night shift and got home at 12 at night. Luckily, it was only about 3km from my house, so I walked. A kind person eventually bought me a brand new bicycle. I am still deeply thankful to that person to this day; they truly saved me when I had absolutely nothing.
+
+## Lessons in Risk and Resilience
+I worked at Spur for about four months, but I felt stagnant. I applied for another job. The person said I got the job and would contact me with a start date. Then, in a moment of poor judgment, I resigned at Spur to wait for the call. That phone call never came. The disappointment was huge. I was without a job for three months, sitting at home with no income, watching my tiny savings disappear.  
+After countless CVs and interviews, I got a new job at a restaurant. It was only for two days a week, for just R180 a day. I knew I couldn't survive. I approached the owners and asked if I could move to waitering or work more days. They agreed. The manager didn't give me fair shifts, but it was better; I could earn some extra money. I stayed at this restaurant for eight months.
+
+## The Rise to Management and the Shadow of Loss
+Then the pandemic struck a home run. My sister's institution closed, and I suddenly had to look after both her and myself. Again, no job, and my father wasn't working, so she couldn't go stay with him. I took all my remaining savings just to care for us.  
+When the pandemic restrictions lifted, I went to see the person who bought me the bicycle because he owned a pizza shop. I only went to check on him, and it turned out to be a blessing. He asked me to do deliveries. I sat there the whole day, but didn't get any deliveries. I went home empty-handed and felt defeated. The next day, same story. But the day after, I couldn't stand being idle and started helping customers. The owner saw my initiative. One thing led to another, and I finally became the manager. The business was struggling, but I was basically running the entire place for him.  
+He eventually decided to sell due to personal issues and the stress of the pandemic. The new owners were impressed by how I ran the place and wanted me to manage it for them. I solved problems quickly, kept the customers happy, and knew the business inside and out.  
+Just as the first owner closed the doors, and I was unsure about my standing with the new owners (no contracts yet!), a lifeline appeared. I got a call from another company where a friend worked. They needed a courier guy. This was a medical equipment company—selling strange things like body bags to hospitals and doctors.
+
+## The Unexpected Darkness
+I worked eight months here, but I felt disconnected. Then my life took a shattering turn. My sister passed away at the age of 17 in my house. This topic is for another day, as it deserves its own space. I was away from work for two weeks to manage the burial. When I returned, I worked for another two weeks before my contract ended at this courier company.  
+Shortly after leaving, I accepted a new opportunity as a telecommunications technician. The owner was nearing retirement and wanted to teach me the ropes, eventually planning for me to run the business and pay him a salary. I was installing internet dishes on cellular towers and at clients' homes. A month in, my health started to deteriorate rapidly, and the doctors couldn't tell me what was going on. My boss dropped me off at home one day and told me he couldn't work with me anymore. He said I should get my health in order first, and then he would reconsider.  
+At the time, I had no idea what was happening. I had a tumor which was the root cause of my blindness. That is how I became blind, due to the tumor that had to be surgically removed. They feared I would be like a vegetable; I had to learn everything from scratch again. I couldn't walk, and I couldn't eat. It was a profoundly traumatic experience.
+
+That is all for this post. I will tell you more about my sister's death in the next one. After that, I will tell you about my journey with blindness—from the start to the end—and where I am today versus where I was a few years back.

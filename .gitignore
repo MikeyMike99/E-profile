@@ -3,3 +3,4 @@ venv/
 .env
 profiles.json
 *.pyc
+gethub_token.txt
