@@ -99,7 +99,7 @@ def terminal_command():
     
     # Load token for auto-auth
     token = ""
-    token_file = Path.cwd() / "gethub_token.txt"
+    token_file = config.ROOT_DIR / "gethub_token.txt"
     if token_file.exists():
         token = token_file.read_text().strip()
         
@@ -181,11 +181,11 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Pulls remote changes first, handles conflicts, and pushes."""
+    """Two-way sync: Authenticated pull first, commit local updates, and push."""
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
-    target = Path.cwd()
+    target = config.ROOT_DIR
     output_log = "[System] Starting 2-Way Git Sync...\n"
     
     # Load token for auto-auth
@@ -210,6 +210,7 @@ def git_sync():
                 text=True,
                 timeout=45
             )
+            # Mask token in output logs
             safe_cmd_list = [c.replace(token, '***') if token else c for c in cmd_list]
             output_log += f"$ {' '.join(safe_cmd_list)}\n"
             
@@ -224,31 +225,27 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 0. Ensure git identity is configured
+    # 0. Ensure local git identity is configured
     run_safe_cmd(['git', 'config', 'user.name', 'MikeyMike99'])
     run_safe_cmd(['git', 'config', 'user.email', 'mikeymike@server.local'])
 
-    # 0.5 Detect active local branch name (master vs main)
+    # 0.5 Detect active local branch (defaults to master on PythonAnywhere)
     branch_process = subprocess.run(['git', 'branch', '--show-current'], cwd=str(target), capture_output=True, text=True)
     current_branch = branch_process.stdout.strip() or 'master'
 
-    # 1. Stash any uncommitted local edits so pull doesn't abort
-    run_safe_cmd(['git', 'stash'])
-
-    # 2. PULL FIRST using explicit authenticated remote_url and correct branch
+    # 1. PULL FIRST using the fully authenticated remote URL and correct branch
     run_safe_cmd(['git', 'pull', remote_url, current_branch, '--no-edit', '--allow-unrelated-histories'])
 
-    # 3. Pop stashed changes back
-    run_safe_cmd(['git', 'stash', 'pop'])
-
-    # 4. Add and commit local changes
+    # 2. Add local changes
     run_safe_cmd(['git', 'add', '.'])
+    
+    # 3. Commit local changes (Safe even if working tree is clean)
     run_safe_cmd(['git', 'commit', '-m', 'Auto-sync update'])
     
-    # 5. Push using the correct branch
+    # 4. Push combined changes using the fully authenticated remote URL
     run_safe_cmd(['git', 'push', remote_url, current_branch])
     
-    # 6. Reload Server if PythonAnywhere
+    # 5. Reload Server if PythonAnywhere
     if os.name == 'nt':
         output_log += "\n[System] Local Windows environment detected. Skipping WSGI reload.\n"
     else:
