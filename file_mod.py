@@ -181,14 +181,14 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Robust fallback token resolution and safe Git execution."""
+    """Two-way sync: Explicitly handles master-to-main branch mapping and authentication."""
     if not session.get('is_admin'):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
     target = config.ROOT_DIR
     output_log = "[System] Starting 2-Way Git Sync...\n"
     
-    # 1. Robust token loading: Check file first, fall back to environment variables
+    # 1. Load token
     token = ""
     token_file = target / "gethub_token.txt"
     if not token_file.exists():
@@ -198,28 +198,20 @@ def git_sync():
         token = token_file.read_text().strip()
     
     if not token:
-        # Fallback to server environment variable if file is missing
         token = os.environ.get("GITHUB_TOKEN", "").strip()
 
     if not token:
-        output_log += "[Warning] No token found in 'gethub_token.txt' or environment variables! Authentication will fail.\n"
+        output_log += "[Warning] No token found! Authentication may fail.\n"
     else:
         output_log += "[System] Authentication token loaded successfully.\n"
 
-    # Construct the explicit authenticated remote URL
     authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git" if token else "origin"
 
     def run_git_cmd(args):
-        """Safely executes a git command without corrupting command-line flags."""
         nonlocal output_log
         try:
             exe_path = shutil.which('git') or 'git'
-            
-            # Base command with credential helper suppression
-            full_cmd = [exe_path, '-c', 'credential.helper=']
-            
-            # Append the actual subcommand and arguments cleanly
-            full_cmd.extend(args)
+            full_cmd = [exe_path, '-c', 'credential.helper='] + args
 
             process = subprocess.run(
                 full_cmd,
@@ -229,7 +221,6 @@ def git_sync():
                 timeout=45
             )
             
-            # Mask token in logs if present
             cmd_str = ' '.join(full_cmd)
             if token:
                 cmd_str = cmd_str.replace(token, '***')
@@ -246,18 +237,18 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 2. Ensure local git identity is configured
+    # 2. Ensure git identity
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
 
-    # 3. Detect active local branch
-    branch_process = subprocess.run(['git', 'branch', '--show-current'], cwd=str(target), capture_output=True, text=True)
-    current_branch = branch_process.stdout.strip() or 'master'
+    # 3. Branch Mapping: Local is 'master', Remote GitHub is 'main'
+    local_branch = 'master'
+    remote_branch = 'main'
 
-    output_log += f"[System] Target branch detected: {current_branch}\n"
+    output_log += f"[System] Syncing local '{local_branch}' with remote '{remote_branch}'...\n"
 
-    # 4. PULL FIRST using the explicitly authenticated remote URL
-    run_git_cmd(['pull', authenticated_url, current_branch, '--no-edit', '--allow-unrelated-histories'])
+    # 4. PULL from remote 'main' into local 'master'
+    run_git_cmd(['pull', authenticated_url, remote_branch, '--no-edit', '--allow-unrelated-histories'])
 
     # 5. Add local changes
     run_git_cmd(['add', '.'])
@@ -265,8 +256,8 @@ def git_sync():
     # 6. Commit local changes
     run_git_cmd(['commit', '-m', 'Auto-sync update'])
     
-    # 7. PUSH using the explicitly authenticated remote URL
-    run_git_cmd(['push', authenticated_url, current_branch])
+    # 7. PUSH local 'master' up to remote 'main'
+    run_git_cmd(['push', authenticated_url, f'{local_branch}:{remote_branch}'])
     
     # 8. Reload Server if PythonAnywhere
     if os.name == 'nt':
