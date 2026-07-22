@@ -377,6 +377,9 @@
                             {% if data.is_admin %}
                             <span
                                 style="color: var(--amber); font-size: 0.7rem; font-weight: bold; margin-left: 10px;">[SYS_ADMIN]</span>
+                            {% elif data.is_employer %}
+                            <span
+                                style="color: #00ff88; font-size: 0.7rem; font-weight: bold; margin-left: 10px;">[EMPLOYER]</span>
                             {% endif %}
 
                             <div style="font-size: 0.75rem; color: gray; margin-top: 5px;">
@@ -389,7 +392,7 @@
                         <div class="action-buttons" style="display: flex; gap: 10px;">
 
                             <!-- EDIT BUTTON -->
-                            <button onclick="alert('Placeholder: Opening Edit Panel for {{ data.username }}')"
+                            <button onclick="editProfile('{{ hashed_token }}', '{{ data.username }}', '{{ data.label }}', {{ 'true' if data.is_admin else 'false' }}, {{ 'true' if data.is_employer else 'false' }}, {{ 'true' if data.require_click_only else 'false' }}, {{ data.permissions|tojson|forceescape }})"
                                 class="cyber-btn"
                                 style="padding: 5px 15px; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan);">
                                 Edit
@@ -540,6 +543,13 @@
                         <label class="custom-toggle">
                             <span>SYS:ADMIN (Full Access)</span>
                             <input type="checkbox" name="is_admin" class="sr-only toggle-input"
+                                onchange="toggleCheckbox(this)">
+                            <span aria-hidden="true" class="state-indicator">[ OFF ]</span>
+                        </label>
+
+                        <label class="custom-toggle">
+                            <span>EMPLOYER (Access All Content)</span>
+                            <input type="checkbox" name="is_employer" class="sr-only toggle-input"
                                 onchange="toggleCheckbox(this)">
                             <span aria-hidden="true" class="state-indicator">[ OFF ]</span>
                         </label>
@@ -748,7 +758,7 @@
 
     <div id="aria-live-region" class="sr-only" aria-live="polite"></div>
     <script>
-        function editProfile(tokenHash, username, label, isAdmin, reqClick, perms) {
+        function editProfile(tokenHash, username, label, isAdmin, isEmployer, reqClick, perms) {
             // Change form action to edit_profile route
             const form = document.getElementById('provision-form');
             form.action = '/edit_profile';
@@ -797,6 +807,7 @@
 
             document.getElementById('req_click_only').checked = reqClick;
             if (isAdmin) setToggle('is_admin', null, true);
+            if (isEmployer) setToggle('is_employer', null, true);
 
             perms.forEach(perm => {
                 setToggle('permissions', perm, true);

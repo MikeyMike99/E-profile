@@ -81,12 +81,19 @@
                 {% endif %}
 
                 {% if can_execute %}
-                <button type="button" class="btn-launch-pill status-{{ project.status }}"
-                    id="test-btn-{{ project.name }}"
-                    onclick="event.stopPropagation(); lockTestButton(this, '{{ project.name }}', {{ is_admin_js }}, '{{ project.status }}')">
-                    <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
-                    {{ project.label }}
-                </button>
+                    {% if project.name == 'echos_lab' %}
+                    <a href="/echos-calibrator" target="_blank" rel="noopener noreferrer" class="btn-launch-pill status-{{ project.status }}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation();">
+                        <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
+                        {{ project.label }}
+                    </a>
+                    {% else %}
+                    <button type="button" class="btn-launch-pill status-{{ project.status }}"
+                        id="test-btn-{{ project.name }}"
+                        onclick="event.stopPropagation(); lockTestButton(this, '{{ project.name }}', {{ is_admin_js }}, '{{ project.status }}')">
+                        <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
+                        {{ project.label }}
+                    </button>
+                    {% endif %}
                 {% else %}
                 <button type="button" class="btn-launch-pill status-{{ project.status }}" style="opacity: 0.5; cursor: not-allowed;" onclick="event.stopPropagation(); alert('ACCESS DENIED: Missing EXECUTE permissions for this node.');">
                     <span class="btn-icon" aria-hidden="true">🔒</span>

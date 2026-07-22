@@ -27,9 +27,8 @@ def get_certifications_data():
     # Recursively find files
     valid_exts = ['.pdf', '.png', '.jpg', '.jpeg', '.docx']
     
-    for root, dirs, files in os.walk(CERT_DIR):
-        for f in files:
-            path = Path(root) / f
+    for path in CERT_DIR.rglob('*'):
+        if path.is_file():
             if path.suffix.lower() in valid_exts:
                 rel_path = path.relative_to(CERT_DIR)
                 provider = rel_path.parts[0] if len(rel_path.parts) > 1 else "General"
@@ -89,5 +88,5 @@ def reorder_certs():
 from flask import send_from_directory
 @cert_bp.route('/api/certifications/files/<path:filename>')
 def get_cert_file(filename):
-    target_dir = os.path.abspath(CERT_DIR)
+    target_dir = str(CERT_DIR.resolve())
     return send_from_directory(target_dir, filename)

@@ -305,7 +305,7 @@
     <nav class="cyber-nav">
         {% for tab in config.TABS %}
             {% set show_tab = True %}
-            {% if not is_admin %}
+            {% if not is_admin and not is_employer %}
                 {% if tab != 'home' and ('master:view_tabs' not in permissions or ('exclude:tab:' ~ tab) in permissions) %}
                     {% set show_tab = False %}
                 {% endif %}

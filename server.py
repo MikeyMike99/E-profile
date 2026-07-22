@@ -14,6 +14,7 @@ from blog_mod import blog_bp
 from projects_mod import projects_bp, get_projects_data 
 from surgery import surgery_bp  # Or wherever your surgery.py is located
 from cert_mod import cert_bp, get_certifications_data
+from echos_mod import echos_bp
 
 # --- 2. APP INITIALIZATION ---
 config = Config()
@@ -45,6 +46,8 @@ app.register_blueprint(cert_bp)
 
 from sync_mod import sync_bp
 app.register_blueprint(sync_bp, url_prefix='/api')
+
+app.register_blueprint(echos_bp)
 
 class SystemLogger:
     def __init__(self):
@@ -134,7 +137,7 @@ def dynamic_route(path):
         return redirect(url_for('dynamic_route', path='home'))
         
     perms = session.get('permissions', [])
-    if path != 'home' and not session.get('admin', False):
+    if path != 'home' and not session.get('admin', False) and not session.get('is_employer', False):
         if f'view:tab:{path}' not in perms:
             flash("ACCESS DENIED: You lack permissions to view this section.", "error")
             return redirect(url_for('login'))
@@ -159,6 +162,10 @@ def dynamic_route(path):
         template = 'projects.html'
     elif path == 'certifications':
         template = 'certifications.html'
+    elif path == 'home':
+        template = 'home.html'
+    elif path == 'bio':
+        template = 'bio.html'
     else:
         template = 'base.html'
 
@@ -177,6 +184,7 @@ def dynamic_route(path):
         certs=certs_data,
         latest_post=latest_shortcut,
         is_admin=session.get('admin', False),
+        is_employer=session.get('is_employer', False),
         permissions=session.get('permissions', [])
     )
 
@@ -199,11 +207,13 @@ def magic_link(uuid_token):
             username = user_data.get('username', 'Unknown')
             perms = user_data.get('permissions', [])
             is_admin = user_data.get('is_admin', False)
+            is_employer = user_data.get('is_employer', False)
             session.permanent = True
             session['label'] = label
             session['username'] = username
             session['permissions'] = perms
             session['admin'] = is_admin
+            session['is_employer'] = is_employer
             sys_log.info(f"Magic Link login success: {username} ({label})")
             
             if is_admin:
@@ -243,6 +253,7 @@ def login():
                 "uuid": str(uuid.uuid4()),
                 "permissions": ['view:real_name'],
                 "is_admin": True,
+                "is_employer": False,
                 "require_click_only": False
             }
             save_profiles(profiles)
@@ -253,6 +264,7 @@ def login():
             session['username'] = username
             session['permissions'] = profiles[hashed_token]['permissions']
             session['admin'] = True
+            session['is_employer'] = False
             sys_log.info(f"System Initialized. Profile '{username}' created as {label}.")
             return redirect(url_for('admin'))
             
@@ -264,12 +276,14 @@ def login():
                 username = user_data.get('username', 'Unknown')
                 perms = user_data.get('permissions', [])
                 is_admin = user_data.get('is_admin', False)
+                is_employer = user_data.get('is_employer', False)
                 
                 session.permanent = True
                 session['label'] = label
                 session['username'] = username
                 session['permissions'] = perms
                 session['admin'] = is_admin
+                session['is_employer'] = is_employer
                 sys_log.info(f"Login success: {username} ({label})")
                 
                 if is_admin:
@@ -310,6 +324,7 @@ def admin():
             permissions = request.form.getlist('permissions')
             require_click_only = request.form.get('require_click_only') == 'on'
             is_admin = request.form.get('is_admin') == 'on'
+            is_employer = request.form.get('is_employer') == 'on'
             
             if username and token:
                 hashed_token = hash_token(token)
@@ -319,7 +334,8 @@ def admin():
                     "uuid": str(uuid.uuid4()),
                     "permissions": permissions,
                     "require_click_only": require_click_only,
-                    "is_admin": is_admin
+                    "is_admin": is_admin,
+                    "is_employer": is_employer
                 }
                 save_profiles(profiles)
                 sys_log.info(f"Profile created: {username}")
@@ -557,6 +573,7 @@ def edit_profile():
         profiles[token_hash]['label'] = request.form.get('label', profiles[token_hash]['label']).strip()
         profiles[token_hash]['permissions'] = request.form.getlist('permissions')
         profiles[token_hash]['is_admin'] = request.form.get('is_admin') == 'on'
+        profiles[token_hash]['is_employer'] = request.form.get('is_employer') == 'on'
         profiles[token_hash]['require_click_only'] = request.form.get('require_click_only') == 'on'
         
         save_profiles(profiles)

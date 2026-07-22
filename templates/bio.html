@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Bio Page Specific Styling */
+    .bio-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .bio-container h1 {
+        font-size: 2.5rem;
+        color: var(--text-bright);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-left: 4px solid var(--accent);
+        padding-left: 20px;
+    }
+
+    .bio-container p:first-of-type {
+        font-size: 1.2rem;
+        color: var(--accent);
+        font-family: monospace;
+        margin-bottom: 40px;
+        margin-top: 0;
+        padding-left: 24px;
+    }
+
+    .bio-container h2 {
+        font-size: 1.8rem;
+        color: var(--text-bright);
+        margin-top: 40px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .bio-container h2::before {
+        content: ">";
+        color: var(--accent);
+        font-family: monospace;
+    }
+
+    .bio-container p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--text-dim);
+        margin-bottom: 15px;
+    }
+
+    .bio-container strong {
+        color: var(--text-bright);
+    }
+
+    .bio-container blockquote {
+        background: rgba(0, 243, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .bio-container blockquote p {
+        color: #d0d0d0;
+        margin-bottom: 15px;
+    }
+    
+    .bio-container blockquote p:last-child {
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="bio-container" role="main" aria-label="Biography and Mission">
+    {{ content | safe }}
+</div>
+{% endblock %}

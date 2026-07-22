@@ -27,7 +27,7 @@ class Config:
     }
 
     # --- Dynamic Navigation Tabs ---
-    TABS = ["home", "blog", "bio", "projects", "certifications"]
+    TABS = ["home", "bio", "blog", "projects", "certifications"]
 
     @classmethod
     def get_all_required_paths(cls):
