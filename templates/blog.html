@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* --- ACCESSIBILITY & UTILITY --- */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+
+    .blog-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* --- LATEST BAR (Interactive Shortcut) --- */
+    .latest-status-bar {
+        background: rgba(0, 242, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 15px;
+        margin-bottom: 30px;
+        font-family: monospace;
+    }
+
+    .latest-link-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        font-family: monospace;
+        cursor: pointer;
+        text-decoration: underline;
+        font-weight: bold;
+        font-size: 1rem;
+        padding: 0;
+        margin-left: 10px;
+        transition: 0.2s;
+    }
+
+    .latest-link-btn:hover {
+        color: var(--accent);
+        text-shadow: 0 0 8px var(--accent);
+    }
+
+    /* --- ADMIN: CREATOR PANEL --- */
+    .admin-creator {
+        border: 1px solid var(--accent);
+        background: rgba(0, 242, 255, 0.02);
+        padding: 25px;
+        margin-bottom: 40px;
+        border-radius: 4px;
+    }
+
+    .cyber-input {
+        width: 100%;
+        background: #000;
+        border: 1px solid var(--border);
+        color: #fff;
+        padding: 12px;
+        margin-bottom: 10px;
+        font-family: monospace;
+    }
+
+    .cyber-input:focus {
+        border-color: var(--accent);
+        outline: none;
+    }
+
+    /* --- BLOG ENTRY --- */
+    .blog-entry {
+        border: 1px solid var(--border);
+        background: #0a0c10;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        transition: border 0.3s;
+        outline: none;
+    }
+
+    .blog-entry.highlight-node {
+        border-color: var(--accent);
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+    }
+
+    .entry-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .entry-trigger {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        color: var(--accent);
+        text-align: left;
+        padding: 20px;
+        cursor: pointer;
+        font-family: monospace;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .entry-trigger:hover {
+        background: rgba(0, 242, 255, 0.05);
+    }
+
+    /* --- ADMIN TRAY --- */
+    .admin-tray {
+        display: flex;
+        gap: 10px;
+        padding: 10px 20px;
+        border-left: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .prio-box {
+        width: 50px;
+        background: #000;
+        border: 1px solid var(--border);
+        color: var(--accent);
+        text-align: center;
+        font-family: monospace;
+    }
+
+    /* --- HIDDEN CONTENT --- */
+    .entry-content {
+        display: none;
+        padding: 30px;
+        border-top: 1px solid var(--border);
+        line-height: 1.8;
+        color: #ccd6f6;
+    }
+
+    .cyber-btn {
+        background: none;
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        padding: 5px 12px;
+        cursor: pointer;
+        font-family: monospace;
+        transition: 0.2s;
+    }
+
+    .cyber-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+</style>
+
+<div class="blog-container">
+    <h2 style="font-family: monospace; letter-spacing: 3px;">[ARCHIVE_NODE_2026]</h2>
+
+    {# --- LATEST STATUS BAR --- #}
+    {% if latest_post %}
+    <nav class="latest-status-bar" aria-label="Latest Post Shortcut">
+        <div style="display: flex; align-items: center;">
+            <span style="color: var(--accent); font-family: monospace; font-weight: bold;">>>
+                NEW_SIGNAL_DETECTED:</span>
+            <button class="latest-link-btn" onclick="toggleNode('mirror-{{ latest_post.id }}')"
+                aria-label="Check out the latest post here: {{ latest_post.title }}">
+                Check out the latest post here: <strong>{{ latest_post.title }}</strong>
+            </button>
+        </div>
+
+        <div id="content-mirror-{{ latest_post.id }}" class="entry-content"
+            style="margin-top:15px; border: 1px solid var(--border); background: rgba(0,0,0,0.3);">
+            <span id="focus-mirror-{{ latest_post.id }}" tabindex="-1" style="outline:none;"></span>
+            {{ latest_post.body | safe }}
+        </div>
+    </nav>
+    {% endif %}
+
+    {# --- ADMIN: ADD NEW POST --- #}
+    {% if session.is_admin %}
+    <section class="admin-creator" aria-labelledby="creator-title">
+        <p id="creator-title" style="color: var(--accent); font-size: 0.75rem; margin: 0 0 15px 0;">[+]
+            INITIALIZE_NEW_CONTENT_STREAM</p>
+        <input type="text" id="new-title" class="cyber-input" placeholder="ENTRY_TITLE">
+        <textarea id="new-body" class="cyber-input" rows="4" placeholder="MARKDOWN_PAYLOAD"></textarea>
+        <button class="cyber-btn" onclick="saveNewPost()"
+            style="width: 100%; padding: 12px; color: var(--accent); border-color: var(--accent);">EXECUTE_UPLOAD</button>
+    </section>
+    {% endif %}
+
+    {# --- BLOG FEED --- #}
+    <div id="blog-feed">
+        {% for post in posts %}
+        <article class="blog-entry" id="node-{{ post.id }}">
+            <div class="entry-wrapper">
+                <h3 style="margin:0; flex-grow: 1;">
+                    <button class="entry-trigger" id="btn-{{ post.id }}" aria-expanded="false"
+                        aria-controls="content-{{ post.id }}" onclick="toggleNode('{{ post.id }}')">
+                        <span>{{ post.title }}</span>
+                        <span class="icon" aria-hidden="true">[+]</span>
+                    </button>
+                </h3>
+
+                {% if session.is_admin %}
+                <div class="admin-tray">
+                    <input type="number" id="inp-{{ post.id }}" class="prio-box" value="{{ post.priority }}"
+                        onchange="updateOrder('{{ post.filename }}', this.value)">
+                    <button onclick="updateOrder('{{ post.filename }}', {{ post.priority - 1 }})"
+                        class="cyber-btn">▲</button>
+                    <button onclick="updateOrder('{{ post.filename }}', {{ post.priority + 1 }})"
+                        class="cyber-btn">▼</button>
+                    <button onclick="deletePost('{{ post.filename }}')" style="color:#ff4d4d;" class="cyber-btn"
+                        aria-label="Delete">Delete Post</button>
+                </div>
+                {% endif %}
+            </div>
+
+            <div id="content-{{ post.id }}" class="entry-content">
+                <span id="focus-{{ post.id }}" tabindex="-1" style="outline:none;"></span>
+                {{ post.body | safe }}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.entry-content').forEach(el => el.style.display = 'none');
+    });
+
+    function toggleNode(id) {
+        const cleanId = id.replace(/\s+/g, '_');
+        const targetContent = document.getElementById('content-' + cleanId);
+        const targetBtn = document.getElementById('btn-' + cleanId);
+        const targetArticle = document.getElementById('node-' + cleanId);
+
+        if (!targetContent) return;
+
+        const isOpening = targetContent.style.display !== 'block';
+
+        document.querySelectorAll('.entry-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.blog-entry').forEach(art => art.classList.remove('highlight-node'));
+        document.querySelectorAll('.entry-trigger').forEach(btn => {
+            btn.setAttribute('aria-expanded', 'false');
+            const icon = btn.querySelector('.icon');
+            if (icon) icon.innerText = '[+]';
+        });
+
+        if (isOpening) {
+            targetContent.style.display = 'block';
+            if (targetArticle) targetArticle.classList.add('highlight-node');
+            if (targetBtn) {
+                targetBtn.setAttribute('aria-expanded', 'true');
+                const icon = targetBtn.querySelector('.icon');
+                if (icon) icon.innerText = '[-]';
+            }
+
+            // PROGRAMMATIC FOCUS ON TOP OF CONTENT
+            const landingPad = document.getElementById('focus-' + cleanId);
+            if (landingPad) {
+                landingPad.focus();
+            }
+
+            if (targetArticle) targetArticle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    async function saveNewPost() {
+        const title = document.getElementById('new-title').value;
+        const body = document.getElementById('new-body').value;
+        if (!title || !body) return alert("FIELDS_EMPTY");
+        const res = await fetch('/save_blog', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: title, body: body })
+        });
+        if (res.ok) setTimeout(() => { location.reload(); }, 300);
+    }
+
+    async function updateOrder(file, val) {
+        await fetch('/set_blog_priority', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file, priority: parseInt(val) })
+        });
+        location.reload();
+    }
+
+    async function deletePost(file) {
+        if (confirm("PERMANENTLY_ERASE_NODE?")) {
+            await fetch('/delete_blog/' + file, { method: 'POST' });
+            location.reload();
+        }
+    }
+</script>
+{% endblock %}
