@@ -57,6 +57,7 @@ class SystemLogger:
         self.logs.append({'time': timestamp, 'type': type, 'msg': msg})
     def error(self, msg): self.log("ERROR", msg)
     def info(self, msg): self.log("INFO", msg)
+    def warning(self, msg): self.log("WARNING", msg)
 
 sys_log = SystemLogger()
 
@@ -213,6 +214,7 @@ def magic_link(uuid_token):
             session['username'] = username
             session['permissions'] = perms
             session['admin'] = is_admin
+            session['is_admin'] = is_admin
             session['is_employer'] = is_employer
             sys_log.info(f"Magic Link login success: {username} ({label})")
             
@@ -264,6 +266,7 @@ def login():
             session['username'] = username
             session['permissions'] = profiles[hashed_token]['permissions']
             session['admin'] = True
+            session['is_admin'] = True
             session['is_employer'] = False
             sys_log.info(f"System Initialized. Profile '{username}' created as {label}.")
             return redirect(url_for('admin'))
@@ -283,6 +286,7 @@ def login():
                 session['username'] = username
                 session['permissions'] = perms
                 session['admin'] = is_admin
+                session['is_admin'] = is_admin
                 session['is_employer'] = is_employer
                 sys_log.info(f"Login success: {username} ({label})")
                 
@@ -435,7 +439,7 @@ def get_git_status(repo_dir: Path):
         for line in lines:
             if len(line) < 3: continue
             status = line[:2]
-            filename = line[3:]
+            filename = line[3:].strip('"')
             if 'D' in status: deleted.append(filename)
             else: modified_added.append(filename)
         return {
@@ -654,80 +658,6 @@ def toggle_exclusion():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('base.html', active_tab='error', content="<h2>404 - Page Not Found</h2>"), 404
-
-def self_heal_directories():
-    """Auto-repairs directories, deletes junk files, standardizes filenames."""
-    import shutil
-    
-    # 1. Auto-Repair Folders
-    required_dirs = [
-        config.CONTENT_DIR / "blog" / "content",
-        config.CONTENT_DIR / "projects" / "engines",
-        config.CONTENT_DIR / "certifications" / "digital badges and certificates"
-    ]
-    for d in required_dirs:
-        if not d.exists():
-            d.mkdir(parents=True, exist_ok=True)
-            sys_log.info(f"Self-Heal: Created missing directory {d}")
-            
-    # 2. Clean & Standardize Files (Focusing on Blog)
-    blog_dir = config.CONTENT_DIR / "blog" / "content"
-    order_file = config.CONTENT_DIR / "blog" / "order.json"
-    junk_patterns = ['.DS_Store', 'Thumbs.db', '__pycache__']
-    
-    order_data = {}
-    if order_file.exists():
-        try:
-            import json
-            order_data = json.loads(order_file.read_text())
-        except:
-            pass
-            
-    order_changed = False
-    
-    if blog_dir.exists():
-        for f in list(blog_dir.iterdir()):
-            if f.is_dir() and f.name == '__pycache__':
-                shutil.rmtree(f)
-                sys_log.info("Self-Heal: Deleted __pycache__ directory")
-                continue
-                
-            if not f.is_file(): continue
-            
-            # Delete junk
-            if f.name in junk_patterns or f.name.startswith('~') or 'copy' in f.name.lower() or 'temp' in f.name.lower():
-                f.unlink()
-                sys_log.info(f"Self-Heal: Deleted junk file {f.name}")
-                continue
-                
-            # Standardize name
-            if f.suffix.lower() in ['.md', '.html', '.json']:
-                old_name = f.name
-                new_stem = old_name[:-len(f.suffix)].replace(' ', '_').lower()
-                new_name = f"{new_stem}{f.suffix.lower()}"
-                if new_name != old_name:
-                    new_path = f.with_name(new_name)
-                    if new_path.exists():
-                        f.unlink()
-                        sys_log.warning(f"Self-Heal: Deleted duplicate after renaming conflict {old_name}")
-                    else:
-                        f.rename(new_path)
-                        sys_log.info(f"Self-Heal: Renamed {old_name} -> {new_name}")
-                        # Update order.json to preserve priority
-                        if old_name in order_data:
-                            order_data[new_name] = order_data.pop(old_name)
-                            order_changed = True
-                        if order_data.get('latest_filename') == old_name:
-                            order_data['latest_filename'] = new_name
-                            order_changed = True
-                            
-    if order_changed:
-        import json
-        order_file.write_text(json.dumps(order_data, indent=4))
-        sys_log.info("Self-Heal: Updated order.json to reflect renamed files")
-
-# Execute healing on startup
-self_heal_directories()
 
 if __name__ == '__main__':
     # Only run the local development server if NOT on PythonAnywhere

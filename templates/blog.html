@@ -218,10 +218,10 @@
                     {% if is_admin %}
                     <div class="admin-tray">
                         <input type="number" id="inp-{{ blog.id }}" class="prio-box" value="{{ blog.priority }}"
-                            onchange="updateOrder('{{ blog.filename }}', this.value)">
-                        <button onclick="updateOrder('{{ blog.filename }}', {{ blog.priority - 1 }})"
+                            onchange="jumpOrder(this, '{{ blog.filename }}')">
+                        <button onclick="moveBlog(this, '{{ blog.filename }}', -1)"
                             class="cyber-btn">▲</button>
-                        <button onclick="updateOrder('{{ blog.filename }}', {{ blog.priority + 1 }})"
+                        <button onclick="moveBlog(this, '{{ blog.filename }}', 1)"
                             class="cyber-btn">▼</button>
                         <button onclick="deletePost('{{ blog.filename }}')" style="color:#ff4d4d;" class="cyber-btn" aria-label="Delete">Delete Post</button>
                     </div>
@@ -292,11 +292,40 @@
         if (res.ok) setTimeout(() => { location.reload(); }, 300);
     }
 
-    async function updateOrder(file, val) {
+    async function moveBlog(button, file, direction) {
+        const article = button.closest('.blog-entry');
+        const container = article.parentElement;
+
+        if (direction === -1 && article.previousElementSibling && article.previousElementSibling.classList.contains('blog-entry')) {
+            container.insertBefore(article, article.previousElementSibling);
+        } else if (direction === 1 && article.nextElementSibling && article.nextElementSibling.classList.contains('blog-entry')) {
+            container.insertBefore(article.nextElementSibling, article);
+        } else {
+            return; // Cannot move
+        }
+
+        // Recalculate physical numbers visually
+        const entries = Array.from(container.querySelectorAll('.blog-entry'));
+        let newPriority = 1;
+        entries.forEach((ent, index) => {
+            const prioBox = ent.querySelector('.prio-box');
+            if (prioBox) prioBox.value = index + 1;
+            if (ent === article) newPriority = index + 1;
+        });
+
+        // Trigger backend route
         await fetch('/set_blog_priority', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filename: file, priority: parseInt(val) })
+            body: JSON.stringify({ filename: file, priority: newPriority })
+        });
+    }
+
+    async function jumpOrder(input, file) {
+        await fetch('/set_blog_priority', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file, priority: parseInt(input.value) })
         });
         location.reload();
     }

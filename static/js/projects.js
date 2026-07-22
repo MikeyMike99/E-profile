@@ -125,9 +125,35 @@ async function confirmVote(name) {
 
 // --- 6. ADMIN SYNC & ACTIONS ---
 async function manualJump(name, newValue) {
-    // Collect all card IDs to maintain order
-    const cards = Array.from(document.querySelectorAll('.project-card'));
-    const order = cards.map(c => c.id.replace('card-', ''));
+    const list = document.getElementById('project-list');
+    if (!list) return;
+
+    const cards = Array.from(list.querySelectorAll('.project-card'));
+    const targetCard = document.getElementById(`card-${name}`);
+    if (!targetCard) return;
+
+    const oldIndex = cards.indexOf(targetCard);
+    let newIndex = parseInt(newValue) - 1;
+    newIndex = Math.max(0, Math.min(newIndex, cards.length - 1));
+
+    if (newIndex !== oldIndex) {
+        // Move in DOM
+        if (newIndex >= cards.length - 1) {
+            list.appendChild(targetCard);
+        } else {
+            const referenceNode = newIndex > oldIndex ? cards[newIndex + 1] : cards[newIndex];
+            list.insertBefore(targetCard, referenceNode);
+        }
+    }
+
+    // Collect new order and update visual numbers
+    const updatedCards = Array.from(list.querySelectorAll('.project-card'));
+    const order = updatedCards.map((c, index) => {
+        const id = c.id.replace('card-', '');
+        const input = document.getElementById('pos-input-' + id);
+        if (input) input.value = index + 1;
+        return id;
+    });
 
     await fetch('/api/projects/reorder_projects', {
         method: 'POST',
