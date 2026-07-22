@@ -13,12 +13,13 @@
             placeholder="SEARCH_PROJECT_NODES..." onkeyup="filterProjects()" aria-label="Search projects by name">
     </div>
 
-    {% if session.is_admin %}
+    {% if is_admin %}
     <div class="top-nav-tray">
         <ul class="global-tools" style="display: flex; list-style: none; padding: 0; margin: 0; gap: 10px;">
             <li><button onclick="openExplorer('root')" class="tool-pill">GLOBAL_FILES</button></li>
             <li><button onclick="openSurgery('root')" class="tool-pill heart-btn">SYSTEM_HEART</button></li>
             <li><button onclick="autoSortByStatus()" class="tool-pill">AUTO_SORT_STATUS</button></li>
+            <li><button onclick="syncGit()" class="tool-pill" style="border-color: #00ff88; color: #00ff88;">GIT_SYNC</button></li>
         </ul>
 
         <section class="builder-box-mini">
@@ -32,7 +33,19 @@
 
     <div id="project-list" role="feed" aria-label="Project Engine Nodes">
         {% for project in projects %}
-        {% set is_admin_js = 'true' if session.is_admin else 'false' %}
+        {% set is_excluded = False %}
+        {% if not is_admin %}
+            {% if 'master:view_projects' not in permissions %}
+                {% set is_excluded = True %}
+            {% elif ('exclude:view:project:' ~ project.name.lower()) in permissions %}
+                {% set is_excluded = True %}
+            {% endif %}
+        {% endif %}
+        
+        {% if is_excluded %}
+            <!-- Hidden by ABAC (Missing Master or Explicitly Excluded) -->
+        {% else %}
+        {% set is_admin_js = 'true' if is_admin else 'false' %}
 
         <article class="project-card" id="card-{{ project.name }}">
             <div class="entry-wrapper single-row-glow">
@@ -51,12 +64,35 @@
                     </div>
                 </div>
 
+                {% if session.get('impersonator_token') %}
+                <button type="button" class="btn-launch-pill" style="border-color: var(--amber); color: var(--amber); background: transparent;" onclick="event.stopPropagation(); toggleExclusion('exclude:view:project:{{ project.name.lower() }}', this)">
+                    {% if ('exclude:view:project:' ~ project.name.lower()) in session.get('permissions', []) %}Excluded{% else %}Exclude View{% endif %}
+                </button>
+                <button type="button" class="btn-launch-pill" style="border-color: var(--amber); color: var(--amber); background: transparent;" onclick="event.stopPropagation(); toggleExclusion('exclude:exec:project:{{ project.name.lower() }}', this)">
+                    {% if ('exclude:exec:project:' ~ project.name.lower()) in session.get('permissions', []) %}Excluded Exec{% else %}Exclude Exec{% endif %}
+                </button>
+                {% endif %}
+
+                {% set can_execute = False %}
+                {% if is_admin %}
+                    {% set can_execute = True %}
+                {% elif 'master:exec_projects' in permissions and ('exclude:exec:project:' ~ project.name.lower()) not in permissions %}
+                    {% set can_execute = True %}
+                {% endif %}
+
+                {% if can_execute %}
                 <button type="button" class="btn-launch-pill status-{{ project.status }}"
                     id="test-btn-{{ project.name }}"
                     onclick="event.stopPropagation(); lockTestButton(this, '{{ project.name }}', {{ is_admin_js }}, '{{ project.status }}')">
                     <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
                     {{ project.label }}
                 </button>
+                {% else %}
+                <button type="button" class="btn-launch-pill status-{{ project.status }}" style="opacity: 0.5; cursor: not-allowed;" onclick="event.stopPropagation(); alert('ACCESS DENIED: Missing EXECUTE permissions for this node.');">
+                    <span class="btn-icon" aria-hidden="true">🔒</span>
+                    LOCKED
+                </button>
+                {% endif %}
 
                 <div class="action-tray-unified" onclick="event.stopPropagation();" style="position: relative;">
                     <div class="vote-wrapper-mini" id="vote-area-{{ project.name }}" style="display: flex; gap: 8px;">
@@ -70,7 +106,7 @@
                         onkeydown="handleFeedbackKey(event, '{{ project.name }}', {{ is_admin_js }})">
                 </div>
 
-                {% if session.is_admin %}
+                {% if is_admin %}
                 <ul class="admin-inline-tools"
                     style="display: flex; list-style: none; padding: 0; margin: 0; gap: 5px; align-items: center;">
                     <li><input type="number" id="pos-input-{{ project.name }}" class="tool-pill pos-input"
@@ -92,6 +128,7 @@
                 </div>
             </div>
         </article>
+        {% endif %}
         {% endfor %}
     </div>
 </div>

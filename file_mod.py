@@ -183,7 +183,7 @@ def terminal_command():
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
     """Two-way sync: Clean environment separation preventing local fetch drops."""
-    if not session.get('is_admin'):
+    if not session.get('admin', False):
         return jsonify({"output": "ACCESS_DENIED"}), 403
 
     target = config.ROOT_DIR

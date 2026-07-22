@@ -268,11 +268,13 @@
             {% if is_setup %}
             <input type="hidden" name="action" value="setup">
             <div class="field-group">
+                <label for="username" class="label-tab">ADMIN_IDENTITY</label>
+                <input type="text" id="username" name="username" class="cyber-input" required autofocus>
+            </div>
+            <div class="field-group">
                 <label for="role" class="label-tab">INITIAL_ROLE</label>
                 <select id="role" name="role" class="cyber-input" style="appearance: none;" required>
                     <option value="admin">ADMIN (Recommended)</option>
-                    <option value="employer">EMPLOYER</option>
-                    <option value="user">USER</option>
                 </select>
             </div>
             {% else %}
@@ -280,12 +282,8 @@
             {% endif %}
 
             <div class="field-group">
-                <label for="username" class="label-tab">IDENTITY</label>
-                <input type="text" id="username" name="username" class="cyber-input" required autofocus>
-            </div>
-            <div class="field-group">
-                <label for="cyber_key" class="label-tab">LOCKED</label>
-                <input type="password" id="cyber_key" name="cyber_key" class="cyber-input" required>
+                <label for="token" class="label-tab">{% if is_setup %}NEW_ADMIN_TOKEN{% else %}ACCESS_TOKEN{% endif %}</label>
+                <input type="password" id="token" name="token" class="cyber-input" required {% if not is_setup %}autofocus{% endif %}>
             </div>
             <span class="micro-meta">KEY_LENGTH: 256-BIT • RATE_LIMIT: ENABLED</span>
 

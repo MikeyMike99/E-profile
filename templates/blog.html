@@ -180,7 +180,7 @@
     {% endif %}
 
     {# --- ADMIN: ADD NEW POST --- #}
-    {% if session.is_admin %}
+    {% if is_admin %}
     <section class="admin-creator" aria-labelledby="creator-title">
         <p id="creator-title" style="color: var(--accent); font-size: 0.75rem; margin: 0 0 15px 0;">[+]
             INITIALIZE_NEW_CONTENT_STREAM</p>
@@ -193,36 +193,47 @@
 
     {# --- BLOG FEED --- #}
     <div id="blog-feed">
-        {% for post in posts %}
-        <article class="blog-entry" id="node-{{ post.id }}">
-            <div class="entry-wrapper">
-                <h3 style="margin:0; flex-grow: 1;">
-                    <button class="entry-trigger" id="btn-{{ post.id }}" aria-expanded="false"
-                        aria-controls="content-{{ post.id }}" onclick="toggleNode('{{ post.id }}')">
-                        <span>{{ post.title }}</span>
-                        <span class="icon" aria-hidden="true">[+]</span>
-                    </button>
-                </h3>
-
-                {% if session.is_admin %}
-                <div class="admin-tray">
-                    <input type="number" id="inp-{{ post.id }}" class="prio-box" value="{{ post.priority }}"
-                        onchange="updateOrder('{{ post.filename }}', this.value)">
-                    <button onclick="updateOrder('{{ post.filename }}', {{ post.priority - 1 }})"
-                        class="cyber-btn">▲</button>
-                    <button onclick="updateOrder('{{ post.filename }}', {{ post.priority + 1 }})"
-                        class="cyber-btn">▼</button>
-                    <button onclick="deletePost('{{ post.filename }}')" style="color:#ff4d4d;" class="cyber-btn"
-                        aria-label="Delete">Delete Post</button>
-                </div>
+        {% for blog in blogs %}
+            {% set is_excluded = False %}
+            
+            <!-- If Admin is True, this block is entirely bypassed -->
+            {% if not is_admin %}
+                {% if 'master:view_blogs' not in permissions %}
+                    {% set is_excluded = True %}
+                {% elif ('exclude:blog:' ~ blog.title) in permissions %}
+                    {% set is_excluded = True %}
                 {% endif %}
-            </div>
-
-            <div id="content-{{ post.id }}" class="entry-content">
-                <span id="focus-{{ post.id }}" tabindex="-1" style="outline:none;"></span>
-                {{ post.body | safe }}
-            </div>
-        </article>
+            {% endif %}
+            
+            {% if not is_excluded %}
+            <article class="blog-entry" id="node-{{ blog.id }}">
+                <div class="entry-wrapper">
+                    <h3 style="margin:0; flex-grow: 1;">
+                        <button class="entry-trigger" id="btn-{{ blog.id }}" aria-expanded="false" onclick="toggleNode('{{ blog.id }}')">
+                            <span>{{ blog.title }}</span>
+                            <span class="icon" aria-hidden="true">[+]</span>
+                        </button>
+                    </h3>
+                    
+                    {% if is_admin %}
+                    <div class="admin-tray">
+                        <input type="number" id="inp-{{ blog.id }}" class="prio-box" value="{{ blog.priority }}"
+                            onchange="updateOrder('{{ blog.filename }}', this.value)">
+                        <button onclick="updateOrder('{{ blog.filename }}', {{ blog.priority - 1 }})"
+                            class="cyber-btn">▲</button>
+                        <button onclick="updateOrder('{{ blog.filename }}', {{ blog.priority + 1 }})"
+                            class="cyber-btn">▼</button>
+                        <button onclick="deletePost('{{ blog.filename }}')" style="color:#ff4d4d;" class="cyber-btn" aria-label="Delete">Delete Post</button>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div id="content-{{ blog.id }}" class="entry-content">
+                    <span id="focus-{{ blog.id }}" tabindex="-1" style="outline:none;"></span>
+                    {{ blog.content | safe }}
+                </div>
+            </article>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

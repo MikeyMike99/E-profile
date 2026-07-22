@@ -20,6 +20,18 @@
         <div class="timeline-line"></div>
         <ul id="cert-timeline" class="timeline-list">
             {% for cert in certs %}
+            {% set is_excluded = False %}
+            {% if not is_admin %}
+                {% if 'master:view_certs' not in permissions %}
+                    {% set is_excluded = True %}
+                {% elif ('exclude:cert:' ~ cert.name) in permissions %}
+                    {% set is_excluded = True %}
+                {% endif %}
+            {% endif %}
+            
+            {% if is_excluded %}
+                <!-- Hidden by ABAC (Explicitly Excluded or Missing Master) -->
+            {% else %}
             <li class="timeline-item" data-id="{{ cert.id }}">
                 <div class="timeline-dot"></div>
                 <div class="cert-card glass-panel">
@@ -35,6 +47,11 @@
                     {% endif %}
                     <div class="cert-actions" style="display: flex; justify-content: space-between; align-items: center;">
                         <a href="{{ cert.file_path }}" target="_blank" class="view-btn">View Certificate</a>
+                        {% if session.get('impersonator_token') %}
+                        <button class="view-btn" style="border-color: var(--amber); color: var(--amber);" onclick="toggleExclusion('exclude:cert:{{ cert.name }}', this)">
+                            {% if ('exclude:cert:' ~ cert.name) in session.get('permissions', []) %}Excluded{% else %}Exclude for {{ username }}{% endif %}
+                        </button>
+                        {% endif %}
                         {% if is_admin %}
                         <div class="admin-controls" style="display: flex; gap: 5px;">
                             <button class="view-btn" style="padding: 5px 10px;" onclick="moveCert(this, -1, '{{ cert.name }}')" aria-label="Move {{ cert.name }} up">▲</button>
@@ -44,6 +61,7 @@
                     </div>
                 </div>
             </li>
+            {% endif %}
             {% endfor %}
         </ul>
     </div>

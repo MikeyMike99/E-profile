@@ -15,32 +15,64 @@ def get_slug(text):
 
 # --- THE BLOG DATA HANDLER ---
 def get_blog_data():
+    from flask import current_app
+    import traceback
+    
     blog_dir = config.CONTENT_DIR / "blog"
     content_dir = blog_dir / "content"
     order_file = blog_dir / "order.json"
+    
+    diagnostic_logs = []
+    
+    def log_diag(msg, level="INFO"):
+        # Strictly read-only to avoid triggering Flask reloader loops
+        diagnostic_logs.append(f"[{level}] {msg}")
+        
+    log_diag(f"Starting blog scan at absolute path: {content_dir.absolute()}")
     
     order_data = {}
     latest_filename = ""
     if order_file.exists():
         try: 
+            import json
             order_data = json.loads(order_file.read_text())
             latest_filename = order_data.get('latest_filename', '')
-        except: pass
+        except Exception as e: 
+            log_diag(f"Failed to load order.json: {e}", "WARNING")
     
-    all_files = list(content_dir.glob("*.md"))
-    if not all_files: return []
+    if not content_dir.exists():
+        log_diag("CRITICAL: Directory does not exist!", "ERROR")
+        return [], diagnostic_logs
+        
+    all_files = []
+    for f in content_dir.iterdir():
+        if not f.is_file(): continue
+        if f.name.startswith('.') or f.name.startswith('~') or f.name == '__pycache__': continue
+        if 'copy' in f.name.lower() or 'temp' in f.name.lower(): continue
+        if f.suffix.lower() in ['.md', '.html']:
+            all_files.append(f)
+            
+    log_diag(f"Found {len(all_files)} valid .md/.html files.")
+    
+    if not all_files: return [], diagnostic_logs
     
     sorted_files = sorted(all_files, key=lambda x: (int(order_data.get(x.name, 999)), x.name))
     
     processed = []
     for post in sorted_files:
         try:
-            raw = post.read_text(encoding="utf-8")
+            try:
+                raw = post.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                log_diag(f"UnicodeDecodeError: {post.name} is not valid UTF-8. Skipping.", "WARNING")
+                continue
+                
             lines = raw.split('\n')
-            title = lines[0].replace('#', '').strip() if lines else post.stem
+            title = lines[0].replace('#', '').strip() if lines and lines[0].startswith('#') else post.stem
             
             import bleach
-            raw_html = markdown.markdown("\n".join(lines[1:]))
+            import markdown
+            raw_html = markdown.markdown("\n".join(lines[1:])) if lines and lines[0].startswith('#') else markdown.markdown("\n".join(lines))
             allowed_tags = ['a', 'b', 'i', 'strong', 'em', 'p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'br', 'span', 'div', 'img', 'iframe']
             allowed_attrs = {'*': ['class', 'id', 'style'], 'a': ['href', 'target'], 'img': ['src', 'alt'], 'iframe': ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen']}
             safe_html = bleach.clean(raw_html, tags=allowed_tags, attributes=allowed_attrs)
@@ -49,12 +81,17 @@ def get_blog_data():
                 'filename': post.name,
                 'id': post.stem.replace(".", "_").replace(" ", "_"),
                 'title': title,
-                'body': safe_html,
+                'content': safe_html,
                 'priority': int(order_data.get(post.name, 999)),
                 'is_latest': (post.name == latest_filename)
             })
-        except: pass
-    return processed
+            log_diag(f"Successfully parsed: {post.name}")
+        except Exception as e: 
+            err_trace = traceback.format_exc()
+            log_diag(f"FAILED to parse {post.name}: {e}\n{err_trace}", "ERROR")
+            
+    log_diag(f"Total processed blogs returning to frontend: {len(processed)}")
+    return processed, diagnostic_logs
 
 # --- BLOG ROUTES ---
 @blog_bp.route("/set_blog_priority", methods=["POST"])
@@ -70,7 +107,14 @@ def set_blog_priority():
     if order_file.exists():
         try: order_data = json.loads(order_file.read_text())
         except: pass
-    all_posts = [f.name for f in content_dir.glob("*.md")]
+        
+    all_posts = []
+    if content_dir.exists():
+        for f in content_dir.iterdir():
+            if f.is_file() and not (f.name.startswith('.') or f.name.startswith('~') or f.name == '__pycache__' or 'copy' in f.name.lower() or 'temp' in f.name.lower()):
+                if f.suffix.lower() in ['.md', '.html']:
+                    all_posts.append(f.name)
+                    
     current_sequence = sorted(all_posts, key=lambda x: int(order_data.get(x, 999)))
     if target_file in current_sequence: current_sequence.remove(target_file)
     target_idx = max(0, min(new_priority - 1, len(current_sequence)))

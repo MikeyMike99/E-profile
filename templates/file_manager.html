@@ -35,7 +35,7 @@
 
     <footer class="footer">
         <div class="auth-info">
-            ENCRYPTED_SESSION_ACTIVE // {{ 'ADMIN' if session.get('is_admin') else 'EMPLOYER' }}
+            ENCRYPTED_SESSION_ACTIVE // {{ 'ADMIN' if role == 'admin' else 'EMPLOYER' }}
         </div>
         <div class="version-info">BUILD_v2.8.5.LOCKED</div>
     </footer>

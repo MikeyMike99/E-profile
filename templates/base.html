@@ -220,29 +220,110 @@
             font-family: monospace;
             font-size: 0.75rem;
         }
+
+        .nav-link.locked {
+            opacity: 0.5;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.02);
+            color: #666 !important;
+            border-color: #333;
+        }
+        
+        .flash-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .flash-message {
+            background: rgba(5, 7, 10, 0.9);
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-bright);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .flash-message.error {
+            border-color: #ff4d4d;
+            box-shadow: 0 5px 15px var(--danger-glow);
+            color: #ff7878;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 
 <body>
 
+    <div id="global-announcer" class="sr-only" aria-live="assertive" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;"></div>
+    <div class="flash-container" aria-live="polite">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    [{{ category|upper }}] {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    {% if 'label' not in session or session['label'] == 'Guest' %}
+    <a href="/login" class="hero-logout" style="color: #00ff88 !important; border-color: #00cc6a;">LOG_IN</a>
+    {% else %}
     <a href="/logout" class="hero-logout">LOG_OUT</a>
-    {% if session.get('is_admin') %}
+    {% endif %}
+    {% if is_admin %}
     <button id="btn-sync" onclick="syncGit()" class="hero-sync">GIT_SYNC</button>
+    {% endif %}
+
+    {% if session.get('impersonator_token') %}
+    <div style="background: var(--amber); color: #000; text-align: center; padding: 5px; font-weight: bold; font-size: 0.8rem; font-family: monospace;">
+        [IMPERSONATION MODE: {{ username }}] <a href="/logout" style="color: #000; text-decoration: underline;">EXIT</a>
+    </div>
     {% endif %}
 
     <header class="hero-header">
         <div class="profile-container">
             <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="ID" class="profile-img">
         </div>
-        <h1 class="operator-id">LOGAN_ARCHITECT</h1>
+        <h1 class="operator-id">{% if 'view:real_name' in permissions or is_admin %}MICHAEL_ROBBERTS{% else %}LOGAN_ARCHITECT{% endif %}</h1>
     </header>
 
     <nav class="cyber-nav">
         {% for tab in config.TABS %}
-        <a href="/{{ '' if tab == 'home' else tab }}" class="nav-link {{ 'active' if active_tab == tab }}">
-            {{ tab | upper }}
-        </a>
+            {% set show_tab = True %}
+            {% if not is_admin %}
+                {% if tab != 'home' and ('master:view_tabs' not in permissions or ('exclude:tab:' ~ tab) in permissions) %}
+                    {% set show_tab = False %}
+                {% endif %}
+            {% endif %}
+            
+            {% if show_tab %}
+            <a href="/{{ '' if tab == 'home' else tab }}" class="nav-link {{ 'active' if active_tab == tab }}">
+                {{ tab | upper }}
+            </a>
+            {% else %}
+            <a href="#" class="nav-link locked" aria-disabled="true">
+                {{ tab | upper }} 🔒
+            </a>
+            {% endif %}
         {% endfor %}
+        {% if is_admin %}
+        <a href="/admin" class="nav-link">ADMIN</a>
+        {% endif %}
     </nav>
 
     <main class="content-shell">
@@ -270,13 +351,25 @@
         <p>&copy; 2026 LOGAN_ARCHITECT // [ENCRYPTED_SESSION_ACTIVE]</p>
     </footer>
 
-    {% if session.get('is_admin') %}
+    {% if is_admin %}
     <script>
+        function announceToScreenReader(message) {
+            const announcer = document.getElementById('global-announcer');
+            if (announcer) {
+                announcer.textContent = message;
+                // Optional: clear after a bit to ensure repeated identical messages get read again
+                setTimeout(() => { if (announcer.textContent === message) announcer.textContent = ''; }, 3000);
+            }
+        }
+
         async function syncGit() {
             const btn = document.getElementById('btn-sync');
+            if (!btn) return;
             const originalText = btn.innerText;
             btn.innerText = "SYNCING...";
             btn.style.color = "#00f3ff";
+            
+            announceToScreenReader("Syncing with GitHub. Please wait.");
             
             try {
                 const response = await fetch('/api/projects/explorer_logic/git_sync', {
@@ -288,16 +381,17 @@
                 if (response.ok && data.output && !data.output.includes("EXCEPTION:")) {
                     btn.innerText = "SYNC_OK";
                     btn.style.color = "#00ff88";
-                    alert(data.output);
+                    announceToScreenReader("Git Sync Successful. " + data.output);
                 } else {
                     btn.innerText = "SYNC_ERR";
                     btn.style.color = "#ff4d4d";
-                    alert("Git Sync Error:\n" + (data.output || "Unknown error"));
+                    const errText = "Git Sync Error: " + (data.output || "Unknown error");
+                    announceToScreenReader(errText);
                 }
             } catch (err) {
                 btn.innerText = "SYNC_ERR";
                 btn.style.color = "#ff4d4d";
-                alert("Connection failed: " + err);
+                announceToScreenReader("Connection failed.");
             }
             
             setTimeout(() => {
@@ -308,6 +402,33 @@
     </script>
     {% endif %}
 
+    {% if session.get('impersonator_token') %}
+    <script>
+    function toggleExclusion(permission, btn) {
+        fetch('/api/toggle_exclusion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ permission: permission })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                if (data.state === 'added') {
+                    btn.style.backgroundColor = 'var(--amber)';
+                    btn.style.color = '#000';
+                    btn.innerText = 'Excluded';
+                    btn.closest('.timeline-item, .blog-entry, .project-card').style.opacity = '0.5';
+                } else {
+                    btn.style.backgroundColor = 'transparent';
+                    btn.style.color = 'var(--amber)';
+                    btn.innerText = `Exclude for {{ username }}`;
+                    btn.closest('.timeline-item, .blog-entry, .project-card').style.opacity = '1';
+                }
+            }
+        });
+    }
+    </script>
+    {% endif %}
 </body>
 
 </html>
