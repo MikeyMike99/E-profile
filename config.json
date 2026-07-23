@@ -1,0 +1,31 @@
+{
+    "known_corrections": {
+        "sisko": "Cisco",
+        "lynux": "Linux",
+        "comtia": "CompTIA",
+        "credbly": "Credly",
+        "mindfullness": "Mindfulness",
+        "funddementals": "Fundamentals",
+        "fundimentals": "Fundamentals",
+        "meshine learning": "Machine Learning",
+        "cognignitive clas": "Cognitive Class",
+        "litracy": "Literacy",
+        "inbed": "embed",
+        "linked in": "LinkedIn",
+        "comptia-a-ce-certification": "CompTIA A+ CE Certification",
+        "comptia-network-ce-certification": "CompTIA Network+ CE Certification",
+        "comptia-secure-infrastructure-specialist-csis-stackable-certification": "CompTIA Secure Infrastructure Specialist CSIS Stackable Certification"
+    },
+    "acronyms": [
+        "IBM",
+        "CompTIA",
+        "Cisco",
+        "Linux",
+        "Python",
+        "LinkedIn",
+        "NQF",
+        "IT",
+        "AI",
+        "AWS"
+    ]
+}

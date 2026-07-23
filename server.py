@@ -360,6 +360,7 @@ def admin():
     
     unindexed = get_unindexed_changes(blog_dir, order_file)
     git_status = get_git_status(config.ROOT_DIR)
+    cert_health = get_cert_health()
 
     # Restore Quarantine Logic
     quarantined_files = {}
@@ -377,8 +378,75 @@ def admin():
         unindexed=unindexed,
         git_status=git_status,
         quarantined_files=quarantined_files,
+        cert_health=cert_health,
         is_admin=session.get('admin', False)
     )
+
+def restore_from_history():
+    history_file = config.ROOT_DIR / "rename_history.json"
+    cert_dir = config.CONTENT_DIR / "certifications" / "digital badges and certificates"
+    
+    if not history_file.exists():
+        return False, "No rename_history.json found."
+        
+    try:
+        with open(history_file, 'r') as f:
+            history = json.load(f)
+    except Exception as e:
+        return False, f"Error reading history file: {e}"
+        
+    success_count = 0
+    errors = []
+    
+    for old_rel, new_rel in reversed(history):
+        old_abs = cert_dir / old_rel
+        new_abs = cert_dir / new_rel
+        
+        if not new_abs.exists():
+            errors.append(f"Target file not found: {new_rel}")
+            continue
+            
+        if old_abs.exists():
+            errors.append(f"Original path already exists (avoiding overwrite): {old_rel}")
+            continue
+            
+        try:
+            old_abs.parent.mkdir(parents=True, exist_ok=True)
+            new_abs.rename(old_abs)
+            success_count += 1
+        except Exception as e:
+            errors.append(f"Could not revert {new_rel}: {e}")
+            
+    if success_count == len(history):
+        history_file.unlink(missing_ok=True)
+        return True, f"Rollback complete. Successfully restored all {success_count} items."
+    else:
+        return False, f"Restored {success_count}/{len(history)} items. Errors: {'; '.join(errors)}"
+
+def get_cert_health():
+    from cert_mod import CERT_DIR, ORDER_FILE
+    order_data = []
+    if ORDER_FILE.exists():
+        try: order_data = json.loads(ORDER_FILE.read_text())
+        except Exception: pass
+        
+    current_files = []
+    if CERT_DIR.exists():
+        for path in CERT_DIR.rglob('*'):
+            if path.is_file() and path.suffix.lower() in ['.pdf', '.png', '.jpg', '.jpeg', '.docx']:
+                rel_path = path.relative_to(CERT_DIR)
+                current_files.append(str(rel_path).replace('\\', '/'))
+                
+    missing_files = [f for f in order_data if f not in current_files]
+    
+    history_file = config.ROOT_DIR / "rename_history.json"
+    rollback_available = history_file.exists()
+    
+    return {
+        "missing_files": missing_files,
+        "rollback_available": rollback_available,
+        "has_issues": len(missing_files) > 0 or rollback_available
+    }
 
 # --- SYSTEM HEALTH & GIT ROUTES ---
 def get_unindexed_changes(blog_dir: Path, order_file: Path):
@@ -452,6 +520,13 @@ def get_git_status(repo_dir: Path):
         return {"error": "Git repository not initialized or inaccessible.", "has_changes": False}
     except FileNotFoundError:
         return {"error": "Git executable not found on the system.", "has_changes": False}
+
+@app.route('/admin/rollback_renames', methods=['POST'])
+def admin_rollback_renames():
+    if not session.get('admin', False): return jsonify({"error": "Unauthorized"}), 403
+    success, msg = restore_from_history()
+    sys_log.info(f"Rollback result: {msg}")
+    return redirect(url_for('admin'))
 
 @app.route('/admin/reindex', methods=['POST'])
 def handle_reindex():
