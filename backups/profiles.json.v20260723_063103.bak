@@ -1,0 +1,6 @@
+{
+    "Mike": {
+        "role": "admin",
+        "password_hash": "pbkdf2:sha256:260000$wheGkh8zDE9JTctb$ab9424374e7746b347d18b218d701be7e34e86b1a072aa26fcf39734b5eb52fd"
+    }
+}
