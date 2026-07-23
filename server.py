@@ -257,7 +257,6 @@ def login():
                 "permissions": ['view:real_name'],
                 "is_admin": True,
                 "is_employer": False,
-                "require_click_only": False,
                 "bypass_enabled": False
             }
             save_profiles(profiles)
@@ -328,7 +327,6 @@ def admin():
             token = request.form.get('token', '').strip()
             label = request.form.get('label', 'Guest Profile')
             permissions = request.form.getlist('permissions')
-            require_click_only = request.form.get('require_click_only') == 'on'
             is_admin = request.form.get('is_admin') == 'on'
             is_employer = request.form.get('is_employer') == 'on'
             
@@ -339,7 +337,6 @@ def admin():
                     "label": label,
                     "uuid": str(uuid.uuid4()),
                     "permissions": permissions,
-                    "require_click_only": require_click_only,
                     "bypass_enabled": request.form.get('bypass_enabled') == 'on',
                     "is_admin": is_admin,
                     "is_employer": is_employer
@@ -581,7 +578,6 @@ def edit_profile():
         profiles[token_hash]['permissions'] = request.form.getlist('permissions')
         profiles[token_hash]['is_admin'] = request.form.get('is_admin') == 'on'
         profiles[token_hash]['is_employer'] = request.form.get('is_employer') == 'on'
-        profiles[token_hash]['require_click_only'] = request.form.get('require_click_only') == 'on'
         profiles[token_hash]['bypass_enabled'] = request.form.get('bypass_enabled') == 'on'
         
         save_profiles(profiles)

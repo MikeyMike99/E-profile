@@ -406,7 +406,7 @@
                         <div class="action-buttons" style="display: flex; gap: 10px;">
 
                             <!-- EDIT BUTTON -->
-                            <button onclick="editProfile('{{ hashed_token }}', '{{ data.username }}', '{{ data.label }}', {{ 'true' if data.is_admin else 'false' }}, {{ 'true' if data.is_employer else 'false' }}, {{ 'true' if data.require_click_only else 'false' }}, {{ 'true' if data.bypass_enabled else 'false' }}, {{ data.permissions|tojson|forceescape }})"
+                            <button onclick="editProfile('{{ hashed_token }}', '{{ data.username }}', '{{ data.label }}', {{ 'true' if data.is_admin else 'false' }}, {{ 'true' if data.is_employer else 'false' }}, false, {{ 'true' if data.bypass_enabled else 'false' }}, {{ data.permissions|tojson|forceescape }})"
                                 class="cyber-btn"
                                 style="padding: 5px 15px; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan);">
                                 Edit
@@ -530,15 +530,7 @@
                         <input type="password" id="token" name="token" class="cyber-input" required>
                     </div>
 
-                    <div class="field-group" style="margin-top: 20px;">
-                        <label for="req_click_only" style="color: var(--amber); font-size: 0.8rem;">
-                            <input type="checkbox" id="req_click_only" name="require_click_only"
-                                aria-describedby="click_helper">
-                            ENFORCE_CLICK_ONLY
-                        </label>
-                        <div id="click_helper" style="font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;">
-                            (Block direct pasting of Magic Links)</div>
-                    </div>
+
 
                     <div class="field-group" style="margin-top: 15px;">
                         <label for="bypass_enabled" style="color: var(--cyan); font-size: 0.8rem;">
@@ -822,13 +814,12 @@
             }
 
             // Reset all toggles to OFF first
-            form.querySelectorAll('.toggle-input, #req_click_only, #bypass_enabled').forEach(inp => {
+            form.querySelectorAll('.toggle-input, #bypass_enabled').forEach(inp => {
                 inp.checked = false;
-                if (inp.id === 'req_click_only' || inp.id === 'bypass_enabled') return;
+                if (inp.id === 'bypass_enabled') return;
                 toggleCheckbox(inp);
             });
 
-            document.getElementById('req_click_only').checked = reqClick;
             document.getElementById('bypass_enabled').checked = bypassEnabled;
             if (isAdmin) setToggle('is_admin', null, true);
             if (isEmployer) setToggle('is_employer', null, true);
