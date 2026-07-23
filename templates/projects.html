@@ -54,7 +54,7 @@
                     aria-expanded="false" aria-controls="details-{{ project.name }}">
 
                     <div class="name-stack">
-                        <h2 class="project-name" style="font-size: 1.4rem; margin-bottom: 4px;">{{ project.name | upper
+                        <h2 class="project-name" style="font-size: 1.4rem; margin-bottom: 4px;">{{ project.name | clean_text | upper
                             }}</h2>
                         <div class="expand-label" id="label-{{ project.name }}">
                             <span class="symbol">[ + ]</span> VIEW_NODE_DETAILS

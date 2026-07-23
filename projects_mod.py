@@ -104,7 +104,7 @@ def get_projects_data():
         
         if desc_path.exists():
             raw_content = desc_path.read_text(encoding="utf-8")
-            description = markdown.markdown(raw_content)
+            description = markdown.markdown(raw_content, extensions=['fenced_code', 'tables', 'nl2br'])
             lines = raw_content.splitlines()
             if lines:
                 first_line = next((line.strip() for line in lines if line.strip()), "")

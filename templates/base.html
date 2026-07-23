@@ -299,7 +299,7 @@
         <div class="profile-container">
             <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="ID" class="profile-img">
         </div>
-        <h1 class="operator-id">{% if 'view:real_name' in permissions or is_admin %}MICHAEL_ROBBERTS{% else %}LOGAN_ARCHITECT{% endif %}</h1>
+        <h1 class="operator-id">{% if 'view:real_name' in permissions or is_admin %}{{ 'MICHAEL_ROBBERTS' | clean_text }}{% else %}{{ 'LOGAN_ARCHITECT' | clean_text }}{% endif %}</h1>
     </header>
 
     <nav class="cyber-nav">

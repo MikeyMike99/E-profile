@@ -72,7 +72,7 @@ def get_blog_data():
             
             import bleach
             import markdown
-            raw_html = markdown.markdown("\n".join(lines[1:])) if lines and lines[0].startswith('#') else markdown.markdown("\n".join(lines))
+            raw_html = markdown.markdown("\n".join(lines[1:]), extensions=['fenced_code', 'tables', 'nl2br']) if lines and lines[0].startswith('#') else markdown.markdown("\n".join(lines), extensions=['fenced_code', 'tables', 'nl2br'])
             allowed_tags = ['a', 'b', 'i', 'strong', 'em', 'p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'br', 'span', 'div', 'img', 'iframe']
             allowed_attrs = {'*': ['class', 'id', 'style'], 'a': ['href', 'target'], 'img': ['src', 'alt'], 'iframe': ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen']}
             safe_html = bleach.clean(raw_html, tags=allowed_tags, attributes=allowed_attrs)

@@ -109,6 +109,12 @@ def initialize_environment():
 
 initialize_environment()
 
+@app.template_filter('clean_text')
+def clean_text_filter(s):
+    if isinstance(s, str):
+        return s.replace('_', ' ').title()
+    return s
+
 @app.context_processor
 def inject_system():
     return dict(
@@ -174,7 +180,7 @@ def dynamic_route(path):
     if path not in ['blog', 'projects', 'certifications']:
         file_path = config.CONTENT_DIR / path / f"{path}.md"
         if file_path.exists():
-            html_content = markdown.markdown(file_path.read_text())
+            html_content = markdown.markdown(file_path.read_text(), extensions=['fenced_code', 'tables', 'nl2br'])
 
     return render_template(
         template, 
@@ -196,19 +202,12 @@ def hash_token(token):
 def magic_link(uuid_token):
     profiles = load_profiles()
     for hashed_token, user_data in profiles.items():
-        if user_data.get('uuid') == uuid_token:
+        if user_data.get('uuid') == uuid_token.strip():
             if not user_data.get('bypass_enabled', False):
                 flash("Bypass link access is currently disabled for this profile.", "error")
                 sys_log.warning(f"Attempted use of disabled Magic Link for {user_data.get('username')}")
                 return redirect(url_for('login'))
                 
-            if user_data.get('require_click_only'):
-                sec_fetch_site = request.headers.get('Sec-Fetch-Site', 'none')
-                if sec_fetch_site == 'none':
-                    flash("Access blocked: Magic Link must be clicked from an external source, not pasted directly.", "error")
-                    sys_log.error(f"Pasted Magic Link rejected for {user_data.get('username')}")
-                    return redirect(url_for('login'))
-            
             label = user_data.get('label', 'Guest')
             username = user_data.get('username', 'Unknown')
             perms = user_data.get('permissions', [])
@@ -223,10 +222,7 @@ def magic_link(uuid_token):
             session['is_employer'] = is_employer
             sys_log.info(f"Magic Link login success: {username} ({label})")
             
-            if is_admin:
-                return redirect(url_for('admin'))
-            else:
-                return redirect(url_for('dynamic_route', path='home'))
+            return redirect(url_for('dynamic_route', path='home'))
                 
     flash("Invalid or expired Magic Link.", "error")
     return redirect(url_for('login'))

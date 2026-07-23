@@ -40,7 +40,7 @@ def get_certifications_data():
                     try:
                         md_text = md_path.read_text(encoding='utf-8')
                         import bleach
-                        raw_html = markdown.markdown(md_text)
+                        raw_html = markdown.markdown(md_text, extensions=['fenced_code', 'tables', 'nl2br'])
                         allowed_tags = ['a', 'b', 'i', 'strong', 'em', 'p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'br', 'span', 'div', 'img', 'iframe']
                         allowed_attrs = {'*': ['class', 'id', 'style'], 'a': ['href', 'target'], 'img': ['src', 'alt'], 'iframe': ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen']}
                         description_html = bleach.clean(raw_html, tags=allowed_tags, attributes=allowed_attrs)

@@ -370,8 +370,8 @@
 
                         <!-- Identity Info -->
                         <div>
-                            <strong style="color: var(--accent); font-size: 1.1rem;">{{ data.username }}</strong>
-                            <span style="color: var(--text-dim); font-size: 0.9rem; margin-left: 5px;">[{{ data.label
+                            <strong style="color: var(--accent); font-size: 1.1rem;">{{ data.username | clean_text }}</strong>
+                            <span style="color: var(--text-dim); font-size: 0.9rem; margin-left: 5px;">[{{ data.label | clean_text
                                 }}]</span>
 
                             {% if data.is_admin %}
@@ -650,7 +650,7 @@
                             <div class="details-content">
                                 {% for tab in dyn_tabs %}
                                 <label class="custom-toggle">
-                                    <span>{{ tab|title }}</span>
+                                    <span>{{ tab|clean_text }}</span>
                                     <input type="checkbox" name="permissions" value="exclude:tab:{{ tab }}"
                                         class="sr-only toggle-input" onchange="toggleCheckbox(this)">
                                     <span aria-hidden="true" class="state-indicator">[ OFF ]</span>
@@ -666,7 +666,7 @@
                             <div class="details-content">
                                 {% for cert in dyn_certs %}
                                 <label class="custom-toggle">
-                                    <span>{{ cert }}</span>
+                                    <span>{{ cert|clean_text }}</span>
                                     <input type="checkbox" name="permissions" value="exclude:cert:{{ cert }}"
                                         class="sr-only toggle-input" onchange="toggleCheckbox(this)">
                                     <span aria-hidden="true" class="state-indicator">[ OFF ]</span>
@@ -704,14 +704,14 @@
                             <div class="details-content">
                                 {% for proj in dyn_projects %}
                                 <label class="custom-toggle">
-                                    <span>{{ proj|title }} (View)</span>
+                                    <span>{{ proj|clean_text }} (View)</span>
                                     <input type="checkbox" name="permissions" value="exclude:view:project:{{ proj }}"
                                         class="sr-only toggle-input" onchange="toggleCheckbox(this)">
                                     <span aria-hidden="true" class="state-indicator">[ OFF ]</span>
                                 </label>
 
                                 <label class="custom-toggle">
-                                    <span style="color:var(--amber);">{{ proj|title }} (Execute)</span>
+                                    <span style="color:var(--amber);">{{ proj|clean_text }} (Execute)</span>
                                     <input type="checkbox" name="permissions" value="exclude:exec:project:{{ proj }}"
                                         class="sr-only toggle-input" onchange="toggleCheckbox(this)">
                                     <span aria-hidden="true" class="state-indicator">[ OFF ]</span>
