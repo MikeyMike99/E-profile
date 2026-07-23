@@ -499,6 +499,31 @@
                     {% endif %}
                 </fieldset>
             </div>
+
+            <!-- CERTIFICATION HEALTH -->
+            <div style="margin-top: 20px;">
+                <fieldset style="background: rgba(0,0,0,0.4); padding: 20px; border: 1px solid var(--magenta); border-radius: 4px; margin: 0;">
+                    <legend style="font-size:0.8rem; color:var(--magenta); padding: 0 5px; font-weight: bold;">CERTIFICATION_HEALTH</legend>
+                    <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:10px;">Scans for missing certification files and broken routes.</p>
+                    
+                    {% if cert_health.missing_files %}
+                    <ul style="list-style-type:none; padding:0; margin:0 0 15px 0;">
+                        {% for file in cert_health.missing_files %}
+                        <li style="color:#ff4d4d; font-size:0.8rem; margin-bottom:5px;">[MISSING] {{ file }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if cert_health.rollback_available %}
+                    <p style="color:var(--amber); font-size:0.8rem; margin-bottom:10px;">[WARNING] A previous rename operation took place. Automatic rollback is available.</p>
+                    <form action="/admin/rollback_renames" method="POST" style="margin:0;" onsubmit="return confirm('This will reverse the file renaming operation. Continue?');">
+                        <button type="submit" class="cyber-btn" style="width:100%; border-color:var(--amber); color:var(--amber);">Rollback Renames</button>
+                    </form>
+                    {% elif not cert_health.has_issues %}
+                    <span style="color:var(--cyan); font-size:0.8rem;">[ CERTIFICATIONS OK ]</span>
+                    {% endif %}
+                </fieldset>
+            </div>
         </div>
 
         <div style="border-top: 1px solid rgba(0, 229, 255, 0.2); padding-top: 20px; margin-bottom: 20px;">

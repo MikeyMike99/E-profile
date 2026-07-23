@@ -4,6 +4,8 @@ import sys
 import traceback
 import subprocess
 from pathlib import Path
+import argparse
+import json
 
 # --- BULLETPROOF PATH INJECTION ---
 local_lib = Path.home() / '.local' / 'lib'
@@ -241,4 +243,57 @@ def application(environ, start_response):
         return [html_bytes]
 
 if __name__ == "__main__":
-    print("This is a WSGI bootstrap file.")
+    parser = argparse.ArgumentParser(description="Bootstrap and Maintenance Utility")
+    parser.add_argument('--undo', '--rollback', action='store_true', help='Revert file renames using rename_history.json')
+    args = parser.parse_args()
+
+    if args.undo:
+        BASE_DIR = Path(__file__).resolve().parent
+        history_file = BASE_DIR / "rename_history.json"
+        cert_dir = BASE_DIR / "content" / "certifications" / "digital badges and certificates"
+        
+        if not history_file.exists():
+            print("No rename_history.json found. Nothing to rollback.")
+            sys.exit(0)
+            
+        try:
+            with open(history_file, 'r') as f:
+                history = json.load(f)
+        except Exception as e:
+            print(f"Error reading history file: {e}")
+            sys.exit(1)
+            
+        print(f"Attempting to rollback {len(history)} items...")
+        success_count = 0
+        
+        for old_rel, new_rel in reversed(history):
+            old_abs = cert_dir / old_rel
+            new_abs = cert_dir / new_rel
+            
+            if not new_abs.exists():
+                print(f"[SKIP] Target file not found (already reverted or moved): {new_rel}")
+                continue
+                
+            if old_abs.exists():
+                print(f"[SKIP] Original path already exists (avoiding overwrite): {old_rel}")
+                continue
+                
+            try:
+                old_abs.parent.mkdir(parents=True, exist_ok=True)
+                new_abs.rename(old_abs)
+                print(f"[OK] Reverted: {new_rel} -> {old_rel}")
+                success_count += 1
+            except Exception as e:
+                print(f"[ERROR] Could not revert {new_rel}: {e}")
+                
+        print(f"\nRollback complete. Successfully restored {success_count}/{len(history)} items.")
+        
+        if success_count == len(history):
+            history_file.unlink(missing_ok=True)
+            print("Cleared rename_history.json.")
+        else:
+            print("WARNING: Not all files were restored. rename_history.json was kept.")
+            
+        sys.exit(0)
+        
+    print("This is a WSGI bootstrap file. Use --undo to rollback renames.")

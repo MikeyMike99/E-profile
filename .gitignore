@@ -6,3 +6,8 @@ profiles.json
 gethub_token.txt
 
 .backup/
+
+# Rename engine files
+rename_history.json
+proposed_renames.json
+*.log

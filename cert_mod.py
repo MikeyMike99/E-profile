@@ -50,9 +50,23 @@ def get_certifications_data():
                 # Fixed: Handle backslash conversion outside of the dictionary/f-string
                 rel_path_str = str(rel_path).replace('\\', '/')
 
+                # Custom formatting to preserve whitelist acronyms/proper nouns
+                whitelist = ["IBM", "CompTIA", "Cisco", "Linux", "Python", "LinkedIn", "NQF", "IT", "AI"]
+                whitelist_lower = {w.lower(): w for w in whitelist}
+                
+                raw_words = path.stem.replace('-', ' ').split()
+                formatted_words = []
+                for word in raw_words:
+                    if word.lower() in whitelist_lower:
+                        formatted_words.append(whitelist_lower[word.lower()])
+                    else:
+                        formatted_words.append(word.title())
+                
+                formatted_name = ' '.join(formatted_words)
+
                 certs.append({
                     'id': rel_path_str,
-                    'name': path.stem.replace('-', ' ').title(),
+                    'name': formatted_name,
                     'provider': provider,
                     'file_path': f"/api/certifications/files/{rel_path_str}",
                     'ext': path.suffix.lower(),
