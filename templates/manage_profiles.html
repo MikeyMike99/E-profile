@@ -386,13 +386,27 @@
                                 Permissions: {% if data.permissions %}{{ data.permissions|join(', ') }}{% else %}NONE{%
                                 endif %}
                             </div>
+                            
+                            {% if data.bypass_enabled and data.uuid %}
+                            <div style="margin-top: 8px; padding: 6px; background: rgba(0, 229, 255, 0.05); border-left: 2px solid var(--cyan);">
+                                <span style="font-size: 0.7rem; color: var(--cyan); display: block; margin-bottom: 4px;">[BYPASS_LINK_ACTIVE]</span>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <a href="{{ request.host_url }}access/{{ data.uuid }}" target="_blank" style="font-size: 0.75rem; color: var(--text-dim); text-decoration: underline; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{ request.host_url }}access/{{ data.uuid }}
+                                    </a>
+                                    <button onclick="copyLink('{{ request.host_url }}access/{{ data.uuid }}', this)" class="cyber-btn" style="padding: 2px 8px; font-size: 0.65rem; border-color: var(--cyan); color: var(--cyan); background: transparent; cursor: pointer;">
+                                        Copy Link
+                                    </button>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="action-buttons" style="display: flex; gap: 10px;">
 
                             <!-- EDIT BUTTON -->
-                            <button onclick="editProfile('{{ hashed_token }}', '{{ data.username }}', '{{ data.label }}', {{ 'true' if data.is_admin else 'false' }}, {{ 'true' if data.is_employer else 'false' }}, {{ 'true' if data.require_click_only else 'false' }}, {{ data.permissions|tojson|forceescape }})"
+                            <button onclick="editProfile('{{ hashed_token }}', '{{ data.username }}', '{{ data.label }}', {{ 'true' if data.is_admin else 'false' }}, {{ 'true' if data.is_employer else 'false' }}, {{ 'true' if data.require_click_only else 'false' }}, {{ 'true' if data.bypass_enabled else 'false' }}, {{ data.permissions|tojson|forceescape }})"
                                 class="cyber-btn"
                                 style="padding: 5px 15px; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan);">
                                 Edit
@@ -524,6 +538,15 @@
                         </label>
                         <div id="click_helper" style="font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;">
                             (Block direct pasting of Magic Links)</div>
+                    </div>
+
+                    <div class="field-group" style="margin-top: 15px;">
+                        <label for="bypass_enabled" style="color: var(--cyan); font-size: 0.8rem;">
+                            <input type="checkbox" id="bypass_enabled" name="bypass_enabled" aria-describedby="bypass_helper">
+                            ENABLE_BYPASS_LINK
+                        </label>
+                        <div id="bypass_helper" style="font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;">
+                            (Allow login without token via unique URL)</div>
                     </div>
                 </fieldset>
 
@@ -758,7 +781,7 @@
 
     <div id="aria-live-region" class="sr-only" aria-live="polite"></div>
     <script>
-        function editProfile(tokenHash, username, label, isAdmin, isEmployer, reqClick, perms) {
+        function editProfile(tokenHash, username, label, isAdmin, isEmployer, reqClick, bypassEnabled, perms) {
             // Change form action to edit_profile route
             const form = document.getElementById('provision-form');
             form.action = '/edit_profile';
@@ -799,13 +822,14 @@
             }
 
             // Reset all toggles to OFF first
-            form.querySelectorAll('.toggle-input, #req_click_only').forEach(inp => {
+            form.querySelectorAll('.toggle-input, #req_click_only, #bypass_enabled').forEach(inp => {
                 inp.checked = false;
-                if (inp.id === 'req_click_only') return;
+                if (inp.id === 'req_click_only' || inp.id === 'bypass_enabled') return;
                 toggleCheckbox(inp);
             });
 
             document.getElementById('req_click_only').checked = reqClick;
+            document.getElementById('bypass_enabled').checked = bypassEnabled;
             if (isAdmin) setToggle('is_admin', null, true);
             if (isEmployer) setToggle('is_employer', null, true);
 

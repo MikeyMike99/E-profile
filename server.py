@@ -197,6 +197,11 @@ def magic_link(uuid_token):
     profiles = load_profiles()
     for hashed_token, user_data in profiles.items():
         if user_data.get('uuid') == uuid_token:
+            if not user_data.get('bypass_enabled', False):
+                flash("Bypass link access is currently disabled for this profile.", "error")
+                sys_log.warning(f"Attempted use of disabled Magic Link for {user_data.get('username')}")
+                return redirect(url_for('login'))
+                
             if user_data.get('require_click_only'):
                 sec_fetch_site = request.headers.get('Sec-Fetch-Site', 'none')
                 if sec_fetch_site == 'none':
@@ -256,7 +261,8 @@ def login():
                 "permissions": ['view:real_name'],
                 "is_admin": True,
                 "is_employer": False,
-                "require_click_only": False
+                "require_click_only": False,
+                "bypass_enabled": False
             }
             save_profiles(profiles)
             
@@ -338,6 +344,7 @@ def admin():
                     "uuid": str(uuid.uuid4()),
                     "permissions": permissions,
                     "require_click_only": require_click_only,
+                    "bypass_enabled": request.form.get('bypass_enabled') == 'on',
                     "is_admin": is_admin,
                     "is_employer": is_employer
                 }
@@ -579,6 +586,7 @@ def edit_profile():
         profiles[token_hash]['is_admin'] = request.form.get('is_admin') == 'on'
         profiles[token_hash]['is_employer'] = request.form.get('is_employer') == 'on'
         profiles[token_hash]['require_click_only'] = request.form.get('require_click_only') == 'on'
+        profiles[token_hash]['bypass_enabled'] = request.form.get('bypass_enabled') == 'on'
         
         save_profiles(profiles)
         flash("Profile identity and permissions updated.", "success")
