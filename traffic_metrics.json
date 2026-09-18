@@ -1,12 +1,12 @@
 {
-    "total_views": 15,
+    "total_views": 26,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9"
     ],
     "paths": {
-        "/": 7,
-        "/favicon.ico": 5,
-        "/projects": 2,
-        "/ai_agent": 1
+        "/": 12,
+        "/favicon.ico": 8,
+        "/projects": 3,
+        "/ai_agent": 3
     }
 }
