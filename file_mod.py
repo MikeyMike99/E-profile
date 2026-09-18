@@ -257,6 +257,7 @@ def git_sync():
         run_git_cmd(['add', '.'])
         run_git_cmd(['commit', '-m', 'Auto-sync update'])
         run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '--allow-unrelated-histories', '--recurse-submodules', '-X', 'ours'])
+        run_git_cmd(['submodule', 'update', '--init', '--recursive'])
         run_git_cmd(['push', authenticated_url, 'master:main'])
         
         # --- AUTO-INSTALL DEPENDENCIES & POST-SYNC HOOKS ---
