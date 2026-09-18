@@ -201,7 +201,7 @@ def git_sync():
     if not token:
         token = os.environ.get("GITHUB_TOKEN", "").strip()
 
-    authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git" if token else "origin"
+    authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
 
     def run_git_cmd(args):
         nonlocal output_log
@@ -256,9 +256,27 @@ def git_sync():
         
         run_git_cmd(['add', '.'])
         run_git_cmd(['commit', '-m', 'Auto-sync update'])
-        run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '--allow-unrelated-histories', '-X', 'ours'])
+        run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '--allow-unrelated-histories', '--recurse-submodules', '-X', 'ours'])
         run_git_cmd(['push', authenticated_url, 'master:main'])
         
+        # --- AUTO-INSTALL DEPENDENCIES & POST-SYNC HOOKS ---
+        output_log += "[System] Auto-installing updated dependencies...\n"
+        import sys
+        try:
+            pip_p = subprocess.run([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
+            output_log += "[System] pip requirements verified.\n"
+            
+            # Generic Post-Sync Hook for future integrations
+            post_sync_script = target / "post_sync.py"
+            if post_sync_script.exists():
+                output_log += "[System] Executing post_sync.py hook...\n"
+                hook_p = subprocess.run([sys.executable, str(post_sync_script)], cwd=str(target), capture_output=True, text=True)
+                output_log += hook_p.stdout + "\n"
+                if hook_p.stderr:
+                    output_log += hook_p.stderr + "\n"
+        except Exception as e:
+            output_log += f"[ERROR] Failed to auto-install dependencies or run hooks: {e}\n"
+            
         # Reload WSGI server
         output_log += "\n[System] Sync complete. Attempting to reload PythonAnywhere server...\n"
         try:

@@ -49,12 +49,75 @@ app.register_blueprint(sync_bp, url_prefix='/api')
 
 app.register_blueprint(echos_bp)
 
+# --- AI AGENT PLUGIN ---
+import sys
+import os
+ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
+if ai_path not in sys.path:
+    sys.path.append(ai_path)
+    
+try:
+    from ai_plugin import ai_bp
+    app.register_blueprint(ai_bp, url_prefix='/ai_agent')
+except Exception as e:
+    app.logger.error(f"Failed to load AI Blueprint: {e}")
+
 class SystemLogger:
     def __init__(self):
         self.logs = []
     def log(self, type, msg):
         timestamp = datetime.now().strftime('%H:%M:%S')
         self.logs.append({'time': timestamp, 'type': type, 'msg': msg})
+        if len(self.logs) > 50: self.logs.pop(0)
+
+sys_log = SystemLogger()
+
+# --- NATIVE ANALYTICS ENGINE (Zero-Cookie, Privacy-First) ---
+ANALYTICS_FILE = config.ROOT_DIR / "traffic_metrics.json"
+
+def get_analytics():
+    if not ANALYTICS_FILE.exists():
+        return {"total_views": 0, "unique_visitors": [], "paths": {}}
+    try:
+        data = json.loads(ANALYTICS_FILE.read_text())
+        return data
+    except Exception:
+        return {"total_views": 0, "unique_visitors": [], "paths": {}}
+
+def save_analytics(data):
+    try:
+        ANALYTICS_FILE.write_text(json.dumps(data, indent=4))
+    except Exception:
+        pass
+
+@app.before_request
+def log_traffic():
+    # Skip tracking for assets, api, and admin routes
+    if request.path.startswith('/static') or request.path.startswith('/api') or request.path.startswith('/admin'):
+        return
+        
+    # Generate daily anonymous hash for unique visitor counting (No cookies used)
+    raw_id = f"{request.remote_addr}-{request.user_agent.string}-{datetime.now().strftime('%Y-%m-%d')}"
+    visitor_hash = hashlib.md5(raw_id.encode()).hexdigest()
+    
+    data = get_analytics()
+    data["total_views"] = data.get("total_views", 0) + 1
+    
+    if visitor_hash not in data["unique_visitors"]:
+        data["unique_visitors"].append(visitor_hash)
+        
+    # Trim visitor list to prevent infinite growth (keep last 1000)
+    if len(data["unique_visitors"]) > 1000:
+        data["unique_visitors"].pop(0)
+        
+    path_key = request.path
+    if path_key not in data["paths"]:
+        data["paths"][path_key] = 0
+    data["paths"][path_key] += 1
+    
+    
+    save_analytics(data)
+
     def error(self, msg): self.log("ERROR", msg)
     def info(self, msg): self.log("INFO", msg)
     def warning(self, msg): self.log("WARNING", msg)
@@ -369,6 +432,8 @@ def admin():
         try: quarantined_files = json.loads(quarantine_log_file.read_text())
         except: pass
 
+    analytics_data = get_analytics()
+
     return render_template('manage_profiles.html', 
         profiles=profiles,
         dyn_tabs=dyn_tabs,
@@ -377,8 +442,10 @@ def admin():
         dyn_projects=dyn_projects,
         unindexed=unindexed,
         git_status=git_status,
-        quarantined_files=quarantined_files,
         cert_health=cert_health,
+        system_logs=sys_log.logs,
+        quarantined_files=quarantined_files,
+        analytics_data=analytics_data,
         is_admin=session.get('admin', False)
     )
 
