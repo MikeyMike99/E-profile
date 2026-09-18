@@ -86,6 +86,11 @@
                         <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
                         {{ project.label }}
                     </a>
+                    {% elif project.name == 'antigravity_agent' %}
+                    <a href="/ai_agent" target="_blank" rel="noopener noreferrer" class="btn-launch-pill status-{{ project.status }}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation();">
+                        <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
+                        Launch Demo
+                    </a>
                     {% else %}
                     <button type="button" class="btn-launch-pill status-{{ project.status }}"
                         id="test-btn-{{ project.name }}"
