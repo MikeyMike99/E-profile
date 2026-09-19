@@ -1,5 +1,5 @@
 {
-    "total_views": 105,
+    "total_views": 237,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -9,10 +9,12 @@
         "b728eaa4bc5be5ecbbc02562589a76b6"
     ],
     "paths": {
-        "/": 42,
-        "/favicon.ico": 28,
-        "/projects": 15,
-        "/ai_agent": 13,
-        "/login": 7
+        "/": 44,
+        "/favicon.ico": 30,
+        "/projects": 16,
+        "/ai_agent": 15,
+        "/login": 7,
+        "/ai_agent/": 2,
+        "/ws": 123
     }
 }
