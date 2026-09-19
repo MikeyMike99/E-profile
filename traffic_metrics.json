@@ -1,5 +1,5 @@
 {
-    "total_views": 253,
+    "total_views": 276,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -9,12 +9,13 @@
         "b728eaa4bc5be5ecbbc02562589a76b6"
     ],
     "paths": {
-        "/": 48,
-        "/favicon.ico": 34,
-        "/projects": 19,
-        "/ai_agent": 17,
-        "/login": 8,
-        "/ai_agent/": 4,
-        "/ws": 123
+        "/": 54,
+        "/favicon.ico": 40,
+        "/projects": 22,
+        "/ai_agent": 19,
+        "/login": 10,
+        "/ai_agent/": 7,
+        "/ws": 123,
+        "/ai_agent/api/chat": 1
     }
 }
