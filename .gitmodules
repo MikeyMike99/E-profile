@@ -1,0 +1,3 @@
+[submodule "content/projects/engines/antigravity_agent"]
+	path = content/projects/engines/antigravity_agent
+	url = ../DevCore.git
