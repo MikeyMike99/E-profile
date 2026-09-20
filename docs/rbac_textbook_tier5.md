@@ -26,3 +26,57 @@ The Super Admin possesses the ability to seamlessly downgrade their agent to aud
 * **Assume Role Mechanism:** Utilizing a command structure (e.g., `/su tier3` or `/impersonate user_id`), the Super Admin temporarily overrides their active session state.
 * **Context Window Swapping:** During impersonation, the agent forcefully injects the target tier's system prompt and restricts the underlying tool registry. Tier 5 tools (bash execution, core DB writes) are physically unmapped from the agent's context.
 * **Secure Reversion (Escape Hatch):** The session maintains a secure hardware or token-based "escape hatch" to revert to Tier 5, mathematically ensuring that the restricted agent cannot independently trigger the reversion.
+
+---
+
+## 5. Physical Access Point
+Exposing Tier 5 privileges over a public web application route—even hidden or token-gated—substantially expands the attack surface. The industry standard separates operational administration from standard web interfaces.
+
+* **Recommended Architecture: Local CLI via Mutual TLS (mTLS) or SSH Tunnelling**
+* **Local CLI / Daemon:** Run the interface as a terminal binary on the local workstation. It communicates with the host agent daemon over an encrypted, authenticated SSH tunnel or a direct UNIX domain socket if running locally.
+* **mTLS Authenticated WebSocket:** For graphical interfaces, a local dashboard bound to `localhost` initiates an outbound mTLS WebSocket connection to the server daemon. Authentication occurs at the TLS handshake level before any application logic or agent processing is reached.
+* **Why Hidden Web Routes Fail at Tier 5:** Relying on security through obscurity (e.g., `/admin-hidden-endpoint`) leaves the agent vulnerable to automated route scanning, session hijacking, cross-site request forgery (CSRF), and web server misconfigurations (such as reverse proxy leaks or cache poisoning).
+
+## 6. Agent Orchestration (Swarming)
+Granting the Super Admin agent the ability to spawn lower-tier sub-agents is one of the most effective ways to balance speed and safety, provided **privilege attenuation** is strictly enforced.
+
+```text
+[Super Admin Agent (Tier 5)]
+        │
+        ├──> Spawns [Coder Sub-Agent (Tier 3)]  ──> Sandboxed Workspace (Git branch)
+        │
+        └──> Spawns [Audit Sub-Agent (Tier 2)]  ──> Read-Only Filesystem / Logs
+```
+
+* **Hierarchical Orchestrator Pattern:** The Tier 5 agent acts strictly as an orchestrator/planner. It decomposes large directives into modular sub-tasks, generates an execution plan, and spawns short-lived worker agents to carry them out.
+* **Ephemeral Scope & Least Privilege:**
+    * Sub-agents **never** inherit Tier 5 credentials.
+    * Each child agent runs under strict sandbox boundaries (Tier 2 or 3) with isolated working directories and transient API tokens scoped to that single sub-task.
+* **Result Verification:** Worker agents return structured diffs, test outputs, or analytical findings to the Tier 5 parent, which audits the output before applying permanent changes.
+
+## 7. Network & API Access
+A binary choice between total air-gapping and unrestricted outbound access is problematic.
+
+| Model | Pros | Cons | Ideal Use Case |
+| --- | --- | --- | --- |
+| **Strict Air-Gap** | Zero remote exfiltration risk; immune to network-based attacks. | Cannot query frontier cloud LLMs, download packages, or scrape live documentation. | On-premise local models (Ollama, vLLM) handling strictly confidential source code. |
+| **Controlled Egress (Recommended)** | Agent can access necessary tools, updates, and APIs while blocking arbitrary connections. | Requires managing firewall rules or forward proxy configs. | Hybrid setups using external APIs (Claude/OpenAI) with code deployment capabilities. |
+| **Unrestricted Access** | Zero configuration friction; full web browsing. | High risk of prompt injection directing the agent to leak environment variables or keys to external servers. | Prototype testing only; never suitable for production Tier 5 agents. |
+
+* **Implementation Strategy (Egress Proxy + Firewall):**
+    * Lock down server outbound traffic using `nftables` or cloud security groups.
+    * Route all outbound HTTP/S requests through an internal forward proxy (like Squid or Envoy) with an enforced domain allowlist (e.g., `api.anthropic.com`, `registry.npmjs.org`, `pypi.org`, `github.com`).
+    * Block direct access to private IP ranges (`10.0.0.0/8`, `192.168.0.0/16`, `169.254.169.254` metadata services) to prevent the agent from pivoting into internal network assets.
+
+## 8. "Break-Glass" Emergency Procedures
+If the agent gets caught in an execution loop, prompt-injected, or the primary auth mechanism fails, an out-of-band recovery path that does not depend on the application layer is required.
+
+* **Out-of-Band Process Supervisor (Hard Kill Switch):**
+    * Run the agent process under a supervisor daemon (`systemd` or an isolated container orchestrator).
+    * Configure an emergency stop command outside the agent's control—such as sending a `SIGKILL` directly via root SSH or a hardware-level host console (IPMI/serial console).
+    * The agent process must run under a restricted non-root system user so it lacks the OS-level permissions to alter its own process supervisor or block termination signals.
+* **Automated Watchdog (Dead-Man's Switch):**
+    * **Resource Caps:** Configure strict thresholds for CPU spikes, token spend velocity, and maximum file modifications per minute.
+    * **Heartbeat Monitor:** If an active Tier 5 session loses connection with your client interface for more than 60 seconds, the daemon immediately pauses execution and locks all pending tool calls.
+* **Emergency State Rollback:**
+    * Implement an independent "nuclear" rollback script on the host that terminates running agent processes, reverts the working directory to the last known healthy Git commit (`git reset --hard HEAD@{upstream}`), and rotates all active agent session tokens.
