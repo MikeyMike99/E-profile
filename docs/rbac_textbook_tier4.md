@@ -59,3 +59,27 @@ The fundamental law of Tier 4 is absolute, unapologetic source code denial.
 * **No Source Code Access:** The Admin is physically barred from reading or writing to the core application repositories (e.g., `server.py`, `models.py`, or core game engine scripts). 
 * **No Host Infrastructure Access:** The Admin cannot execute OS-level commands (`apt-get`, `systemctl`), alter the `nftables` proxy, or view host IP routing.
 * **No Escape Hatches:** The Admin's Agent is locked out of raw command execution (`python -c`, `bash`). It can only execute predefined, parameterized Webhooks or strictly authorized shell scripts (e.g., `./deploy_asset.sh --id 123`).
+
+## Section 7: Model Strategy & Data Flow
+
+Because the Admin acts as the central hub for operations, they process vastly different types of data. Routing everything through a massive, expensive LLM would be financially devastating. Instead, the Tier 4 Agent utilizes a highly optimized **Dual-Model Strategy** based on the specific operational context.
+
+### The Fast Model (Operations & Queries)
+Pushing buttons, toggling feature flags, and performing database lookups do not require deep reasoning. 
+* **Implementation:** The Admin Agent defaults to a lightning-fast, lightweight model (like `flash`) for all basic operations. 
+* **Use Case:** When the Admin queries a payment record, searches the user database, or toggles an event flag, the fast model executes the indexed search and returns the result instantly.
+
+### The Heavy Model (Error Logs & QA)
+Unlike basic queries, diagnosing an application crash or inspecting a Developer's plugin requires deep, logical deduction.
+* **Implementation:** The Agent dynamically routes to a heavy, high-reasoning model (like `pro`) exclusively when reading complex error logs or running QA tests on new code.
+* **Data Permanence:** Error logs are treated as permanent infrastructure debt. Unlike support tickets, error logs *never expire* until the Admin explicitly assigns them to a Tier 3 Developer and a fix is deployed.
+
+### The Ticket Funnel (Voting System)
+A common flaw in support systems is allowing the Admin to be flooded by a "Ticket Storm" from thousands of users. In this architecture, raw tickets *never* reach the Admin dashboard directly.
+* **Community Filtering:** Tickets are filtered at the lowest tiers. A ticket only escalates to the Tier 4 Admin if it passes a community **voting system** or automated threshold.
+* **Expiration:** Bad or irrelevant tickets automatically expire and are purged from the system. Only the most critical, validated issues survive the funnel to consume the Admin's time.
+
+### Plugin Circuit Breakers (Graceful Degradation)
+When a Tier 4 Admin deploys a plugin built by a Developer, there is always a risk it contains an edge-case bug.
+* **Isolation:** Plugins operate in complete isolation from the core application loop. 
+* **Automatic Shutdown:** If a live plugin triggers a fatal exception, it does not crash the application. The plugin's circuit breaker trips, it instantly *switches itself off*, and it generates an error log for the Admin. The core game or application remains completely unaffected.
