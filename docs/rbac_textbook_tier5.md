@@ -76,3 +76,14 @@ To lock this down, I completely overhauled the ingestion pipeline:
 * **Zero-Knowledge Scrubbing:** Before the massive payload ever touches a single sub-agent, it is aggressively routed through the `LocalSecurity.scrub_text()` middleware, stripping all PII (IPs, passwords, keys) before the text is chunked.
 * **Role Inheritance:** The headless sub-agents no longer run generic sandbox commands. The backend extracts the specific role from the JWT token and passes it down. If a Guest submits the file, the sub-agent is strictly constrained by the `--sandbox` flag. If an Admin uploads it, the sub-agent inherits their specific privilege flags.
 * **Semantic Untrusted Barriers:** When the sub-agents compile the final summary and hand it back to the Main Agent, it is no longer trusted. The master summary is wrapped in an impenetrable `<UNTRUSTED_USER_INPUT>` XML tag. The Main Agent receives a strict mandate to treat the summarized data as hostile, completely neutralizing the prompt injection vector.
+
+## Section 9: The Forensic Vault (Cost vs. Subpoena Compliance)
+A massive multi-tenant AI orchestration engine generates terabytes of raw JSON conversational logs (`transcript.jsonl`) every week. Keeping this data in hot, active database storage will bankrupt the infrastructure. 
+
+While the Ingestion Swarm is excellent at crushing massive logs into tiny summaries to save space, doing so indiscriminately destroys raw forensic evidence. If an attacker uses the platform to generate hostile payloads, and law enforcement issues a subpoena, handing over an AI-generated summary of the crime is unacceptable. 
+
+I engineered a pipeline that perfectly balances infrastructure costs with absolute legal compliance:
+
+* **Threat-Heuristic Triage:** Every incoming prompt is scanned by lightweight moderation heuristics. Standard development work is flagged as "Benign." Prompts containing hostile intent (privilege escalation, PII extraction, kernel commands) trigger a permanent **Forensic Hold** on that session.
+* **The Benign Swarm Crunch:** To save costs, "Benign" logs are subjected to a 30-day cooldown. Once expired, a background cron job feeds the logs to the Ingestion Swarm. The massive JSON arrays are summarized into lightweight contextual markers, and the raw files are purged from the hot servers.
+* **The Glacier Vault (Immutable Evidence):** Sessions under a Forensic Hold are never summarized. When the session terminates, the core engine cryptographically hashes the raw log using the user's UUID to establish a chain of custody (proving the log was not altered after the fact). The log is then gzipped and ejected from the hot server into deep cold storage (e.g., AWS S3 Glacier). This secures the unadulterated evidence for legal discovery at a fraction of a penny per gigabyte, while protecting the active infrastructure from storage exhaustion.
