@@ -52,6 +52,9 @@ Exposing Tier 5 privileges over a public web route expands the attack surface un
 * **Local CLI / Daemon:** Run the interface as a terminal binary on the local workstation, communicating with the host agent daemon over an encrypted SSH tunnel.
 * **mTLS Authenticated WebSocket:** For graphical interfaces, a local dashboard bound to `localhost` initiates an outbound mTLS WebSocket connection to the server. Authentication occurs at the TLS handshake level before any application logic is reached.
 
+* **Developer Note (The Accessibility Imperative):** Standard SSH terminals and generic UI toolkits (like Tkinter) often fail to interface with screen readers (like NVDA), resulting in "dead silence." A Super Admin interface is entirely useless if it refuses to speak to the architect. The physical access point must be decoupled from legacy terminal constraints and built using custom accessible DLLs or ARIA-compliant WebSockets. The Super Admin must never be "trapped in the terminal" while managing root infrastructure.
+
+
 ### 7. Execution Failsafes
 Tier 5 relies on lightweight, automated failsafes that do not bottleneck latency.
 * **State Snapshots:** Prior to any tool call that modifies the filesystem, a background script triggers an immediate state snapshot (e.g., `git add . && git commit -m "Pre-execution backup"`).
