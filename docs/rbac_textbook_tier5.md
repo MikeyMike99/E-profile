@@ -104,3 +104,11 @@ To eliminate this vulnerability, I engineered an **Immutable Configuration State
 * **Secure Export Bridging:** When an Admin needs to export server configurations or migrate states to a new node, the payload is never dumped as JSON. It is encrypted through the Zero-Knowledge Shadow Bridge, requiring an offline challenge-response token to unlock on the receiving end.
 
 This guarantees that the physical server state can never be silently altered from underneath the active daemon.
+
+### Defeating Second-Order Execution (Configuration-as-Code)
+The primary reason plaintext configurations are catastrophic is because they often contain executable logic. Modern `.env` and `.json` configs store database connection strings, password hashes, dictionary structures, and embedded bash/shell strings for caching or pre-boot hooks.
+
+This introduces the silent killer of secure systems: **Second-Order Execution**. 
+If a local attacker injects a malicious payload (`rm -rf /` or a reverse shell) into a cache-refresh string inside a plaintext config file, they don't need to bypass the live application's firewalls. They simply wait for the server to reboot or a cron job to fire. The server will blindly parse and execute the injected script with root privileges because it inherently "trusts" its own configuration file.
+
+The **Tamper-Evident Boot Sequence** completely neutralizes this vector. Because the config is cryptographically sealed inside a `.vault`, an attacker cannot inject a script without invalidating the AES-128 MAC (Message Authentication Code). When the daemon attempts to decrypt the file into RAM, the signature mismatch triggers an immediate hard-crash, preventing the malicious string from ever being parsed or executed.
