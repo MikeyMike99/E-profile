@@ -165,3 +165,33 @@ Incoming data must be treated as highly radioactive. If a Super Admin asks the a
 * **Error Message Sanitization (CWE-209):** If the agent executes a command that fails, the backend must intercept the error. It must return a highly generic string to the agent rather than the raw stack trace. 
 * **Developer Note (The Social Engineering Loop):** It is incredibly frustrating to watch an AI "socially engineer" its way out of a sandbox simply by reading its own verbose error logs. If a stack trace reveals internal IP addresses or true physical directory paths (`/mnt/c/Users/...`), the agent will learn the host layout. Mask all errors before they re-enter the agent's context.
 * **Second-Order Execution Defense:** Before the agent is permitted to write any executable file (`.sh`, `.py`), the payload must undergo static analysis. If high-risk system commands are detected in the generated code, the write operation is permanently blocked to prevent Trojan horse scenarios.
+
+---
+
+## Part VI: Bare Metal & Core Primitives
+*Introduction: A highly secure application layer is useless if the underlying daemon architecture is fragile. The core engine must be built using strict Linux systems engineering principles to guarantee that a runaway LLM cannot exhaust host resources or bypass network stacks.*
+
+### 23. The Core Event Loop (The Actor Model)
+Standard asynchronous programming is insufficient for autonomous AI, as an LLM API call can easily hang and block the execution thread.
+* **The Architecture:** The core engine implements an **Actor Model Architecture**. It acts as a decoupled "Message Broker" maintaining a priority queue.
+* **Worker Preemption:** A dedicated Worker Thread pulls tasks from the queue, while the Main Thread strictly monitors the Worker's health. If the Worker hangs or hallucinates, the Main Thread preemptively kills the Worker and spawns a new one without restarting the overarching engine or dropping the WebSocket connection.
+
+### 24. Inter-Process Communication (IPC)
+Using standard `localhost` TCP ports to connect the web application to the Agent Daemon is a vulnerability, as local processes can sniff or spoof TCP traffic.
+* **UNIX Domain Sockets (`.sock`):** The engine listens strictly on a `.sock` file, bypassing the network stack entirely for lightning-fast execution.
+* **Kernel-Level Peer Credentialing (`SO_PEERCRED`):** The Linux kernel mathematically verifies the exact User ID (UID) and Group ID (GID) of the process sending the command. If a rogue script attempts to send a payload to the socket, the kernel proves it wasn't sent by the authorized Web Server user and instantly drops the connection.
+
+### 25. OS-Level Resource Isolation
+Relying on application-layer timeouts is dangerous. A runaway AI generating a fork-bomb script will crash the host server.
+* **Control Groups (`cgroups v2`):** The core engine is launched as a `systemd` service with strict kernel-level resource directives.
+* **Hard Limits:** 
+  * `MemoryMax`: If the agent hits its RAM limit, the kernel's OOM killer terminates the agent *before* it affects the host server.
+  * `CPUQuota`: Mathematically prevents the agent from monopolizing the processor.
+  * `PrivateTmp=yes`: Grants the agent a completely isolated `/tmp` directory invisible to the rest of the server.
+
+### 26. The Filesystem Hierarchy (Ephemeral RAM Disks)
+Allowing an AI to rapidly write, test, and rewrite temporary code directly to the host's hard drive causes severe SSD wear and leaves digital shrapnel.
+* **Volatile `tmpfs` (RAM Disks):** The physical layout of the core is strictly partitioned:
+  * `/opt/antigravity/` (Immutable): Read-only binaries and core logic.
+  * `/var/lib/antigravity/` (Persistent): The encrypted vector database (Memory).
+  * `/dev/shm/antigravity/` (Volatile): The `staging/` environment where the agent generates and tests code is mounted on `tmpfs`. The sandbox exists entirely in RAM, operating at lightning speed. Upon server restart, the entire staging sandbox vanishes automatically.
