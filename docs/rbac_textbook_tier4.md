@@ -1,38 +1,56 @@
 # Chapter 2: Tier 4 - The Application Admin
 
-## Introduction: King of the Sandbox
-The Tier 4 Admin holds absolute, unrestricted control over the *business logic, user databases, and frontend interfaces* of the application (e.g., E-Profile or an external Game Engine). To the end-users and developers beneath them, the Tier 4 Admin appears to possess "God Mode." 
+## Introduction: The Illusion of Full Access
+In a traditional hierarchy, an "Admin" is assumed to have unrestricted access to the application's source code. In the Antigravity ecosystem, this is a dangerous anti-pattern. 
 
-However, this is an illusion of absolute power. To the Tier 5 Super Admin, a Tier 4 Admin is merely a highly privileged tenant operating inside an unbreakable glass box. The foundational rule of Tier 4 is the strict separation of **Application** and **Infrastructure**. The Admin can rewrite the entire website, drop user database tables, and redesign the game logic—but they are mathematically blind to the host operating system, the underlying daemon architecture, and the agent's core source code. 
+The Tier 4 Admin possesses what appears to be "God Mode" to the end-users, but this is a deliberate illusion. The Admin is not a developer; they are the ultimate **Operations and Release Manager**. They sit strictly *above* the source code of the application or game. They are the connection point between raw development and the live production environment. 
 
-If Tier 5 is the architect of the planet, Tier 4 is the ruler of the city.
-
----
-
-## What the Admin Inherits from Tier 5
-Because Tier 4 operates on the same core engine designed by the Super Admin, it seamlessly inherits the most powerful capabilities of the architecture, but forcefully scoped to the application layer.
-
-### 1. The Accessible Handoff (UX)
-**Inherited:** The Tier 4 Admin inherits the exact same frictionless, ARIA-compliant WebSocket interface built for the Super Admin.
-**The Benefit:** An Admin who relies on a screen reader (like NVDA) is not forced into hostile or silent legacy interfaces to manage the application. The seamless "State Handoff Protocol" guarantees they can securely log in via the web and instantly connect to their agent with full audio and semantic support.
-
-### 2. Cognitive Memory & Knowledge Graphs
-**Inherited:** The Admin inherits the AI's ability to utilize Vector Databases and semantic memory.
-**The Constraint:** The memory is mathematically scoped. The Tier 4 agent perfectly remembers the architecture of the `E-Profile` codebase, past UI decisions, and frontend bugs. However, the agent is physically barred from querying the Tier 5 Vector DB; it has zero memory or awareness of the host OS, `policies.yaml`, or how the daemon is configured.
-
-### 3. Agent Orchestration (Swarming)
-**Inherited:** The Admin inherits the "Supervisor Tree" capability. They do not have to write all the code themselves.
-**The Benefit:** A Tier 4 Admin can instruct their agent to "Redesign the blog portal." The Admin's agent will autonomously spawn a Swarm of Tier 3 (Developer) and Tier 2 (Modder) sub-agents, orchestrate the task in parallel, and return the finished code to the Admin for final approval.
-
-### 4. Ephemeral Sandboxing (`tmpfs`)
-**Inherited:** Just like the Super Admin, the Tier 4 Admin's agent does its heavy lifting inside a volatile RAM disk (`tmpfs`).
-**The Benefit:** If the Admin's agent hallucinates and generates 10,000 recursive garbage files while trying to compile a new frontend template, it does not corrupt the live application or burn out the server's hard drive. The staging happens in RAM, and is wiped clean by the Janitor process if it fails.
+If a Tier 3 Developer builds a new house for a game, the Developer cannot put it in the live world. The Tier 4 Admin takes that finished asset and "plugs it in." The Admin has the power to push buttons, turn dials, schedule restarts, and assign roles—but they are mathematically barred from opening a raw Python or C++ file and rewriting the core logic. 
 
 ---
 
-## The Hard Boundary: What is Denied
-While the Admin inherits the *capabilities* of the engine, they are strictly denied access to the *mechanics* of the engine.
-* **No Host Access:** The Tier 4 agent cannot execute OS-level commands (`apt-get`, `systemctl`, `chmod`).
-* **No Self-Modification:** The Admin cannot instruct their agent to modify `agent_manager.py` or `security_manager.py`.
-* **No Network Egress Alteration:** The Admin cannot alter the `nftables` proxy or open new ports on the server.
-* **No Daemon Killswitches:** The Admin cannot restart the core engine or purge the global blacklist.
+## Section 1: The Operator's Toolkit (Buttons & Dials)
+
+Because the Admin does not write source code, their Agent interfaces with the application through a highly privileged, abstracted control layer. 
+
+### Server Operations & Lifecycle Management
+The Admin is granted strict operational endpoints. Through their Agent, they can:
+* **Schedule Restarts:** Instruct the system to gracefully drain users and restart the game/application server at 3:00 AM.
+* **Apply Patches:** Take compiled patches or verified scripts generated by Tier 3 and execute the deployment sequence to push them live.
+* **State Debugging:** Pull application state logs, view active player/user metrics, and toggle global feature flags to debug live issues without touching the underlying code.
+
+* **The Developer Benefit (Separation of Concerns):** By physically stripping the Admin's ability to edit raw source code, you eliminate the risk of a non-developer Admin (or their hallucinating AI) accidentally breaking the application's core logic with a syntax error during a live crisis.
+
+---
+
+## Section 2: Sandbox Provisioning & Delegation
+
+While the Tier 5 Super Admin manages the root architecture, the Tier 4 Admin acts as the manager of the human (and AI) workforce. 
+
+### Provisioning Lower Tiers
+The Admin inherits the ability to wield the sandbox provisioning engine.
+* **Role Assignment:** The Admin can generate invites or assign existing users to Tier 3 (Dev Team), Tier 2 (Guest/Modder), or Tier 1 (End User).
+* **Workspace Generation:** When the Admin assigns a new Tier 3 Developer to a project, the Admin's Agent orchestrates the creation of that Developer's restricted `tmpfs` container and binds it to their ID. 
+
+### The Deployment Bridge
+The Admin is the absolute gatekeeper of the production environment. 
+* **The Handoff:** When a Tier 3 Developer finishes a task in their isolated sandbox, they submit it. The Tier 4 Admin reviews the asset (via visual dashboards or automated tests) and pushes the "Deploy" button. The Agent then moves the asset from the sandbox into the live application environment.
+
+---
+
+## Section 3: What the Admin Inherits from Tier 5
+
+Because Tier 4 operates on the same core engine designed by the Super Admin, they seamlessly inherit the most powerful UX capabilities, scoped purely to Operations.
+
+* **The Accessible Handoff (UX):** The Admin inherits the frictionless, ARIA-compliant WebSocket interface. An Admin relying on a screen reader (like NVDA) is not forced to navigate hostile legacy dashboards. They log in via the web and seamlessly converse with their Operations Agent.
+* **Cognitive Memory (Operational Scope):** The Admin's agent remembers the operational history of the application—when the server last crashed, which Developer submitted which patch, and what feature flags are active. However, it has zero memory of the Host OS or the Tier 5 infrastructure.
+* **Swarming (Task Delegation):** If an Admin needs to generate a massive weekly metrics report, their agent can spawn ephemeral Tier 1 sub-agents to crunch the database logs and return a summarized dashboard.
+
+---
+
+## The Hard Boundary: Absolute Code Denial
+
+The fundamental law of Tier 4 is that they can use the application, they can deploy to the application, and they can restart the application, but they cannot *code* the application.
+* **No Source Code Access:** The Admin is physically denied read/write access to the core application repositories (e.g., `server.py`, `models.py`, or core game engine scripts).
+* **No Host Infrastructure Access:** The Admin cannot touch the OS, `systemctl`, or networking configurations. 
+* **The Interface Boundary:** The Admin's Agent can only interact with the application via predefined APIs, webhooks, and authorized shell commands (e.g., `./deploy_patch.sh`). It cannot execute raw code execution commands like `python -c`.
