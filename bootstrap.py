@@ -22,7 +22,10 @@ REQUIRED_PACKAGES = {
     'Markdown': 'markdown',
     'Werkzeug': 'werkzeug',
     'python-dotenv': 'dotenv',
-    'bleach': 'bleach'
+    'bleach': 'bleach',
+    'libcst': 'libcst',
+    'requests': 'requests',
+    'flask-socketio': 'flask_socketio'
 }
 
 # Required files/directories (Added sync_mod.py to pre-flight checks)
