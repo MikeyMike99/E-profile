@@ -220,3 +220,45 @@ Because stateless JWTs cannot easily be "logged out" until they expire, the Supe
 Hardcoding the rules for Tiers 1-4 into Python files requires complete server restarts to modify, causing unacceptable downtime for a developer tool.
 * **Configuration-as-Code:** The Super Admin manages a strict `policies.yaml` file defining the precise directory paths, token budgets, and LLM models allowed for each tier.
 * **Hot-Reloading via inotify:** The Agent daemon utilizes kernel-level file watchers (`inotify`). If the Super Admin edits the `policies.yaml` file to revoke Tier 3 access to a specific database, the daemon hot-reloads the policy into memory instantly, applying the new restrictions to all subsequent tool calls without interrupting active connections.
+
+---
+
+## Part VIII: The State Handoff Protocol
+*Introduction: The "handoff" is where the vast majority of privilege escalation vulnerabilities occur in plugin architectures. If the bridge between the Host Application and the Agent Daemon isn't airtight, a malicious user can forge the state transfer. The transition must be mathematically guaranteed before the client connects.*
+
+### 31. The Pre-Flight (Host Authentication)
+The user authenticates against the Host Application (e.g., E-Profile). The host verifies their credentials and database roles, generating a short-lived JSON Web Token (JWT) signed with the host's private key. This token strictly contains the user's `UUID` and their integer `Tier_Level`.
+
+### 32. Context Hydration over IPC
+The client's browser does *not* talk to the agent yet. First, the Host Application's backend opens a secure connection to the Agent Daemon's UNIX domain socket (`.sock`). It sends an "Initialization Payload" containing the signed JWT, the physical path to the user's current project, and the required system intent.
+
+### 33. Sandbox Materialization (The Daemon Takes Over)
+Before acknowledging the payload, the Agent Daemon:
+1. Validates the JWT signature against the Host's public key.
+2. Checks the `UUID` against its in-memory Kill Switch (CRL).
+3. Consults `policies.yaml` to determine the strict permissions for that `Tier_Level`.
+4. Dynamically provisions the ID-bound temporary sandbox folder (`/var/sandboxes/tier_<UUID>/`).
+
+### 34. The Stream Binding
+Once the sandbox is materialized, the Agent Daemon generates a one-time use, cryptographic "Session Ticket" and returns it over the UNIX socket to the Host App, which passes it to the user's browser. The user's browser opens a WebSocket directly to the Agent Daemon using this Ticket. The Daemon consumes the ticket and binds the WebSocket to the waiting, sandboxed worker thread.
+
+---
+
+## Part IX: Secure Self-Healing Capabilities
+*Introduction: A resilient core engine must recover from API deadlocks, memory corruption, or bad configuration files without human intervention. However, self-healing mechanisms are frequent targets for attackers, who intentionally crash systems hoping they reboot in a vulnerable default state. Healing must be cryptographically secure and state-preserving.*
+
+### 35. Supervisor Trees (Context Preservation)
+If a lower-tier sub-agent worker crashes (due to an LLM timeout or unhandled exception), it must not take down the main daemon. 
+* **Implementation:** The engine utilizes a Supervisor Tree pattern. If a worker thread dies, the Supervisor intercepts the crash. When spawning a replacement worker, it mathematically injects the *exact same* restrictive context (JWT constraints, sandbox paths) from the parent cache. It never falls back to a default "empty" state, ensuring a crash loop cannot shed sandbox restrictions.
+
+### 36. Immutable Configuration Fallbacks
+If the Super Admin pushes a malformed `policies.yaml` file (e.g., invalid YAML syntax or impossible directory paths), the hot-reloader could theoretically corrupt the engine's memory.
+* **Implementation:** Before hot-reloading a new policy file, the daemon parses it in an isolated memory buffer. If parsing fails or security logic is broken, the daemon drops the new file and falls back to a cached, cryptographic hash of the Last Known Good Configuration (LKGC). It logs a critical alert to the Super Admin but keeps the server running securely.
+
+### 37. The Janitor Process (State Reconciliation)
+If the entire OS unexpectedly reboots or the daemon suffers a fatal OOM (Out of Memory) crash, orphaned temporary files or half-written code blocks could be left on the disk, creating state bleed.
+* **Implementation:** The daemon's startup sequence includes an idempotent `Janitor Process`. Before the engine begins accepting IPC connections, the Janitor forcefully wipes all unclaimed `.sock` files, destroys all temporary `tmpfs` sandbox folders, and resets the in-memory Revocation List. It guarantees a perfectly clean slate.
+
+### 38. The Canary Thread (Deadlock Recovery)
+If the main event loop gets caught in a silent deadlock (e.g., an infinite `while` loop that consumes no CPU but blocks execution), standard resource limits (`cgroups`) won't catch it.
+* **Implementation:** The engine runs a dedicated internal `Canary Thread` that continuously pings the primary UNIX socket. If the socket fails to respond within 5 seconds, the Canary concludes the main thread is deadlocked. It securely sends a `SIGTERM` to the process tree, allowing the OS-level `systemd` supervisor to cleanly reap the deadlocked daemon and spawn a fresh instance.
