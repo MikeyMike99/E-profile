@@ -37,9 +37,14 @@ REQUIRED_PATHS = [
 def install_package(package):
     """Attempts to install a package programmatically."""
     try:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--user', package])
+        # WSGI sys.executable is uwsgi, so use python3 explicitly
+        if package == 'python-dotenv':
+            subprocess.run(['python3', '-m', 'pip', 'uninstall', '-y', 'dotenv'], capture_output=True)
+            subprocess.check_call(['python3', '-m', 'pip', 'install', '--user', 'python-dotenv'])
+        else:
+            subprocess.check_call(['python3', '-m', 'pip', 'install', '--user', package])
         return True
-    except Exception:
+    except Exception as e:
         return False
 
 def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files):
@@ -175,7 +180,10 @@ def application(environ, start_response):
         import importlib
         for pkg_name, import_name in REQUIRED_PACKAGES.items():
             try:
-                importlib.import_module(import_name)
+                mod = importlib.import_module(import_name)
+                # Ensure the correct dotenv is installed
+                if import_name == 'dotenv' and not hasattr(mod, 'load_dotenv'):
+                    raise ImportError("Wrong dotenv package installed")
                 missing_pkgs[pkg_name] = 'INSTALLED'
             except ImportError:
                 success = install_package(pkg_name)
