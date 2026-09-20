@@ -134,3 +134,29 @@ Running every trivial filesystem operation or log parsing task through a frontie
 * **The Router Pattern:** Place a fast, highly quantized local model (like Llama 3 8B) at the front of the execution chain. Its sole job is to classify the complexity of the sub-task.
 * **Model Delegation:** Trivial tasks like JSON formatting, log filtering, and regex generation are routed to a fast local model or a cheaper cloud API. High-reasoning tasks like core architectural planning, self-modification, and complex debugging are routed exclusively to the frontier model.
 * **Cost-Aware Agents:** You can give the Tier 5 agent a "cost-estimation" tool. Before spawning a sub-agent for a massive code refactor, it calculates the estimated token burn and requests your explicit approval if it crosses a predefined budget threshold.
+
+## 17. Initial Provisioning (The Genesis User)
+The genesis user must be created out-of-band via a one-time setup script (e.g., `bootstrap.py` or a compiled binary) executed directly via the host terminal. Exposing genesis provisioning to a web endpoint—even temporarily—invites race conditions where an automated scanner could claim the server before the rightful owner.
+
+* **Execution:** Connect to the server via SSH, run the script under the designated service user (not root, but the user the agent daemon will run as). The script initializes the underlying database and architecture.
+* **Safeguard:** The script proactively checks for an existing Genesis block or Super Admin flag in the database. If found, it executes a hard-abort to prevent accidental lockouts or overwrite attacks by malicious actors.
+
+## 18. Master Token Generation (Asymmetric Cryptography)
+For Tier 5 access, symmetric tokens (e.g., standard high-entropy strings) are abandoned entirely in favor of an **asymmetric Ed25519 key pair**.
+
+* **Why Ed25519:** It provides significantly better performance and security than RSA, utilizing much smaller key sizes that are easily handled in CLI and configuration environments.
+* **The Architecture:** The server does not hold the "password". It only holds the public key. The local client holds the private key and cryptographically signs requests to prove identity. Even in the event of a total server database compromise and dump, the attacker only acquires the public key, rendering it impossible to impersonate the Super Admin.
+
+## 19. Token Storage & Secure Handshake
+The initial handshake and token exchange rely entirely on the physical security of the underlying SSH connection to the server.
+
+* **Storage on Server:** The `bootstrap.py` script writes the newly generated Ed25519 public key to the agent's internal database or a heavily restricted `.env`/vault file.
+* **The Export (One-Time View):** The script prints the private key directly to `stdout` in the active terminal session, or writes it to a temporary `genesis_key.pem` file with strict `chmod 400` permissions.
+* **The Transfer:** Utilizing the encrypted SSH connection, the user securely copies the terminal output (or uses `scp` to pull the file) to their local machine, and immediately deletes the `.pem` file from the host server. The private key never traverses an application-layer network protocol.
+
+## 20. The "Lost Key" Recovery Protocol
+If the local workstation suffers a catastrophic failure and the private key is lost, the recovery mechanism must bypass the agent entirely and rely on fundamental host-level OS access.
+
+* **The Break-Glass Script:** The administrator connects to the server using underlying infrastructure SSH credentials (which are strictly separated from the agent's credentials) and executes a dedicated `recovery.py` script (or `bootstrap.py --rotate-genesis`).
+* **The Process:** Utilizing OS-level execution privileges, this script halts the agent daemon, purges the existing Ed25519 public key from the database, generates a brand new key pair, outputs the new private key to the terminal, and restarts the daemon.
+* **Lockout Prevention:** The agent itself is mathematically and physically restricted from altering this recovery script or the host's SSH daemon configurations, ensuring the infrastructure administrator always retains a back-door route to reset the system.
