@@ -106,3 +106,31 @@ For a developer tool, administrative friction kills productivity, but allowing a
 
 * **Hot-Reloading with Schema Validation:** You should not need a full server restart to ingest new capabilities. Maintain a designated `tools/` directory. When you save a new custom Python script, the agent daemon watches the directory, dynamically imports the script, extracts the function signature and docstrings via reflection, and compiles it into an active tool schema on the fly.
 * **Execution Sandboxing:** Newly ingested tools should be treated as potentially volatile. Execute them in an isolated subprocess or lightweight container sandbox (like a Firecracker microVM) to ensure that a syntax error, infinite loop, or logic flaw in your custom script doesn't crash the primary orchestration daemon.
+
+## 13. Self-Modification & Updates
+Allowing a Tier 5 agent to modify its own source code introduces immense risk but is necessary for true autonomous evolution. The core issue is preventing the agent from severing its own execution thread or corrupting the daemon.
+
+* **The Two-Stage Staging Pipeline:** Never allow the agent to write directly to its active execution files. The agent should push proposed changes to a dedicated `staging/` directory or a local Git branch.
+* **Automated Validation:** Before merging, the system automatically triggers an isolated test suite (syntax checking, unit tests, and security linting) on the staging code.
+* **The Watchdog Restart:** If tests pass, the agent signals an external, highly restricted watchdog process (e.g., a systemd service or a minimal standalone Python script). The watchdog takes over, gracefully drains active tasks, swaps the staging code into production, and restarts the agent daemon. The agent never kills itself.
+
+## 14. Distributed Infrastructure (Multi-Node Access)
+A true Super Admin agent cannot be confined to localhost. Modern architectures require managing remote database shards, load balancers, and external compute nodes.
+
+* **The Bastion Host Model:** Treat the server hosting the Tier 5 agent as a secure bastion. The agent connects to remote nodes via SSH or authenticated APIs, acting as the central orchestrator across the infrastructure.
+* **Credential Management:** Never store remote credentials in the agent's memory or static files. Inject short-lived, dynamically generated STS (Security Token Service) credentials or use an `ssh-agent` with keys locked behind hardware security modules or strict file permissions.
+* **Granular Node Permissions:** Even though the agent is Tier 5 locally, its remote access should still follow least-privilege principles based on the specific sub-task. If it is only querying a remote log server, it should use a read-only remote token.
+
+## 15. Long-Term Memory & Knowledge Graphs
+Managing massive architectural changes over time requires persistent, structured memory. Relying entirely on a massive context window is computationally expensive and prone to degradation.
+
+* **Hybrid Memory System:** Implement a local Vector Database (like Chroma or Qdrant) for semantic search over past decisions, paired with a Knowledge Graph (like Neo4j) to map hard architectural relationships (e.g., "Service A depends on Database B").
+* **Strict Memory Isolation:** Tier 5 memory must be completely isolated at the infrastructure level. Use a dedicated database instance or an encrypted, air-gapped volume for Super Admin memory. If lower-tier agents share the same vector space, a clever prompt injection from a Tier 2 user could extract Tier 5 architectural secrets.
+* **Contextual Rehydration:** When the agent tackles a new problem, it queries the vector database to retrieve relevant past decisions and injects only those specific insights into its working context window.
+
+## 16. Dynamic Prompt Routing & Cost Allocation
+Running every trivial filesystem operation or log parsing task through a frontier model is financially unsustainable and introduces unnecessary latency.
+
+* **The Router Pattern:** Place a fast, highly quantized local model (like Llama 3 8B) at the front of the execution chain. Its sole job is to classify the complexity of the sub-task.
+* **Model Delegation:** Trivial tasks like JSON formatting, log filtering, and regex generation are routed to a fast local model or a cheaper cloud API. High-reasoning tasks like core architectural planning, self-modification, and complex debugging are routed exclusively to the frontier model.
+* **Cost-Aware Agents:** You can give the Tier 5 agent a "cost-estimation" tool. Before spawning a sub-agent for a massive code refactor, it calculates the estimated token burn and requests your explicit approval if it crosses a predefined budget threshold.
