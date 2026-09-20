@@ -195,3 +195,28 @@ Allowing an AI to rapidly write, test, and rewrite temporary code directly to th
   * `/opt/antigravity/` (Immutable): Read-only binaries and core logic.
   * `/var/lib/antigravity/` (Persistent): The encrypted vector database (Memory).
   * `/dev/shm/antigravity/` (Volatile): The `staging/` environment where the agent generates and tests code is mounted on `tmpfs`. The sandbox exists entirely in RAM, operating at lightning speed. Upon server restart, the entire staging sandbox vanishes automatically.
+
+---
+
+## Part VII: Role Provisioning & Delegation (Plugin Architecture)
+*Introduction: Because the Agent Core functions as a plugin for external game engines and web applications, the Super Admin must project their authority downwards without tightly coupling the agent to the host application's database. Delegation must be stateless, dynamic, and mathematically bound to user accountability.*
+
+### 27. The Source of Truth (Stateless Delegation)
+A secure plugin should never duplicate the host's user database to avoid desynchronization and credential leaks. 
+* **Host-Driven Authentication:** The Host Application (E-Profile or the Game Engine) exclusively handles passwords and user logins. 
+* **Cryptographic Handoff:** Upon successful login, the Host App generates a short-lived, asymmetric JSON Web Token (JWT) containing the user's `UUID` and integer `Tier_Level`. The Agent Core simply validates the JWT's signature against the Host's public key. If valid, the Agent temporarily assumes the restricted state defined by that token.
+
+### 28. Workspace Binding & Accountability
+To enforce absolute accountability, lower-tier agents must never share overlapping host directories.
+* **Dynamic Contained Environments:** When a lower-tier user initiates a session, the Super Admin engine dynamically provisions a dedicated, isolated sandbox directory mapped directly to the user's cryptographic `UUID` (e.g., `/var/sandboxes/tier3_<UUID>/`).
+* **Mathematical Accountability:** Every read, write, and agent-generated script is physically trapped inside this ID-bound folder. This ensures that any malicious prompt or destructive code is perfectly traceable back to the specific human operator who issued it, making anonymous lateral movement impossible.
+
+### 29. Cryptographic Revocation & The Kill Switch
+Because stateless JWTs cannot easily be "logged out" until they expire, the Super Admin must possess a mechanism to sever active sessions instantly.
+* **The In-Memory Blacklist:** The Agent Core maintains a high-speed, in-memory Certificate Revocation List (CRL) for compromised `UUID`s. 
+* **The Reaper Thread:** The Super Admin can issue a global "Kill Command" for a specific user ID. The Core Engine immediately adds the `UUID` to the blacklist and broadcasts a `SIGKILL` to any active worker threads or sub-agents associated with that ID, destroying the user's session mid-execution.
+
+### 30. Dynamic Policy Propagation
+Hardcoding the rules for Tiers 1-4 into Python files requires complete server restarts to modify, causing unacceptable downtime for a developer tool.
+* **Configuration-as-Code:** The Super Admin manages a strict `policies.yaml` file defining the precise directory paths, token budgets, and LLM models allowed for each tier.
+* **Hot-Reloading via inotify:** The Agent daemon utilizes kernel-level file watchers (`inotify`). If the Super Admin edits the `policies.yaml` file to revoke Tier 3 access to a specific database, the daemon hot-reloads the policy into memory instantly, applying the new restrictions to all subsequent tool calls without interrupting active connections.
