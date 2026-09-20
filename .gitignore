@@ -11,3 +11,4 @@ gethub_token.txt
 rename_history.json
 proposed_renames.json
 *.log
+.local/
