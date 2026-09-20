@@ -80,3 +80,29 @@ If the agent gets caught in an execution loop, prompt-injected, or the primary a
     * **Heartbeat Monitor:** If an active Tier 5 session loses connection with your client interface for more than 60 seconds, the daemon immediately pauses execution and locks all pending tool calls.
 * **Emergency State Rollback:**
     * Implement an independent "nuclear" rollback script on the host that terminates running agent processes, reverts the working directory to the last known healthy Git commit (`git reset --hard HEAD@{upstream}`), and rotates all active agent session tokens.
+
+## 9. Data Privacy & Context Encryption
+If the agent is interacting with an external cloud LLM, sending raw sensitive data out of your network introduces severe compliance and security risks.
+
+* **Context Masking (Substitution Strategy):** Implement a local proxy or middleware that intercepts the outgoing prompt. Use a lightweight scanner (like Microsoft Presidio or custom regex) to detect secrets and replace them with deterministic tokens (e.g., `<SECRET_DB_PASS_1>`). When the model's output requires that secret to execute a command, your local executor rehydrates the token with the actual secret before running it on your system.
+* **Encryption at Rest:** The agent's memory, execution logs, and state databases must be encrypted at rest using strong AES-256-GCM encryption. Avoid writing raw secrets or context dumps to standard disk storage; utilize memory-backed tmpfs for ephemeral agent states.
+
+## 10. Autonomy & Asynchronous Execution
+Unattended execution at Tier 5 must be partitioned strictly by action type to prevent catastrophic unmonitored failures.
+
+* **Read-Only Autonomy:** It is generally safe to grant full asynchronous autonomy for monitoring and triage tasks. The agent can ingest server logs overnight, analyze traffic, and draft incident reports independently.
+* **Constrained Mutating Autonomy:** Tier 5 agents should never have unconstrained asynchronous mutation rights. For tasks like banning IPs, implement a rigid policy engine. The agent can execute predefined, narrow runbooks (e.g., "Add IP to firewall drop list if failed SSH attempts > 10").
+* **Human-in-the-Loop Fallback:** Any novel destructive action or configuration change outside of pre-approved runbooks must push an asynchronous notification (e.g., via a CLI prompt or webhook) requiring a one-touch human sign-off before proceeding.
+
+## 11. Resource Limits & Anomaly Detection
+A malfunctioning orchestration loop can rapidly burn through API budgets or cripple server infrastructure. Lightweight, automated circuit breakers are mandatory.
+
+* **Hard Circuit Breakers:** Enforce strict limits on execution depth. Set a maximum threshold for sequential tool calls without a human checkpoint (e.g., max 15 iterations per sub-task). Implement a hard velocity cap on token spend and API calls per minute.
+* **Loop Detection:** Track the agent's tool calls and argument payloads. If the agent executes the exact same command or experiences the same tool failure three times consecutively, the system must trigger an automatic halt (`status: locked_awaiting_operator`).
+* **Semantic Divergence:** Monitor the agent's behavior relative to the initial prompt. If an agent tasked with reviewing Nginx logs suddenly attempts to execute recursive directory deletions or database schema drops, an anomaly detector should instantly pause the session and revoke execution privileges.
+
+## 12. Tool Registry & Extensibility
+For a developer tool, administrative friction kills productivity, but allowing arbitrary code execution compromises security.
+
+* **Hot-Reloading with Schema Validation:** You should not need a full server restart to ingest new capabilities. Maintain a designated `tools/` directory. When you save a new custom Python script, the agent daemon watches the directory, dynamically imports the script, extracts the function signature and docstrings via reflection, and compiles it into an active tool schema on the fly.
+* **Execution Sandboxing:** Newly ingested tools should be treated as potentially volatile. Execute them in an isolated subprocess or lightweight container sandbox (like a Firecracker microVM) to ensure that a syntax error, infinite loop, or logic flaw in your custom script doesn't crash the primary orchestration daemon.
