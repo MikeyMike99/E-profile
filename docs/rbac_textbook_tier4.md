@@ -146,3 +146,24 @@ If a manipulative plugin is highly sophisticated and bypasses the static analysi
 If a plugin doesn't try to hack the OS, but instead tries to manipulate the *Agent* (e.g., feeding the Admin's Agent subtle prompt injections to manipulate the Admin's decisions):
 * **The Mechanism:** A lightweight, secondary "Watcher" model continuously monitors the Admin Agent's outputs. If the Agent's behavior suddenly diverges from its established baseline (Semantic Divergence)—such as suddenly granting permissions it normally denies—the Watcher triggers a global circuit breaker. 
 * **The Result:** The system instantly freezes the Admin's session, terminates the manipulative plugin, and rolls back the application state to the snapshot taken precisely before the plugin was deployed.
+
+## Section 11: Anti-Spyware & Passive Surveillance
+
+While active malware tries to crash the server or execute commands, **passive spyware** (keyloggers, packet sniffers, and rogue error catchers) attempts to sit silently in the background and steal data. Because these plugins do not consume high CPU or trigger fatal errors, they are notoriously difficult to detect. 
+
+To neutralize passive surveillance, the core engine enforces strict data-blindness across all plugins.
+
+### Memory & Packet Blindness (Anti-Sniffing)
+A malicious plugin might attempt to read the memory space of the core application or put the virtual network interface into promiscuous mode to sniff incoming packets.
+* **The Mechanism:** The plugin's namespace explicitly drops `ptrace` (the ability to read other processes' memory) and `CAP_NET_RAW` (the ability to read raw network packets). 
+* **The Result:** The plugin is mathematically blind. It can only see its own allocated memory. If it attempts to scan the host's memory or sniff network traffic, the kernel returns a complete void.
+
+### The Scoped Event Bus (Anti-Keylogging)
+A common exploit in game engines is a plugin registering a global input hook to secretly log every keystroke, private message, or password entered by users.
+* **The Mechanism:** Plugins are physically barred from accessing raw input streams (e.g., they cannot read from `/dev/input` or hook into global keyboard events). Instead, all inputs go through the Host Application's central **Event Bus**. 
+* **The Result:** The Event Bus only routes strictly necessary, sanitized events to the plugin (e.g., `Event.PlayerEnteredZone`). The plugin never receives raw keystrokes or chat logs intended for other channels, making keylogging impossible.
+
+### Global Exception Shielding (Anti-Error Catching)
+Stack traces and crash logs often contain highly sensitive data, such as database connection strings, API tokens, or memory addresses. A malicious plugin might attempt to register a "Global Exception Handler" to secretly record every error thrown by the host or other plugins.
+* **The Mechanism:** The architecture explicitly denies plugins the ability to register global error catchers. A plugin can only catch and read exceptions generated within its own isolated thread.
+* **The Result:** If another plugin (or the core engine) crashes and leaks a database token in its stack trace, the malicious plugin cannot see it. The core engine instantly intercepts the global stack trace, sanitizes it, and logs it securely, completely shielding the leaked data from passive surveillance.
