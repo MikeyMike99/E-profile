@@ -185,6 +185,12 @@ def application(environ, start_response):
         missing_files = {}
         has_errors = False
         
+        # Wipe the incompatible 3.10 directory unconditionally before importing
+        import shutil
+        bad_path = Path.home() / '.local' / 'lib' / 'python3.10'
+        if bad_path.exists():
+            shutil.rmtree(bad_path, ignore_errors=True)
+            
         # Step 2: Check dependencies programmatically
         import importlib
         for pkg_name, import_name in REQUIRED_PACKAGES.items():
@@ -194,7 +200,7 @@ def application(environ, start_response):
                 if import_name == 'dotenv' and not hasattr(mod, 'load_dotenv'):
                     raise ImportError("Wrong dotenv package installed")
                 missing_pkgs[pkg_name] = 'INSTALLED'
-            except ImportError:
+            except Exception:  # Catch TypeError/SyntaxError from bad versions too!
                 success = install_package(pkg_name)
                 if success:
                     missing_pkgs[pkg_name] = 'INSTALLED (Auto-Recovered)'
