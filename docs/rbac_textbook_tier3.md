@@ -41,3 +41,16 @@ I implemented a harsh static analysis filter on the `write_file_content` operati
 
 ## Section 8: The Cryptographic Self-Destruct
 When the ticket closes, standard file deletion isn't enough. I programmed the EXE to actively rewrite its own memory space and disk footprint with randomized garbage data before unlinking itself, leaving forensic tools with a useless mesh.
+
+## Section 5: In-Memory Source Code Execution (Abolishing Temp Files)
+In the pursuit of true Anti-Forensics, leaving plaintext source code on a hard drive is a critical failure. However, the standard solution—encrypting the code on disk and decrypting it to a `temp` file at runtime—is fatally flawed. 
+
+This introduces a classic Time-of-Check to Time-of-Use (TOCTOU) race condition. A local attacker (or even a modder) can monitor the filesystem during boot, pause the execution thread, and silently swap the decrypted `temp` file with a malicious payload before the engine compiles it.
+
+To render the architecture mathematically untouchable, I engineered **In-Memory Source Code Execution**, completely bypassing the physical disk:
+
+* **The Vaulted Codebase:** Every core Python module is encrypted using the Zero-Knowledge `.vault` architecture. The plaintext `.py` files do not exist on the storage medium.
+* **The Custom Import Hook:** The environment utilizes a single, obfuscated bootstrapper (`boot.py`) that hijacks the language's native import sequence via `sys.meta_path`. 
+* **RAM-Only Decryption & Compilation:** When the application attempts to import a module, the custom loader reads the `.vault` ciphertext from disk. It decrypts the AES-128 payload directly into a volatile string in RAM. It then uses the native `compile()` and `exec()` methods to evaluate the code.
+
+The plaintext source code never touches the hard drive, completely neutralizing the "temp file swap" attack vector. If a physical adversary steals the server's hard drive, they extract nothing but useless ciphertext. The intellectual property only exists in volatile RAM while the server is actively running.
