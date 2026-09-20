@@ -40,12 +40,18 @@ REQUIRED_PATHS = [
 def install_package(package):
     """Attempts to install a package programmatically."""
     try:
-        # WSGI sys.executable is uwsgi, so use python3 explicitly
+        # Wipe the incompatible 3.10 directory if it exists to prevent syntax errors
+        import shutil
+        bad_path = Path.home() / '.local' / 'lib' / 'python3.10'
+        if bad_path.exists():
+            shutil.rmtree(bad_path, ignore_errors=True)
+            
+        # The WSGI server is running Python 3.9, so we MUST install for 3.9
         if package == 'python-dotenv':
-            subprocess.run(['python3', '-m', 'pip', 'uninstall', '-y', 'dotenv'], capture_output=True)
-            subprocess.check_call(['python3', '-m', 'pip', 'install', '--user', 'python-dotenv'])
+            subprocess.run(['python3.9', '-m', 'pip', 'uninstall', '-y', 'dotenv'], capture_output=True)
+            subprocess.check_call(['python3.9', '-m', 'pip', 'install', '--user', 'python-dotenv'])
         else:
-            subprocess.check_call(['python3', '-m', 'pip', 'install', '--user', package])
+            subprocess.check_call(['python3.9', '-m', 'pip', 'install', '--user', package])
         return True
     except Exception as e:
         return False
