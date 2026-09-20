@@ -212,3 +212,24 @@ Even if the Agent somehow bypassed its tool restrictions, the Host OS provides a
 Plugins should never be allowed to execute as raw OS-level processes. 
 * **The Mechanism:** When a plugin is legitimately loaded by the engine, it is forced to run inside a highly restricted, sandboxed runtime (such as WebAssembly (WASM), a Lua sandbox, or a heavily stripped-down Python environment). 
 * **The Result:** The plugin runtime explicitly blocks access to standard libraries that spawn OS processes (e.g., Python's `os.system` or `subprocess.Popen`). Even if the plugin's code tries to instruct the kernel to do something, the runtime interpreter traps the instruction and destroys the plugin.
+
+## Section 14: Renaming Evasion (The Extension Spoofing Threat)
+
+A very common and clever attack vector against AI Agents is **Renaming Evasion** (or Extension Spoofing). If a security guardrail is hardcoded to say *"Do not execute or parse `.sh` or `.exe` files,"* an attacker (or a "helpful" Agent) might simply rename `exploit.sh` to `exploit.txt` or `exploit.config`. Suddenly, the file no longer matches the regex guardrail, allowing it to bypass the security filter and be accessed or executed.
+
+Relying on human-readable file names or extensions for security is fundamentally flawed. To defeat Renaming Evasion, the architecture enforces identity at the structural level.
+
+### 1. Inode and Mount-Level Policies
+In Linux, a file's name is just a pointer. The true identity of a file is its `inode` (index node) on the disk. 
+* **The Mechanism:** When the Admin provisions a plugin sandbox, the security rules (like the `noexec` execution ban) are applied to the entire directory mount point, not to a list of file names.
+* **The Defense:** If an attacker renames `exploit.sh` to `exploit.txt`, the file's `inode` does not change, and it remains physically located on the `noexec` partition. The Linux kernel does not care what the file is called; it will violently reject execution based on where the `inode` resides. 
+
+### 2. Content-Based Identity (MIME & AST Scanning)
+If the Admin's Agent is instructed to "read a configuration file," it must not trust that a `.txt` or `.json` file is actually safe text.
+* **The Mechanism:** Before the Agent ingests a file into its context window or passes it to a parser, the backend inspects the file's "Magic Bytes" (MIME type via `libmagic`) and runs an Abstract Syntax Tree (AST) scan on the contents.
+* **The Defense:** If a bash script is renamed to `config.json`, the backend scanner looks at the contents, sees the `#!/bin/bash` shebang or malicious syntax, and instantly identifies it as an executable script. It drops the file and flags the Admin, completely ignoring the `.json` extension.
+
+### 3. Immutable Sandbox Topologies (The `mv` Ban)
+Agents often try to rename files to "fix" perceived errors, unwittingly aiding an attacker.
+* **The Mechanism:** The Admin's Agent is explicitly deprived of `rename` or `mv` tools within production or staging directories. 
+* **The Result:** The Agent physically cannot rename a file to bypass a guardrail. The structure of a plugin's directory is considered immutable by the Agent; it can only read authorized structures and deploy them, preventing "helpful" file manipulations from creating security loopholes.
