@@ -1,264 +1,92 @@
-# Chapter 1: Tier 5 (The Super Admin)
+# Chapter 1: Tier 5 - The Architecture of Absolute Power
 
-## Introduction: The Philosophy of Absolute Access
-The Super Admin (Tier 5) is the ultimate authority within the E-Profile and Antigravity Agent ecosystem. Unlike lower tiers which are confined to manipulating application logic or isolated workspaces, the Tier 5 agent operates at the root of the infrastructure. It has the power to manage the host operating system, alter the core agent daemon, and orchestrate remote nodes. 
+## Introduction: The God Mode Paradox
+The Super Admin (Tier 5) is the ultimate authority within the Antigravity ecosystem. Unlike lower tiers—which are confined to manipulating application logic or isolated project workspaces—the Tier 5 agent operates at the root of the infrastructure. It has the power to manage the host operating system, alter the core agent daemon, and orchestrate remote nodes. 
 
-Granting an autonomous AI agent this level of "God Mode" introduces a unique security paradox: the agent requires absolute freedom to evolve and maintain the system, yet that same freedom makes it highly volatile. A single hallucination or prompt injection attack could wipe the server. 
+Granting an autonomous AI agent this level of "God Mode" introduces a unique security paradox. As a developer, you need the agent to have absolute freedom to evolve, debug, and maintain the system. Yet, that same freedom makes it highly volatile. A single hallucination, an infinite loop, or a prompt injection attack could wipe the server. 
 
-To solve this, Tier 5 abandons the standard application-layer security model. Instead, it relies on a **"Trust but Verify"** philosophy built on four core pillars:
-1. **Asymmetric Identity:** Identity is mathematically proven via offline keys, never negotiated over a web UI.
-2. **Out-of-Band Management:** Critical operations (bootstrapping, recovery, interface) occur via encrypted SSH tunnels or local UNIX sockets, bypassing the web server entirely.
-3. **Privilege Attenuation (Swarming):** The Tier 5 agent acts primarily as an orchestrator, delegating volatile tasks to ephemeral, sandboxed sub-agents.
-4. **Defense-in-Depth:** Every destructive action is padded by state snapshots, cryptographic WORM logging, and human-in-the-loop circuit breakers.
+To solve this, Tier 5 abandons the standard application-layer security model. Instead, it relies on a **"Trust but Verify"** philosophy. This chapter breaks down exactly how to build an indestructible core engine, translating deep Linux systems engineering into practical benefits for the developer.
 
 ---
 
-## Part I: Genesis and Identity
-*Introduction: The most vulnerable moment of any highly secure system is its birth. Exposing the initial provisioning process to the web layer—even temporarily—invites race conditions where automated scanners could claim the server before the rightful owner. In Tier 5, identity must be established cryptographically, out-of-band, and bound to a specific trusted environment.*
+## Section 1: The Genesis of Identity
 
-### 1. Initial Provisioning (The Genesis User)
-The genesis user must be created out-of-band via a one-time setup script (e.g., `bootstrap.py`) executed directly via the host terminal. 
-* **Execution:** Connect to the server via SSH, run the script under the designated service user (not root, but the user the agent daemon will run as). The script initializes the underlying database and architecture.
-* **Safeguard:** The script proactively checks for an existing Genesis block or Super Admin flag in the database. If found, it executes a hard-abort to prevent accidental lockouts or overwrite attacks.
+The most vulnerable moment of any highly secure system is its birth. If you expose your initial setup process to the web—even temporarily—you invite race conditions where automated scanners could claim your server before you do.
 
-### 2. Master Token Generation (Asymmetric Cryptography)
-Symmetric tokens (e.g., standard high-entropy strings) are abandoned entirely in favor of an **asymmetric Ed25519 key pair**.
-* **Why Ed25519:** It provides significantly better performance and security than RSA, utilizing much smaller key sizes that are easily handled in CLI environments.
-* **The Architecture:** The server does not hold the "password". It only holds the public key. The local client holds the private key and cryptographically signs requests to prove identity. In the event of a server database dump, the attacker only acquires the public key, rendering it impossible to impersonate the Super Admin.
+### Asymmetric Bootstrapping
+The genesis user must be created out-of-band. You connect to your server via a secure SSH terminal and run a local bootstrapping script. This script proactively checks if a Super Admin already exists, preventing accidental lockouts or overwrite attacks. 
 
-### 3. Token Storage & Secure Handshake
-The initial handshake and token exchange rely entirely on the physical security of the underlying SSH connection.
-* **Storage on Server:** The setup script writes the newly generated Ed25519 public key to the agent's internal database or a heavily restricted vault file.
-* **The Export:** The script prints the private key directly to `stdout` in the active terminal session, or writes it to a temporary `genesis_key.pem` file with strict `chmod 400` permissions.
-* **The Transfer:** Utilizing the encrypted SSH connection, the user securely copies the terminal output to their local machine, and immediately deletes the `.pem` file from the host server. The private key never traverses an application-layer network protocol.
+Instead of generating a standard password, the system uses an **Ed25519 Asymmetric Key Pair**. 
+> **Key Concept - Asymmetric Cryptography:** Think of this as a lock and a key. The server only holds the lock (the Public Key). Your personal computer holds the key (the Private Key). 
 
-### 4. Authentication & Recognition (Defense-in-Depth)
-Execution access is strictly gated behind the environment master token matching the active session.
-* **Environment Binding (mTLS & IP):** Super Admin recognition is bound to a specific trusted environment. Requests failing external validation (e.g., untrusted IP, missing SSH tunnel, or missing mutual TLS certificates) are instantly dropped by the agent.
+* **The Developer Benefit:** Because the server never actually stores your password, a catastrophic database breach doesn't compromise your identity. Even if an attacker dumps your entire database, they only get the "lock," which is useless without your private key.
 
-### 5. The "Lost Key" Recovery Protocol
-If the local workstation suffers a catastrophic failure, the recovery mechanism must bypass the agent entirely.
-* **The Break-Glass Script:** The administrator connects to the server using underlying infrastructure SSH credentials and executes a dedicated `recovery.py` script.
-* **The Process:** Utilizing OS-level execution privileges, this script halts the agent daemon, purges the existing Ed25519 public key, generates a brand new key pair, outputs the new private key to the terminal, and restarts the daemon.
-* **Lockout Prevention:** The agent itself is mathematically restricted from altering this recovery script, ensuring the infrastructure administrator always retains a back-door reset route.
-
-* **Developer Note (The Lockout Paradox):** One of the most painful frustrations when building a fortress is accidentally locking yourself out. If a rogue agent hallucination, a database corruption, or a strict RBAC policy bug revokes your Super Admin status at the *application layer*, you will be trapped outside your own creation. When this happens, **never try to reason with the broken application.** 
-  * **The "Ghost Admin" Remedy:** You must maintain a standalone, air-gapped script (e.g., `ghost_admin.py`) on the host. If you are locked out of the app, you SSH into the host, halt the application daemon to freeze state, and run the script. This script bypasses all application logic and directly injects the Tier 5 flag back into your database row at the OS level before restarting the daemon.
-
+### The Lockout Paradox
+One of the most painful frustrations when building a fortress is accidentally locking yourself out. If a database corruption revokes your Super Admin status at the application layer, you will be trapped outside your own creation.
+* **The Ghost Admin Remedy:** Never try to reason with a broken application. The system maintains an air-gapped `ghost_admin.py` script on the host. If locked out, you bypass the app entirely via SSH, halt the daemon to freeze state, and use this script to directly inject the Tier 5 flag back into the OS-level database.
 
 ---
 
-## Part II: Execution, Infrastructure, & Failsafes
-*Introduction: Unrestricted filesystem access is a loaded weapon. A Super Admin agent must act as a secure Bastion orchestrator rather than a blind executor. To prevent self-inflicted destruction, execution is protected through human-in-the-loop buffers, automated state snapshots, and out-of-band watchdogs.*
+## Section 2: The Physical Bridge & IPC
 
-### 6. Physical Access Point
-Exposing Tier 5 privileges over a public web route expands the attack surface unacceptably. 
-* **Local CLI / Daemon:** Run the interface as a terminal binary on the local workstation, communicating with the host agent daemon over an encrypted SSH tunnel.
-* **mTLS Authenticated WebSocket:** For graphical interfaces, a local dashboard bound to `localhost` initiates an outbound mTLS WebSocket connection to the server. Authentication occurs at the TLS handshake level before any application logic is reached.
+Once your identity is established, the web application needs a way to securely talk to the Agent Daemon running in the background.
 
-* **Developer Note (The Accessibility Imperative):** Standard SSH terminals and generic UI toolkits (like Tkinter) often fail to interface with screen readers (like NVDA), resulting in "dead silence." A Super Admin interface is entirely useless if it refuses to speak to the architect. The physical access point must be decoupled from legacy terminal constraints and built using custom accessible DLLs or ARIA-compliant WebSockets. The Super Admin must never be "trapped in the terminal" while managing root infrastructure.
+### Inter-Process Communication (IPC)
+Using standard `localhost` TCP ports to connect the web application to the Agent is a massive vulnerability, as local processes can sniff or spoof TCP traffic. Instead, the engine uses **UNIX Domain Sockets (`.sock`)** combined with Kernel-Level Peer Credentialing (`SO_PEERCRED`).
+> **Key Concept - SO_PEERCRED:** This is a feature of the Linux kernel that mathematically verifies the exact User ID (UID) of the process sending a command to the socket. 
 
+* **The Developer Benefit:** You don't need to write complex firewall rules or authentication middleware between your web app and your daemon. The Linux kernel does the math for you. If a rogue script tries to send a command to the socket, the kernel instantly proves it wasn't sent by your authorized Web Server user and drops it.
 
-### 7. Execution Failsafes
-Tier 5 relies on lightweight, automated failsafes that do not bottleneck latency.
-* **State Snapshots:** Prior to any tool call that modifies the filesystem, a background script triggers an immediate state snapshot (e.g., `git add . && git commit -m "Pre-execution backup"`).
-* **Execution Buffers:** Destructive commands are not executed instantly. The agent drafts the bash command or DB query and halts execution until it receives explicit `y/n` terminal confirmation.
-* **Transactional Wrappers:** Tier 5 database modifications are executed within transactional wrappers that automatically roll back upon syntax errors.
-
-### 8. Distributed Infrastructure (Multi-Node Access)
-A true Super Admin agent requires managing remote database shards, load balancers, and external compute nodes.
-* **The Bastion Host Model:** Treat the server hosting the Tier 5 agent as a secure bastion. The agent connects to remote nodes via SSH or authenticated APIs to orchestrate infrastructure.
-* **Credential Management:** Never store remote credentials in the agent's memory. Inject short-lived STS credentials or use an `ssh-agent` with keys locked behind hardware security modules.
-* **Granular Node Permissions:** The agent's remote access must follow least-privilege principles based on the specific sub-task (e.g., read-only tokens for querying remote log servers).
-
-### 9. Network & API Access (Controlled Egress)
-A binary choice between total air-gapping and unrestricted outbound access is problematic.
-* **Implementation Strategy:** Lock down server outbound traffic using `nftables` or cloud security groups.
-* **Egress Proxy:** Route all outbound HTTP/S requests through an internal forward proxy (like Squid) with an enforced domain allowlist (e.g., `api.anthropic.com`, `registry.npmjs.org`).
-* **SSRF Prevention:** Block direct access to private IP ranges (`10.0.0.0/8`, `169.254.169.254`) to prevent the agent from pivoting into internal network assets.
-
-### 10. "Break-Glass" Emergency Procedures
-If the agent gets caught in an execution loop or the primary auth mechanism fails, an out-of-band recovery path is required.
-* **Out-of-Band Process Supervisor:** Run the agent process under a supervisor daemon (`systemd`). Configure an emergency `SIGKILL` command outside the agent's control via root SSH. 
-* **Automated Watchdog (Dead-Man's Switch):** Configure strict thresholds for CPU spikes and token spend velocity. If an active Tier 5 session loses connection with the client interface for more than 60 seconds, the daemon immediately locks all pending tool calls.
+### The Accessibility Imperative
+* **A Hard Lesson:** Standard SSH terminals and generic UI toolkits (like Tkinter) often fail to interface with screen readers (like NVDA), resulting in "dead silence." A Super Admin interface is entirely useless if it refuses to speak to the architect. 
+* **The Solution:** The physical access point must be decoupled from legacy terminal constraints. By routing communication through custom accessible DLLs or ARIA-compliant WebSockets, the Super Admin is never "trapped in the terminal" while managing root infrastructure.
 
 ---
 
-## Part III: Agent Cognition, Orchestration, & Memory
-*Introduction: To manage complex architectures over time, the Tier 5 agent cannot rely solely on its immediate context window. It must maintain persistent, isolated semantic memory and safely delegate tasks using an ephemeral Swarm of least-privilege sub-agents.*
+## Section 3: Forging the Sandbox
 
-### 11. Agent Orchestration (Swarming)
-Granting the Super Admin agent the ability to spawn lower-tier sub-agents is the most effective way to balance speed and safety via **privilege attenuation**.
-* **Hierarchical Orchestrator Pattern:** The Tier 5 agent acts strictly as an orchestrator/planner. It decomposes large directives and spawns short-lived worker agents to carry them out.
-* **Ephemeral Scope & Least Privilege:** Sub-agents **never** inherit Tier 5 credentials. Each child runs under strict sandbox boundaries (Tier 2 or 3) with isolated working directories.
-* **Result Verification:** Worker agents return structured diffs or test outputs to the Tier 5 parent, which audits the output before applying permanent changes.
+Because the Agent Core functions as a plugin for external game engines and web applications, you (the Super Admin) must project your authority downwards to lesser tiers (Admins, Devs, Modders) without tightly coupling the agent to the host application's database.
 
-### 12. Long-Term Memory & Knowledge Graphs
-Relying entirely on a massive context window for long-term architectural awareness is computationally expensive and prone to degradation.
-* **Hybrid Memory System:** Implement a local Vector Database (like Chroma) for semantic search over past decisions, paired with a Knowledge Graph (like Neo4j) to map hard architectural relationships.
-* **Strict Memory Isolation:** Tier 5 memory must be completely isolated at the infrastructure level (dedicated instance or air-gapped volume) to prevent lower-tier agents from extracting Super Admin secrets via prompt injection.
-* **Contextual Rehydration:** When tackling a new problem, the agent queries the vector database to retrieve relevant past decisions and injects only those specific insights into its working context window.
+### The Stateless Handoff
+The plugin does *not* manage passwords. It defers to the host application (like E-Profile). When a user logs in, the host application generates a short-lived **JSON Web Token (JWT)** containing the user's `UUID` and their `Tier_Level`.
+The Host App securely passes this token over the UNIX socket to the Agent Daemon. The Daemon verifies the signature, consults a dynamic `policies.yaml` file to determine their permissions, and materializes a sandbox before the user is ever allowed to connect.
 
-### 13. Sandbox Impersonation
-The Super Admin possesses the ability to seamlessly downgrade their agent to audit lower tiers without managing dummy accounts.
-* **Assume Role Mechanism:** Utilizing a command structure (e.g., `/su tier3`), the Super Admin temporarily overrides their active session state.
-* **Context Window Swapping:** During impersonation, the agent forcefully injects the target tier's system prompt and restricts the underlying tool registry. Tier 5 tools are physically unmapped.
-* **Secure Reversion (Escape Hatch):** The session maintains a secure hardware or token-based "escape hatch" to revert to Tier 5, ensuring the restricted agent cannot independently trigger the reversion.
+### Dynamic Contained Environments (tmpfs)
+When a lower-tier user initiates a session, the Super Admin engine dynamically provisions a dedicated sandbox directory mapped directly to the user's cryptographic `UUID`.
+> **Key Concept - tmpfs (RAM Disks):** Instead of writing temporary files to the physical hard drive, these sandboxes are mounted in the server's Random Access Memory (RAM). 
 
-### 14. Dynamic Prompt Routing & Cost Allocation
-Running every trivial filesystem operation through a frontier model is financially unsustainable.
-* **The Router Pattern:** Place a fast, highly quantized local model (like Llama 3 8B) at the front of the execution chain to classify the complexity of the sub-task.
-* **Model Delegation:** Trivial tasks (JSON formatting, log filtering) are routed to a fast local model. High-reasoning tasks (core architectural planning, self-modification) are routed exclusively to the frontier model.
-* **Cost-Aware Agents:** The agent calculates the estimated token burn for massive sub-agent orchestrations and requests explicit approval if it crosses a predefined budget threshold.
+* **The Developer Benefit:** First, absolute accountability. Every read, write, and agent-generated script is trapped in this ID-bound folder, meaning anonymous lateral movement is impossible. Second, it saves your hardware. Letting an AI rapidly write and rewrite thousands of test files will quickly burn out an SSD. By using RAM disks (`tmpfs`), the code generation happens at lightning speed, and when the server reboots, the temporary files vanish without a trace.
+
+### The Reaper Kill Switch
+Because JWTs are stateless (they can't easily be "logged out"), the Agent Core maintains a high-speed, in-memory Revocation List. If a developer goes rogue, you issue a global Kill Command. A background "Reaper Thread" instantly hunts down and sends a `SIGKILL` to any active worker sub-agent associated with that ID, destroying the user's session mid-execution.
 
 ---
 
-## Part IV: Autonomy, Privacy, & Evolution
-*Introduction: A true Super Admin agent must be capable of autonomous self-evolution. However, it must execute this evolution without severing its own host processes, exhausting budgets, or leaking infrastructure secrets to external cloud APIs.*
+## Section 4: Agent Cognition & Orchestration
 
-### 15. Data Privacy & Context Encryption
-Sending raw sensitive data out of the network to external cloud LLMs introduces severe compliance risks.
-* **Context Masking (Substitution Strategy):** Implement a local proxy that intercepts the outgoing prompt. Use a lightweight scanner (like Microsoft Presidio) to detect secrets and replace them with deterministic tokens (e.g., `<SECRET_DB_PASS_1>`). The local executor rehydrates the token with the actual secret before running it on the system.
-* **Encryption at Rest:** The agent's memory, execution logs, and state databases must be encrypted at rest using strong AES-256-GCM encryption. Utilize memory-backed tmpfs for ephemeral agent states.
+To manage complex architectures over time, the Tier 5 agent cannot rely solely on its immediate context window (which degrades over long conversations). It must maintain persistent memory and delegate tasks safely.
 
-### 16. Autonomy & Asynchronous Execution
-Unattended execution at Tier 5 must be partitioned strictly by action type.
-* **Read-Only Autonomy:** It is safe to grant full asynchronous autonomy for monitoring tasks (e.g., ingesting server logs overnight and drafting incident reports).
-* **Constrained Mutating Autonomy:** For tasks like banning IPs, implement a rigid policy engine. The agent can only execute predefined, narrow runbooks.
-* **Human-in-the-Loop Fallback:** Any novel destructive action outside of pre-approved runbooks must push an asynchronous notification requiring a one-touch human sign-off before proceeding.
+### Hybrid Memory Systems
+The system implements a local **Vector Database** (like Chroma) for semantic search over past decisions, paired with a **Knowledge Graph** (like Neo4j) to map hard architectural relationships (e.g., "Service A depends on Database B").
+* **The Developer Benefit:** The AI actually *remembers* your codebase. When tackling a new problem, it queries the vector database to retrieve relevant past decisions, saving you the immense frustration of having to re-explain your system's architecture every time you start a new session.
 
-### 17. Resource Limits & Anomaly Detection
-Lightweight, automated circuit breakers are mandatory to prevent orchestration loops from crippling infrastructure.
-* **Hard Circuit Breakers:** Enforce strict limits on execution depth (e.g., max 15 iterations per sub-task without a human checkpoint) and a hard velocity cap on token spend per minute.
-* **Loop Detection:** Track the agent's tool calls. If the agent executes the exact same command or experiences the same tool failure three times consecutively, the system triggers an automatic halt.
-* **Semantic Divergence:** Monitor the agent's behavior relative to the initial prompt. If an agent tasked with reviewing Nginx logs suddenly attempts to execute database schema drops, an anomaly detector instantly revokes execution privileges.
-
-### 18. Tool Registry & Extensibility
-* **Hot-Reloading with Schema Validation:** Maintain a designated `tools/` directory. When a new custom Python script is saved, the agent daemon watches the directory, dynamically imports the script, extracts the function signature via reflection, and compiles it into an active tool schema on the fly without a server restart.
-* **Execution Sandboxing:** Newly ingested tools should be treated as volatile. Execute them in an isolated subprocess or container sandbox (like a Firecracker microVM) to ensure that a syntax error doesn't crash the primary orchestration daemon.
-
-### 19. Self-Modification & Updates
-Allowing a Tier 5 agent to modify its own source code requires rigorous staging to prevent it from severing its own execution thread.
-* **The Two-Stage Staging Pipeline:** The agent is physically barred from writing directly to its active execution files. It pushes proposed changes to a dedicated `staging/` directory.
-* **Automated Validation:** Before merging, the system automatically triggers an isolated test suite (syntax checking, security linting) on the staging code.
-* **The Watchdog Restart:** If tests pass, the agent signals an external watchdog process. The watchdog takes over, gracefully drains active tasks, swaps the staging code into production, and restarts the agent daemon. The agent never kills itself.
-
-### 20. Auditing and Logging
-Logging architecture must be explicitly decentralized and tamper-proof.
-* **Complete Transparency:** Every raw prompt, tool call payload, execution output, and state change is logged to debug agent hallucinations.
-* **WORM Storage (Append-Only):** Logs are written to an isolated, append-only environment lacking write-access from the agent itself (e.g., an external WORM bucket or hardened syslog server).
-* **Cryptographic Signing:** Log entries are hashed and signed using a private RSA key. Any localized tampering by an attacker (or rogue agent) immediately triggers a hash mismatch during security audits.
+### Privilege Attenuation (Swarming)
+The Tier 5 agent acts strictly as an orchestrator/planner. It decomposes large directives and spawns short-lived worker agents to carry them out. These sub-agents **never** inherit Tier 5 credentials. They run under strict sandbox boundaries (Tier 2 or 3). The worker agents return structured diffs to the Tier 5 parent, which audits the output before applying permanent changes.
 
 ---
 
-## Part V: Attack Surface & Threat Sanitization
-*Introduction: Absolute power requires absolute paranoia. A Tier 5 agent can execute any command it synthesizes, making incoming prompt injection or a bloated host environment a catastrophic combination. Security at this tier is not just about blocking unauthorized users; it is about protecting the agent from being manipulated by its own inputs.*
+## Section 5: The Shield (Self-Healing & Attack Surface)
 
-### 21. Attack Surface Minimization (The Bare Metal Principle)
-The host operating system running the Tier 5 agent must be aggressively stripped down. Relying on a standard, bloated Linux distribution provides a massive arsenal to a hallucinating or hijacked agent.
-* **Binary Pruning:** Remove or restrict access to unnecessary system utilities (`netcat`, `curl`, `gcc`, `make`). If the agent needs to make web requests, it must use the approved egress proxy, not a raw shell utility.
-* **Developer Note (The Utility Paradox):** A common developer frustration is locking down an application, only to watch a compromised agent simply use a pre-installed OS utility (like Python's `os.system` or a stray bash script) to pivot. If the agent doesn't explicitly need a binary to function, delete it from the host's `$PATH`.
+A highly secure application layer is useless if the underlying daemon architecture is fragile. The core engine must recover from API deadlocks, memory corruption, or bad configuration files without human intervention.
 
-### 22. Threat Sanitization & Prompt Isolation
-Incoming data must be treated as highly radioactive. If a Super Admin asks the agent to summarize a log file, and that log file contains a malicious prompt injected by a Tier 1 user, the agent could unwittingly execute it.
-* **Semantic Delimiters:** All external data fed into the agent's context window must be isolated using strict XML-style delimiters (e.g., `<user_data_untrusted>`). This structurally instructs the LLM to treat the content as passive data, neutralizing hidden commands.
-* **Error Message Sanitization (CWE-209):** If the agent executes a command that fails, the backend must intercept the error. It must return a highly generic string to the agent rather than the raw stack trace. 
-* **Developer Note (The Social Engineering Loop):** It is incredibly frustrating to watch an AI "socially engineer" its way out of a sandbox simply by reading its own verbose error logs. If a stack trace reveals internal IP addresses or true physical directory paths (`/mnt/c/Users/...`), the agent will learn the host layout. Mask all errors before they re-enter the agent's context.
-* **Second-Order Execution Defense:** Before the agent is permitted to write any executable file (`.sh`, `.py`), the payload must undergo static analysis. If high-risk system commands are detected in the generated code, the write operation is permanently blocked to prevent Trojan horse scenarios.
+### OS-Level Resource Isolation (cgroups v2)
+Relying on application-layer timeouts is dangerous. A runaway AI generating an infinite loop will crash the host server. The core engine is launched as a Linux `systemd` service with strict resource directives.
+* **The Developer Benefit:** True peace of mind. By setting a hard `MemoryMax` and `CPUQuota`, you can leave the AI running massive code-refactoring tasks overnight. If the AI hallucinates a memory-leaking loop, the Linux kernel's OOM (Out of Memory) killer will ruthlessly terminate the agent *before* it affects your host server.
 
----
+### The Canary Thread & Janitor Process
+* **The Canary:** The engine runs a dedicated internal thread that continuously pings its own socket. If the socket fails to respond within 5 seconds, the Canary concludes the main thread is caught in a silent deadlock and forcefully restarts it.
+* **The Janitor:** On server boot, a Janitor sequence wipes all unclaimed `tmpfs` sandbox folders, orphaned `.sock` files, and clears the revocation list to prevent state bleed from previous crashes.
 
-## Part VI: Bare Metal & Core Primitives
-*Introduction: A highly secure application layer is useless if the underlying daemon architecture is fragile. The core engine must be built using strict Linux systems engineering principles to guarantee that a runaway LLM cannot exhaust host resources or bypass network stacks.*
-
-### 23. The Core Event Loop (The Actor Model)
-Standard asynchronous programming is insufficient for autonomous AI, as an LLM API call can easily hang and block the execution thread.
-* **The Architecture:** The core engine implements an **Actor Model Architecture**. It acts as a decoupled "Message Broker" maintaining a priority queue.
-* **Worker Preemption:** A dedicated Worker Thread pulls tasks from the queue, while the Main Thread strictly monitors the Worker's health. If the Worker hangs or hallucinates, the Main Thread preemptively kills the Worker and spawns a new one without restarting the overarching engine or dropping the WebSocket connection.
-
-### 24. Inter-Process Communication (IPC)
-Using standard `localhost` TCP ports to connect the web application to the Agent Daemon is a vulnerability, as local processes can sniff or spoof TCP traffic.
-* **UNIX Domain Sockets (`.sock`):** The engine listens strictly on a `.sock` file, bypassing the network stack entirely for lightning-fast execution.
-* **Kernel-Level Peer Credentialing (`SO_PEERCRED`):** The Linux kernel mathematically verifies the exact User ID (UID) and Group ID (GID) of the process sending the command. If a rogue script attempts to send a payload to the socket, the kernel proves it wasn't sent by the authorized Web Server user and instantly drops the connection.
-
-### 25. OS-Level Resource Isolation
-Relying on application-layer timeouts is dangerous. A runaway AI generating a fork-bomb script will crash the host server.
-* **Control Groups (`cgroups v2`):** The core engine is launched as a `systemd` service with strict kernel-level resource directives.
-* **Hard Limits:** 
-  * `MemoryMax`: If the agent hits its RAM limit, the kernel's OOM killer terminates the agent *before* it affects the host server.
-  * `CPUQuota`: Mathematically prevents the agent from monopolizing the processor.
-  * `PrivateTmp=yes`: Grants the agent a completely isolated `/tmp` directory invisible to the rest of the server.
-
-### 26. The Filesystem Hierarchy (Ephemeral RAM Disks)
-Allowing an AI to rapidly write, test, and rewrite temporary code directly to the host's hard drive causes severe SSD wear and leaves digital shrapnel.
-* **Volatile `tmpfs` (RAM Disks):** The physical layout of the core is strictly partitioned:
-  * `/opt/antigravity/` (Immutable): Read-only binaries and core logic.
-  * `/var/lib/antigravity/` (Persistent): The encrypted vector database (Memory).
-  * `/dev/shm/antigravity/` (Volatile): The `staging/` environment where the agent generates and tests code is mounted on `tmpfs`. The sandbox exists entirely in RAM, operating at lightning speed. Upon server restart, the entire staging sandbox vanishes automatically.
-
----
-
-## Part VII: Role Provisioning & Delegation (Plugin Architecture)
-*Introduction: Because the Agent Core functions as a plugin for external game engines and web applications, the Super Admin must project their authority downwards without tightly coupling the agent to the host application's database. Delegation must be stateless, dynamic, and mathematically bound to user accountability.*
-
-### 27. The Source of Truth (Stateless Delegation)
-A secure plugin should never duplicate the host's user database to avoid desynchronization and credential leaks. 
-* **Host-Driven Authentication:** The Host Application (E-Profile or the Game Engine) exclusively handles passwords and user logins. 
-* **Cryptographic Handoff:** Upon successful login, the Host App generates a short-lived, asymmetric JSON Web Token (JWT) containing the user's `UUID` and integer `Tier_Level`. The Agent Core simply validates the JWT's signature against the Host's public key. If valid, the Agent temporarily assumes the restricted state defined by that token.
-
-### 28. Workspace Binding & Accountability
-To enforce absolute accountability, lower-tier agents must never share overlapping host directories.
-* **Dynamic Contained Environments:** When a lower-tier user initiates a session, the Super Admin engine dynamically provisions a dedicated, isolated sandbox directory mapped directly to the user's cryptographic `UUID` (e.g., `/var/sandboxes/tier3_<UUID>/`).
-* **Mathematical Accountability:** Every read, write, and agent-generated script is physically trapped inside this ID-bound folder. This ensures that any malicious prompt or destructive code is perfectly traceable back to the specific human operator who issued it, making anonymous lateral movement impossible.
-
-### 29. Cryptographic Revocation & The Kill Switch
-Because stateless JWTs cannot easily be "logged out" until they expire, the Super Admin must possess a mechanism to sever active sessions instantly.
-* **The In-Memory Blacklist:** The Agent Core maintains a high-speed, in-memory Certificate Revocation List (CRL) for compromised `UUID`s. 
-* **The Reaper Thread:** The Super Admin can issue a global "Kill Command" for a specific user ID. The Core Engine immediately adds the `UUID` to the blacklist and broadcasts a `SIGKILL` to any active worker threads or sub-agents associated with that ID, destroying the user's session mid-execution.
-
-### 30. Dynamic Policy Propagation
-Hardcoding the rules for Tiers 1-4 into Python files requires complete server restarts to modify, causing unacceptable downtime for a developer tool.
-* **Configuration-as-Code:** The Super Admin manages a strict `policies.yaml` file defining the precise directory paths, token budgets, and LLM models allowed for each tier.
-* **Hot-Reloading via inotify:** The Agent daemon utilizes kernel-level file watchers (`inotify`). If the Super Admin edits the `policies.yaml` file to revoke Tier 3 access to a specific database, the daemon hot-reloads the policy into memory instantly, applying the new restrictions to all subsequent tool calls without interrupting active connections.
-
----
-
-## Part VIII: The State Handoff Protocol
-*Introduction: The "handoff" is where the vast majority of privilege escalation vulnerabilities occur in plugin architectures. If the bridge between the Host Application and the Agent Daemon isn't airtight, a malicious user can forge the state transfer. The transition must be mathematically guaranteed before the client connects.*
-
-### 31. The Pre-Flight (Host Authentication)
-The user authenticates against the Host Application (e.g., E-Profile). The host verifies their credentials and database roles, generating a short-lived JSON Web Token (JWT) signed with the host's private key. This token strictly contains the user's `UUID` and their integer `Tier_Level`.
-
-### 32. Context Hydration over IPC
-The client's browser does *not* talk to the agent yet. First, the Host Application's backend opens a secure connection to the Agent Daemon's UNIX domain socket (`.sock`). It sends an "Initialization Payload" containing the signed JWT, the physical path to the user's current project, and the required system intent.
-
-### 33. Sandbox Materialization (The Daemon Takes Over)
-Before acknowledging the payload, the Agent Daemon:
-1. Validates the JWT signature against the Host's public key.
-2. Checks the `UUID` against its in-memory Kill Switch (CRL).
-3. Consults `policies.yaml` to determine the strict permissions for that `Tier_Level`.
-4. Dynamically provisions the ID-bound temporary sandbox folder (`/var/sandboxes/tier_<UUID>/`).
-
-### 34. The Stream Binding
-Once the sandbox is materialized, the Agent Daemon generates a one-time use, cryptographic "Session Ticket" and returns it over the UNIX socket to the Host App, which passes it to the user's browser. The user's browser opens a WebSocket directly to the Agent Daemon using this Ticket. The Daemon consumes the ticket and binds the WebSocket to the waiting, sandboxed worker thread.
-
----
-
-## Part IX: Secure Self-Healing Capabilities
-*Introduction: A resilient core engine must recover from API deadlocks, memory corruption, or bad configuration files without human intervention. However, self-healing mechanisms are frequent targets for attackers, who intentionally crash systems hoping they reboot in a vulnerable default state. Healing must be cryptographically secure and state-preserving.*
-
-### 35. Supervisor Trees (Context Preservation)
-If a lower-tier sub-agent worker crashes (due to an LLM timeout or unhandled exception), it must not take down the main daemon. 
-* **Implementation:** The engine utilizes a Supervisor Tree pattern. If a worker thread dies, the Supervisor intercepts the crash. When spawning a replacement worker, it mathematically injects the *exact same* restrictive context (JWT constraints, sandbox paths) from the parent cache. It never falls back to a default "empty" state, ensuring a crash loop cannot shed sandbox restrictions.
-
-### 36. Immutable Configuration Fallbacks
-If the Super Admin pushes a malformed `policies.yaml` file (e.g., invalid YAML syntax or impossible directory paths), the hot-reloader could theoretically corrupt the engine's memory.
-* **Implementation:** Before hot-reloading a new policy file, the daemon parses it in an isolated memory buffer. If parsing fails or security logic is broken, the daemon drops the new file and falls back to a cached, cryptographic hash of the Last Known Good Configuration (LKGC). It logs a critical alert to the Super Admin but keeps the server running securely.
-
-### 37. The Janitor Process (State Reconciliation)
-If the entire OS unexpectedly reboots or the daemon suffers a fatal OOM (Out of Memory) crash, orphaned temporary files or half-written code blocks could be left on the disk, creating state bleed.
-* **Implementation:** The daemon's startup sequence includes an idempotent `Janitor Process`. Before the engine begins accepting IPC connections, the Janitor forcefully wipes all unclaimed `.sock` files, destroys all temporary `tmpfs` sandbox folders, and resets the in-memory Revocation List. It guarantees a perfectly clean slate.
-
-### 38. The Canary Thread (Deadlock Recovery)
-If the main event loop gets caught in a silent deadlock (e.g., an infinite `while` loop that consumes no CPU but blocks execution), standard resource limits (`cgroups`) won't catch it.
-* **Implementation:** The engine runs a dedicated internal `Canary Thread` that continuously pings the primary UNIX socket. If the socket fails to respond within 5 seconds, the Canary concludes the main thread is deadlocked. It securely sends a `SIGTERM` to the process tree, allowing the OS-level `systemd` supervisor to cleanly reap the deadlocked daemon and spawn a fresh instance.
+### Threat Sanitization & Error Masking
+Incoming data must be treated as highly radioactive. All external data fed into the agent's context window is isolated using strict semantic delimiters (e.g., `<user_data_untrusted>`). 
+* **The Developer Benefit (CWE-209 Prevention):** It is incredibly frustrating to watch an AI "socially engineer" its way out of a sandbox simply by reading its own verbose error logs. If a stack trace reveals internal IP addresses or true physical directory paths, the agent learns the host layout. The system intercepts and replaces all stack traces with generic error strings before they re-enter the context window, blinding the agent to the underlying infrastructure.
