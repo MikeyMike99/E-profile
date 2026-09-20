@@ -138,6 +138,15 @@ At the root level, I knew I had to defend against Time-Of-Check to Time-Of-Use (
 * **The Mechanism (O_NOFOLLOW):** When my core engine opens any file, I forced it to utilize the `os.O_NOFOLLOW` flag at the kernel level.
 * **The Result:** If an attacker successfully executes a race condition and swaps the target file with a symlink pointing to `/etc/shadow`, the Linux kernel violently rejects the operation. My file descriptors are completely immunized against symlink spoofing.
 
+## Section 7: Defeating UI Asphyxiation (The Ingestion Swarm & Draft Sandbox)
+At the highest tier, I realized that the user interface itself is a vulnerability. If an Admin pastes a massive, 5-megabyte block of code into the chat box, `JSON.stringify` freezes the main thread. When it tries to force that payload through a WebSocket frame, it severs the connection and crashes the backend async loop.
+
+I had to apply Zero-Trust principles to the UI and the clipboard itself. I cannot blindly trust an "auto-send" from a paste event, and I cannot allow a massive prompt to choke the Main Agent's context window.
+
+* **Trust-No-Auto-Send (The Draft Sandbox):** I engineered the input box to intercept every keystroke and paste event, silently updating a local JSON string (`localStorage`) within the browser. It *never* transmits automatically. A stray newline character in a copied block of code cannot trigger a catastrophic API call. If the browser crashes mid-paste, the Draft Sandbox completely restores the prompt. The text is only purged from the local cache and handed to the backend when the Admin explicitly clicks "Send."
+* **The Edit Box Rolling Window:** To prevent the generic HTML `<textarea>` from stretching out of proportion and breaking the layout when loaded with a massive prompt, I capped it at an auto-resize limit of 250px. Beyond that, it locks its height and transforms into a buttery-smooth scrolling window.
+* **The Ingestion Swarm:** If an Admin *does* send a massive 10,000+ character prompt, I forced the frontend to bypass WebSockets entirely, routing the payload through a standard HTTP POST request. When the backend receives this massive file, it does not feed it directly to the Main Agent. Instead, it splices the file into 15,000-character chunks and spawns a background "Ingestion Swarm"—multiple headless, isolated sub-agents that run in parallel. Their only mandate is to read their chunk, strip out technical requirements, and summarize it. The backend compiles these summaries and feeds them to the Main Agent as a hidden `<SYSTEM_MESSAGE>`, instructing the Main Agent to ask the user for explicit confirmation before executing the massive task.
+
 
 ---
 
