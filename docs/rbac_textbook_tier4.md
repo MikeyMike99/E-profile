@@ -235,7 +235,7 @@ Agents often try to rename files to "fix" perceived errors, unwittingly aiding a
 * **The Result:** The Agent physically cannot rename a file to bypass a guardrail. The structure of a plugin's directory is considered immutable by the Agent; it can only read authorized structures and deploy them, preventing "helpful" file manipulations from creating security loopholes.
 
 
-# Section 15: Plugin Data Storage & Isolation (State Security)
+## Section 15: Plugin Data Storage & Isolation (State Security)
 
 When a plugin requires database storage, it transitions from being *stateless* to *stateful*. This introduces complex security risks, particularly when different tiers (Admins, Devs, and End Users) interact with the same plugin.
 

@@ -29,6 +29,58 @@ This is not a standard security manual. This is the blueprint for containing an 
 
 ---
 
+## Table of Contents
+
+**Foreword: A Hacker's Manifesto**
+- The Reality of the AI Game Master
+
+**Chapter 1: Tier 5 - The Architecture of Absolute Power**
+- Section 1: The Genesis of Identity
+- Section 2: The Physical Bridge & IPC
+- Section 3: Forging the Sandbox
+- Section 4: Agent Cognition & Orchestration
+- Section 5: The Shield (Self-Healing & Attack Surface)
+- Section 6: Defeating Race Conditions (TOCTOU & Symlink Armor)
+
+**Chapter 2: Tier 4 - The Application Admin**
+- Section 1: The Operator's Toolkit
+- Section 2: The Dispatcher (Workforce & Ticketing)
+- Section 3: QA and Plugin Inspection
+- Section 4: Community, Economy, & Gameplay Management
+- Section 5: What the Admin Inherits from Tier 5
+- Section 6: The Hard Boundary (Absolute Code Denial)
+- Section 7-14: Defense in Depth (Malicious Plugins, Spyware, Proxy Execution, Renaming Evasion)
+- Section 15: Plugin Data Storage & Isolation (State Security)
+- Section 16: Operational Safeguards & The Admin Fallback
+- Section 17: Zero-Knowledge Data Masking (PII Scrubbing)
+
+**Chapter 3: Tier 3 - The Dev Team (Scoped Contributor)**
+- Section 1: The Ephemeral Payload (The EXE Sandbox)
+- Section 2: Local Agent Control (The Best of Both Worlds)
+- Section 3: The Tether (Logging & Access Control)
+- Section 4: Defeating the Memory Dump (Anti-Forensics)
+- Section 5: Session Lifecycles & Cryptographic Key Rotation
+- Section 6: Fault Tolerance & Offline Data Recovery
+- Section 7: What the Dev Inherits from the Core Architecture
+- Section 8: The Cryptographic Self-Destruct
+- Section 9: Second-Order Execution Prevention (Static Analysis)
+
+**Chapter 4: Tier 2 - The Guest / Client (Plugin Creator)**
+- Section 1: The Disconnected Payload
+- Section 2: Semantic Abstraction (Coding in the Dark)
+- Section 3: Sanitized Debugging (The Button Fallback)
+- Section 4: The Security Risks & Defenses
+
+**Chapter 5: Tier 1 - Least Privilege (End User)**
+- Section 1: The Interrogation Agent (Server-Side Pipeline)
+- Section 2: The Offline Playground
+- Section 3: Hardware Binding & The Viral EXE (P2P Realms)
+
+**Conclusion: The Future of Autonomous Architecture**
+
+
+---
+
 # Chapter 1: Tier 5 - The Architecture of Absolute Power
 
 ## Introduction: The God Mode Paradox
@@ -368,7 +420,7 @@ Agents often try to rename files to "fix" perceived errors, unwittingly aiding a
 * **The Result:** The Agent physically cannot rename a file to bypass a guardrail. The structure of a plugin's directory is considered immutable by the Agent; it can only read authorized structures and deploy them, preventing "helpful" file manipulations from creating security loopholes.
 
 
-# Section 15: Plugin Data Storage & Isolation (State Security)
+## Section 15: Plugin Data Storage & Isolation (State Security)
 
 When a plugin requires database storage, it transitions from being *stateless* to *stateful*. This introduces complex security risks, particularly when different tiers (Admins, Devs, and End Users) interact with the same plugin.
 
@@ -586,6 +638,24 @@ What happens if a player creates an incredible offline game mode and wants to pl
 * **Decentralized Servers:** By exchanging these tokens, a group of friends can forge their own private, Peer-to-Peer (P2P) server pool operating entirely on their local hosts. They can play their heavily modified, AI-generated version of the game together, entirely bypassing the Tier 4 and Tier 5 central infrastructure. 
 
 Tier 1 is where the architecture transitions from a rigidly controlled hierarchy into a viral, decentralized gaming ecosystem.
+
+
+---
+
+# Conclusion: The Future of Autonomous Architecture
+
+The Antigravity Engine represents a paradigm shift in how we handle autonomous AI agents in production environments. Traditional systems rely on fragile prompt engineering, hoping the AI simply *chooses* not to execute malicious code. We have proven throughout this textbook that hope is not a security strategy.
+
+By implementing the 5-Tier Zero-Trust Hierarchy, we have shifted the burden of security from the LLM's context window to the unbreakable laws of the Linux kernel and cryptographic mathematics. 
+* We bound the Super Admin to asymmetric keys and hardware protocols.
+* We locked the Admins out of the codebase, restricting them to immutable plugin deployments and strict operational APIs.
+* We completely reinvented developer workflows, pushing Tier 3 into volatile, RAM-only EXEs that self-destruct upon completion to protect the company's IP.
+* We blinded external Modders with Semantic Abstraction, forcing them to code through a heavily guarded "Black Box."
+* And finally, we unleashed the End Users, granting them the ultimate freedom to mutate their offline worlds and forge viral, decentralized P2P networks without ever endangering the core infrastructure.
+
+The textbook is complete, but the architecture is a living organism. As AI models become faster and more autonomous, the boundary between "developer" and "agent" will continue to blur. But with this Zero-Trust foundation, the Antigravity Engine is prepared to scale into that future safely.
+
+The sandbox has fallen away. The real game begins now.
 
 
 ---
