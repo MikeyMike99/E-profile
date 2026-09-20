@@ -70,6 +70,10 @@ class SystemLogger:
         self.logs.append({'time': timestamp, 'type': type, 'msg': msg})
         if len(self.logs) > 50: self.logs.pop(0)
 
+    def error(self, msg): self.log("ERROR", msg)
+    def info(self, msg): self.log("INFO", msg)
+    def warning(self, msg): self.log("WARNING", msg)
+
 sys_log = SystemLogger()
 
 # --- NATIVE ANALYTICS ENGINE (Zero-Cookie, Privacy-First) ---
@@ -117,10 +121,6 @@ def log_traffic():
     
     
     save_analytics(data)
-
-    def error(self, msg): self.log("ERROR", msg)
-    def info(self, msg): self.log("INFO", msg)
-    def warning(self, msg): self.log("WARNING", msg)
 
 sys_log = SystemLogger()
 
