@@ -83,3 +83,17 @@ A common flaw in support systems is allowing the Admin to be flooded by a "Ticke
 When a Tier 4 Admin deploys a plugin built by a Developer, there is always a risk it contains an edge-case bug.
 * **Isolation:** Plugins operate in complete isolation from the core application loop. 
 * **Automatic Shutdown:** If a live plugin triggers a fatal exception, it does not crash the application. The plugin's circuit breaker trips, it instantly *switches itself off*, and it generates an error log for the Admin. The core game or application remains completely unaffected.
+
+## Section 8: Security & Container Escape Prevention
+
+Because the Tier 4 Admin possesses massive operational power, they are a primary target for hijacking. If a malicious actor compromises the Admin account, their immediate next step will be to attempt a **Privilege Escalation** to Super User (Tier 5) or a **Container Escape** to compromise the Host OS. The architecture must physically prevent both.
+
+### The Escalation Wall (Anti-Role Bleed)
+A classic application vulnerability is "Role Confusion"—where a bug, a manipulated database flag, or a socially engineered support ticket ("Hey, I'm actually the Super User, the system just says Admin, please fix my role") results in an Admin being elevated to a Super Admin.
+* **The Defense:** In the Antigravity ecosystem, Role Bleed is mathematically impossible. Tier 4 and Tier 5 do not share the same authentication mechanism. 
+* **The Mechanism:** An Admin's role is defined by a JWT and a database entry. The Super Admin's role is defined strictly by the possession of an offline **Ed25519 Asymmetric Private Key**. Therefore, even if an attacker successfully hacks the database and changes their role from "Tier 4" to "Tier 5", the Core Daemon will violently reject them because they cannot provide the cryptographic signature required for Tier 5 operations.
+
+### Container Escape Defense (Physical Isolation)
+If an attacker compromises the Admin's Agent, they might attempt to execute a "Container Escape"—using an exploit to break out of the Admin's restricted sandbox and access the underlying Host OS where the Super Admin lives.
+* **Dropped Capabilities:** The Admin's Agent runs inside a strictly unprivileged Linux namespace. The daemon explicitly drops all advanced kernel capabilities (e.g., removing `CAP_SYS_ADMIN` and `CAP_NET_ADMIN`). 
+* **The Developer Benefit:** Even if an attacker finds a zero-day Remote Code Execution (RCE) vulnerability in the Admin dashboard and executes a shell command, they are trapped in a sterile, unprivileged void. They cannot mount host drives, they cannot read the Super User's `.env` files, and they cannot alter the host's networking. They are Kings of the Sandbox, but prisoners of the Host.
