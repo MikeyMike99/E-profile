@@ -42,6 +42,10 @@ If the local workstation suffers a catastrophic failure, the recovery mechanism 
 * **The Process:** Utilizing OS-level execution privileges, this script halts the agent daemon, purges the existing Ed25519 public key, generates a brand new key pair, outputs the new private key to the terminal, and restarts the daemon.
 * **Lockout Prevention:** The agent itself is mathematically restricted from altering this recovery script, ensuring the infrastructure administrator always retains a back-door reset route.
 
+* **Developer Note (The Lockout Paradox):** One of the most painful frustrations when building a fortress is accidentally locking yourself out. If a rogue agent hallucination, a database corruption, or a strict RBAC policy bug revokes your Super Admin status at the *application layer*, you will be trapped outside your own creation. When this happens, **never try to reason with the broken application.** 
+  * **The "Ghost Admin" Remedy:** You must maintain a standalone, air-gapped script (e.g., `ghost_admin.py`) on the host. If you are locked out of the app, you SSH into the host, halt the application daemon to freeze state, and run the script. This script bypasses all application logic and directly injects the Tier 5 flag back into your database row at the OS level before restarting the daemon.
+
+
 ---
 
 ## Part II: Execution, Infrastructure, & Failsafes
