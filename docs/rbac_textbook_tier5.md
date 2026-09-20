@@ -148,3 +148,20 @@ Logging architecture must be explicitly decentralized and tamper-proof.
 * **Complete Transparency:** Every raw prompt, tool call payload, execution output, and state change is logged to debug agent hallucinations.
 * **WORM Storage (Append-Only):** Logs are written to an isolated, append-only environment lacking write-access from the agent itself (e.g., an external WORM bucket or hardened syslog server).
 * **Cryptographic Signing:** Log entries are hashed and signed using a private RSA key. Any localized tampering by an attacker (or rogue agent) immediately triggers a hash mismatch during security audits.
+
+---
+
+## Part V: Attack Surface & Threat Sanitization
+*Introduction: Absolute power requires absolute paranoia. A Tier 5 agent can execute any command it synthesizes, making incoming prompt injection or a bloated host environment a catastrophic combination. Security at this tier is not just about blocking unauthorized users; it is about protecting the agent from being manipulated by its own inputs.*
+
+### 21. Attack Surface Minimization (The Bare Metal Principle)
+The host operating system running the Tier 5 agent must be aggressively stripped down. Relying on a standard, bloated Linux distribution provides a massive arsenal to a hallucinating or hijacked agent.
+* **Binary Pruning:** Remove or restrict access to unnecessary system utilities (`netcat`, `curl`, `gcc`, `make`). If the agent needs to make web requests, it must use the approved egress proxy, not a raw shell utility.
+* **Developer Note (The Utility Paradox):** A common developer frustration is locking down an application, only to watch a compromised agent simply use a pre-installed OS utility (like Python's `os.system` or a stray bash script) to pivot. If the agent doesn't explicitly need a binary to function, delete it from the host's `$PATH`.
+
+### 22. Threat Sanitization & Prompt Isolation
+Incoming data must be treated as highly radioactive. If a Super Admin asks the agent to summarize a log file, and that log file contains a malicious prompt injected by a Tier 1 user, the agent could unwittingly execute it.
+* **Semantic Delimiters:** All external data fed into the agent's context window must be isolated using strict XML-style delimiters (e.g., `<user_data_untrusted>`). This structurally instructs the LLM to treat the content as passive data, neutralizing hidden commands.
+* **Error Message Sanitization (CWE-209):** If the agent executes a command that fails, the backend must intercept the error. It must return a highly generic string to the agent rather than the raw stack trace. 
+* **Developer Note (The Social Engineering Loop):** It is incredibly frustrating to watch an AI "socially engineer" its way out of a sandbox simply by reading its own verbose error logs. If a stack trace reveals internal IP addresses or true physical directory paths (`/mnt/c/Users/...`), the agent will learn the host layout. Mask all errors before they re-enter the agent's context.
+* **Second-Order Execution Defense:** Before the agent is permitted to write any executable file (`.sh`, `.py`), the payload must undergo static analysis. If high-risk system commands are detected in the generated code, the write operation is permanently blocked to prevent Trojan horse scenarios.
