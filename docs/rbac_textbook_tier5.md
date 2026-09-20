@@ -90,3 +90,9 @@ Relying on application-layer timeouts is dangerous. A runaway AI generating an i
 ### Threat Sanitization & Error Masking
 Incoming data must be treated as highly radioactive. All external data fed into the agent's context window is isolated using strict semantic delimiters (e.g., `<user_data_untrusted>`). 
 * **The Developer Benefit (CWE-209 Prevention):** It is incredibly frustrating to watch an AI "socially engineer" its way out of a sandbox simply by reading its own verbose error logs. If a stack trace reveals internal IP addresses or true physical directory paths, the agent learns the host layout. The system intercepts and replaces all stack traces with generic error strings before they re-enter the context window, blinding the agent to the underlying infrastructure.
+
+## Section 6: Defeating Race Conditions (TOCTOU & Symlink Armor)
+At the root level, the architecture must defend against Time-Of-Check to Time-Of-Use (TOCTOU) vulnerabilities. Attackers love "Race Conditions." They will attempt to swap a safe file for a malicious symbolic link in the exact millisecond between when the Security Manager *checks* the file path and when the system actually *opens* the file descriptor.
+
+* **The Mechanism (O_NOFOLLOW):** When the core engine opens any file for reading or writing, it utilizes the `os.O_NOFOLLOW` flag at the kernel level.
+* **The Result:** If an attacker successfully executes a race condition and swaps the target file with a symlink pointing to `/etc/shadow` or a core `.env` file, the Linux kernel violently rejects the operation. The file descriptor guarantees that the system only opens hard, verified file inodes, completely immunizing the architecture against symlink spoofing.

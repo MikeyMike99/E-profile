@@ -291,3 +291,9 @@ While Tier 5 outlined the basics of accountability, Tier 4 requires absolute Non
 Even with high privileges, an Admin (or their hallucinating Agent) cannot spam operational commands. 
 * **The Mechanism:** If an Agent gets caught in an infinite loop and attempts to restart the server 50 times in one minute, the backend evaluates the physical state of the application.
 * **The Result:** If the application is running smoothly, throwing no warnings, and the host is perfectly healthy, the engine simply ignores and drops the restart requests. The system refuses to disrupt a healthy live environment just because an Admin’s Agent sent a panicked command.
+
+## Section 17: Zero-Knowledge Data Masking (PII Scrubbing)
+When an Admin's Agent or a lower-tier Dev interacts with production logs or database queries, there is a massive risk of exposing Personally Identifiable Information (PII) to the LLM. If the Agent reads a stack trace containing a user's credit card or IP address, that data enters the Agent's context window.
+
+* **The Mechanism:** The `SecurityManager` implements a strict middleware layer (`LocalSecurity.scrub_text`). Before a file's content is ever passed from the disk to a non-Super Admin's Agent, the engine scrubs the plaintext using regex and pattern matching. 
+* **The Result:** Passwords, API keys, and PII are redacted into safe placeholders (e.g., `[REDACTED_IP]`) *before* the Agent sees them. The Agent can still analyze the bug or summarize the logs, but it remains structurally blind to sensitive user data.

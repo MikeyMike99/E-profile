@@ -57,3 +57,9 @@ What happens when the ticket is closed, or if the Admin permanently revokes the 
 
 * **Forensic Denial:** Standard file deletion is insecure; disk recovery tools can easily un-delete a file. To prevent this, the EXE actively rewrites its own memory space and disk footprint with randomized garbage data.
 * **The Scramble:** First, it scrambles its own memory allocation. Then, it shreds the file blocks it occupied on the disk before finally unlinking itself. If an attacker attempts to use forensic data recovery tools to unpack the application, they will only recover a scrambled, useless mesh.
+
+## Section 9: Second-Order Execution Prevention (Static Analysis)
+Even with strict RAM-only execution and chroot jails, what happens if a Tier 3 Dev or their Agent attempts to write a script that specifically contains malicious kernel commands (e.g., `rm -rf /` or `os.system`)?
+
+* **The Mechanism:** The backend implements a harsh static analysis filter on the `write_file_content` operation. If a Dev attempts to save a `.py`, `.lua`, or `.sh` file, the core engine scans the plaintext of the code before writing it to disk.
+* **The Result:** If the engine detects high-risk system calls (like `subprocess`, `os.execute`, or `rm -rf`), it immediately throws a `PermissionError` and blocks the write operation entirely. The malicious code is never even allowed to materialize, providing a fail-safe against both rogue developers and hallucinatory Agents trying to write dangerous bash scripts.
