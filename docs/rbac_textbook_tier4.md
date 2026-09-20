@@ -23,29 +23,29 @@ Through their Agent, the Admin commands the lifecycle of the application:
 
 * **The Developer Benefit:** As a Tier 5 Super Admin, you can confidently hand off daily management to a Tier 4 Admin. You never have to worry about them accidentally dropping a critical database table with a malformed SQL injection, because they do not have SQL access. They only have a secure "Archive User" button.
 
-## Section 2: The Deployment Bridge
+## Section 2: The Dispatcher (Workforce & Ticketing)
 
-If the Admin does not build features, how do features get into the game? 
-The Admin serves as the absolute gatekeeper of the production environment. 
+While the Tier 5 Super Admin manages the bare-metal architecture and physically *creates* the isolated sandboxes, the Tier 4 Admin acts as the dispatcher who assigns the workforce to those sandboxes.
 
-### The Quarantine Handoff
-When a Tier 3 Developer finishes building a "new house" or a "new weapon" in their isolated `tmpfs` sandbox, that asset is fundamentally quarantined. The Developer cannot push it to the live server. 
-Instead, they submit a deployment request. The Tier 4 Admin's Agent reviews the asset, runs automated safety checks, and visualizes the impact on the game. 
+### Ticketing & Delegation
+* **The Escalation Workflow:** When a Tier 1 (End User) raises a support ticket or reports a bug, it flows directly to the Tier 4 Admin. The Admin uses their Agent to evaluate the ticket.
+* **Dev Assignment:** If the ticket requires code changes, the Admin assigns the ticket to a Tier 3 Developer and grants that Developer access to a testing sandbox. 
+* **Privilege Revocation:** Once the task is complete (or if a Developer goes rogue), the Admin has the authority to instantly revoke the Developer's access to the sandbox.
 
-Only the Tier 4 Admin can authorize the release. When they issue the command, the Agent mechanically lifts the compiled asset out of the developer's quarantine and seamlessly plugs it into the live environment.
+## Section 3: QA and Plugin Inspection
 
-## Section 3: Sandbox Provisioning & Workforce Delegation
+The Admin is the absolute gatekeeper of the production environment. They do not write the code, but they are responsible for ensuring it works safely.
+* **The Inspection Phase:** When a Tier 3 Dev team finishes building a new plugin or feature, they submit it. The Admin uses their Agent to inspect the plugin, run tests, and evaluate it in a safe environment.
+* **The Deployment Handoff:** Only after the Admin is satisfied with the inspection do they authorize the deployment, moving the asset from the Dev's quarantine sandbox into the live application.
 
-While the Tier 5 Super Admin manages the bare-metal architecture, the Tier 4 Admin acts as the manager of the human (and AI) workforce.
+## Section 4: Community, Economy, & Gameplay Management
 
-### Orchestrating the Hierarchy
-The Admin inherits the ability to wield the sandbox provisioning engine. 
-* **Role Generation:** The Admin dynamically generates cryptographic JWT invites for Tier 3 (Dev Team), Tier 2 (Guest/Modder), or Tier 1 (End User).
-* **Workspace Spawning:** When the Admin assigns a new Developer to a specific project, the Admin's Agent commands the daemon to spin up a fresh, UUID-bound `tmpfs` sandbox for that Developer. 
+The Tier 4 Admin serves as the judge, jury, and economy manager for the live application. Their interface provides strict control over the user base and game mechanics:
+* **Community Policing:** The Admin's Agent can continuously monitor live chat logs for toxicity or rule-breaking. The Admin has the authority to ban, block, and revoke accounts or privilege levels instantly.
+* **Economy & Payments:** If a payment system is in place, the Admin handles payment queries. They have the authority to approve premium features, generate in-game gifts, and issue awards to players.
+* **Gameplay Oversight:** The Admin is responsible for the live game loop. They can create, review, and approve new quests or in-game events without needing to write the underlying code.
 
-* **The Developer Benefit:** The Super Admin never has to waste time doing IT support or account creation. The Tier 4 Admin manages the entire lifecycle of the workforce, completely automating the onboarding and offboarding of new developers and modders.
-
-## Section 4: What the Admin Inherits from Tier 5
+## Section 5: What the Admin Inherits from Tier 5
 
 Because Tier 4 operates on the same core daemon designed by the Super Admin, they seamlessly inherit the most powerful capabilities of the architecture, but forcefully scoped to the application layer.
 
@@ -53,7 +53,7 @@ Because Tier 4 operates on the same core daemon designed by the Super Admin, the
 * **Cognitive Memory (Operational Scope):** The Admin's agent remembers the operational history of the application—when the server last crashed, which Developer submitted which patch, and what feature flags are active. However, it is mathematically blinded to the Tier 5 Vector DB; it has zero memory of the Host OS or the daemon configuration.
 * **Swarming (Task Delegation):** If an Admin needs to generate a massive weekly metrics report, their agent can spawn ephemeral Tier 1 sub-agents to crunch the database logs and return a summarized dashboard, saving hours of manual data entry.
 
-## Section 5: The Hard Boundary (Absolute Code Denial)
+## Section 6: The Hard Boundary (Absolute Code Denial)
 
 The fundamental law of Tier 4 is absolute, unapologetic source code denial.
 * **No Source Code Access:** The Admin is physically barred from reading or writing to the core application repositories (e.g., `server.py`, `models.py`, or core game engine scripts). 
