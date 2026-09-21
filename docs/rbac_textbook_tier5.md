@@ -190,3 +190,15 @@ By utilizing an AI Agent as the central orchestration engine, the platform becom
 3. **Hot-Patching Resilience:** Because the architecture decouples the generated artifacts from the core system routing, the Agent can physically rewrite and hot-patch application components on the fly. The host system's native hot-reloader seamlessly applies these patches without downtime.
 
 This creates an Infinite AI Platform: A system that securely writes, patches, and serves its own software to perfectly match the immediate needs of its users, all while enforcing absolute security boundaries.
+
+## 16. Framework-Agnostic AI Governance
+
+A severe vulnerability in Agentic deployment is **Framework Dependency**. Security policies (such as preventing the AI from hoarding dead scratch scripts or leaking credentials in temporary JSON files) are often defined using proprietary rule systems specific to a single AI framework.
+
+If the enterprise swaps the underlying AI framework, the new agent will ignore the proprietary rule files. It will immediately revert to feral behavior, polluting the workspace and exposing credentials.
+
+### The Immutable Host Doctrine
+You cannot rely on an AI agent "agreeing" to read a markdown file. Security rules must be physically enforced by the Host Environment.
+1. **Middleware Prompt Injection:** The application's backend must intercept all outbound LLM generation requests and forcibly prepend security constraints (e.g., "Secrets must be passed via memory, never written to disk") into the System Prompt, ensuring every model receives the command natively.
+2. **Execution Interception:** The Tool-Calling sandbox must physically monitor file-write operations. If an unknown agent attempts a `write_to_file` operation for a `.json` configuration file, the middleware must scan for high-entropy credential patterns and block the I/O request if detected. 
+3. **Automated Reaper Daemons:** The host environment should run aggressive garbage collection (cron jobs) that unconditionally purge all files in designated Agent Scratch directories every 10 minutes, entirely removing the Agent's responsibility to clean up after itself.
