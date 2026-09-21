@@ -296,3 +296,10 @@ Because LLMs process instructions and data through the exact same channel (natur
 A Zero-Trust Agentic deployment must implement **Semantic Firewalls** (e.g., NVIDIA NeMo Guardrails) to decouple data from instructions:
 1. **Input Classification:** A specialized, lightweight routing model scans all inbound text strictly for adversarial intent, jailbreak signatures, and prompt leaking attempts. If detected, the pipeline drops the request with a 403 Forbidden.
 2. **Constitutional Egress Evaluation:** The primary Agent's generated output must never be streamed directly to the client. It must be held in a buffer and evaluated by a secondary "Constitutional Model" or rigid egress filter to ensure it contains no leaked system prompts, API keys, or malicious executable code. 
+
+### Practical Implementation (The Interceptor Pattern)
+While large enterprise firewalls (like NeMo Guardrails) require heavy, local PyTorch clusters, the Semantic Firewall doctrine can be achieved efficiently using the **Evaluator LLM Pattern**.
+
+In this architecture, the inbound network layer (e.g., the WebSocket listener) is intercepted. The raw text payload is temporarily diverted to an independent, lightweight LLM via a fast REST API call. This "Evaluator Model" operates under a strict Zero-Trust system prompt designed exclusively to classify adversarial intent (outputting only "ATTACK" or "SAFE"). 
+
+If the Evaluator flags the payload, the network connection is immediately dropped, returning a 403 Forbidden or a UI Caution alert. Crucially, this ensures that hostile semantic payloads never physically reach the operational memory of the primary Autonomous Agent.
