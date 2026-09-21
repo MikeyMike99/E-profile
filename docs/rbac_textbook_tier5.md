@@ -330,3 +330,15 @@ To safely grant Agents the capability to build dynamic interfaces, the enterpris
 2. **Volatile Duplication:** The Agent must construct a localized, temporary copy of the blueprint within a designated RAM-disk sandbox (e.g., `/static/scratch/`).
 3. **Isolated Iframe Projection:** The dynamic UI is delivered to the client exclusively via cross-origin or isolated Iframes referencing the volatile directory.
 4. **Automated Reaping:** The Agent relies on underlying OS infrastructure (the Reaper Daemons) to annihilate the temporary files, relieving the LLM of cleanup responsibilities and guaranteeing long-term system stability.
+
+## 26. Extensible Plugin Architectures (Media Sandboxing)
+
+The Zero-Trust Ephemeral Plugin architecture (Iframe Projection + RAM-Disk Sandboxing) serves as a universal foundation for safely extending Agentic capabilities. By utilizing this pattern, an enterprise can permit Agents to generate arbitrary dynamic interfaces—such as custom Media Players, Data Dashboards, or Interactive Forms—without compromising the integrity of the host application.
+
+### Secure Media Embedding
+For example, granting an LLM the ability to embed external media (like YouTube videos) directly into the Chat DOM introduces severe Cross-Site Scripting (XSS) and tracking vulnerabilities. 
+
+By forcing the Agent to build the Media Player through the Ephemeral Plugin Workflow:
+1. **Origin Isolation:** The external media is sandboxed within a child iframe (`youtube-nocookie.com`), which is itself sandboxed within the Agent's volatile iframe projection.
+2. **Immutability:** The Agent constructs the UI based on a cryptographically static blueprint (`video_application.html`), preventing it from hallucinating unauthorized DOM structures.
+3. **Automated Destruction:** The media plugin is automatically shredded by the Reaper Daemon upon session expiration, preventing persistent tracking artifacts.
