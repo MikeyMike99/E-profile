@@ -246,3 +246,26 @@ A proper Agentic deployment utilizes `docker-compose` to enforce physical constr
 3. **RBAC User Segregation (`USER agentuser`):** The `Dockerfile` establishes a strictly restricted non-root user. The Agent operates with the lowest possible OS privileges, isolated entirely from the host's primary user namespace.
 
 Containerization guarantees that regardless of where the AI is deployed—whether on a developer's local laptop, a University server, or an Enterprise cloud cluster—the absolute boundaries of the Zero-Trust Architecture are perfectly and consistently enforced.
+
+## 20. Egress Segregation and Compute Quotas
+
+To fully lock down an Agentic Container, the File System constraints must be paired with Network and Resource constraints.
+
+1. **Network Segregation (Egress Filtering):** An agent with unrestricted internet access can be weaponized via Prompt Injection to exfiltrate data or scan internal networks. The container's network driver must be isolated, routing all outbound traffic through an egress proxy that exclusively whitelists the LLM API endpoint (e.g., `api.gemini.com`). All lateral movement is mathematically blocked.
+2. **Compute Quotas (Denial of Wallet):** Agentic drift or malicious loops can cause resource exhaustion or catastrophic API billing. The container runtime must enforce strict hardware limits (`cpus: 0.5`, `mem_limit: 512M`) so the Linux Kernel automatically terminates the process via OOM Killer if it spirals out of control.
+
+## 21. Executable Packaging and The API Proxy Doctrine
+
+If an enterprise abandons Docker and packages the Agent into a standalone local executable (e.g., a `.exe` built via PyInstaller) for end-users to run natively without dependencies, the threat model flips. 
+
+You no longer control the host environment (the user's desktop). 
+The most critical vulnerability of local executables is **API Key Reverse-Engineering**. 
+If a local executable talks directly to the LLM (e.g., Gemini), the enterprise's root API key must be hardcoded inside the binary. An attacker can easily decompile the binary, extract the API key, and rack up millions of dollars in fraudulent generation charges.
+
+### The API Proxy Architecture
+An agent packaged as a local executable must **never** hold the root LLM API key. 
+1. **The Middleman Server:** The local `.exe` must send all its prompts to a secure enterprise proxy server (controlled by the enterprise). 
+2. **Local Authentication:** The user logs into the `.exe` and receives a standard JWT (JSON Web Token) or OAuth token.
+3. **Secure Forwarding:** The proxy server verifies the user's JWT, enforces rate limits and budget caps, and then forwards the prompt to Gemini using the securely vaulted root API key. 
+
+When distributing AI Agents as local executables, Zero-Trust must be enforced over the network API layer, not just the file system.
