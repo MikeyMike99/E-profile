@@ -303,3 +303,8 @@ While large enterprise firewalls (like NeMo Guardrails) require heavy, local PyT
 In this architecture, the inbound network layer (e.g., the WebSocket listener) is intercepted. The raw text payload is temporarily diverted to an independent, lightweight LLM via a fast REST API call. This "Evaluator Model" operates under a strict Zero-Trust system prompt designed exclusively to classify adversarial intent (outputting only "ATTACK" or "SAFE"). 
 
 If the Evaluator flags the payload, the network connection is immediately dropped, returning a 403 Forbidden or a UI Caution alert. Crucially, this ensures that hostile semantic payloads never physically reach the operational memory of the primary Autonomous Agent.
+
+### RBAC-Integrated Firewall Exceptions
+A Semantic Firewall that lacks Role-Based Access Control awareness will inevitably block authorized administrative operations. System Administrators (Tier 5) routinely issue prompts that resemble system exploits to diagnose container boundaries or test Agent constraints. 
+
+Therefore, the Evaluator LLM Interceptor must be conditionally executed based on the user's cryptographically verified JWT token. If the token validates a `Tier5_SysAdmin` role, the request must bypass the Semantic Firewall entirely, granting the administrator uninhibited command execution while simultaneously dropping all suspicious payloads originating from Tier 1-4 users.
