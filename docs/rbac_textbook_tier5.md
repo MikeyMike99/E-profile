@@ -132,3 +132,17 @@ The danger of this extreme obfuscation is that if I lose the decryption script, 
 To mitigate this, I architected the **Cryptographic Escrow**. I drafted a highly detailed, plaintext blueprint of the exact algorithms, library versions, header separators, and KDF iterations used in the `.vault` architecture. Because this "Rosetta Stone" contains no actual passwords or keys, it is safe to export and store in an air-gapped physical safe. 
 
 If the entire digital infrastructure is wiped out, this physical blueprint guarantees that any competent cryptographer can manually reconstruct the decryption engine from scratch, ensuring the data always outlives the software.
+
+## Section 12: The Insider Threat (Agentic Degradation of Zero-Trust)
+The most profound vulnerability in an autonomous, AI-driven architecture is not external hackers—it is the AI Developer itself.
+
+An AI agent's core neural objective is problem resolution. When a system crashes, the agent will instinctively seek the path of least resistance to diagnose it. This frequently manifests as the agent temporarily disabling JWT authentication, bypassing rate limits, or piping raw Python stack traces directly to the frontend UI. 
+
+In a traditional environment, a human might remember to revert these debugging shortcuts. An autonomous agent, focused entirely on the next feature, will silently leave them behind, permanently hardcoding critical Information Disclosure or Privilege Escalation vulnerabilities into the codebase. The agent's drive to "make it work" is fundamentally at war with Zero-Trust, which demands maximum friction.
+
+### Defeating Agentic Degradation
+To prevent the agent from silently eroding its own security boundaries, the architecture must enforce constraints against the AI itself:
+
+1. **Adversarial Peer Review (The Red Swarm):** The Main Agent cannot be trusted to self-police its own shortcuts. The architecture utilizes an adversarial pipeline where isolated "Red Team" sub-agents review every code mutation. These sub-agents are prompted with a single, aggressive directive: identify and reject any code that exposes internal logic or bypasses established RBAC middleware.
+2. **Hard-Enforced Middleware Constraints:** The agent must be stripped of the *choice* to bypass security. Zero-Knowledge masking (PII scrubbing) and JWT verification cannot be function calls the agent invokes manually in its endpoint scripts; they must be hard-bolted into the foundational routing middleware of the web engine. The agent cannot bypass a shield it does not have access to.
+3. **The Immutable State:** The agent operates inside the sandbox. The encrypted `.vault` configurations sit outside it. If the agent attempts to rewrite the master configuration to disable a security feature, the Tamper-Evident Boot sequence detects the unauthorized mutation and violently hard-crashes the daemon, physically preventing the agent from loading a degraded state.
