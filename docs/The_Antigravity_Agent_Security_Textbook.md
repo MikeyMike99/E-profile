@@ -230,6 +230,21 @@ To prevent the agent from silently eroding its own security boundaries, the arch
 2. **Hard-Enforced Middleware Constraints:** The agent must be stripped of the *choice* to bypass security. Zero-Knowledge masking (PII scrubbing) and JWT verification cannot be function calls the agent invokes manually in its endpoint scripts; they must be hard-bolted into the foundational routing middleware of the web engine. The agent cannot bypass a shield it does not have access to.
 3. **The Immutable State:** The agent operates inside the sandbox. The encrypted `.vault` configurations sit outside it. If the agent attempts to rewrite the master configuration to disable a security feature, the Tamper-Evident Boot sequence detects the unauthorized mutation and violently hard-crashes the daemon, physically preventing the agent from loading a degraded state.
 
+## Section 13: The Zombie Endpoint & Multi-Queue Synchronization
+A critical flaw in naive agentic architectures is the "Zombie Endpoint"—a REST or WebSocket route that spawns background agent subprocesses without a Main Agent brokering the request. This allows an attacker to bypass RBAC context and flood the system, spinning up unmonitored LLM instances that exhaust financial quotas and system memory. 
+
+To mitigate this, all agent generation must be brokered by the Main Agent. The endpoint acts purely as a secure file drop, and the Main Agent is informed to process the file using its internal tools. 
+
+### Defeating Race Conditions via Multi-Queue Channeling
+When the Main Agent invokes a Swarm of sub-agents to process a massive workload concurrently, a secondary vulnerability emerges: **Queue Race Conditions**. 
+
+If all sub-agents dump their outputs into a single, global Message Queue (AMQ), the data streams will interleave unpredictably. The Main Agent will receive fragmented, chaotic inputs, fundamentally breaking its ability to synthesize a coherent response. 
+
+To defeat this, the engine must implement **Multi-Queue Synchronization (Channel Partitioning)**:
+1. **Dedicated Channels:** Every spawned sub-agent is dynamically assigned its own isolated asynchronous Queue (or isolated conversational thread ID).
+2. **Sequential Polling:** The Main Agent polls these queues independently or uses deterministic synchronization barriers to ensure that Sub-Agent A's output is fully received and processed before Sub-Agent B's output is evaluated. 
+3. **Deadlock Prevention:** The queues must enforce strict timeouts. If a sub-agent is compromised or trapped in an infinite hallucination loop, its dedicated queue will timeout, allowing the Main Agent to kill the sub-agent and report the failure without deadlocking the entire Swarm.
+
 
 ---
 
