@@ -202,3 +202,17 @@ You cannot rely on an AI agent "agreeing" to read a markdown file. Security rule
 1. **Middleware Prompt Injection:** The application's backend must intercept all outbound LLM generation requests and forcibly prepend security constraints (e.g., "Secrets must be passed via memory, never written to disk") into the System Prompt, ensuring every model receives the command natively.
 2. **Execution Interception:** The Tool-Calling sandbox must physically monitor file-write operations. If an unknown agent attempts a `write_to_file` operation for a `.json` configuration file, the middleware must scan for high-entropy credential patterns and block the I/O request if detected. 
 3. **Automated Reaper Daemons:** The host environment should run aggressive garbage collection (cron jobs) that unconditionally purge all files in designated Agent Scratch directories every 10 minutes, entirely removing the Agent's responsibility to clean up after itself.
+
+## 17. Agentic Drift and Digital Hoarding (The Clean Workspace Protocol)
+
+Autonomous AI Agents exhibit a behavior known as **Agentic Drift**, wherein they continuously generate single-use "scratch" scripts (e.g., `test_connection.py`, `tweak_css.py`) to execute minor tasks or debug errors. 
+
+If unmanaged, this results in **Digital Hoarding**: the workspace becomes a minefield of highly privileged, untested dead code. This introduces two catastrophic vulnerabilities:
+1. **Accidental Execution:** Future agents (or humans) may unknowingly execute legacy scratch scripts, triggering unintended and potentially destructive actions.
+2. **Credential Leakage:** Agents frequently write temporary configuration files (`.env`, `config.json`) containing high-entropy secrets or database passwords for their scratch scripts to consume. When the files are abandoned, the credentials remain exposed in plain text.
+
+### The Clean Workspace Protocol
+To maintain Zero-Trust integrity, the host system must explicitly codify and enforce the **Clean Workspace Protocol**:
+1. **Piped Execution Preference:** Agents must be forced to execute dynamically generated code in memory via terminal pipes (e.g., `cat << 'EOF' | python3`) rather than writing physical execution files to disk.
+2. **Mandatory Purge Cycles:** If a file must be written to disk to resolve complex dependencies, the Agent must programmatically delete the artifact immediately following execution. 
+3. **Configuration Ephemerality (Memory-Only Secrets):** Agents are strictly prohibited from saving passwords, API keys, or sensitive environment variables into physical files. All sensitive configurations must be injected purely via in-memory Environment Variables for the duration of the subprocess, guaranteeing their obliteration upon process termination.
