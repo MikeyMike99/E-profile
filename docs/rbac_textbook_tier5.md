@@ -269,3 +269,18 @@ An agent packaged as a local executable must **never** hold the root LLM API key
 3. **Secure Forwarding:** The proxy server verifies the user's JWT, enforces rate limits and budget caps, and then forwards the prompt to Gemini using the securely vaulted root API key. 
 
 When distributing AI Agents as local executables, Zero-Trust must be enforced over the network API layer, not just the file system.
+
+## 22. The Trust Penalty and Code Signing (Client Distribution)
+
+When shifting from a Zero-Trust Server Architecture (Docker) to Client-Side Distribution (shipping a local executable to end-users), engineers encounter a fatal UX bottleneck: **The Trust Penalty**.
+
+### The PyInstaller Heuristic Failure
+Standard Python packaging tools like `PyInstaller` function as "Droppers"—they package the Python runtime and source code into a self-extracting archive that unpacks silently into a temporary directory upon execution. This is the exact heuristic signature utilized by Trojans and Malware. 
+Consequently, Windows Defender and Enterprise EDRs universally flag these executables as severe threats, destroying user trust and halting software adoption.
+
+### Distribution Trust Mechanics
+To successfully distribute agentic executables in a Zero-Trust ecosystem, the enterprise must implement cryptographic trust verification:
+
+1. **AOT Compilation (Nuitka):** The application must be compiled Ahead-Of-Time (AOT) using tools like `Nuitka` or rewritten in a systems language (Rust/Go). This produces a true native machine binary, entirely bypassing the malicious "Dropper" heuristic.
+2. **Cryptographic Code Signing (EV Certificates):** The resulting native binary must be cryptographically signed using an **Extended Validation (EV) Code Signing Certificate**. This mathematically binds the enterprise's verified legal identity to the binary. When executed, the operating system (e.g., Windows SmartScreen) validates the signature against global Certificate Authorities, granting immediate execution trust and suppressing all "Unknown Publisher" warnings.
+3. **PWA Sandboxing:** Alternatively, distribution trust can be outsourced entirely to the browser sandbox by deploying the Client UI as a Progressive Web App (PWA). This bypasses the OS-level executable trust layer entirely while providing native desktop integration.
