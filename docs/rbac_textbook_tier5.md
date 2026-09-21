@@ -342,3 +342,13 @@ By forcing the Agent to build the Media Player through the Ephemeral Plugin Work
 1. **Origin Isolation:** The external media is sandboxed within a child iframe (`youtube-nocookie.com`), which is itself sandboxed within the Agent's volatile iframe projection.
 2. **Immutability:** The Agent constructs the UI based on a cryptographically static blueprint (`video_application.html`), preventing it from hallucinating unauthorized DOM structures.
 3. **Automated Destruction:** The media plugin is automatically shredded by the Reaper Daemon upon session expiration, preventing persistent tracking artifacts.
+
+## 27. The Accessible Overlay Pattern
+
+When operating an Enterprise Agentic Architecture, third-party content integration (such as video embeds or external widgets) often breaks compliance with accessibility standards (WCAG) and Screen Reader paradigms.
+
+### Headless API Wrapping
+To maintain absolute compliance, Zero-Trust Ephemeral Plugins must employ the **Accessible Overlay Pattern**. 
+Rather than rendering external iframes directly to the user (which forces the user to navigate the third-party's inaccessible DOM), the Plugin should instantiate the third-party service headlessly via an API.
+
+The Agent then generates a custom, ARIA-compliant HTML wrapper containing semantic buttons, sliders, and landmarks, and bridges them to the headless API via JavaScript. This isolates the user from the hostile external DOM, guaranteeing that all media interaction is filtered through the enterprise's accessible, auditable UI layer.
