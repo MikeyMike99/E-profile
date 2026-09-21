@@ -216,3 +216,19 @@ To maintain Zero-Trust integrity, the host system must explicitly codify and enf
 1. **Piped Execution Preference:** Agents must be forced to execute dynamically generated code in memory via terminal pipes (e.g., `cat << 'EOF' | python3`) rather than writing physical execution files to disk.
 2. **Mandatory Purge Cycles:** If a file must be written to disk to resolve complex dependencies, the Agent must programmatically delete the artifact immediately following execution. 
 3. **Configuration Ephemerality (Memory-Only Secrets):** Agents are strictly prohibited from saving passwords, API keys, or sensitive environment variables into physical files. All sensitive configurations must be injected purely via in-memory Environment Variables for the duration of the subprocess, guaranteeing their obliteration upon process termination.
+
+## 18. Data Remanence and Forensic Agentic Threats
+
+Even when the Clean Workspace Protocol and Automated Reaper Daemons are perfectly enforced, a deeper forensic vulnerability exists: **Data Remanence**.
+
+When a standard Operating System deletes a scratch script or a temporary configuration file using standard commands (e.g., `rm`), the file is not actually erased. The OS merely unlinks the file pointer. The high-entropy secrets and plaintext scripts remain physically encoded on the SSD or Hard Drive sectors. 
+
+An internal threat actor or an attacker with specialized forensic disk-carving tools can easily retrieve the "deleted" files, entirely bypassing the Reaper Daemons.
+
+### The RAM-Disk Mandate (tmpfs)
+To neutralize forensic retrieval, Agentic architectures must abandon physical disk writes for temporary operations:
+1. **tmpfs Mounting:** The designated `.agent_scratch/` directories must be mounted exclusively as `tmpfs` (RAM disks) mapping directly to `/dev/shm` in Linux.
+2. **Physical Impossibility:** Because `tmpfs` resides entirely in volatile Random Access Memory, the files physically never touch the SSD or Hard Drive platters. 
+3. **Instant Obliteration:** The moment a file is unlinked by the Reaper, or the moment the server loses power/reboots, the electrical charge holding the data dissipates. Forensic disk recovery is mathematically and physically impossible.
+
+For high-security operations, if physical disk writes are absolutely unavoidable, the Reaper Daemons must be configured to use cryptographic shredding (`shred -u -z`) to overwrite the physical sectors with zero-state data before unlinking the inode.
