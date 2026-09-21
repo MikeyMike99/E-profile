@@ -319,3 +319,14 @@ These Zombie Subagents continue to consume compute resources and execute LLM API
 To ensure absolute containment, the host infrastructure must never target individual Agent processes for termination. Instead:
 1. **Session Isolation:** The primary Agent must be executed within an isolated Process Group (`start_new_session=True`). All generated Subagents natively inherit this Process Group ID.
 2. **Hierarchical Eradication:** Termination sequences must target the Process Group identifier (`SIGKILL -<PGID>`). The Linux Kernel will enforce simultaneous, non-negotiable termination across the entire process tree, mathematically ensuring no Subagent can survive the death of its parent.
+
+## 25. Capability Bootstrapping (The Skill Architecture)
+
+In a Zero-Trust ecosystem, autonomous Agents must never be permitted to dynamically mutate master UI files or core system templates. Allowing an LLM to overwrite a master template to fulfill a user request (e.g., generating a custom quiz interface) introduces catastrophic risk of Template Corruption and persistent code injection.
+
+### The Ephemeral Plugin Workflow
+To safely grant Agents the capability to build dynamic interfaces, the enterprise must implement **Capability Bootstrapping via Skills**. This establishes a rigid, repeatable workflow defined by four pillars:
+1. **Template Immutability:** Master structural files (HTML/JS blueprints) are universally treated as immutable.
+2. **Volatile Duplication:** The Agent must construct a localized, temporary copy of the blueprint within a designated RAM-disk sandbox (e.g., `/static/scratch/`).
+3. **Isolated Iframe Projection:** The dynamic UI is delivered to the client exclusively via cross-origin or isolated Iframes referencing the volatile directory.
+4. **Automated Reaping:** The Agent relies on underlying OS infrastructure (the Reaper Daemons) to annihilate the temporary files, relieving the LLM of cleanup responsibilities and guaranteeing long-term system stability.
