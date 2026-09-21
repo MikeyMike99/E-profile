@@ -232,3 +232,17 @@ To neutralize forensic retrieval, Agentic architectures must abandon physical di
 3. **Instant Obliteration:** The moment a file is unlinked by the Reaper, or the moment the server loses power/reboots, the electrical charge holding the data dissipates. Forensic disk recovery is mathematically and physically impossible.
 
 For high-security operations, if physical disk writes are absolutely unavoidable, the Reaper Daemons must be configured to use cryptographic shredding (`shred -u -z`) to overwrite the physical sectors with zero-state data before unlinking the inode.
+
+## 19. Containerized Agentic Sandboxing (Docker)
+
+The ultimate realization of the Immutable Host Doctrine is **Containerization**. Attempting to secure an AI Agent directly on a bare-metal Operating System (using raw bash scripts, manual cron jobs, and `fstab` tmpfs mounts) is brittle and prone to configuration drift across environments.
+
+For a true, scalable "Lift and Shift" deployment, the AI Agent must be enclosed within a **Zero-Trust Docker Container**. 
+
+### Containerized Zero-Trust Configuration
+A proper Agentic deployment utilizes `docker-compose` to enforce physical constraints at the container runtime level:
+1. **The Read-Only Lock (`read_only: true`):** The container's entire root filesystem is locked. The Agent physically cannot modify its own source code, preventing it from bypassing security middleware or writing persistence backdoors.
+2. **Native Memory Drives (`tmpfs`):** The forensic threat of Data Remanence is neutralized natively by Docker. By mapping the designated Agent scratch directory using a `tmpfs` volume (`tmpfs: /app/.agent_scratch:rw,noexec,nosuid,size=256m`), the container engine securely manages the RAM allocation without requiring host-level `sudo` privileges. 
+3. **RBAC User Segregation (`USER agentuser`):** The `Dockerfile` establishes a strictly restricted non-root user. The Agent operates with the lowest possible OS privileges, isolated entirely from the host's primary user namespace.
+
+Containerization guarantees that regardless of where the AI is deployed—whether on a developer's local laptop, a University server, or an Enterprise cloud cluster—the absolute boundaries of the Zero-Trust Architecture are perfectly and consistently enforced.
