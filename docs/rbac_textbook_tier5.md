@@ -308,3 +308,14 @@ If the Evaluator flags the payload, the network connection is immediately droppe
 A Semantic Firewall that lacks Role-Based Access Control awareness will inevitably block authorized administrative operations. System Administrators (Tier 5) routinely issue prompts that resemble system exploits to diagnose container boundaries or test Agent constraints. 
 
 Therefore, the Evaluator LLM Interceptor must be conditionally executed based on the user's cryptographically verified JWT token. If the token validates a `Tier5_SysAdmin` role, the request must bypass the Semantic Firewall entirely, granting the administrator uninhibited command execution while simultaneously dropping all suspicious payloads originating from Tier 1-4 users.
+
+## 24. Process Group Reaping (Subagent Zombies)
+
+A critical vulnerability in autonomous multi-agent environments is the generation of **Zombie Subagents**. If a Main Agent spawns background Subagents for parallel task execution, and the Main Agent is subsequently terminated (via UI cancellation, API timeout, or Semantic Firewall Block), the Subagents will frequently survive as detached orphaned processes.
+
+These Zombie Subagents continue to consume compute resources and execute LLM API calls indefinitely, leading to severe Resource Exhaustion and unmitigated API billing (Denial of Wallet).
+
+### Process Group SIGKILL Mandate
+To ensure absolute containment, the host infrastructure must never target individual Agent processes for termination. Instead:
+1. **Session Isolation:** The primary Agent must be executed within an isolated Process Group (`start_new_session=True`). All generated Subagents natively inherit this Process Group ID.
+2. **Hierarchical Eradication:** Termination sequences must target the Process Group identifier (`SIGKILL -<PGID>`). The Linux Kernel will enforce simultaneous, non-negotiable termination across the entire process tree, mathematically ensuring no Subagent can survive the death of its parent.
