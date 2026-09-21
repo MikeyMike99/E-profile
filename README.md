@@ -43,12 +43,18 @@ The System Admin profile has access to the `/admin` routing panel (`manage_profi
 - **Content Engine**: Python `markdown` library (Dynamic file-parsing instead of a traditional SQL database)
 
 ## 🧠 AI Integration (Antigravity Agent)
-This application hosts a fully embedded, zero-trust AI assistant designed to serve as both an interactive demo for visitors and a root-level developer tool for the system administrator. 
-It is integrated as a Flask Blueprint (`ai_plugin.py`) and avoids WebSocket-blocking by utilizing a custom synchronous HTTP Short-Polling architecture.
+This application hosts a fully embedded, Zero-Trust AI assistant designed to serve as both an interactive demo for visitors and a root-level developer tool for the system administrator. 
+
+To govern this advanced AI architecture, the repository contains the definitive **Zero-Trust RBAC Textbook** located in `docs/rbac_textbook_tier5.md`. This textbook outlines the 27 Core Pillars of our Enterprise Security Architecture, including:
+
+- **The Immutable Host Doctrine:** Utilizing Docker `read_only` and RAM-disks (`tmpfs`) to prevent AI Data Remanence and Remote Code Execution persistence.
+- **The Semantic Firewall:** Intercepting all prompts through an Evaluator LLM middleware to mathematically neutralize Prompt Injection and Jailbreaks.
+- **Ephemeral UI Plugins:** Using Iframe Sandboxing and Capability Bootstrapping to allow the AI to safely generate dynamic UI (like Exam Portals and Accessible YouTube Media Players) without risking XSS or Template Corruption.
+- **Subagent Zombie Reaping:** Issuing `SIGKILL` commands to entire Linux Process Groups (`os.killpg`) to eradicate orphaned AI subagents and prevent Resource Exhaustion (Denial of Wallet).
 
 ### The "Dual-Reality" Security Sandbox
 The AI engine dynamically adjusts its absolute filesystem boundaries based on the user's cryptographic backend session:
-1. **The Playground (Visitors)**: Unprivileged users are trapped in a strict sub-folder (`/playground/`). Inside this directory, they possess "simulated admin" powers—they can generate files, run scripts, and experience the full capability of the AI coding tool. However, the backend's canonical path resolution mathematically blocks the AI from traversing out of the playground to see or modify the core website code.
-2. **God-Mode (Root Admin)**: When accessed via the admin-exclusive pop-out shortcut, the AI detects the master session and elevates its anchor to the absolute root of the `e_profile` directory, transforming from a visitor demo into an unrestricted live-deployment developer tool.
+1. **The Playground (Visitors)**: Unprivileged users are trapped in a strict sub-folder (`/playground/`). The backend's canonical path resolution mathematically blocks the AI from traversing out of the playground to see or modify the core website code.
+2. **God-Mode (Root Admin)**: When accessed via the admin-exclusive pop-out shortcut, the AI detects the master session (Tier 5) and completely bypasses the Semantic Firewall and path restrictions, elevating its anchor to the absolute root of the directory for unrestricted deployment power.
 
 copy_right 
