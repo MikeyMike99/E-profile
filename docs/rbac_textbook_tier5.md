@@ -161,3 +161,17 @@ To defeat this, the engine must implement **Multi-Queue Synchronization (Channel
 1. **Dedicated Channels:** Every spawned sub-agent is dynamically assigned its own isolated asynchronous Queue (or isolated conversational thread ID).
 2. **Sequential Polling:** The Main Agent polls these queues independently or uses deterministic synchronization barriers to ensure that Sub-Agent A's output is fully received and processed before Sub-Agent B's output is evaluated. 
 3. **Deadlock Prevention:** The queues must enforce strict timeouts. If a sub-agent is compromised or trapped in an infinite hallucination loop, its dedicated queue will timeout, allowing the Main Agent to kill the sub-agent and report the failure without deadlocking the entire Swarm.
+
+## 14. The Iframe Handoff (Zero-Trust UI Integration)
+
+When an AI Agent needs to generate deeply interactive, stateful UI components (such as exam simulators, data visualizers, or custom forms) for the user, integrating these directly into the master Chat UI via WebSocket DOM manipulation introduces unacceptable risks:
+1. **Zero-Trust Violations:** The Agent injects unverified Javascript into the core application framework, creating XSS and security vulnerabilities.
+2. **Event Collisions:** Complex accessibility requirements (like global keybinds or ARIA live regions) collide with the parent application's routing.
+
+### The Iframe Handoff Architecture
+Instead of hacking the DOM, the Agent must utilize the **Iframe Handoff Architecture**:
+1. **Isolated Static Generation:** The Agent dynamically writes a completely standalone, self-contained HTML/JS application and saves it to a secure, partitioned web directory (e.g., `/static/`).
+2. **Stateless Handoff:** The Agent responds to the user strictly using standard Markdown, embedding the application via an `<iframe>` tag (`<iframe src="/static/app.html"></iframe>`).
+
+### The Result
+The user experiences seamless integration. The application sits natively inside the chat feed—exactly like a YouTube or TikTok embed—waiting for interaction. The core Chat UI remains perfectly pristine, and the Agent's code runs in a sandboxed iframe, enforcing absolute Zero-Trust separation between the Agent's generated artifacts and the master system framework.
