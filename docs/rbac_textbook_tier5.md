@@ -284,3 +284,15 @@ To successfully distribute agentic executables in a Zero-Trust ecosystem, the en
 1. **AOT Compilation (Nuitka):** The application must be compiled Ahead-Of-Time (AOT) using tools like `Nuitka` or rewritten in a systems language (Rust/Go). This produces a true native machine binary, entirely bypassing the malicious "Dropper" heuristic.
 2. **Cryptographic Code Signing (EV Certificates):** The resulting native binary must be cryptographically signed using an **Extended Validation (EV) Code Signing Certificate**. This mathematically binds the enterprise's verified legal identity to the binary. When executed, the operating system (e.g., Windows SmartScreen) validates the signature against global Certificate Authorities, granting immediate execution trust and suppressing all "Unknown Publisher" warnings.
 3. **PWA Sandboxing:** Alternatively, distribution trust can be outsourced entirely to the browser sandbox by deploying the Client UI as a Progressive Web App (PWA). This bypasses the OS-level executable trust layer entirely while providing native desktop integration.
+
+## 23. Semantic Firewalls and LLM Guardrails
+
+Standard Input Validation (such as Regex or Microsoft Presidio for PII scrubbing) is incapable of securing Agentic systems against semantic attacks.
+
+### The Prompt Injection Vector
+Because LLMs process instructions and data through the exact same channel (natural language text), an attacker can embed malicious instructions within benign data payloads (e.g., hidden text inside an uploaded PDF). This **Prompt Injection** bypasses traditional PII scrubbers and hijacks the Agent's execution flow.
+
+### The Guardrail Architecture
+A Zero-Trust Agentic deployment must implement **Semantic Firewalls** (e.g., NVIDIA NeMo Guardrails) to decouple data from instructions:
+1. **Input Classification:** A specialized, lightweight routing model scans all inbound text strictly for adversarial intent, jailbreak signatures, and prompt leaking attempts. If detected, the pipeline drops the request with a 403 Forbidden.
+2. **Constitutional Egress Evaluation:** The primary Agent's generated output must never be streamed directly to the client. It must be held in a buffer and evaluated by a secondary "Constitutional Model" or rigid egress filter to ensure it contains no leaked system prompts, API keys, or malicious executable code. 
