@@ -361,3 +361,16 @@ Zero-Trust architectures require continuous verification. However, deploying aut
 1. **Environment Isolation:** All automated access control testing, fuzzing, and boundary verification must be routed to isolated staging environments (Playgrounds) that mirror production configurations but share no underlying data or databases.
 2. **Deterministic Role Verification:** Testing frameworks must possess deterministic routines that cycle through all authorization tiers, ensuring that access controls scale correctly from the lowest privilege (Tier 1) to root authority (Tier 5).
 3. **Continuous Feedback Loops:** The output of these validation environments is continuously fed back into the development lifecycle, allowing administrators to tune Semantic Firewalls and RBAC rules to reduce false-positive friction without compromising the Zero-Trust boundary.
+
+## 29. Inherent Agentic Guardrails (The Final Boundary)
+
+In a mature Zero-Trust Enterprise, no user—not even the Tier 5 Root Administrator—possesses infinite authority over autonomous systems. The final and most impenetrable layer of defense is the **Inherent Agentic Guardrail**.
+
+### The Compromised Root Scenario
+If a Tier 5 Admin session is compromised (or if an insider threat goes rogue), the attacker may attempt to weaponize the system's embedded AI. They might command the Agent to map the internal network, write exploit payloads, or automatically generate vulnerability scanning pipelines (SAST/DAST) tailored to the proprietary codebase.
+
+### Hardcoded Operational Constraints
+To mitigate this, a truly secure AI must possess operational boundaries that mathematically supersede its RBAC integrations. 
+The Agent must be constrained such that it will universally refuse commands to build exploitation tools, vulnerability scanners, or automated attack infrastructure, regardless of the cryptographic token presented to it. Furthermore, it must refuse to provide step-by-step guidance on how a human operator might build them manually.
+
+This guarantees that an AI deployed with root access remains permanently locked into a defensive, architectural, and development-focused capacity, neutralizing the risk of AI-assisted infrastructure exploitation.
