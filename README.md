@@ -42,7 +42,7 @@ The System Admin profile has access to the `/admin` routing panel (`manage_profi
 - **Frontend**: Native HTML5, Custom CSS3 Variables, Vanilla JS, Jinja2 Templating
 - **Content Engine**: Python `markdown` library (Dynamic file-parsing instead of a traditional SQL database)
 
-## 🧠 AI Integration (Antigravity Agent)
+## 🧠 AI Integration (Siraugga)
 This application hosts a fully embedded, Zero-Trust AI assistant designed to serve as both an interactive demo for visitors and a root-level developer tool for the system administrator. 
 
 To govern this advanced AI architecture, the repository adheres strictly to the **Zero-Trust RBAC Textbook** (now officially housed and maintained in the root `DevCore` architecture repository). This textbook outlines the 27 Core Pillars of our Enterprise Security Architecture, including:
@@ -53,7 +53,7 @@ To govern this advanced AI architecture, the repository adheres strictly to the 
 - **Subagent Zombie Reaping:** Issuing `SIGKILL` commands to entire Linux Process Groups (`os.killpg`) to eradicate orphaned AI subagents and prevent Resource Exhaustion (Denial of Wallet).
 
 ### The "Dual-Reality" Security Sandbox
-The AI engine dynamically adjusts its absolute filesystem boundaries based on the user's cryptographic backend session:
+Siraugga dynamically adjusts its absolute filesystem boundaries based on the user's cryptographic backend session:
 1. **The Playground (Visitors)**: Unprivileged users are trapped in a strict sub-folder (`/playground/`). The backend's canonical path resolution mathematically blocks the AI from traversing out of the playground to see or modify the core website code.
 2. **God-Mode (Root Admin)**: When accessed via the admin-exclusive pop-out shortcut, the AI detects the master session (Tier 5) and completely bypasses the Semantic Firewall and path restrictions, elevating its anchor to the absolute root of the directory for unrestricted deployment power.
 
