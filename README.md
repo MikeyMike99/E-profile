@@ -45,7 +45,7 @@ The System Admin profile has access to the `/admin` routing panel (`manage_profi
 ## 🧠 AI Integration (Antigravity Agent)
 This application hosts a fully embedded, Zero-Trust AI assistant designed to serve as both an interactive demo for visitors and a root-level developer tool for the system administrator. 
 
-To govern this advanced AI architecture, the repository contains the definitive **Zero-Trust RBAC Textbook** located in `docs/rbac_textbook_tier5.md`. This textbook outlines the 27 Core Pillars of our Enterprise Security Architecture, including:
+To govern this advanced AI architecture, the repository adheres strictly to the **Zero-Trust RBAC Textbook** (now officially housed and maintained in the root `DevCore` architecture repository). This textbook outlines the 27 Core Pillars of our Enterprise Security Architecture, including:
 
 - **The Immutable Host Doctrine:** Utilizing Docker `read_only` and RAM-disks (`tmpfs`) to prevent AI Data Remanence and Remote Code Execution persistence.
 - **The Semantic Firewall:** Intercepting all prompts through an Evaluator LLM middleware to mathematically neutralize Prompt Injection and Jailbreaks.
