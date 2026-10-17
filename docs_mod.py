@@ -11,6 +11,9 @@ docs_bp = Blueprint('docs', __name__, url_prefix='/docs')
 
 DOCS_DIR = config.CONTENT_DIR / "docs"
 CATALOG_PATH = DOCS_DIR / "docs_catalog.json"
+CENTRAL_DOCS_DIR = getattr(config, 'CENTRAL_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Central_Docs"))
+DEVCORE_DOCS_DIR = getattr(config, 'DEVCORE_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/DevCore/docs"))
+AUDIO_DOCS_DIR = getattr(config, 'AUDIO_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Audio_pllayback_suite/docs"))
 
 COLLECTIONS = {
     "devlog": {
@@ -77,7 +80,49 @@ TOPICS = {
     "changelog": {"title": "Devlog & Changelog", "icon": "📜"}
 }
 
+_last_sync_check = 0
+
+def auto_sync_if_needed():
+    """
+    Zero-touch automatic documentation synchronization:
+    Detects if Central_Docs or workspace sources are newer than docs_catalog.json,
+    and automatically rebuilds the catalog and cache.
+    """
+    global _last_sync_check
+    import time
+    now = time.time()
+    if now - _last_sync_check < 3:
+        return
+    _last_sync_check = now
+
+    try:
+        needs_sync = False
+        if not CATALOG_PATH.exists():
+            needs_sync = True
+        else:
+            cat_mtime = CATALOG_PATH.stat().st_mtime
+            if CENTRAL_DOCS_DIR.exists():
+                projects_dir = CENTRAL_DOCS_DIR / "projects"
+                if projects_dir.exists() and projects_dir.stat().st_mtime > cat_mtime:
+                    needs_sync = True
+                git_log = CENTRAL_DOCS_DIR / ".git" / "logs" / "HEAD"
+                if git_log.exists() and git_log.stat().st_mtime > cat_mtime:
+                    needs_sync = True
+
+        if needs_sync and CENTRAL_DOCS_DIR.exists():
+            sync_script = CENTRAL_DOCS_DIR / "scripts" / "sync_to_eprofile.py"
+            if sync_script.exists():
+                import importlib.util
+                spec = importlib.util.spec_from_file_location("central_sync", str(sync_script))
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                if hasattr(mod, 'sync'):
+                    mod.sync()
+    except Exception as e:
+        print(f"[DocsMod] Auto-sync encountered: {e}")
+
 def load_catalog():
+    auto_sync_if_needed()
     if not CATALOG_PATH.exists():
         return []
     try:
@@ -215,16 +260,36 @@ def docs_reader(category, doc_slug):
             topics=TOPICS
         )
 
-    # Locate file
+    # Locate file: Check live Central_Docs repository first, fallback to local DOCS_DIR
     file_path = None
-    if doc_meta:
-        file_path = DOCS_DIR / doc_meta.get('rel_path', '')
+    if CENTRAL_DOCS_DIR.exists():
+        candidates = []
+        if doc_meta and doc_meta.get('rel_path'):
+            rel = doc_meta.get('rel_path')
+            candidates.append(CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / rel)
+            candidates.append(CENTRAL_DOCS_DIR / "projects" / "audio_suite" / rel)
+            candidates.append(CENTRAL_DOCS_DIR / "projects" / rel)
+        candidates.extend([
+            CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / category / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "audio_suite" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "encrypt_me" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "echoes_of_the_world" / f"{doc_slug}.md",
+        ])
+        for c in candidates:
+            if c.exists() and c.is_file():
+                file_path = c
+                break
+
     if not file_path or not file_path.exists():
-        candidate = DOCS_DIR / category / f"{doc_slug}.md"
-        if candidate.exists():
-            file_path = candidate
-        else:
-            abort(404)
+        if doc_meta:
+            file_path = DOCS_DIR / doc_meta.get('rel_path', '')
+        if not file_path or not file_path.exists():
+            candidate = DOCS_DIR / category / f"{doc_slug}.md"
+            if candidate.exists():
+                file_path = candidate
+            else:
+                abort(404)
             
     try:
         raw_text = file_path.read_text(encoding='utf-8', errors='replace')

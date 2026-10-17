@@ -12,6 +12,11 @@ class Config:
     STATIC_DIR = ROOT_DIR / "static"
     TEMPLATES_DIR = ROOT_DIR / "templates"
     
+    # 2. Centralized Documentation Sources (Zero-Touch Discovery)
+    CENTRAL_DOCS_DIR = Path(os.environ.get("CENTRAL_DOCS_DIR", "/mnt/c/Users/michael/Documents/Central_Docs"))
+    DEVCORE_DOCS_DIR = Path(os.environ.get("DEVCORE_DOCS_DIR", "/mnt/c/Users/michael/Documents/DevCore/docs"))
+    AUDIO_DOCS_DIR = Path(os.environ.get("AUDIO_DOCS_DIR", "/mnt/c/Users/michael/Documents/Audio_pllayback_suite/docs"))
+    
     # 2. Handshake Security Keys (Loaded from ENV for security)
     ADMIN_KEY = os.environ.get("ADMIN_KEY", "SECURE_ADMIN_KEY_HERE")
     USER_KEY = os.environ.get("USER_KEY", "USER")
