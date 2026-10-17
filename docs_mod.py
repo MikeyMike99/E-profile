@@ -11,7 +11,7 @@ docs_bp = Blueprint('docs', __name__, url_prefix='/docs')
 DOCS_DIR = config.CONTENT_DIR / "docs"
 CATALOG_PATH = DOCS_DIR / "docs_catalog.json"
 
-CATEGORIES = {
+COLLECTIONS = {
     "devlog": {
         "title": "5-Pillar Architecture Devlog Suite",
         "badge": "199 Chapters",
@@ -50,6 +50,25 @@ CATEGORIES = {
     }
 }
 
+PROJECTS = {
+    "all": {"title": "All Projects", "icon": "🌐"},
+    "siraugga": {"title": "Siraugga / DevCore Core", "icon": "⚡"},
+    "echoes": {"title": "Echoes of the World", "icon": "🎮"},
+    "accessible_apps": {"title": "Accessible Tools Suite", "icon": "♿"},
+    "eprofile": {"title": "E-Profile Portal", "icon": "💼"}
+}
+
+TOPICS = {
+    "all": {"title": "All Topics", "icon": "🔍"},
+    "security": {"title": "Security & Zero-Trust", "icon": "🛡️"},
+    "infrastructure": {"title": "Infrastructure & Systems", "icon": "🖥️"},
+    "accessibility_ui": {"title": "UI & Accessibility (WCAG)", "icon": "♿"},
+    "workflow": {"title": "Workflow & Automation", "icon": "⚙️"},
+    "limitations": {"title": "Limitations & Traps", "icon": "⚠️"},
+    "origin_story": {"title": "The Story & Manifesto", "icon": "🌌"},
+    "changelog": {"title": "Devlog & Changelog", "icon": "📜"}
+}
+
 def load_catalog():
     if not CATALOG_PATH.exists():
         return []
@@ -70,45 +89,78 @@ def get_prev_next(catalog, category, slug):
     next_doc = cat_items[idx + 1] if idx != -1 and idx < len(cat_items) - 1 else None
     return prev_doc, next_doc
 
-@docs_bp.route('/')
+@docs_bp.route('/', strict_slashes=False)
+@docs_bp.route('', strict_slashes=False)
 def docs_index():
     catalog = load_catalog()
     
-    # Calculate category counts
-    counts = {}
+    # Selected filters from query string
+    selected_project = request.args.get('project', 'all').lower()
+    selected_topic = request.args.get('topic', 'all').lower()
+    selected_collection = request.args.get('category', 'all').lower()
+    sort_mode = request.args.get('sort', 'newest').lower()
+    
+    # Compute counts dynamically across all dimensions
+    project_counts = {"all": len(catalog)}
+    topic_counts = {"all": len(catalog)}
+    collection_counts = {"all": len(catalog)}
+    
     for item in catalog:
-        cat = item.get('category')
-        counts[cat] = counts.get(cat, 0) + 1
+        # Project counts
+        p = item.get('project', 'siraugga')
+        project_counts[p] = project_counts.get(p, 0) + 1
         
+        # Collection counts
+        c = item.get('category', 'devlog')
+        collection_counts[c] = collection_counts.get(c, 0) + 1
+        
+        # Topic counts
+        for t in item.get('topics', []):
+            topic_counts[t] = topic_counts.get(t, 0) + 1
+
+    # Filter items based on user selection
+    filtered_docs = list(catalog)
+    if selected_project != 'all':
+        filtered_docs = [d for d in filtered_docs if d.get('project') == selected_project]
+    if selected_topic != 'all':
+        filtered_docs = [d for d in filtered_docs if selected_topic in d.get('topics', [])]
+    if selected_collection != 'all':
+        filtered_docs = [d for d in filtered_docs if d.get('category') == selected_collection]
+        
+    # Sort mode: newest first (order_score desc) vs alphabetical
+    if sort_mode == 'alpha':
+        filtered_docs.sort(key=lambda x: x.get('title', '').lower())
+    else:
+        filtered_docs.sort(key=lambda x: x.get('order_score', 0), reverse=True)
+
+    # Latest flagship update for the interactive top bar
+    latest_doc = next((d for d in catalog if d.get('is_latest')), catalog[0] if catalog else None)
+
     return render_template(
         'docs.html',
         active_tab='docs',
         view_mode='index',
-        categories=CATEGORIES,
-        counts=counts,
+        categories=COLLECTIONS,
+        projects=PROJECTS,
+        topics=TOPICS,
+        project_counts=project_counts,
+        topic_counts=topic_counts,
+        collection_counts=collection_counts,
+        selected_project=selected_project,
+        selected_topic=selected_topic,
+        selected_collection=selected_collection,
+        sort_mode=sort_mode,
+        latest_doc=latest_doc,
+        docs=filtered_docs,
         total_docs=len(catalog),
-        recent_docs=catalog[:10],
-        catalog=catalog
+        filtered_count=len(filtered_docs)
     )
 
 @docs_bp.route('/<category>')
 def docs_category(category):
-    if category not in CATEGORIES:
+    if category not in COLLECTIONS:
         return redirect(url_for('docs.docs_index'))
-        
-    catalog = load_catalog()
-    cat_docs = [d for d in catalog if d.get('category') == category]
-    
-    return render_template(
-        'docs.html',
-        active_tab='docs',
-        view_mode='category',
-        category_key=category,
-        category_meta=CATEGORIES[category],
-        docs=cat_docs,
-        categories=CATEGORIES,
-        catalog=catalog
-    )
+    return redirect(url_for('docs.docs_index', category=category))
 
 @docs_bp.route('/<category>/<doc_slug>')
 def docs_reader(category, doc_slug):
@@ -120,7 +172,6 @@ def docs_reader(category, doc_slug):
     if doc_meta:
         file_path = DOCS_DIR / doc_meta.get('rel_path', '')
     if not file_path or not file_path.exists():
-        # Fallback search
         candidate = DOCS_DIR / category / f"{doc_slug}.md"
         if candidate.exists():
             file_path = candidate
@@ -134,7 +185,7 @@ def docs_reader(category, doc_slug):
         html_body = f"<p>Error rendering document: {e}</p>"
         
     prev_doc, next_doc = get_prev_next(catalog, category, doc_slug)
-    category_meta = CATEGORIES.get(category, {"title": category.title(), "icon": "📄"})
+    category_meta = COLLECTIONS.get(category, {"title": category.title(), "icon": "📄"})
     
     return render_template(
         'docs.html',
@@ -146,13 +197,17 @@ def docs_reader(category, doc_slug):
         category_meta=category_meta,
         prev_doc=prev_doc,
         next_doc=next_doc,
-        categories=CATEGORIES,
-        catalog=catalog
+        categories=COLLECTIONS,
+        projects=PROJECTS,
+        topics=TOPICS
     )
 
 @docs_bp.route('/api/search')
 def docs_search():
     query = request.args.get('q', '').strip().lower()
+    project_filter = request.args.get('project', 'all').lower()
+    topic_filter = request.args.get('topic', 'all').lower()
+    
     if not query:
         return jsonify([])
         
@@ -160,30 +215,39 @@ def docs_search():
     results = []
     
     for item in catalog:
+        if project_filter != 'all' and item.get('project') != project_filter:
+            continue
+        if topic_filter != 'all' and topic_filter not in item.get('topics', []):
+            continue
+            
         title = item.get('title', '').lower()
         slug = item.get('slug', '').lower()
         summary = item.get('summary', '').lower()
         cat = item.get('category', '').lower()
+        p_label = item.get('project_label', '').lower()
         
         score = 0
         if query in title:
-            score += 10
+            score += 15
         if query in slug:
-            score += 5
+            score += 8
         if query in summary:
-            score += 2
+            score += 4
         if query in cat:
-            score += 1
+            score += 2
+        if query in p_label:
+            score += 3
             
         if score > 0:
             results.append({
                 "title": item.get('title'),
                 "category": item.get('category'),
+                "project": item.get('project_label', 'Siraugga Core'),
                 "url": f"/docs/{item.get('category')}/{item.get('slug')}",
                 "summary": item.get('summary'),
                 "words": item.get('word_count'),
-                "score": score
+                "score": score + (item.get('order_score', 0) / 1000)
             })
             
     results.sort(key=lambda x: x["score"], reverse=True)
-    return jsonify(results[:25])
+    return jsonify(results[:30])
