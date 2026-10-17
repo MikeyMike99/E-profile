@@ -1,5 +1,5 @@
 {
-    "total_views": 517,
+    "total_views": 575,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -62,11 +62,11 @@
         "3e6282a42f0d9ec38fc80d72217f63aa"
     ],
     "paths": {
-        "/": 159,
-        "/favicon.ico": 75,
+        "/": 183,
+        "/favicon.ico": 94,
         "/projects": 26,
         "/ai_agent": 20,
-        "/login": 37,
+        "/login": 39,
         "/ai_agent/": 12,
         "/ws": 123,
         "/ai_agent/api/chat": 2,
@@ -74,13 +74,16 @@
         "/robots.txt": 45,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
-        "/docs": 6,
+        "/docs": 9,
         "/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": 1,
-        "/logout": 2,
+        "/logout": 3,
         "/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE": 1,
         "/docs/api/chapter/story/DEVLOG": 1,
-        "/docs/api/chapter/eprofile/DEVLOG": 1,
+        "/docs/api/chapter/eprofile/DEVLOG": 4,
         "/docs/api/chapter/devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE": 1,
-        "/docs/devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE": 1
+        "/docs/devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE": 1,
+        "/docs/api/chapter/guides/HOT_PATCH_ARCHITECTURE": 4,
+        "/docs/api/chapter/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE": 1,
+        "/docs/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE": 1
     }
 }
