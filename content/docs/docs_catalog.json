@@ -23,6 +23,14 @@
     "rel_path": "devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD.md",
     "cross_references": [
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "audio_suite",
         "project_label": "JOSHY Audio Suite",
         "category": "audio_suite",
@@ -61,7 +69,7 @@
     "category": "eprofile",
     "title": "E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 4714,
+    "word_count": 4876,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "topics": [
@@ -90,80 +98,12 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "HOT_PATCH_ARCHITECTURE",
-        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
-        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
-      },
-      {
-        "project": "encrypt_me",
-        "project_label": "EncryptMe Multi-User Vault",
-        "category": "encrypt_me",
-        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
-        "title": "EncryptMe Cryptographic Architecture",
-        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "SECURITY",
-        "title": "Siraugga Framework Security Specification",
-        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
-      },
-      {
-        "project": "audio_suite",
-        "project_label": "JOSHY Audio Suite",
-        "category": "audio_suite",
-        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
-        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
-        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "manifesto",
-        "slug": "04_The_Forge_of_Sovereignty",
-        "title": "The Manifesto: Chapter 4 \u2014 The Forge of Sovereignty",
-        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
-      }
-    ]
-  },
-  {
-    "slug": "06_EPROFILE_DEVLOG",
-    "category": "devlog",
-    "title": "E-Profile Architecture & Cybersecurity Devlog",
-    "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 4714,
-    "project": "eprofile",
-    "project_label": "E-Profile Portal",
-    "topics": [
-      "security",
-      "cryptography",
-      "infrastructure",
-      "accessibility_ui",
-      "workflow",
-      "origin_story",
-      "changelog"
-    ],
-    "order_score": 14990,
-    "is_latest": true,
-    "is_origin": false,
-    "is_proprietary": true,
-    "clearance": "proprietary",
-    "base_sensitivity": 1,
-    "max_sensitivity": 4,
-    "rel_path": "devlog/06_EPROFILE_DEVLOG.md",
-    "cross_references": [
-      {
         "project": "echoes",
         "project_label": "Echoes of the World (Audio Game)",
-        "category": "devlog",
-        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
-        "title": "The Origin Architecture: Echoes of the World",
-        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "siraugga",
@@ -305,6 +245,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "eprofile",
         "project_label": "E-Profile Portal",
         "category": "eprofile",
@@ -370,6 +318,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "eprofile",
@@ -438,6 +394,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "eprofile",
         "project_label": "E-Profile Portal",
         "category": "eprofile",
@@ -498,6 +462,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "audio_suite",
@@ -561,6 +533,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "audio_suite",
@@ -1136,6 +1116,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "siraugga",
         "project_label": "Siraugga / DevCore Core",
         "category": "manifesto",
@@ -1344,6 +1332,90 @@
         "slug": "SECURITY",
         "title": "Siraugga Framework Security Specification",
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      }
+    ]
+  },
+  {
+    "slug": "06_EPROFILE_DEVLOG",
+    "category": "devlog",
+    "title": "E-Profile Architecture & Cybersecurity Devlog",
+    "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
+    "word_count": 4876,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "topics": [
+      "security",
+      "cryptography",
+      "infrastructure",
+      "accessibility_ui",
+      "workflow",
+      "origin_story",
+      "changelog"
+    ],
+    "order_score": 600,
+    "is_latest": true,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/06_EPROFILE_DEVLOG.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "04_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 4 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ]
   },
@@ -4721,6 +4793,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "audio_suite",
         "project_label": "JOSHY Audio Suite",
         "category": "audio_suite",
@@ -5133,6 +5213,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "audio_suite",
         "project_label": "JOSHY Audio Suite",
         "category": "audio_suite",
@@ -5432,6 +5520,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "eprofile",
@@ -8197,6 +8293,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "siraugga",
@@ -16725,6 +16829,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "siraugga",
         "project_label": "Siraugga / DevCore Core",
         "category": "manifesto",
@@ -16785,6 +16897,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "audio_suite",
@@ -16920,6 +17040,14 @@
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
       },
       {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
         "project": "audio_suite",
         "project_label": "JOSHY Audio Suite",
         "category": "audio_suite",
@@ -17041,6 +17169,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "siraugga",
@@ -17171,6 +17307,14 @@
         "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
         "title": "The Origin Architecture: Echoes of the World",
         "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
         "project": "audio_suite",

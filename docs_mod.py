@@ -150,7 +150,44 @@ def load_catalog():
     except Exception:
         return []
 
+CURATED_NARRATIVE_FLOW = [
+    ('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'),
+    ('manifesto', '01_Echoes_in_the_Void'),
+    ('manifesto', '02_The_Echoes_Architecture'),
+    ('echoes', 'CLASS_WORLD_ARCHITECTURE'),
+    ('echoes', 'MENU_CONFIG'),
+    ('devlog', '02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE'),
+    ('devlog', '05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH'),
+    ('manifesto', '03_The_Quantitative_Era'),
+    ('manifesto', '04_The_Forge_of_Sovereignty'),
+    ('manifesto', '05_The_24_Hour_Crucible'),
+    ('story', 'DEVLOG')
+]
+
 def get_prev_next(catalog, category, slug):
+    # 1. Curated Narrative Journey: Bridges across categories for the origin story
+    flow_idx = -1
+    for i, (f_cat, f_slug) in enumerate(CURATED_NARRATIVE_FLOW):
+        if f_slug == slug and (f_cat == category or not category):
+            flow_idx = i
+            break
+
+    if flow_idx != -1:
+        prev_doc = None
+        next_doc = None
+        if flow_idx > 0:
+            p_cat, p_slug = CURATED_NARRATIVE_FLOW[flow_idx - 1]
+            prev_doc = next((d for d in catalog if d.get('category') == p_cat and d.get('slug') == p_slug), None)
+            if not prev_doc:
+                prev_doc = next((d for d in catalog if d.get('slug') == p_slug), None)
+        if flow_idx < len(CURATED_NARRATIVE_FLOW) - 1:
+            n_cat, n_slug = CURATED_NARRATIVE_FLOW[flow_idx + 1]
+            next_doc = next((d for d in catalog if d.get('category') == n_cat and d.get('slug') == n_slug), None)
+            if not next_doc:
+                next_doc = next((d for d in catalog if d.get('slug') == n_slug), None)
+        return prev_doc, next_doc
+
+    # 2. Standard Category Traversal (Fallback for all other documents)
     cat_items = [d for d in catalog if d.get('category') == category]
     idx = -1
     for i, item in enumerate(cat_items):

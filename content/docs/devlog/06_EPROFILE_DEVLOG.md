@@ -518,9 +518,14 @@ In the legacy implementation, clicking a chapter in the navigation list performe
 
 | Related Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
 | :--- | :--- | :--- |
+| **Origin Architecture** | [The Origin Architecture: Echoes of the World](/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD) — Genesis blueprint establishing mathematical coordinate modeling and screen-reader-first accessibility. | 5-Pillar Devlog |
+| **The Developer Manifesto** | [Chapter 1: Echoes in the Void (The True Origin)](/docs/manifesto/01_Echoes_in_the_Void) — The forensic genesis: sight loss, Optima College, discovering NVDAController.dll, and spatial math. | The Manifesto |
+| **Echoes of the World** | [Class & World Architecture](/docs/echoes/CLASS_WORLD_ARCHITECTURE) — Procedural chunking, bounding boxes, and 3D spatial soundscapes. | Echoes Game Engine |
+| **Zero-Downtime Hot-Patching** | [Hot-Patch Architecture](/docs/guides/HOT_PATCH_ARCHITECTURE) — Zero-restart bytecode compilation, staging queues, and in-memory view swapping. | Architecture Guides |
+| **Raugus Key-Only VFS** | [Raugus Resolver MCP Architecture](/docs/guides/RAUGUS_RESOLVER_MCP_ARCHITECTURE) — Pathless symbol extraction and zero-trust tool security. | Architecture Guides |
+| **EncryptMe Vault** | [Cryptographic Architecture](/docs/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE) — Split-key entropy slicing, PBKDF2HMAC, and ephemeral zeroization. | EncryptMe Multi-User Vault |
 | **DevCore Post-Commit Bridge** | [Bootstrap Preflight Architecture](/docs/guides/BOOTSTRAP_PREFLIGHT_ARCHITECTURE) — Automated zero-touch hooks syncing documentation to Central_Docs without manual developer intervention. | Architecture Guides |
 | **DevCore WebSocket Streaming** | [Devlog 01_02: WebSocket Dropouts & Refresh Crashes](/docs/devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES) — Zero-restart state persistence and reconnection protocols. | 5-Pillar Devlog |
-| **Siraugga Developer Manifesto** | [The Developer Manifesto: Origin Story](/docs/manifesto/DEVELOPERS_MANIFESTO) — The forensic genesis and philosophy behind centralized, sovereign developer infrastructure. | The Manifesto |
 
 </details>
 
@@ -545,6 +550,8 @@ The following commit timeline documents the empirical evolution of the E-Profile
 | `1aff4e3` | 2026-10-17 | Section Sensitivity Scoring Engine | Deployed silent multi-tier redaction across documentation tiers. |
 | `81e2747` | 2026-10-17 | Zero-Touch Central Vault Discovery | Automated auto-sync detection bridging `Central_Docs` to `e_profile`. |
 | `78d837b` | 2026-10-17 | Master-Detail SPA Docs Explorer | Sub-15ms client-side chapter loading with zero-reload accessible focus shifting. |
+| `4cbc241` | 2026-10-18 | Multi-Project Vault & Relational Graph | Integrated 302 chapters, 5 projects, relational cross-references, and landing page. |
+| `8e6c710` | 2026-10-18 | Curated Narrative Flow & Origin Bridge | Connected The Origin Architecture directly into The Manifesto & Audio Game Genesis. |
 
 ---
 
