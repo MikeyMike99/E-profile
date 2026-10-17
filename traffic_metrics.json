@@ -1,5 +1,5 @@
 {
-    "total_views": 469,
+    "total_views": 475,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -81,6 +81,10 @@
         "/docs/api/chapter/devlog/05_42_KMS_VAULT_AND_OFFLINE_RECOVERY_TRAPS": 1,
         "/docs/api/chapter/devlog/05_30_KMS_KEYCHAIN_AND_COLD_STORAGE_FROM_SCRATCH": 1,
         "/docs/api/chapter/devlog/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH": 2,
-        "/docs/api/chapter/eprofile/DEVLOG": 1
+        "/docs/api/chapter/eprofile/DEVLOG": 2,
+        "/docs/api/chapter/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE": 1,
+        "/docs/api/chapter/echoes/CLASS_WORLD_ARCHITECTURE": 2,
+        "/docs/api/chapter/guides/SECURITY": 1,
+        "/docs/api/chapter/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY": 1
     }
 }

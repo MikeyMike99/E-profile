@@ -63,6 +63,18 @@ COLLECTIONS = {
         "badge": "Portfolio Core",
         "icon": "💼",
         "desc": "Forensic devlog, zero-trust RBAC, schema evolution, and accessibility physical access point."
+    },
+    "echoes": {
+        "title": "Echoes of the World Architecture",
+        "badge": "Audio Game Core",
+        "icon": "🎮",
+        "desc": "Procedural spatial audio world engine, state management, 8-way compass, and menu architecture."
+    },
+    "encrypt_me": {
+        "title": "EncryptMe Multi-User Vault",
+        "badge": "Cryptographic Tool",
+        "icon": "🔐",
+        "desc": "Industrial-grade PBKDF2 symmetric cryptography, split-key entropy recovery, and memory zeroization."
     }
 }
 
@@ -71,6 +83,7 @@ PROJECTS = {
     "audio_suite": {"title": "JOSHY Audio Suite", "icon": "🎵"},
     "siraugga": {"title": "Siraugga / DevCore Core", "icon": "⚡"},
     "echoes": {"title": "Echoes of the World", "icon": "🎮"},
+    "encrypt_me": {"title": "EncryptMe Vault", "icon": "🔐"},
     "accessible_apps": {"title": "Accessible Tools Suite", "icon": "♿"},
     "eprofile": {"title": "E-Profile Portal", "icon": "💼"}
 }
@@ -262,6 +275,7 @@ def docs_api_chapter(category, doc_slug):
         "base_sensitivity": doc_meta.get('base_sensitivity', 1),
         "max_sensitivity": doc_meta.get('max_sensitivity', 1),
         "is_proprietary": doc_meta.get('is_proprietary', False),
+        "cross_references": doc_meta.get('cross_references', []),
         "html": html_body,
         "prev_doc": prev_doc,
         "next_doc": next_doc

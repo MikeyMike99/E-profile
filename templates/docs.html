@@ -629,6 +629,7 @@
                 <option value="audio_suite">🎵 JOSHY Audio Suite</option>
                 <option value="encrypt_me">🔒 encrypt_me Crypto Tool</option>
                 <option value="echoes">🎮 Echoes of the World</option>
+                <option value="eprofile">💼 E-Profile Portal</option>
                 <option value="accessible_apps">♿ Accessible Applications</option>
             </select>
 
@@ -653,6 +654,9 @@
                 <button type="button" class="cat-pill-btn" data-cat="manual" onclick="handleCategoryFilter('manual')">Manual</button>
                 <button type="button" class="cat-pill-btn" data-cat="story" onclick="handleCategoryFilter('story')">Story</button>
                 <button type="button" class="cat-pill-btn" data-cat="audio_suite" onclick="handleCategoryFilter('audio_suite')">Audio</button>
+                <button type="button" class="cat-pill-btn" data-cat="eprofile" onclick="handleCategoryFilter('eprofile')">E-Profile</button>
+                <button type="button" class="cat-pill-btn" data-cat="echoes" onclick="handleCategoryFilter('echoes')">Echoes</button>
+                <button type="button" class="cat-pill-btn" data-cat="encrypt_me" onclick="handleCategoryFilter('encrypt_me')">EncryptMe</button>
             </div>
 
             <!-- 4. Scrollable Chapter Tree -->
@@ -710,12 +714,48 @@
                 </div>
             </div>
 
+            <!-- Cross-Reference Jump Dropdown (Accessible Dropdown Standard) -->
+            <div id="crossref-dropdown-container" class="crossref-dropdown-box" style="margin: 0 0 22px 0; padding: 12px 16px; background: rgba(0, 243, 255, 0.04); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
+                <label for="crossref-select" id="crossref-label" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; color: var(--accent); margin-bottom: 6px;">
+                    🔽 Jump to Related Multi-Project Architecture (Dropdown):
+                </label>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <select id="crossref-select" class="crossref-select" onchange="handleCrossrefJump(this.value)" aria-labelledby="crossref-label" style="flex: 1; min-width: 280px; background: #080c14; border: 1px solid var(--accent); color: #00ff88; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 0.84rem; cursor: pointer;">
+                        <option value="">-- Select a cross-referenced project to jump ({{ active_doc.cross_references|length if active_doc and active_doc.cross_references else 0 }} available) --</option>
+                        {% if active_doc and active_doc.cross_references %}
+                        {% for ref in active_doc.cross_references %}
+                        <option value="{{ ref.category }}/{{ ref.slug }}">{{ '[' ~ ref.project_label ~ '] ' ~ ref.title ~ ' — ' ~ ref.relation }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
             <!-- Main Rendered Article -->
             <article class="doc-article-wrapper" id="doc-article" tabindex="-1">
                 <h1 class="doc-article-title" id="reader-heading">{{ active_doc.title if active_doc else 'Documentation Chapter' }}</h1>
                 <div id="doc-body">
                     {{ doc_html | safe }}
                 </div>
+
+                <!-- Bottom Collapsible Cross-Reference Details (The Dropdown Standard) -->
+                <details id="crossref-details" class="crossref-accordion" style="margin: 35px 0 15px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 8px; background: rgba(0, 243, 255, 0.03); {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
+                    <summary id="crossref-details-summary" style="font-family: monospace; font-size: 0.88rem; font-weight: bold; cursor: pointer; color: var(--accent);">
+                        🔽 Related Multi-Project Architecture & Security Notes (Click to Expand Dropdown)
+                    </summary>
+                    <div id="crossref-details-list" style="margin-top: 14px; font-family: monospace; font-size: 0.84rem; line-height: 1.7; color: var(--text-bright);">
+                        {% if active_doc and active_doc.cross_references %}
+                        <ul style="margin: 0; padding-left: 20px;">
+                            {% for ref in active_doc.cross_references %}
+                            <li style="margin-bottom: 8px;">
+                                <strong style="color: var(--accent);">[{{ ref.project_label }}] {{ ref.title }}</strong>: {{ ref.relation }}
+                                <button type="button" class="ctrl-btn" style="margin-left: 8px; padding: 2px 6px;" onclick="selectChapter('{{ ref.category }}', '{{ ref.slug }}')">Jump</button>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </details>
             </article>
 
             <!-- Bottom Pager -->
@@ -805,6 +845,40 @@
                 // Update reading meta
                 document.getElementById('reader-words').textContent = 
                     data.word_count + ' WORDS • ~' + data.read_time + ' MIN READ';
+
+                // Update cross-reference dropdowns (The Dropdown Standard)
+                var crContainer = document.getElementById('crossref-dropdown-container');
+                var crSelect = document.getElementById('crossref-select');
+                var crDetails = document.getElementById('crossref-details');
+                var crList = document.getElementById('crossref-details-list');
+
+                if (crContainer && crSelect && crDetails && crList) {
+                    if (data.cross_references && data.cross_references.length > 0) {
+                        crSelect.innerHTML = '<option value="">-- Select a cross-referenced project to jump (' + data.cross_references.length + ' available) --</option>';
+                        var detailsHtml = '<ul style="margin: 0; padding-left: 20px;">';
+
+                        data.cross_references.forEach(function(ref) {
+                            var opt = document.createElement('option');
+                            opt.value = ref.category + '/' + ref.slug;
+                            opt.textContent = '[' + ref.project_label + '] ' + ref.title + ' — ' + ref.relation;
+                            crSelect.appendChild(opt);
+
+                            detailsHtml += '<li style="margin-bottom: 8px;">' +
+                                '<strong style="color: var(--accent);">[' + ref.project_label + '] ' + ref.title + '</strong>: ' + ref.relation + 
+                                ' <button type="button" class="ctrl-btn" style="margin-left: 8px; padding: 2px 6px;" onclick="selectChapter(\'' + ref.category + '\', \'' + ref.slug + '\')">Jump</button>' +
+                                '</li>';
+                        });
+
+                        detailsHtml += '</ul>';
+                        crList.innerHTML = detailsHtml;
+
+                        crContainer.style.display = 'block';
+                        crDetails.style.display = 'block';
+                    } else {
+                        crContainer.style.display = 'none';
+                        crDetails.style.display = 'none';
+                    }
+                }
 
                 // Update pager
                 updatePagerButtons(data.prev_doc, data.next_doc);
@@ -953,6 +1027,19 @@
 
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 7. CROSS-REFERENCE JUMP HANDLER (DROPDOWN NAVIGATION)
+    function handleCrossrefJump(val) {
+        if (!val) return;
+        var parts = val.split('/');
+        if (parts.length >= 2) {
+            var cat = parts[0];
+            var slug = parts.slice(1).join('/');
+            selectChapter(cat, slug);
+            var selectEl = document.getElementById('crossref-select');
+            if (selectEl) selectEl.value = '';
+        }
     }
 
     function toggleMobileToc() {

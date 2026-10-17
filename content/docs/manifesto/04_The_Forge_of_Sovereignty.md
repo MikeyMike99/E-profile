@@ -13,3 +13,20 @@ In the realm of media, the developer forged `tts+gemeni`, a dynamic, multi-speak
 The culmination of this sovereign toolkit was `scanners`, a formidable DevSecOps suite operating as a Model Context Protocol (MCP) server. It orchestrated industry-standard external security tools—like Bandit, Semgrep, and OWASP ZAP—through precisely controlled Python subprocesses. The aggregated findings were unified into security reports and cryptographically signed using HMAC to guarantee data integrity. The entire pipeline was then exposed to AI agents via `fastmcp` servers, brilliantly bridging the gap between automated security auditing and AI-driven remediation. 
 
 Through these projects, the developer forged an arsenal that secured, synthesized, and analyzed at an enterprise scale, entirely on their own terms.
+
+---
+
+<details>
+<summary>🔽 Technical Cross-References & Realized Sovereign Projects (Click to Expand)</summary>
+
+* **E-Profile Architecture & Forensic Devlog**:
+  * *AST Surgery (`libcst`)*: Runtime AST modification and hot-patching architecture.
+  * *The Lockout Paradox*: Super Admin recovery and break-glass credential management.
+* **EncryptMe Multi-User Vault**:
+  * *Cryptographic Architecture*: AES Fernet encryption, PBKDF2HMAC key protection, and Identity-Gated Administrative Recovery (IGAR).
+* **Raugus Resolver MCP Broker Architecture**:
+  * *Air-Gapped Tool Security*: Opaque Key-Only VFS, AST symbol extraction, and automated security audit pipeline.
+* **JOSHY Audio Playback Suite**:
+  * *Low-Level Audio & Speech*: PCM wave synthesis, Tolk DLL bridging, and screen reader output drivers.
+
+</details>
