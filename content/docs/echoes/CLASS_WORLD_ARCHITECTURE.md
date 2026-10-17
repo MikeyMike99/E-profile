@@ -160,8 +160,9 @@ Confirms whether the player was successfully added to the world.
 
 | Related Project / Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
 | :--- | :--- | :--- |
+| **The Developer's Manifesto** | [Chapter 1: Echoes in the Void (The True Origin)](/docs/manifesto/01_Echoes_in_the_Void) — First-person audio movement engine, `(x, y, z)` grid, four-corner bounding box rotation, and chunk boundary design. | The Manifesto |
+| **Origin Architecture Blueprint** | [04_26 The Origin Architecture: Echoes of the World](/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD) — Genesis architectural decisions, state isolation, and rejecting terminal speech silence. | Devlog Suite |
 | **JOSHY Audio Suite** | [Guide 00A: Beginner Guide to Screen Readers](/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY) — Universal screen reader detection, `accessible_output2`, and `nvdaControllerClient64.dll` integration. | JOSHY Audio Suite |
 | **E-Profile Portfolio Portal** | [E-Profile Devlog: Chapter 5](/docs/eprofile/DEVLOG#chapter-5-screen-reader-accessibility-as-an-operational-physical-access-point-secops--wcag-synergy) — Accessibility as the physical operational access point and non-visual feedback design. | E-Profile Devlog |
 | **Siraugga Developer Manifesto** | [Chapter 4: The Forge of Sovereignty](/docs/manifesto/DEVELOPERS_MANIFESTO#chapter-4-the-forge-of-sovereignty) — The origin of Echoes of the World, spatial audio gaming for the blind, and building without visual crutches. | The Manifesto |
-
 </details>

@@ -85,3 +85,23 @@ By mid-2025, the menu and collision systems were both stable, but gravity was st
 Fast-forward to December 2025: I finally dialed in a stable, scalable gravity engine fast enough to run authoritatively on the server. Next, I introduced an NPC to the world and began tackling how entity synchronization should function online versus offline.
 I restructured the WebSocket networking so the server acts as the single source of truth. Whenever a client attempts an action, it must authenticate and request permission from the server: "May I perform this action?" The server validates the request and acknowledges it. The server handles NPC pathfinding and movement directly, treating clients essentially as display terminals and event repeaters. When a player moves, the input is sent to the server, validated, and broadcast to all connected clients, rendering just like any other entity in the simulation.
 Getting that client-server authority model right was tricky. I had to determine priority: the players or the NPCs. The players naturally took precedence—if their inputs lag, the game feels unresponsive and unplayable. If an NPC's positional update arrives a few milliseconds late, the player won't even notice. In fact, that slight tolerance can even work in the player's favor during fast-paced combat.
+
+---
+
+### 🔗 Technical Cross-References & Architectural DNA
+
+* **Origin Architecture Blueprint**:
+  * [04_26 The Origin Architecture: Echoes of the World](/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD) — The core architectural blueprint, foundational breakthroughs, and four-corner coordinate math.
+* **Source Evidence & From-Scratch Implementations**:
+  * [02_26 NVDA DLL Movement Engine Evidence](/docs/devlog/02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE) — Raw Python `ctypes` bindings for `NVDAController.dll`, 8-way compass math, and speech triggers.
+  * [05_28 NVDA DLL Coordinate Audio Engine From Scratch](/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH) — Step-by-step tutorial for building an accessible 3D grid with speech integration.
+* **Game Specifications & World Architecture**:
+  * [Echoes of the World — Class & World Architecture](/docs/echoes/CLASS_WORLD_ARCHITECTURE) — 3D bounding box coordinate space, surface height calculations, overworld/underworld layering, and chunk buffering.
+  * [Echoes of the World — Menu Configuration](/docs/echoes/MENU_CONFIG) — Spoken menu loops, character profiles, and audio state transitions.
+* **Assistive Technology & Sound Engineering**:
+  * [JOSHY Audio Suite — Primer on Screen Readers](/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY) — Evolution from raw `ctypes` NVDA hooks to Tolk DLL and `accessible_output2`.
+* **Zero-Trust Cybersecurity & Network Authority**:
+  * [Zero-Trust Textbook — Chapter 1: Introduction to Zero Trust](/docs/textbook/Chapter_01_Introduction_To_Zero_Trust) — Client-server state locking, server-authoritative validation, and mitigating client-side tampering.
+* **Historical Timeline & Ecosystem Rules**:
+  * [Foreword: The Cost of Memory](/docs/manifesto/00_Foreword) — Why documentation is the permanent rule for this ecosystem.
+  * [The Forensic Timeline](/docs/manifesto/00_The_Forensic_Timeline) — Complete chronological development logs from October 2024 to present.

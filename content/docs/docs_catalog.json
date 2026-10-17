@@ -4,7 +4,7 @@
     "category": "devlog",
     "title": "The Origin Architecture: Echoes of the World",
     "summary": "Long before Siraugga existed as an enterprise autonomous platform with opaque virtual filesystems and hot-patching compilers, it began with a single blind gamer in October 2024 who wanted to play an audio game.",
-    "word_count": 591,
+    "word_count": 727,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "topics": [
@@ -476,7 +476,7 @@
     "category": "echoes",
     "title": "Echoes of the World: Class & World Architecture",
     "summary": "The World class is responsible for managing players, objects, surface zones, and chunk coordinates across the audio world grid. It dynamically manages player movement between spatial chunks while pruning stale entities f...",
-    "word_count": 1114,
+    "word_count": 1177,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "topics": [
@@ -487,7 +487,7 @@
     "is_origin": false,
     "is_proprietary": false,
     "clearance": "public",
-    "base_sensitivity": 1,
+    "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "echoes/CLASS_WORLD_ARCHITECTURE.md",
     "cross_references": [
@@ -16825,7 +16825,7 @@
     "category": "manifesto",
     "title": "Chapter 1: ECHOES_OF_THE_WORLD (The True Origin)",
     "summary": "Every great technological ecosystem begins with some thing or another that could not be satisfied. For some, it is the pursuit of profit; for others, academic curiosity. But the foundation of my journey was forged in som...",
-    "word_count": 4997,
+    "word_count": 5213,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "topics": [

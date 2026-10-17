@@ -71,3 +71,17 @@ A: No! The developer had zero programming background when starting in October 20
 
 **Q: Why is this story preserved in the documentation?**  
 A: Because software architecture is not just code—it is the human history of overcoming constraints and turning technical barriers into sovereign leverage.
+
+---
+
+## 6. Technical & Narrative Cross-References
+
+* **The Developer's Manifesto**:
+  * [Chapter 1: Echoes in the Void (The True Origin)](/docs/manifesto/01_Echoes_in_the_Void) — The unfiltered personal journey: losing sight in 2021, battling terminal speech silence, and constructing the 3D world grid.
+  * [Chapter 2: The Echoes Architecture](/docs/manifesto/02_The_Echoes_Architecture) — Prototyping `PROGRAM`, `MAIN_MENU`, `TEST`, and `GAME`.
+  * [Foreword: The Cost of Memory](/docs/manifesto/00_Foreword) — The foundational principle: code without documentation is code that is already lost.
+* **Source Evidence & Code Proof**:
+  * [02_26 NVDA DLL Movement Engine Evidence](/docs/devlog/02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE) — Raw `ctypes` bindings for `NVDAController.dll`, 8-way compass math, and speech triggers.
+  * [05_28 NVDA DLL Coordinate Audio Engine From Scratch](/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH) — Step-by-step from-scratch implementation guide.
+* **Game System Specifications**:
+  * [Echoes of the World — Class & World Architecture](/docs/echoes/CLASS_WORLD_ARCHITECTURE) — 3D bounding-box collision detection, chunk buffering, and surface height calculations.
