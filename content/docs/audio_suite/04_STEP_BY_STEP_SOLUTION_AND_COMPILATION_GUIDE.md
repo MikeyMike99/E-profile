@@ -28,7 +28,7 @@ py -3.13 -c "import base64; b64_64 = base64.b64encode(open(r'accessible_output2\
 
 ## Step 2: The Self-Healing `screenreader_speak.py` Bridge
 
-- **File**: `screenreader_speak.py` (screenreader_speak.py#L1-L123)
+- **File**: [`screenreader_speak.py`](../screenreader_speak.py#L1-L123)
 
 Below is how each section of `screenreader_speak.py` (screenreader_speak.py) works:
 
@@ -112,7 +112,7 @@ If you are writing or modifying `screenreader_speak.py` yourself, **never move `
 
 ## Step 3: How the Nuitka Compilation Script Works (`compile_joshy.bat`)
 
-- **File**: `compile_joshy.bat` (compile_joshy.bat#L20-L46)
+- **File**: [`compile_joshy.bat`](../compile_joshy.bat#L20-L46)
 
 Here is the exact Nuitka command used in `compile_joshy.bat` (compile_joshy.bat) and what every flag does:
 

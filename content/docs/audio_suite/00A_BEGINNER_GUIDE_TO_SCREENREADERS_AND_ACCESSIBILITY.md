@@ -106,7 +106,7 @@ However, when you are building a Windows desktop application that uses **COM (`p
 
 ### 1. `pythoncom` and `pywintypes` Must Be Imported First
 - Even the original creator of `pywin32` wrote a warning inside `pywintypes.py` (located in `<python_lib>/site-packages/win32/lib/pywintypes.py`) explaining that if another Windows module is imported *before* `pywintypes`, Windows can load the wrong copy of the DLL or fail to find it in a frozen `.exe`.
-- When `import pythoncom` and `import pywintypes` run at the very top of `screenreader_speak.py` (screenreader_speak.py#L1-L5), Python registers them in its internal loaded-modules list (`sys.modules`). When `accessible_output2` later asks for them to talk to JAWS or SAPI, they are already loaded and ready.
+- When `import pythoncom` and `import pywintypes` run at the very top of [`screenreader_speak.py`](../screenreader_speak.py#L1-L5), Python registers them in its internal loaded-modules list (`sys.modules`). When `accessible_output2` later asks for them to talk to JAWS or SAPI, they are already loaded and ready.
 
 ### 2. Setting Up Paths Must Happen *Before* Importing and Calling `Auto()`
 - Think of `accessible_output2.outputs.auto.Auto()` like a train leaving the station: the moment it starts, it immediately checks the tracks (`platform_utils.paths.embedded_data_path()`) for its `.dll` files.
@@ -115,4 +115,4 @@ However, when you are building a Windows desktop application that uses **COM (`p
 ### 3. The `from module import function` Timing Trap
 - In Python, when a file runs `from accessible_output2 import load_library` (as seen in `<python_lib>/site-packages/accessible_output2/outputs/base.py` on line 1), it grabs whatever `load_library` function existed **at that exact millisecond**.
 - If you try to replace `accessible_output2.load_library` *after* `base.py` has already been imported, `base.py` ignores your change because it already saved the old function!
-- That is why in `screenreader_speak.py` (screenreader_speak.py#L63-L84), we configure `platform_utils.paths.embedded_data_path` and wrap `accessible_output2.outputs.base.Output.__init__` **first**, and only import `accessible_output2.outputs.auto` inside `_get_screenreader()` **after** all setup steps are complete.
+- That is why in [`screenreader_speak.py`](../screenreader_speak.py#L63-L84), we configure `platform_utils.paths.embedded_data_path` and wrap `accessible_output2.outputs.base.Output.__init__` **first**, and only import `accessible_output2.outputs.auto` inside `_get_screenreader()` **after** all setup steps are complete.

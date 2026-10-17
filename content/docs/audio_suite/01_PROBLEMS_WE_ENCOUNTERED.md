@@ -93,7 +93,7 @@ However, when you are building a Windows app that talks to screen readers and `.
 1. **Why `import pythoncom` and `import pywintypes` Have to Go on Lines 1–3**:
    - JAWS and Windows SAPI use Windows' built-in `COM` messaging system (`pywin32`).
    - Inside a compiled `.exe` (`sys.frozen = True`), if `accessible_output2` tries to import `pywintypes` deep inside its subfolders *before* your main script has loaded it, Python fails to find the Windows COM DLLs.
-   - By placing `import pythoncom` and `import pywintypes` at the **very top** of `screenreader_speak.py` (screenreader_speak.py#L1-L5) before anything else is imported, Python loads and remembers them in memory (`sys.modules`) first.
+   - By placing `import pythoncom` and `import pywintypes` at the **very top** of [`screenreader_speak.py`](../screenreader_speak.py#L1-L5) before anything else is imported, Python loads and remembers them in memory (`sys.modules`) first.
 
 2. **Why You Cannot Import and Run `Auto()` Before Setting Up the `.dll` Folder**:
    - Think of `accessible_output2.outputs.auto.Auto()` as a delivery driver who leaves the building the exact millisecond you call it.
@@ -111,4 +111,4 @@ However, when you are building a Windows app that talks to screen readers and `.
 - **Top-Level Eager Initialization (What caused Problem 1)**:
   Putting `_screenreader = Auto()` right at the top of `screenreader_speak.py` outside of any `def` function. The moment `main.py` ran `from screenreader_speak import screenreader_speak`, Python immediately executed `Auto()` before the main program window could even open. When `Auto()` crashed, the entire `.exe` died silently before the user ever saw a window.
 - **Lazy Initialization (How we fixed it)**:
-  Putting `Auto()` *inside* a helper function (`def _get_screenreader():` on line 89 of `screenreader_speak.py` (screenreader_speak.py#L89-L104)) wrapped in a `try...except` safety net. Now, importing `screenreader_speak` never blocks or crashes your app on startup, and `Auto()` is only created the first time `screenreader_speak("...")` is actually called to speak a message!
+  Putting `Auto()` *inside* a helper function (`def _get_screenreader():` on line 89 of [`screenreader_speak.py`](../screenreader_speak.py#L89-L104)) wrapped in a `try...except` safety net. Now, importing `screenreader_speak` never blocks or crashes your app on startup, and `Auto()` is only created the first time `screenreader_speak("...")` is actually called to speak a message!
