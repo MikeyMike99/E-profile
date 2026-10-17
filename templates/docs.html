@@ -277,6 +277,204 @@
         font-size: 0.65rem;
     }
 
+    /* =========================================================================
+       HIERARCHICAL PROJECT & COLLECTION GROUPING STYLES
+       ========================================================================= */
+    .project-group-section {
+        margin-bottom: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: border-color 0.2s;
+    }
+
+    .project-group-section:hover {
+        border-color: rgba(0, 243, 255, 0.25);
+    }
+
+    .project-header-bar {
+        background: rgba(0, 243, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 9px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.15s ease;
+    }
+
+    .project-header-bar:hover, .project-header-bar:focus {
+        background: rgba(0, 243, 255, 0.12);
+        outline: none;
+    }
+
+    .proj-header-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: monospace;
+        font-weight: 800;
+        font-size: 0.82rem;
+        color: var(--text-bright);
+        letter-spacing: 0.5px;
+    }
+
+    .proj-header-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .proj-count-badge {
+        font-family: monospace;
+        font-size: 0.68rem;
+        background: rgba(0, 243, 255, 0.12);
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        color: var(--accent);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .proj-chevron {
+        font-size: 0.75rem;
+        color: var(--accent);
+        transition: transform 0.2s ease;
+    }
+
+    .project-body {
+        padding: 6px 8px 8px;
+    }
+
+    .project-body.collapsed {
+        display: none;
+    }
+
+    .collection-subgroup {
+        margin-top: 8px;
+        margin-bottom: 10px;
+    }
+
+    .collection-header-row {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: bold;
+        color: #00ff88;
+        padding: 4px 6px;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border-bottom: 1px dashed rgba(0, 255, 136, 0.2);
+        margin-bottom: 6px;
+    }
+
+    .col-count {
+        color: var(--text-dim);
+        font-weight: normal;
+        font-size: 0.68rem;
+    }
+
+    .nav-item-topline {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        margin-bottom: 4px;
+        flex-wrap: wrap;
+    }
+
+    .badge-project-mini {
+        font-family: monospace;
+        font-size: 0.62rem;
+        font-weight: bold;
+        padding: 1px 5px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .badge-siraugga { color: #00f3ff; background: rgba(0, 243, 255, 0.1); border-color: rgba(0, 243, 255, 0.3); }
+    .badge-eprofile { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); }
+    .badge-encrypt_me { color: #c084fc; background: rgba(192, 132, 252, 0.1); border-color: rgba(192, 132, 252, 0.3); }
+    .badge-echoes { color: #34d399; background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.3); }
+    .badge-audio_suite { color: #f472b6; background: rgba(244, 114, 182, 0.1); border-color: rgba(244, 114, 182, 0.3); }
+    .badge-accessible_apps { color: #60a5fa; background: rgba(96, 165, 250, 0.1); border-color: rgba(96, 165, 250, 0.3); }
+
+    .badge-cat-mini {
+        font-family: monospace;
+        font-size: 0.62rem;
+        color: var(--text-dim);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1px 5px;
+        border-radius: 3px;
+    }
+
+    /* Document Ownership & Context Banner */
+    .doc-context-banner {
+        background: rgba(0, 243, 255, 0.04);
+        border: 1px solid rgba(0, 243, 255, 0.2);
+        border-left: 4px solid var(--accent);
+        border-radius: 8px;
+        padding: 14px 18px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .context-banner-top {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .context-pill {
+        font-family: monospace;
+        font-size: 0.74rem;
+        font-weight: bold;
+        padding: 3px 9px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        letter-spacing: 0.5px;
+    }
+
+    .project-pill {
+        background: rgba(0, 243, 255, 0.15);
+        color: var(--accent);
+        border: 1px solid rgba(0, 243, 255, 0.4);
+    }
+
+    .collection-pill {
+        background: rgba(0, 255, 136, 0.12);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.35);
+    }
+
+    .sensitivity-pill {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-dim);
+        border: 1px solid var(--border);
+    }
+
+    .context-banner-desc {
+        font-family: monospace;
+        font-size: 0.84rem;
+        line-height: 1.6;
+        color: var(--text-bright);
+    }
+
+    .context-hierarchy-label {
+        color: var(--accent);
+        font-weight: 800;
+        margin-right: 6px;
+        letter-spacing: 1px;
+    }
+
     /* --- RIGHT MAIN PANE: MODERN READER --- */
     .docs-reader-panel {
         background: rgba(10, 14, 22, 0.95);
@@ -659,8 +857,63 @@
                 <button type="button" class="cat-pill-btn" data-cat="encrypt_me" onclick="handleCategoryFilter('encrypt_me')">EncryptMe</button>
             </div>
 
-            <!-- 4. Scrollable Chapter Tree -->
-            <div class="chapter-tree-container" id="chapter-tree" role="feed" aria-label="Chapter list">
+            <!-- 4. Scrollable Hierarchical Chapter Tree -->
+            <div class="chapter-tree-container" id="chapter-tree" role="feed" aria-label="Hierarchical Documentation Explorer">
+                {% if grouped_tree %}
+                {% for proj in grouped_tree %}
+                <section class="project-group-section" data-project="{{ proj.key }}">
+                    <div class="project-header-bar" onclick="toggleProjectFolder('{{ proj.key }}')" role="button" tabindex="0" aria-expanded="true" aria-controls="proj-body-{{ proj.key }}" onkeydown="if(event.key==='Enter'||event.key===' ')toggleProjectFolder('{{ proj.key }}')">
+                        <div class="proj-header-left">
+                            <span class="proj-icon">{{ proj.icon }}</span>
+                            <span class="proj-title">{{ proj.title }}</span>
+                        </div>
+                        <div class="proj-header-right">
+                            <span class="proj-count-badge" id="pbadge-{{ proj.key }}">{{ proj.total_docs }}</span>
+                            <span class="proj-chevron" id="pchev-{{ proj.key }}">▾</span>
+                        </div>
+                    </div>
+                    <div class="project-body" id="proj-body-{{ proj.key }}">
+                        {% for cat_key, cat in proj.collections.items() %}
+                        <div class="collection-subgroup" data-category="{{ cat_key }}">
+                            <div class="collection-header-row">
+                                <span class="col-icon">{{ cat.icon }}</span>
+                                <span class="col-title">{{ cat.title }}</span>
+                                <span class="col-count">({{ cat.docs|length }})</span>
+                            </div>
+                            <div class="collection-items-list">
+                                {% for d in cat.docs %}
+                                <button 
+                                    type="button" 
+                                    class="chapter-nav-item {{ 'active' if active_doc and d.slug == active_doc.slug }}" 
+                                    data-project="{{ d.project }}" 
+                                    data-category="{{ d.category }}" 
+                                    data-slug="{{ d.slug }}" 
+                                    data-title="{{ d.title }}" 
+                                    onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
+                                    aria-label="{{ d.project_label }} - {{ cat.title }} - {{ d.title }}"
+                                >
+                                    <div class="nav-item-topline">
+                                        <span class="badge-project-mini badge-{{ d.project }}">{{ d.project_label }}</span>
+                                        <span class="badge-cat-mini">{{ cat.title }}</span>
+                                    </div>
+                                    <div class="nav-item-title">{{ d.title }}</div>
+                                    <div class="nav-item-meta">
+                                        {% if d.max_sensitivity and d.max_sensitivity >= 4 %}
+                                        <span class="nav-badge-adaptive">🛡️ T{{ d.max_sensitivity }}</span>
+                                        {% else %}
+                                        <span class="nav-badge-public">🌐 T{{ d.max_sensitivity if d.max_sensitivity else '1' }}</span>
+                                        {% endif %}
+                                        <span>~{{ ((d.word_count or 0) / 180)|round|int + 1 }}m</span>
+                                    </div>
+                                </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endfor %}
+                {% else %}
                 {% for d in all_docs %}
                 <button 
                     type="button" 
@@ -672,6 +925,10 @@
                     onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
                     aria-label="{{ d.title }}"
                 >
+                    <div class="nav-item-topline">
+                        <span class="badge-project-mini badge-{{ d.project }}">{{ d.project_label }}</span>
+                        <span class="badge-cat-mini">{{ d.category }}</span>
+                    </div>
                     <div class="nav-item-title">{{ d.title }}</div>
                     <div class="nav-item-meta">
                         {% if d.max_sensitivity and d.max_sensitivity >= 4 %}
@@ -684,6 +941,7 @@
                     </div>
                 </button>
                 {% endfor %}
+                {% endif %}
             </div>
         </aside>
 
@@ -694,7 +952,7 @@
                 <nav class="reader-breadcrumbs" aria-label="Breadcrumb Navigation">
                     <span id="crumb-project" class="crumb-project">{{ active_doc.project_label if active_doc else 'Siraugga Core' }}</span>
                     <span>/</span>
-                    <span id="crumb-cat" class="crumb-cat">{{ active_doc.category | upper if active_doc else 'DEVLOG' }}</span>
+                    <span id="crumb-cat" class="crumb-cat">{{ categories.get(active_doc.category, {}).title if active_doc and active_doc.category in categories else (active_doc.category | upper if active_doc else 'DEVLOG') }}</span>
                 </nav>
 
                 <div class="reader-controls">
@@ -711,6 +969,29 @@
                     <button type="button" class="ctrl-btn" onclick="adjustFontSize(-0.1)" aria-label="Decrease text size">A-</button>
                     <button type="button" class="ctrl-btn" onclick="adjustFontSize(0.1)" aria-label="Increase text size">A+</button>
                     <button type="button" class="ctrl-btn" onclick="copyCurrentLink()" aria-label="Copy direct chapter link">📋 Link</button>
+                </div>
+            </div>
+
+            <!-- System Context & Ownership Banner -->
+            <div class="doc-context-banner" id="doc-context-banner" role="region" aria-label="Document System Context">
+                <div class="context-banner-top">
+                    <div class="context-pill project-pill" id="ctx-project-badge">
+                        <span id="ctx-project-icon">{{ projects.get(active_doc.project, {}).icon if active_doc and active_doc.project in projects else '⚡' }}</span>
+                        <span id="ctx-project-title">{{ active_doc.project_label if active_doc else 'Siraugga / DevCore Framework' }}</span>
+                    </div>
+                    <div class="context-pill collection-pill" id="ctx-cat-badge">
+                        <span id="ctx-cat-icon">{{ categories.get(active_doc.category, {}).icon if active_doc and active_doc.category in categories else '🛡️' }}</span>
+                        <span id="ctx-cat-title">{{ categories.get(active_doc.category, {}).title if active_doc and active_doc.category in categories else (active_doc.category | upper if active_doc else 'Documentation Collection') }}</span>
+                    </div>
+                    <div class="context-pill sensitivity-pill" id="ctx-sens-pill">
+                        <span id="ctx-sens-text">🌐 TIER {{ active_doc.max_sensitivity if active_doc and active_doc.max_sensitivity else '1' }} PUBLIC</span>
+                    </div>
+                </div>
+                <div class="context-banner-desc">
+                    <span class="context-hierarchy-label">SYSTEM CONTEXT:</span>
+                    <span id="ctx-hierarchy-text">
+                        Belongs to <strong>{{ active_doc.project_label if active_doc else 'Siraugga / DevCore Framework' }}</strong> &bull; {{ categories.get(active_doc.category, {}).desc if active_doc and active_doc.category in categories else 'Technical Architecture Specification' }}
+                    </span>
                 </div>
             </div>
 
@@ -886,6 +1167,39 @@
                 // Re-apply code block copy buttons
                 enhanceCodeBlocks();
 
+                // Update System Context & Ownership Banner
+                var ctxProjectIcon = document.getElementById('ctx-project-icon');
+                var ctxProjectTitle = document.getElementById('ctx-project-title');
+                var ctxCatIcon = document.getElementById('ctx-cat-icon');
+                var ctxCatTitle = document.getElementById('ctx-cat-title');
+                var ctxHierarchyText = document.getElementById('ctx-hierarchy-text');
+                var ctxSensText = document.getElementById('ctx-sens-text');
+
+                if (ctxProjectTitle) ctxProjectTitle.textContent = data.project_label || 'Siraugga / DevCore Framework';
+                if (ctxProjectIcon) ctxProjectIcon.textContent = data.project_icon || '⚡';
+                if (ctxCatTitle) ctxCatTitle.textContent = data.collection_title || data.category.toUpperCase();
+                if (ctxCatIcon) ctxCatIcon.textContent = data.collection_icon || '📄';
+                if (ctxSensText) ctxSensText.textContent = data.max_sensitivity >= 4 ? ('🛡️ TIER ' + data.max_sensitivity + ' ADAPTIVE') : ('🌐 TIER ' + (data.max_sensitivity || 1) + ' PUBLIC');
+                if (ctxHierarchyText) {
+                    ctxHierarchyText.innerHTML = 'Belongs to <strong>' + (data.project_label || 'Siraugga') + '</strong> &bull; ' + (data.collection_desc || 'Technical Architecture Specification');
+                }
+                var crumbCat = document.getElementById('crumb-cat');
+                if (crumbCat) crumbCat.textContent = data.collection_title || data.category.toUpperCase();
+
+                // Ensure parent project folder is expanded if closed
+                var activeBtn = document.querySelector('.chapter-nav-item.active');
+                if (activeBtn) {
+                    var parentSec = activeBtn.closest('.project-group-section');
+                    if (parentSec) {
+                        var body = parentSec.querySelector('.project-body');
+                        var chev = parentSec.querySelector('.proj-chevron');
+                        if (body && body.classList.contains('collapsed')) {
+                            body.classList.remove('collapsed');
+                            if (chev) chev.textContent = '▾';
+                        }
+                    }
+                }
+
                 // Update browser history & document title (ZERO PAGE RELOAD)
                 var newUrl = '/docs/' + encodeURIComponent(category) + '/' + encodeURIComponent(slug);
                 window.history.pushState({ category: category, slug: slug }, data.title, newUrl);
@@ -894,7 +1208,7 @@
                 // Accessibility focus management: Focus heading without jumping
                 heading.focus();
                 if (announcer) {
-                    announcer.textContent = 'Loaded chapter: ' + data.title;
+                    announcer.textContent = 'Loaded chapter: ' + data.title + ' (' + (data.project_label || '') + ')';
                 }
             })
             .catch(function(err) {
@@ -964,6 +1278,7 @@
         var selectedProject = document.getElementById('project-selector').value;
         var items = document.querySelectorAll('.chapter-nav-item');
         var visibleCount = 0;
+        var projectCounts = {};
 
         items.forEach(function(item) {
             var itemProject = item.dataset.project || '';
@@ -977,8 +1292,30 @@
             if (matchProject && matchCategory && matchSearch) {
                 item.style.display = 'block';
                 visibleCount++;
+                projectCounts[itemProject] = (projectCounts[itemProject] || 0) + 1;
             } else {
                 item.style.display = 'none';
+            }
+        });
+
+        // Update project sections and collection subgroups
+        var projectSections = document.querySelectorAll('.project-group-section');
+        projectSections.forEach(function(sec) {
+            var pKey = sec.dataset.project;
+            var pCount = projectCounts[pKey] || 0;
+            var pBadge = document.getElementById('pbadge-' + pKey);
+            if (pBadge) pBadge.textContent = pCount;
+
+            if (pCount > 0) {
+                sec.style.display = 'block';
+                // Hide empty collection subgroups inside this project
+                var subgroups = sec.querySelectorAll('.collection-subgroup');
+                subgroups.forEach(function(sub) {
+                    var visibleInSub = sub.querySelectorAll('.chapter-nav-item:not([style*="display: none"])').length;
+                    sub.style.display = visibleInSub > 0 ? 'block' : 'none';
+                });
+            } else {
+                sec.style.display = 'none';
             }
         });
 
@@ -988,6 +1325,17 @@
 
         var announcer = document.getElementById('docs-announcer');
         if (announcer) announcer.textContent = 'Showing ' + visibleCount + ' chapters.';
+    }
+
+    function toggleProjectFolder(projKey) {
+        var body = document.getElementById('proj-body-' + projKey);
+        var chev = document.getElementById('pchev-' + projKey);
+        if (body) {
+            var isCollapsed = body.classList.toggle('collapsed');
+            if (chev) chev.textContent = isCollapsed ? '▸' : '▾';
+            var header = body.previousElementSibling;
+            if (header) header.setAttribute('aria-expanded', !isCollapsed);
+        }
     }
 
     function handleProjectChange(val) {

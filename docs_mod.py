@@ -79,13 +79,13 @@ COLLECTIONS = {
 }
 
 PROJECTS = {
-    "all": {"title": "All Projects", "icon": "🌐"},
-    "audio_suite": {"title": "JOSHY Audio Suite", "icon": "🎵"},
-    "siraugga": {"title": "Siraugga / DevCore Core", "icon": "⚡"},
-    "echoes": {"title": "Echoes of the World", "icon": "🎮"},
-    "encrypt_me": {"title": "EncryptMe Vault", "icon": "🔐"},
-    "accessible_apps": {"title": "Accessible Tools Suite", "icon": "♿"},
-    "eprofile": {"title": "E-Profile Portal", "icon": "💼"}
+    "all": {"title": "All Projects", "icon": "🌐", "desc": "Unified cross-project documentation vault"},
+    "siraugga": {"title": "Siraugga / DevCore Framework", "icon": "⚡", "desc": "Core agentic execution engine, zero-restart WebSocket streaming, Zero-Trust Textbook, Master Manual, and 5-Pillar Devlogs"},
+    "eprofile": {"title": "E-Profile Portal", "icon": "💼", "desc": "Public portfolio portal, self-mutating LibCST AST code surgery, and zero-trust RBAC architecture"},
+    "encrypt_me": {"title": "EncryptMe Multi-User Vault", "icon": "🔐", "desc": "Industrial-grade PBKDF2 symmetric cryptography, split-key recovery (IGAR), and memory zeroization"},
+    "echoes": {"title": "Echoes of the World (Audio Game)", "icon": "🎮", "desc": "Procedural spatial audio world engine, 8-way compass, audio trigonometry, and tabbed menu state machine"},
+    "audio_suite": {"title": "JOSHY Audio Suite", "icon": "🎵", "desc": "Standalone audio playback suite, accessible_output2 speech drivers, Tolk DLL bridging, and Nuitka binary packaging"},
+    "accessible_apps": {"title": "Accessible Applications", "icon": "♿", "desc": "Screen-reader optimized developer tooling, Exam Generator, and accessible media player"}
 }
 
 TOPICS = {
@@ -255,6 +255,61 @@ def render_doc_content(category, doc_slug, viewer_tier=1):
 
     return doc_meta, html_body, prev_doc, next_doc
 
+def build_grouped_tree(catalog):
+    """
+    Groups catalog into a hierarchical structure: Project -> Collection -> Documents.
+    Guarantees that readers always see which project each document belongs to.
+    """
+    project_order = ["eprofile", "encrypt_me", "echoes", "audio_suite", "siraugga", "accessible_apps"]
+    by_proj = {}
+    tree = []
+    
+    for p_key in project_order:
+        p_info = PROJECTS.get(p_key, {"title": p_key.title(), "icon": "📁", "desc": ""})
+        p_node = {
+            "key": p_key,
+            "title": p_info.get("title", p_key),
+            "icon": p_info.get("icon", "📁"),
+            "desc": p_info.get("desc", ""),
+            "collections": {},
+            "total_docs": 0
+        }
+        by_proj[p_key] = p_node
+        tree.append(p_node)
+        
+    for doc in catalog:
+        p_key = doc.get("project", "siraugga")
+        if p_key not in by_proj:
+            p_info = PROJECTS.get(p_key, {"title": doc.get("project_label", p_key.title()), "icon": "📁", "desc": ""})
+            p_node = {
+                "key": p_key,
+                "title": p_info.get("title", doc.get("project_label", p_key.title())),
+                "icon": p_info.get("icon", "📁"),
+                "desc": p_info.get("desc", ""),
+                "collections": {},
+                "total_docs": 0
+            }
+            by_proj[p_key] = p_node
+            tree.append(p_node)
+            
+        c_key = doc.get("category", "guides")
+        p_node = by_proj[p_key]
+        p_node["total_docs"] += 1
+        
+        if c_key not in p_node["collections"]:
+            c_info = COLLECTIONS.get(c_key, {"title": c_key.replace('_', ' ').title(), "icon": "📄", "desc": ""})
+            p_node["collections"][c_key] = {
+                "key": c_key,
+                "title": c_info.get("title", c_key.title()),
+                "icon": c_info.get("icon", "📄"),
+                "desc": c_info.get("desc", ""),
+                "docs": []
+            }
+            
+        p_node["collections"][c_key]["docs"].append(doc)
+        
+    return [p for p in tree if p["total_docs"] > 0]
+
 @docs_bp.route('/api/chapter/<category>/<doc_slug>')
 def docs_api_chapter(category, doc_slug):
     viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
@@ -262,13 +317,23 @@ def docs_api_chapter(category, doc_slug):
     if not doc_meta or html_body is None:
         return jsonify({"status": "error", "message": "Chapter not found"}), 404
         
+    c_info = COLLECTIONS.get(category, {})
+    p_key = doc_meta.get('project', 'siraugga')
+    p_info = PROJECTS.get(p_key, {})
+
     return jsonify({
         "status": "success",
         "slug": doc_meta.get('slug'),
         "category": doc_meta.get('category'),
         "title": doc_meta.get('title'),
-        "project": doc_meta.get('project', 'siraugga'),
-        "project_label": doc_meta.get('project_label', 'Siraugga Framework'),
+        "project": p_key,
+        "project_label": doc_meta.get('project_label', p_info.get('title', 'Siraugga Framework')),
+        "project_icon": p_info.get('icon', '⚡'),
+        "project_desc": p_info.get('desc', ''),
+        "collection_title": c_info.get('title', category.title()),
+        "collection_desc": c_info.get('desc', ''),
+        "collection_icon": c_info.get('icon', '📄'),
+        "hierarchy_path": f"{p_info.get('title', 'Siraugga Framework')} → {c_info.get('title', category.title())} → {doc_meta.get('title')}",
         "summary": doc_meta.get('summary', ''),
         "word_count": doc_meta.get('word_count', 0),
         "read_time": max(1, round(doc_meta.get('word_count', 0) / 180)),
@@ -286,7 +351,7 @@ def docs_api_chapter(category, doc_slug):
 def docs_index():
     catalog = load_catalog()
     if not catalog:
-        return render_template('docs.html', active_tab='docs', all_docs=[], total_docs=0)
+        return render_template('docs.html', active_tab='docs', all_docs=[], grouped_tree=[], total_docs=0)
         
     active_slug = request.args.get('slug')
     active_cat = request.args.get('category')
@@ -299,11 +364,13 @@ def docs_index():
         
     viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
     doc_meta, html_body, prev_doc, next_doc = render_doc_content(active_doc.get('category'), active_doc.get('slug'), viewer_tier)
+    grouped_tree = build_grouped_tree(catalog)
 
     return render_template(
         'docs.html',
         active_tab='docs',
         all_docs=catalog,
+        grouped_tree=grouped_tree,
         active_doc=doc_meta or active_doc,
         doc_html=html_body,
         prev_doc=prev_doc,
@@ -334,11 +401,13 @@ def docs_reader(category, doc_slug):
         
     viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
     doc_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
+    grouped_tree = build_grouped_tree(catalog)
     
     return render_template(
         'docs.html',
         active_tab='docs',
         all_docs=catalog,
+        grouped_tree=grouped_tree,
         active_doc=doc_meta or {"title": doc_slug.replace('_', ' '), "slug": doc_slug, "category": category},
         doc_html=html_body,
         prev_doc=prev_doc,
