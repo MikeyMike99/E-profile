@@ -199,3 +199,22 @@ Re-indexes workspace AST symbol keys and 64-bit hardware inodes in the Raugus Ph
 The Raugus Resolver MCP Broker is continuously verified by the **Automated Workspace Tool Security Auditor**:
 - **Stage 3 AST Static Code Hygiene**: Confirms the MCP server contains **zero external HTTP client imports** (100% air-gapped), zero `shell=True` subprocess calls, and zero `eval`/`exec` primitives.
 - **Stage 5 Opaque Key-Only Verification**: Automatically tests `search_keys`, `list_module_keys`, `read_by_key`, and `write_by_key` to guarantee zero physical host path leaks, strict Tier 3 vs. Tier 5 RBAC enforcement, isolated AST symbol extraction, Sensitive Vault digest-only routing, Read-Only blueprint protection, Self-Protection guard locks,     and pre-write syntax error rejection.
+
+---
+
+## 5. Architectural Cross-References & Related Systems Dropdown
+
+<details>
+<summary>🔽 Related Subsystems & Cross-Project Architectures (Click to Expand)</summary>
+
+* **E-Profile Architecture & Forensic Devlog**:
+  * *AST Surgery & Self-Mutating Code*: Runtime transformation using `libcst.CSTTransformer` vs. Raugus AST Symbol Extraction.
+  * *Zero-Downtime Hot-Patching*: Seamless module swap and view-function syncing without socket disconnects.
+* **Siraugga Zero-Downtime Hot-Patch Architecture**:
+  * Complete lifecycle from quarantine pre-flight compilation to backup snapshots and atomic route promotion.
+* **EncryptMe Cryptographic Architecture**:
+  * Multi-user file vaults, MRSV binary handshake verification, and PBKDF2HMAC derivation (complementing Raugus Sensitive Vault isolation).
+* **Siraugga Framework Security Specification**:
+  * Tier 1 to Tier 5 RBAC security model, directory traversal defenses, and semantic mantrap locks.
+
+</details>

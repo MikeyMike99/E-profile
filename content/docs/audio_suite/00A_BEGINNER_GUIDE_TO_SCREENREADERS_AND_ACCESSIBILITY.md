@@ -116,3 +116,17 @@ However, when you are building a Windows desktop application that uses **COM (`p
 - In Python, when a file runs `from accessible_output2 import load_library` (as seen in `<python_lib>/site-packages/accessible_output2/outputs/base.py` on line 1), it grabs whatever `load_library` function existed **at that exact millisecond**.
 - If you try to replace `accessible_output2.load_library` *after* `base.py` has already been imported, `base.py` ignores your change because it already saved the old function!
 - That is why in [`screenreader_speak.py`](../screenreader_speak.py#L63-L84), we configure `platform_utils.paths.embedded_data_path` and wrap `accessible_output2.outputs.base.Output.__init__` **first**, and only import `accessible_output2.outputs.auto` inside `_get_screenreader()` **after** all setup steps are complete.
+
+
+## Cross-References & System Parallels
+
+<details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
+<summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Accessibility & Speech Engines (Click to Expand Dropdown)</summary>
+
+| Related Project / Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
+| :--- | :--- | :--- |
+| **Echoes of the World Engine** | [World Chunking & Spatial Coordinates](/docs/echoes/CLASS_WORLD_ARCHITECTURE) — Uses the same `screenreader_speak` DLL bindings to announce 3D player positions and soundscape coordinates in real time. | Echoes 3D Engine |
+| **E-Profile Portfolio Portal** | [E-Profile Devlog: Chapter 5](/docs/eprofile/DEVLOG#chapter-5-screen-reader-accessibility-as-an-operational-physical-access-point-secops--wcag-synergy) — Establishing screen reader access as the operational physical access point for blind cybersecurity administrators. | E-Profile Devlog |
+| **DevCore Web Streaming** | [Devlog 01_05: Screen Reader Spam & Focus Traps](/docs/devlog/01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES) — Preventing audio buffer flooding and managing ARIA live region queues over WebSockets. | 5-Pillar Devlog |
+
+</details>

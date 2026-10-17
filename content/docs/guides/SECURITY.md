@@ -143,3 +143,17 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
 
 
 
+
+
+## 9. Cross-References & System Parallels
+
+<details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
+<summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Zero-Trust Security & Vault Boundaries (Click to Expand Dropdown)</summary>
+
+| Related Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
+| :--- | :--- | :--- |
+| **E-Profile RBAC & Threat Model** | [E-Profile Devlog: Chapter 4 & 6.3](/docs/eprofile/DEVLOG#chapter-4-the-5-tier-zero-trust-role-based-access-control-rbac--the-lockout-paradox) — 5-tier classification, Lockout Paradox Ghost Admin bypass, and server-side DevTools inspection defeat. | E-Profile Devlog |
+| **EncryptMe Zero-Knowledge Tool** | [Cryptographic Architecture (v3.0)](/docs/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE) — Split-key challenge-response recovery and securing the Global Forensic Vault. | EncryptMe Security |
+| **Zero-Trust Cybersecurity Textbook** | [Chapter 1: Tier 5 - Absolute Power](/docs/textbook/Chapter_01_Tier_5_The_Architecture_of_Absolute_Power) — Asymmetric Ed25519 root bootstrapping and kernel peer credentialing. | Zero-Trust Textbook |
+
+</details>

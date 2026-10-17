@@ -126,3 +126,17 @@ The **Zero-Downtime Hot-Patch Sequence** operates in tandem with the **Bootstrap
    - Intercepts direct writes to live engine modules and forces all agent code mutations through the **Staging Quarantine Directory**.
    - Compiles candidate code before applying, snapshots known-good modules into the **Backup Vault**, hot-swaps classes and routes in memory while preserving active WebSocket queues and running agent subprocesses, and automatically rolls back if a runtime error occurs.
 
+
+
+## 6. Cross-References & System Parallels
+
+<details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
+<summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Zero-Downtime Code Evolution (Click to Expand Dropdown)</summary>
+
+| Related Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
+| :--- | :--- | :--- |
+| **E-Profile Admin Surgery** | [E-Profile Devlog: Chapter 3](/docs/eprofile/DEVLOG#chapter-3-blueprint-decoupling-schema-evolution-and-surgical-patching-august--september-2026) — AST code transformation via LibCST and two-phase Heart Draft staging before atomic disk writes. | E-Profile Devlog |
+| **Bootstrap Pre-Flight Supervisor** | [Bootstrap Preflight Architecture](/docs/guides/BOOTSTRAP_PREFLIGHT_ARCHITECTURE) — Layer 1 complementary crash recovery and bytecode validation prior to port binding. | Architecture Guides |
+| **DevCore Safe Hot-Patch Blueprint** | [Devlog 05_34: Safe Hot-Patching From Scratch](/docs/devlog/05_34_SAFE_HOT_PATCH_AND_IN_MEMORY_RELOAD_FROM_SCRATCH) — Line-by-line guide to in-memory importlib reloading and route resynchronization. | From-Scratch Creation Guides |
+
+</details>

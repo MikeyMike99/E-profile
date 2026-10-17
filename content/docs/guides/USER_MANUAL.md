@@ -141,3 +141,23 @@ Open the **Settings & Sessions** panel from the top-right header button to manag
 - **`↻ Reload Scripts`**: Hot-reloads `agent_manager`, `execution_mixin`, `security_manager`, `project_manager`, and `session_manager` in memory (`POST /api/reload`) without dropping active WebSocket connections or restarting Port 5000.
 - **`🛡️ Auto-Patch Event`**: Simulates the zero-downtime syntax verification, backup, hot-patch, and automatic rollback sequence.
 - **Massive Prompt Ingestion**: Prompts exceeding 10,000 characters are automatically uploaded over HTTP (`/api/prompt/massive`), scrubbed for PII, saved to `.agents/massive_prompts/`, and handed to the agent without overflowing WebSocket frame limits.
+
+---
+
+## 7. Cross-Project Technical Reference Dropdown
+
+<details>
+<summary>🔽 Related Multi-Project Architecture & Security Manuals (Click to Expand)</summary>
+
+* **E-Profile Architecture & Forensic Devlog**:
+  * *Zero-Downtime AST Surgery*: Meta-programming and runtime patching using `libcst`.
+  * *The Lockout Paradox*: Super Admin recovery and break-glass credential management.
+  * *Central Vault & Zero-Reload UI*: Master-Detail SPA Docs Explorer navigation.
+* **JOSHY Audio Playback Suite**:
+  * *00A Primer*: Screen reader accessibility, Tolk DLL bridging, and speech synthesizer routing.
+* **Echoes of the World**:
+  * *Class & World Architecture*: Accessible game loop, spatial audio trigonometry, and 8-way compass state machine.
+* **EncryptMe Multi-User Vault**:
+  * *Cryptographic Architecture*: Split-key entropy slicing, PBKDF2HMAC key derivation, and memory zeroization.
+
+</details>
