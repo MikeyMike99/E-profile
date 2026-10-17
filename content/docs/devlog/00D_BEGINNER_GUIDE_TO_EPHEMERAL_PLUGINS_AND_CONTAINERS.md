@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-00D_BEGINNER_G | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 00D: Beginner Guide to Ephemeral Plugins & Zero-Modification Architecture
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## What is an Ephemeral Plugin?
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-1)
 
 In traditional web applications, adding an interactive tool (like a quiz generator or video player) requires modifying frontend JavaScript, adding database tables, and hardcoding new UI layouts.
 
@@ -18,6 +21,7 @@ In the Siraugga platform, interactive tools are **Ephemeral Plugins**:
 ---
 
 ## The Zero-Modification Blueprint Architecture
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-2)
 
 A common beginner trap when using AI agents is allowing the AI to directly edit frontend HTML, CSS, or JavaScript files to "add new features." This leads to:
 1. **Broken Keyboard Shortcuts**: Hacking JavaScript often breaks screen reader accessibility keys.
@@ -52,6 +56,7 @@ Siraugga mandates the **Zero-Modification Architecture**:
 ---
 
 ## Plain-English Glossary
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-3)
 
 - **Ephemeral**: Short-lived, temporary, or existing only for the duration of a task.
 - **Blueprint Pattern**: A fixed template that never changes its structure, but dynamically alters its display based on the data fed into it.
@@ -61,6 +66,7 @@ Siraugga mandates the **Zero-Modification Architecture**:
 ---
 
 ## Why Order Matters in Ephemeral Plugins
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-4)
 
 1. **Schema Validation Before Iframe Mounting**:
    - The JSON data must be validated by `format_exam.py` *before* the web portal mounts the iframe. If an invalid JSON file is loaded, the client JavaScript crashes silently, leaving the user with an empty screen.
@@ -70,9 +76,12 @@ Siraugga mandates the **Zero-Modification Architecture**:
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-5)
 
 ### Q: If the HTML never changes, how do I change the quiz timer or add a question?
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-6)
 **A:** You simply include `"time_limit_minutes": 10` or add a new question dictionary in the JSON payload! The immutable JavaScript reads the JSON values and sets the countdown timer automatically.
 
 ### Q: Why is this approach safer for screen reader users?
+[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-7)
 **A:** The base blueprint has been rigorously tested and optimized for NVDA and JAWS screen readers (proper ARIA attributes, semantic headings, logical tab stops). If an AI modified the HTML dynamically, it would accidentally strip those accessibility tags.

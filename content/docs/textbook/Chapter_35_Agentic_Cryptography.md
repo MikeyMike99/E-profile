@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH35 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 35: Introduction to Agentic Cryptography
 
 ## 35.1 The Vulnerability of a Thought
+[//]: # (SECTION_ID: SIRA-TXT-CH35-SEC-35_1)
 
 In the Siraugga Engine, a Subagent's "thought" is simply a massive string of JSON tokens. When a Modder prompts the Swarm to generate a new level for their game, that prompt, along with the AI's entire conversational history, must travel from the Modder's local device, across the internet, into the Orchestrator, and out to a remote LLM API.
 
@@ -9,6 +12,7 @@ If this data travels in plaintext, it is entirely vulnerable. A hacker intercept
 To secure data as it travels across these links, Tier 5 Admins rely on **Agentic Cryptography**. 
 
 ## 35.2 The Computational Trade-off
+[//]: # (SECTION_ID: SIRA-TXT-CH35-SEC-35_2)
 
 Cryptography is the science of scrambling data to maintain its confidentiality and integrity. While it is an absolute necessity in decentralized Swarm Hosting, it comes with a severe cost: **Latency**.
 
@@ -17,6 +21,7 @@ Every microsecond the Orchestrator spends encrypting and decrypting an AI's thou
 ---
 
 ## 35.3 Module Objectives & Master Syllabus
+[//]: # (SECTION_ID: SIRA-TXT-CH35-SEC-35_3)
 
 This module dives deeply into the mechanics of Agentic Cryptography, transitioning from high-level Swarm theory into the mathematical tools used to lock down the engine.
 

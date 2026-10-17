@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-03_27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # PreToolUse Hook Simulation & 30-Check Diagnostic Logs
 
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_27-SEC-1)
 This document records the full automated execution trace of the 6-Stage, 30-Check Tool Security Audit (`security/tool_security_auditor.py`). It simulates synthetic tool calls piped into `.agents/raugus_hook.py`, verifies AST static hygiene, tests DLP canary scrubbing, and audits SIEM intrusion alerts.
 
 ---
 
 ## 2. Full Console Execution Trace
+[//]: # (SECTION_ID: SIRA-DOC-03_27-SEC-2)
 
 ```text
 ======================================================================
@@ -65,6 +69,7 @@ Total Execution Time: 3.42 seconds
 ---
 
 ## 3. Why Order Matters in Security Auditing
+[//]: # (SECTION_ID: SIRA-DOC-03_27-SEC-3)
 1. **Audit Static Syntax Before Hook Simulation**: Verifying that the hook itself contains valid syntax ensures the test harness does not produce false positives.
 2. **Inject Audit Canary Token**: Using an identifiable canary string (`__RAUGUS_AUDIT_CANARY__`) allows the test runner to clean up test records from SIEM logs after the audit concludes.
 3. **Verify Alert Queue After Interception**: Checking that blocked operations appear in `master_alert_queue.jsonl` confirms that denial actions generate forensic visibility.
@@ -72,6 +77,7 @@ Total Execution Time: 3.42 seconds
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_27-SEC-4)
 **Q: What is a synthetic tool call?**  
 A: A mock JSON object structured exactly like an actual AI tool call, allowing security engineers to test if the hook catches attacks without actually running harmful commands.
 

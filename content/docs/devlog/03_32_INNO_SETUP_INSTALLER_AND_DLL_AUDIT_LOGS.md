@@ -1,24 +1,31 @@
+[//]: # (DOC_ID: JOSH-DOC-03_32 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+
 # Pillar 03.32: Diagnostic Tests & Logs: Inno Setup Packaging & Screen Reader DLL Extraction
 
 ## Overview & Context
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-1)
 This document records diagnostic tests verifying the automated packaging of accessible desktop software via PyInstaller and Inno Setup, evaluating the pre-installer process termination script, and auditing the runtime self-extraction of NVDA controller DLLs on clean virtual machines.
 
 ---
 
 ## 1. Test Execution & Diagnostic Log
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-1)
 
 ### What We Tested
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-2)
 1. Automated termination of background running instances (`taskkill /F /IM JOSHY.exe`).
 2. Clean compilation of `JOSHY-Setup.exe` with Inno Setup Compiler (`ISCC.exe`).
 3. Execution of the installed application on a clean Windows VM with zero preexisting developer libraries.
 
 ### Exact Test Execution
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-3)
 ```batch
 :: Automated Build & Installation Audit Trace
 call compile_joshy.bat
 ```
 
 ### Exact Output Returned
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-4)
 ```
 [PRE_BUILD]: Terminating lingering background processes...
 SUCCESS: The process "JOSHY.exe" with PID 8940 has been terminated.
@@ -42,6 +49,7 @@ SUCCESS: The process "JOSHY.exe" with PID 8940 has been terminated.
 ---
 
 ## 2. Compilation & Extraction Reliability Matrix
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-2)
 
 ```
 Packaging & Execution Benchmark Across 3 Environments:
@@ -55,28 +63,34 @@ Reliability Assessment:       Zero installer lockups, 100% self-healing DLL disc
 ```
 
 ### How We Reached Our Conclusion
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-5)
 - Terminating active processes with `taskkill` prior to running Inno Setup completely eliminated the `Error opening file for writing` lockup.
 - The self-extracting base64 payload in `screenreader_speak.py` proved 100% effective on clean machines, eliminating the dreaded missing DLL error without requiring complex manual installer steps.
 
 ---
 
 ## 3. Why Order Matters in Packaging Pipelines
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-3)
 1. **Kill Process Before Compilation**: If an old version of the binary is running, `pyinstaller` and `ISCC` cannot overwrite the output file.
 2. **Extract DLL Before Initializing Audio Controllers**: The file must exist on the hard drive before Windows can map it into memory via `LoadLibrary`.
 
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-4)
 
 ### Why does Inno Setup require the `/SILENT` flag during tests?
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-6)
 The `/SILENT` flag tells the installer to run without displaying graphical wizard dialogs or asking the user to click "Next", allowing automated test scripts to install software non-interactively.
 
 ### What happens if the user does not have NVDA running?
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-7)
 The `screenreader_speak` module automatically tests if NVDA is running. If not, it gracefully falls back to Windows SAPI5 so the user still receives audio feedback instead of silence or a crash.
 
 ---
 
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md`](/docs/devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE.md`](/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE.md`](/docs/devlog/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE)

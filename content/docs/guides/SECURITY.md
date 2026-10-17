@@ -1,12 +1,16 @@
+[//]: # (DOC_ID: SIRA-DOC-SEC | VERSION: v1.1 | SCOPE: Siraugga / DevCore Framework)
+
 # Antigravity Security & Threat Model Documentation
 
 ## Threat Landscape for In-Game Developer & Assistive Study Deployments
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-1)
 
 When embedding an autonomous AI portal inside developer workflows, game engines, and assistive study environments, standard conversational guardrails are insufficient. Hard architectural controls must prevent sandbox escapes, data leakage, and system compromise without exposing internal filesystem structures.
 
 ---
 
 ### 1. Symlink Traversal (CWE-59)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-1)
 - **Methodology**: Canonical Path Resolution & Physical Boundary Enforcement
 - **Vulnerability**: An unprivileged user creates a symbolic link within an assigned workspace pointing to restricted host files outside the project root. Traditional string-based path normalization only resolves relative dot-segments without dereferencing filesystem links, which could allow unauthorized reads or writes.
 - **Mitigation Applied**: The backend security resolver dereferences all filesystem links to their canonical physical destination at the operating-system level and verifies that the physical destination resides strictly within the authorized workspace boundary before any file operation occurs.
@@ -14,6 +18,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 2. Multi-Tenant WebSocket Bleed (CWE-200)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-2)
 - **Methodology**: Session-Scoped Stream Routing
 - **Vulnerability**: Indiscriminate WebSocket broadcasting could emit streaming agent tokens and tool outputs to all connected clients, leaking private prompts and session transcripts across users.
 - **Mitigation Applied**: The task orchestration layer binds an immutable authenticated user context to each active WebSocket connection. Every asynchronous task is tagged with the originating session identity, and streaming output chunks are routed exclusively to sockets owned by that authenticated session.
@@ -21,6 +26,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 3. Subprocess Environment & Credential Exfiltration (CWE-214)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-3)
 - **Methodology**: Environment Whitelisting & Server-Side Credential Proxying
 - **Vulnerability**: Spawning agent subprocesses with the host's raw environment variables could expose root API keys, cloud tokens, and sensitive host configuration if a prompt instructs the agent to inspect its environment.
 - **Mitigation Applied**: The subprocess orchestrator constructs a strictly sanitized environment dictionary. Root billing and provider credentials are completely stripped from the agent's memory space. The subprocess receives only an ephemeral placeholder token and routes traffic through an internal server-side proxy, which attaches the encrypted vault key strictly on the backend before forwarding requests upstream.
@@ -28,6 +34,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 4. Indirect Prompt Injection via Untrusted Assets (CWE-74)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-4)
 - **Methodology**: Tiered Workspace Confinement & Semantic Context Delimiters
 - **Vulnerability**: Poisoned third-party assets, scripts, or documents imported into a workspace may contain hidden adversarial instructions designed to hijack the agent's behavior when read.
 - **Mitigation Applied**:
@@ -37,6 +44,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 5. Localhost & Private Subnet SSRF (CWE-918)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-5)
 - **Methodology**: OS-Level Sandbox Confinement & Loopback Isolation
 - **Vulnerability**: An unprivileged user or adversarial prompt instructs the agent to query internal loopback services, administrative endpoints, or cloud metadata addresses.
 - **Mitigation Applied**: Non-administrative sessions are forcefully launched inside an isolated sandbox mode, blocking arbitrary network probes and unauthorized loopback requests.
@@ -44,6 +52,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 6. Resource Exhaustion & Runaway Subprocesses (CWE-400)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-6)
 - **Methodology**: Execution Timeouts, Write Quotas, & Bounded Event Queues
 - **Vulnerability**: Adversarial prompts triggering infinite execution loops, oversized disk writes, or unbounded memory consumption.
 - **Mitigation Applied**:
@@ -54,6 +63,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 7. Dynamic Tool Feed Bleed (CWE-200 / CWE-497)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-7)
 - **Methodology**: Real-Time Telemetry Scrubbing & Stealth Obfuscation
 - **Vulnerability**: Even when file I/O is blocked by the firewall, streaming the agent's internal tool-call telemetry to the client interface could inadvertently reveal internal architectural indicators before the firewall denies the request.
 - **Mitigation Applied**: Before any tool telemetry event is transmitted to unprivileged clients, an outbound sanitizer scans the payload for internal system indicators. If restricted indicators are detected, the server scrubs the payload and replaces the status announcement with a generic message (`"Running a routine background check..."`), preventing architectural reconnaissance.
@@ -61,6 +71,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 8. Source Code Disclosure via Backup Artifacts (CWE-530)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-8)
 - **Methodology**: In-Place Atomic Editing & Zero-Residue Workspace Policy
 - **Vulnerability**: Automated editing tools that leave temporary `.bak`, `.orig`, or `.tmp` files on disk risk exposing source code or configuration data if a web server serves unrecognized file extensions as plain text.
 - **Mitigation Applied**: The architecture prohibits persistent backup or scratch files across all workspaces. Code modifications are performed strictly in-place, relying on version control for state recovery and enforcing immediate cleanup of any temporary artifacts.
@@ -68,6 +79,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 9. Custom Extension & Protocol Evasion (CWE-284)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-9)
 - **Methodology**: Unified Pre-Execution AST Diffing Across Built-In & Custom Tools
 - **Vulnerability**: Custom extension tools (such as coordinate-based line editors) operate outside standard built-in file tools and could bypass permission checks if the interceptor only inspects default tool signatures.
 - **Mitigation Applied**: The pre-execution memory interceptor normalizes arguments across both built-in tools and custom Model Context Protocol (MCP) extensions. Proposed edits are projected into memory and parsed into an Abstract Syntax Tree (AST) to verify symbol-level read/write permissions against the Virtual File System (VFS) policy map before touching the disk.
@@ -75,6 +87,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 10. Cloud Context Leakage of Sensitive Study Material & Cloud-Synced Folders (CWE-359)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-10)
 - **Methodology**: The 5-Layer "Blindfolded Broker" Architecture & Zero-Config Sync-Root Discovery
 - **Vulnerability**: When users store proprietary coursework, institutional policies, or PII-heavy study documents inside protected vaults or personal cloud-synced directories (such as Microsoft OneDrive folders with arbitrary custom names), standard AI file-reading or search tools would transmit raw document text directly to the cloud LLM.
 - **Mitigation Applied (5 Defense Layers)**:
@@ -104,6 +117,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 11. Regulatory & Institutional Policy Alignment (Self-Study & Accessibility)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-11)
 - **Regulatory Scope**: Engineered to align with the **Protection of Personal Information Act 4 of 2013 (POPIA)** and institutional AI, Acceptable Use, and Data Governance standards for **personal self-study, academic research, and assistive accessibility**.
 - **Compliance Guarantees**:
   - **Assistive Accessibility & Non-Assessed Self-Study**: Supports blind and visually impaired learners by summarizing complex reading material and generating non-graded practice quizzes formatted for screen readers.
@@ -114,6 +128,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 ---
 
 ### 12. Deep Red-Team Blind-Spot Audit & Hardening Summary
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-12)
 During comprehensive red-team auditing of the runtime interceptor, local HTTP endpoints, and OS-level filesystem boundaries, **8 advanced bypass vectors** were identified, remediated, and locked behind **30 automated verification checks across 6 audit stages**:
 
 1. **Hook Configuration Schema & Global Scope Enforcement**:
@@ -146,6 +161,7 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
 
 
 ## 9. Cross-References & System Parallels
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-9)
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
 <summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Zero-Trust Security & Vault Boundaries (Click to Expand Dropdown)</summary>

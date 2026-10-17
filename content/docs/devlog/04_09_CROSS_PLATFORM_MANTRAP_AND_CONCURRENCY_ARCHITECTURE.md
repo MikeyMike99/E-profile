@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-04_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 04_09: Cross-Platform Mantrap & Concurrency Architecture
 
 A comprehensive architectural walkthrough of the Siraugga **Semantic Mantrap**â€”the dual-kernel synchronization layer ensuring atomic resource access, thread safety, and deadlock prevention across heterogeneous operating systems.
@@ -5,6 +7,7 @@ A comprehensive architectural walkthrough of the Siraugga **Semantic Mantrap**â€
 ---
 
 ## Architectural Overview & Topology
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-1)
 
 In a multi-agent development environment, multiple background subagents, web requests, and file watchers execute concurrently. Without hardware-level coordination, simultaneous disk access causes data corruption.
 
@@ -36,15 +39,18 @@ The Semantic Mantrap solves this by establishing a physical **Execution Chamber*
 ---
 
 ## Cross-Platform Kernel Abstraction
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-2)
 
 The mantrap dynamically interfaces with the native file locking mechanisms of the host OS:
 
 ### 1. Linux & WSL (POSIX Advisory Locking)
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-1)
 - Uses `fcntl.flock(fd, fcntl.LOCK_EX)` on POSIX systems.
 - Locks the entire file inode. Does not require the file to have a non-zero length.
 - Automatically cleaned up by the Linux kernel if the holding process dies unexpectedly.
 
 ### 2. Windows NT (Win32 Byte-Range Locking)
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-2)
 - Uses `msvcrt.locking(fd, msvcrt.LK_LOCK, 1)`.
 - Locks a specific byte range in the file (byte 0 to byte 1).
 - **Mandatory 1-Byte Rule**: The lock file MUST contain at least 1 byte (`"X"`); otherwise, Windows Win32 API returns invalid argument errors.
@@ -52,6 +58,7 @@ The mantrap dynamically interfaces with the native file locking mechanisms of th
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-3)
 
 In concurrent lock architectures, strict sequence execution prevents deadlocks:
 1. **Normalize Path String Before Hashing**: Slashing conventions (`/` vs `\`) must be standardized into valid OS-neutral filenames before lock descriptors are created.
@@ -61,6 +68,7 @@ In concurrent lock architectures, strict sequence execution prevents deadlocks:
 ---
 
 ## Reusable Integration Recipe
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-4)
 
 To protect any file or database in your project using the Semantic Mantrap in under 2 minutes:
 
@@ -85,19 +93,24 @@ def safe_update_database(db_path: str, new_data: dict):
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-5)
 
 ### What happens if two agents call `execution_chamber` at the exact same time?
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-6)
 The first agent to acquire the OS lock proceeds into the chamber immediately. The second agent is paused by the operating system at the Outer Door until the first agent finishes and releases the lock.
 
 ### How does the mantrap prevent permanent deadlocks?
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-7)
 If an agent fails to release a lock within 10 seconds, the mantrap inspects the OS process table. If the holding process ID is dead, it automatically breaks the stale lock and grants access to the waiting agent.
 
 ### Does this slow down the web portal?
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-8)
 No. In benchmarks, acquiring and releasing a lock takes less than 4 milliseconds. Because reads and writes are serialized, data integrity is 100% guaranteed with imperceptible latency.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-9)
 - To understand why uncoordinated concurrency broke the server, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).
 - To inspect the primary source code of `mantrap.py`, view [`02_SOURCE_EVIDENCE/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE.md`](/docs/devlog/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE).
 - To build the complete mantrap from a completely blank file, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH.md`](/docs/devlog/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH).

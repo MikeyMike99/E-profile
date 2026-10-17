@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-00E_BEGINNER_G | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 00E: Beginner Guide to Cinematic TTS & Intent-Driven Audio Feeds
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Why Standard Audio Feeds Fail Blind Developers
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-1)
 
 When blind developers code alongside autonomous AI agents, their ears are their screen. In typical agentic tools, text-to-speech (TTS) engines read raw token streams as they arrive. This results in three fatal auditory UX flaws:
 1. **Robotic Preamble**: The AI spends 15 seconds speaking conversational filler (*"Certainly! I would be happy to examine your server configuration..."*) while the developer waits to know if the server is broken.
@@ -16,6 +19,7 @@ When blind developers code alongside autonomous AI agents, their ears are their 
 ---
 
 ## The Solution: "The Death of the Robot" & The Stealth Feed
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-2)
 
 As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM bot-speak from the accessibility feed in favor of an **Intent-Driven Cinematic Audio Stream**:
 
@@ -44,6 +48,7 @@ As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM b
 ---
 
 ## Plain-English Glossary
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-3)
 
 - **Text-to-Speech (TTS)**: Software that converts written digital text into audible synthesized spoken words.
 - **Intent-Driven Audio**: Speaking the goal or consequence of an action (e.g., "Reloading Port 5000") rather than reading raw source code characters aloud.
@@ -53,6 +58,7 @@ As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM b
 ---
 
 ## Why Order Matters in Audio Processing
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-4)
 
 1. **Scrub Punctuation Before TTS Dispatch**:
    - Quotes, backticks, and markdown brackets must be stripped *before* sending strings to the speech synthesis API. Screen readers pronounce backticks literally ("grave accent, grave accent"), producing grating auditory spam.
@@ -62,9 +68,12 @@ As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM b
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-5)
 
 ### Q: Why not just let NVDA or JAWS read the screen normally?
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-6)
 **A:** Standard screen readers only speak when focus moves or when text appears in an ARIA live region. During complex multi-step coding tasks, an AI might modify 10 files without moving the user's cursor. An intent-driven audio feed keeps the blind developer continuously aware of progress.
 
 ### Q: Why were first-person pronouns ("I", "Me") removed?
+[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-7)
 **A:** Early iterations used dramatic fantasy personas ("I weave the arcane threads..."). Developers found this irritating during serious debugging sprints. The persona was refactored into a direct, professional, objective system voice ("Rebuilding server index: 14 modules verified").

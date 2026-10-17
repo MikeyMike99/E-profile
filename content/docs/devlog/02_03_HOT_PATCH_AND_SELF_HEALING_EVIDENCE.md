@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.3: Source Evidence: Safe Hot-Patching & Self-Healing Engine
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-1)
 
 This chapter documents verbatim source citations from Siraugga's zero-downtime hot-patching engine (`core/routes/system.py`). 
 
@@ -15,6 +18,7 @@ It provides concrete code proof of how pre-compilation syntax checks, snapshot b
 ---
 
 ## Source 1: The 4-Stage Hot-Patch Execution Sequence
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-2)
 
 - **Source File**: `<project_root>/core/routes/system.py`
 - **Location**: Lines 24–130
@@ -50,12 +54,14 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-3)
 1. **Pre-Flight Syntax Gating**: `py_compile.compile(..., doraise=True)` parses the staged patch before any disk changes occur. Invalid syntax is trapped immediately, protecting live code.
 2. **Snapshot Guarantees**: Any existing live module is cloned to `core/backups/` before being overwritten, recording a reversible state tuple in `applied_targets`.
 
 ---
 
 ## Source 2: In-Memory Reload & Automated Rollback
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-4)
 
 - **Source File**: `<project_root>/core/routes/system.py`
 - **Location**: Lines 178–245
@@ -89,12 +95,14 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-5)
 1. **Zero Socket Destruction**: Modules are refreshed using `importlib.reload()`, keeping the Quart server and active WebSockets open.
 2. **Self-Healing Rollback**: If an exception occurs during module reloads, the loop automatically copies backup files from `backup_dir` back to their live targets and re-reloads stable code.
 
 ---
 
 ## Why Order Matters in Hot-Patching
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-6)
 
 1. **`py_compile` Before Disk Copy**:
    - Compiling the file in staging must occur *before* copying it over the live file. If you overwrite the live file first and compilation fails, the application crashes on the next import.
@@ -104,9 +112,12 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-7)
 
 ### Q: Why not just restart Python with `os.system("python3 server.py")`?
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-8)
 **A:** Restarting Python severs all active WebSocket connections, cancels background AI tasks, and can fail due to port binding collisions (`Address already in use`). Hot-patching updates logic without dropping a single packet.
 
 ### Q: What is `shutil.copy2()`?
+[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-9)
 **A:** `copy2` copies file contents *and* preserves metadata (timestamps, file permissions), ensuring backup files retain their exact historical attributes.

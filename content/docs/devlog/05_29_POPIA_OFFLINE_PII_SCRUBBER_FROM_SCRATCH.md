@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # POPIA Offline PII Scrubber from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-1)
 Sending raw user documents or source code to external cloud AI models violates strict regional data privacy laws like South Africa's Protection of Personal Information Act (POPIA).
 
 This guide details how to build `local_brain_broker.py` from scratch. It creates a 100% offline data protection broker that scrubs South African IDs, phone numbers, email addresses, and API credentials using deterministic regex and local Microsoft Presidio NLP before running inference on local GGUF models.
@@ -35,6 +38,7 @@ This guide details how to build `local_brain_broker.py` from scratch. It creates
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-2)
 Save the following script as `popia_scrubber.py`:
 
 ```python
@@ -121,6 +125,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Privacy Scrubbing
+[//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-3)
 1. **Scrub Deterministic Patterns Before NLP**: Running fast regexes first redacts obvious keys and IDs before sentence tokenization, saving significant CPU time.
 2. **Execute Anti-Exfiltration Before Inference**: Rejecting code theft queries early avoids wasting system compute on malicious prompts.
 3. **Scrub Before Storing Context in RAM**: Scrubbing input text before passing it to inference engines ensures sensitive data never persists in volatile model context buffers.
@@ -128,6 +133,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-4)
 **Q: How does the South African ID regex validate a date?**  
 A: `[0-9]{2}` matches the year, `(?:0[1-9]|1[0-2])` matches months 01-12, and `(?:0[1-9]|[12][0-9]|3[01])` matches days 01-31.
 

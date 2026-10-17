@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Game Engine WebSocket Bridge from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-1)
 Modern video games and virtual simulations require intelligent NPCs, dynamic quest generation, and real-time world narration. However, embedding heavy AI runtimes directly inside game engines introduces memory bloat and frame-rate stuttering.
 
 The Game Engine WebSocket Bridge decouples the game engine (e.g., Godot, Unity, Unreal) from the AI runtime. The AI engine runs as a lightweight, headless background daemon on `127.0.0.1:5000`. The game connects via local WebSocket, transmitting real-time player telemetry and receiving narrative dialogue, quest modifications, and TTS audio chunks without dropping frames.
@@ -28,6 +31,7 @@ The Game Engine WebSocket Bridge decouples the game engine (e.g., Godot, Unity, 
 ---
 
 ## 2. Complete Python Bridge Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-2)
 Save the following script as `game_bridge.py`:
 
 ```python
@@ -119,6 +123,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Game Bridge Communication
+[//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-3)
 1. **Send Monotonic ACK Immediately**: Transmitting `{"type": "ack", "seq": N}` as soon as an event arrives prevents the server buffer from growing endlessly during heavy gameplay.
 2. **Decouple Render Frame from Network Socket**: WebSocket reads must run asynchronously or in a worker thread so waiting for AI responses never drops rendering FPS below 60.
 3. **Validate Target Paths on World Modification**: If the AI returns a file patch for a mod or quest script, the bridge must verify that the path resolves inside `./mods/` or `./saves/` before writing to disk.
@@ -126,6 +131,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-4)
 **Q: Can this slow down game performance?**  
 A: No! The AI engine runs in an isolated OS process. Network communication is handled over loopback sockets asynchronously, consuming zero GPU cycles and negligible CPU time from the game engine.
 

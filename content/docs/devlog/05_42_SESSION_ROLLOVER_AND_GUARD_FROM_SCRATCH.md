@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-05_42 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.42: "From Scratch" Step-by-Step Creation Guide: Session Rollover & In-Flight Protection
 
 ## 1. Overview & Goal
+[//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-1)
 This guide provides a complete, step-by-step engineering tutorial for building an autonomous, background session rollover and context transfer system from scratch. By following this guide, you will construct a distillation engine that extracts state offline, an execution gatekeeper that guards active in-flight tasks from accidental wipes, and an automated regression test suite.
 
 ---
 
 ## 2. Step 1: Implement the Context Distillation Engine (`core/session_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-2)
 
 Create or update `core/session_manager.py` to extract working memory directly from transcript history:
 
@@ -62,6 +66,7 @@ class SessionManager:
 ---
 
 ## 3. Step 2: Implement the Execution Gatekeeper (`agents/mixins/execution_mixin.py`)
+[//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-3)
 
 Ensure `start_task` forwards in-flight origins and `_execute_agent` strictly suppresses resets mid-task:
 
@@ -115,6 +120,7 @@ class ExecutionMixin:
 ---
 
 ## 4. Step 3: Frontend Event Handlers (`sandbox/templates/index.html`)
+[//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-4)
 
 Wire the client WebSocket to announce rollovers and update token metrics:
 
@@ -148,6 +154,7 @@ else if (data.type === 'token_telemetry') {
 ---
 
 ## 5. Step 4: Verification and Hot-Patching
+[//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-5)
 
 1. **Stage Patch**:
    ```bash
@@ -166,6 +173,7 @@ else if (data.type === 'token_telemetry') {
 ---
 
 ## 6. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-6)
 - **Problem Statement**: [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md`](/docs/devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md`](/docs/devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS)

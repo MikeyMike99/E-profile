@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 02_17: Directory Tiering & API Contract Evidence
 
 Primary source evidence from the Siraugga security manager (`security/security_manager.py`) demonstrating how recursive directory namespace scanning and cryptographic master key verification enforce zero-trust isolation.
@@ -5,6 +7,7 @@ Primary source evidence from the Siraugga security manager (`security/security_m
 ---
 
 ## Source Citation 1: Cryptographic Master Signature Verification (`security/security_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-1)
 
 This excerpt displays how the application mathematically verifies that it is executing on the creator's machine without hardcoding plaintext secret keys:
 
@@ -40,12 +43,14 @@ def check_master_signature() -> bool:
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-2)
 - **Immunity to Reverse Engineering**: When compiled to native machine code via Nuitka, strings extracted by hackers reveal only the SHA-256 digest (`80fbad...`), which cannot be mathematically reversed to produce the raw 32-byte key file.
 - **Frictionless Developer Auto-Bypass**: The creator never encounters trial locks or API key prompts on their physical hardware.
 
 ---
 
 ## Source Citation 2: Directory-Level Tiering Algorithm (`security/security_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-3)
 
 This excerpt demonstrates the recursive path scanner that stamps entire folder namespaces as protected:
 
@@ -75,12 +80,14 @@ def classify_file(self, rel_path: str) -> str:
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-4)
 - **Deep Namespace Protection**: Even if a file has an innocent extension like `.json` or `.txt`, if it lives inside `core/` (e.g., `core/ui_config.json`), lines 308–309 immediately classify it as `TIER_CORE_ENGINE`.
 - **Symlink & Path Traversal Immunity**: Calling `os.path.normpath()` resolves relative tricks (`../../`) before splitting directory parts.
 
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-5)
 
 In recursive security classification, path evaluation sequence prevents bypasses:
 1. **Normalize Path String Before Splitting**: Slashes must be normalized (`\` to `/`) and relative segments (`..`) resolved before analyzing path components.
@@ -90,19 +97,24 @@ In recursive security classification, path evaluation sequence prevents bypasses
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-6)
 
 ### What is a SHA-256 digest?
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-7)
 A SHA-256 digest is a 64-character fingerprint of data. Even if you change one comma in a file, the entire fingerprint completely changes, making forgery impossible.
 
 ### Why do we check `parts[:-1]`?
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-8)
 `parts[:-1]` selects all folder names in the path, leaving out the file itself. This lets us check if the file is inside a protected folder before we even look at the filename.
 
 ### How does this protect game engine developers?
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-9)
 Third-party modders or game developers given access to write game scripts are jailed to `playground/` and blocked from modifying server code or security configs.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-10)
 - To understand why flat file matching failed, read [`01_PROBLEMS_ENCOUNTERED/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md`](/docs/devlog/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING).
 - To view diagnostic test logs of directory classification, visit [`03_DIAGNOSTIC_TESTS/03_16_DIRECTORY_TIERING_AND_SANDBOX_JAIL_AUDIT_LOGS.md`](/docs/devlog/03_16_DIRECTORY_TIERING_AND_SANDBOX_JAIL_AUDIT_LOGS).
 - To build the complete zero-trust RBAC engine from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH.md`](/docs/devlog/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH).

@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: JOSH-DOC-02_35 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+
 # Pillar 02.35: Source Code Evidence: Inno Setup & Screen Reader DLL Extraction
 
 ## Overview & Context
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-1)
 This document cites primary source code evidence from `screenreader_speak.py` demonstrating how accessible applications bundle native C-libraries as base64 byte arrays to guarantee screen reader connectivity even on clean Windows systems where external DLLs are stripped.
 
 ---
 
 ## Source Citation 1: Dynamic DLL Extraction & Directory Registration (`screenreader_speak.py`)
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-2)
 
 ```python
 # Location: Audio_pllayback_suite/screenreader_speak.py
@@ -53,12 +57,14 @@ This document cites primary source code evidence from `screenreader_speak.py` de
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-3)
 - The application guarantees zero-failure screen reader connectivity by self-extracting embedded 32-bit and 64-bit NVDA controller DLLs if they are missing from disk.
 - By calling `os.add_dll_directory(resolved_lib_dir)`, it explicitly satisfies Windows security policies introduced in Python 3.8+ that restrict DLL loading to trusted paths.
 
 ---
 
 ## Source Citation 2: Inno Setup Process Termination Hook (`compile_joshy.bat`)
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-4)
 
 ```batch
 :: Location: Audio_pllayback_suite/compile_joshy.bat
@@ -71,27 +77,33 @@ timeout /t 1 /nobreak >nul
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-5)
 - The automated packaging pipeline forces running executable processes to close before Inno Setup begins compilation, eliminating `Error opening file for writing` file-locking failures.
 
 ---
 
 ## 3. Why Order Matters in DLL Discovery
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-3)
 1. **Candidate Scan Before Base64 Extraction**: Check existing directories first to avoid unnecessary disk writes and flash wear.
 2. **Directory Registration Before Library Import**: You must invoke `os.add_dll_directory` *before* `accessible_output2.outputs.auto.Auto()` attempts to load the DLL into Python's address space.
 
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-4)
 
 ### What is `os.add_dll_directory`?
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-6)
 In Python 3.8 and newer on Windows, Python no longer searches the system `PATH` or current directory for DLLs loaded via `ctypes`. You must explicitly call `os.add_dll_directory` with the exact folder path where your `.dll` file resides.
 
 ### Why does NVDA have both 32-bit and 64-bit DLLs?
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-7)
 NVDA itself is a 32-bit application, but Python programs can run as either 32-bit or 64-bit processes. The controller client must match the bitness of your running Python executable to communicate with NVDA.
 
 ---
 
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md`](/docs/devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS.md`](/docs/devlog/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE.md`](/docs/devlog/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE)

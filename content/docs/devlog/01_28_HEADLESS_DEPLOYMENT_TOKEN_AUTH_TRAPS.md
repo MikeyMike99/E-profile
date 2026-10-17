@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-01_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Headless Deployment Token Authentication Traps
 
 ## 1. The Problem: Unprotected Headless Endpoints
+[//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-1)
 When developers launch Siraugga on a remote server, secondary workstation, or inside a Docker container, the service must bind to network interfaces so client browsers can connect.
 
 However, binding an autonomous agent engine to `0.0.0.0` or a local area network (LAN) creates severe security risks. Any machine on the subnet can open `http://<host-ip>:5000`, gain immediate access to the prompt box, and execute arbitrary terminal commands with the server's OS privileges.
@@ -22,6 +25,7 @@ However, binding an autonomous agent engine to `0.0.0.0` or a local area network
 ---
 
 ## 2. The Authentication Trap
+[//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-2)
 Initial attempts to secure the portal relied on basic HTTP passwords saved in static configuration files. This introduced two fatal traps:
 1. **Config File Leaks**: Hardcoded passwords in `.env` or `config.json` frequently got committed to Git repositories or ingested by AI prompt contexts.
 2. **Infinite Brute-Force**: Without an authentication challenge screen and rate limiter, attackers could script thousands of automated password guesses per second against `/ws`.
@@ -29,6 +33,7 @@ Initial attempts to secure the portal relied on basic HTTP passwords saved in st
 ---
 
 ## 3. The Solution: Ephemeral Terminal Deployment Tokens
+[//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-3)
 Siraugga resolved this with the Headless Deployment Token Protocol (`sandbox/templates/login.html`):
 1. **Ephemeral Token Generation**: When the server boots headlessly, it prints an ephemeral token directly to the host console:
    ```text
@@ -45,6 +50,7 @@ Siraugga resolved this with the Headless Deployment Token Protocol (`sandbox/tem
 ---
 
 ## 4. Why Order Matters in Headless Security
+[//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-4)
 1. **Generate Token in Memory Before Binding Socket**: The server must generate the deployment token before accepting network traffic so no unauthenticated window exists.
 2. **Validate Auth Token Before Upgrading WebSocket**: The server must verify authentication headers during the HTTP upgrade handshake; once a WebSocket is established, connection-level defense is bypassed.
 3. **Enforce Rate Limiting Before Token Comparison**: Rate limiting counters must be updated before cryptographic string comparison to throttle timing attacks.
@@ -52,6 +58,7 @@ Siraugga resolved this with the Headless Deployment Token Protocol (`sandbox/tem
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-5)
 **Q: Why generate a new token on every server restart?**  
 A: Ephemerality ensures that even if a token is exposed, it becomes invalid as soon as the server process terminates.
 

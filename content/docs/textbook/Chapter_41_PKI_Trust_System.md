@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH41 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 41: The Modder Trust System (PKI)
 
 ## 41.1 The Modder Passport (Certificate Authorities)
+[//]: # (SECTION_ID: SIRA-TXT-CH41-SEC-41_1)
 
 In a decentralized Swarm hosting environment, thousands of remote Modders connect to the Orchestrator's WebSocket to generate code. How does the Orchestrator know that a user claiming to be a Tier 5 Admin is actually an Admin, and not a malicious hacker?
 
@@ -9,6 +12,7 @@ The answer is the **Modder Trust System**, DevCore's implementation of a **Publi
 A digital certificate acts exactly like an electronic passport. In DevCore, the Orchestrator acts as its own **Certificate Authority (CA)**. When a developer is hired, the Orchestrator validates their identity and issues them a mathematically unforgeable X.509 v3 digital certificate. Every time that Modder attempts to connect to the WebSocket, the Orchestrator checks the certificate to verify their identity. 
 
 ## 41.2 Trust Classes and the Five Tiers
+[//]: # (SECTION_ID: SIRA-TXT-CH41-SEC-41_2)
 
 In traditional IT, Certificate Authorities issue certificates based on "Classes" (0 through 5) which determine how rigorously the user's identity was vetted. In DevCore, this maps perfectly to the **Five Tiers of Access**:
 
@@ -17,6 +21,7 @@ In traditional IT, Certificate Authorities issue certificates based on "Classes"
 *   **Class 4 / Class 5 Certificates:** Issued strictly to Tier 5 Admins. Class 5 is the absolute highest level of cryptographic trust. These certificates grant unrestricted read/write access to the Orchestrator's Core Engine files.
 
 ## 41.3 Swarm CA Topologies
+[//]: # (SECTION_ID: SIRA-TXT-CH41-SEC-41_3)
 
 Depending on the size of the game studio, the Orchestrator will establish different topologies of trust:
 
@@ -24,6 +29,7 @@ Depending on the size of the game studio, the Orchestrator will establish differ
 *   **Hierarchical CA Topology:** Used for massive MMORPGs. The highest-level Orchestrator (Root CA) issues certificates to Subordinate Orchestrators (Sub-CAs) that manage specific server zones (e.g., the North America Zone, the Europe Zone). This provides massive scalability.
 
 ## 41.4 Enrollment and Revocation
+[//]: # (SECTION_ID: SIRA-TXT-CH41-SEC-41_4)
 
 When a Modder first connects to the engine, they undergo the **Enrollment** process. Their local computer contacts the Orchestrator (the CA) to request a digital identity certificate. To prove this connection is authentic and hasn't been intercepted, the Modder often verifies the CA's fingerprint *out-of-band* (e.g., confirming the key via a phone call or a secure internal Slack channel before trusting it).
 
@@ -36,10 +42,12 @@ Tier 5 Admins execute **Certificate Revocation** using two primary methods:
 ---
 
 ## Chapter 41 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH41-SEC-1)
 
 Chapter 41 outlines the bureaucratic backbone of cryptography: PKI. By acting as a Certificate Authority, the Orchestrator issues Class-based digital passports to Modders, mapping perfectly to their security Tiers. Through Hierarchical Topologies and real-time Revocation (OCSP), Tier 5 Admins maintain absolute control over who is allowed into the Swarm.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 41 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH41-SEC-2)
 
 *   **Public Key Infrastructure (PKI)** $\rightarrow$ **The Modder Trust System:** The framework of specifications, tools, and databases used to issue and revoke digital certificates.
 *   **Certificate Authority (CA)** $\rightarrow$ **The Orchestrator (as Root CA):** The trusted entity that mathematically signs and issues the certificates to users.

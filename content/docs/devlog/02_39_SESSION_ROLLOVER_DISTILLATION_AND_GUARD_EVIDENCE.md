@@ -1,13 +1,18 @@
+[//]: # (DOC_ID: SIRA-DOC-02_39 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.39: Source Code Evidence: Session Rollover Distillation, In-Flight Guards & SIEM Telemetry
 
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-1)
 This document catalogs the exact production code implementations across the Siraugga backend and frontend architecture that govern session lifecycle management, transcript distillation, mid-conversation rollover suppression, and automated security auditing.
 
 ---
 
 ## 1. Context Distillation Engine (`core/session_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-1)
 
 ### Safe Turn Counting with Directory Traversal Defense
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-2)
 ```python
 def get_session_turn_count(self, conv_id: str) -> int:
     """Safely extracts the count of completed USER_INPUT turns without path escapes."""
@@ -36,6 +41,7 @@ def get_session_turn_count(self, conv_id: str) -> int:
 ```
 
 ### Offline Context Briefing Generator
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-3)
 ```python
 def generate_continuation_briefing(self, conv_id: str, workspace_path: str = None) -> str:
     """Extracts working directory, project, recent goals, and touched files offline."""
@@ -68,8 +74,10 @@ def generate_continuation_briefing(self, conv_id: str, workspace_path: str = Non
 ---
 
 ## 2. In-Flight Rollover Gatekeeper (`agents/mixins/execution_mixin.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-2)
 
 ### Parameter Passing & In-Flight Protection
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-4)
 ```python
 async def start_task(
     self,
@@ -98,6 +106,7 @@ async def start_task(
 ```
 
 ### In-Flight Rollover Suppression & SIEM Telemetry
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-5)
 ```python
 # --- AUTOMATED SILENT SESSION ROLLOVER CHECK ---
 # Session reset MUST NOT happen when a task is still ongoing midconversation.
@@ -155,6 +164,7 @@ if conversation_id and auto_rollover_enabled:
 ```
 
 ### Turn Cleanup Subprocess Hygiene (No Blanket pkill)
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-6)
 ```python
 finally:
     hb_task.cancel()
@@ -174,6 +184,7 @@ finally:
 ---
 
 ## 3. Automated Guard Invariants (`security/security_audit.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-3)
 ```python
 print("\n--- 4. Testing Session Stability & Rollover Guards ---")
 # 4.1 In-Flight Task Protection AST Check
@@ -193,6 +204,7 @@ run_test(test_rollover_invariants)
 ---
 
 ## 4. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-02_39-SEC-4)
 - **Problem Statement**: [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md`](/docs/devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md`](/docs/devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE)

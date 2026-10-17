@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_07 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.7: Source Evidence: Cinematic TTS & Stealth Audio Feed
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-1)
 
 This chapter presents primary source citations from `agents/agent_manager.py` and the Git development history (`5537605`, `f3748d1`, `9796a36`).
 
@@ -15,6 +18,7 @@ These citations provide concrete code proof of how Siraugga intercepts raw tool 
 ---
 
 ## Source 1: Tool Interception & Deterministic Intent Mapping
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-2)
 
 - **Source File**: `<project_root>/agents/agent_manager.py` (Git Commit `f3748d1`)
 - **Location**: Event Processing Loop
@@ -44,12 +48,14 @@ These citations provide concrete code proof of how Siraugga intercepts raw tool 
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-3)
 1. **Zero Bot-Speak**: Rather than asking an LLM to generate conversational filler, the audio phrase is constructed deterministically from structured metadata (`toolAction` and `toolSummary`).
 2. **Speed & Clarity**: Audio notifications are emitted concurrently with execution, achieving sub-50ms announcement latency.
 
 ---
 
 ## Source 2: Quote Stripping & Pronoun Normalization
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-4)
 
 - **Source File**: `<project_root>/agents/agent_manager.py` (Git Commit `9796a36` & `d58264d`)
 - **Location**: Phonetic Sanitizer Routine
@@ -70,12 +76,14 @@ These citations provide concrete code proof of how Siraugga intercepts raw tool 
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-5)
 1. **Pronunciation Integrity**: Stripping quotation marks and backticks stops neural voices from stuttering or reading syntax aloud.
 2. **Professional Persona**: Excising first-person pronouns keeps audio updates concise, direct, and non-intrusive.
 
 ---
 
 ## Why Order Matters in Audio Generation
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-6)
 
 1. **Strip Punctuation Before Character Counting**:
    - Punctuation scrubbing must execute *before* measuring string length or applying text truncation. If you truncate first, trailing quote fragments can remain at the end of the phrase.
@@ -85,9 +93,12 @@ These citations provide concrete code proof of how Siraugga intercepts raw tool 
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-7)
 
 ### Q: What is `toolAction` vs `toolSummary`?
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-8)
 **A:** `toolAction` is an active verb phrase (e.g., *"Patching server route"*). `toolSummary` is a concise noun phrase (e.g., *"WebSocket loop update"*). Combining them creates a natural English sentence: *"Patching server route: WebSocket loop update."*
 
 ### Q: Why use `asyncio.create_task()` to broadcast audio?
+[//]: # (SECTION_ID: SIRA-DOC-02_07-SEC-9)
 **A:** `create_task()` sends the audio event in the background without pausing the main thread. The AI can keep modifying code without waiting for the audio frame to traverse the network.

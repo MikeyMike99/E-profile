@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-01_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # SIEM Log Exhaustion & Alert Queue Flooding Traps
 
 ## 1. The Problem: The Swarm Telemetry Flood
+[//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-1)
 As Siraugga evolved to orchestrate multi-agent swarms, the volume of security events exploded. Subagents running file inspections, AST static analysis, and prompt validation emitted thousands of audit records per minute into `security/central_logger.py`.
 
 Without strict volume controls, this firehose of data created two catastrophic failure modes:
@@ -28,11 +31,13 @@ Without strict volume controls, this firehose of data created two catastrophic f
 ---
 
 ## 2. UI Asphyxiation
+[//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-2)
 When the web portal attempted to render the executive dashboard (`sandbox/templates/security_dashboard.html`), it tried to parse the entire unindexed JSONL log file over WebSocket. The browser froze, the DOM crashed, and screen readers became completely unresponsive.
 
 ---
 
 ## 3. The Solution: Fixed Deque Ring Buffers & Size Rotation
+[//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-3)
 To restore stability without sacrificing forensic compliance, Siraugga re-engineered the SIEM logging pipeline:
 1. **Bounded Deque Ring Buffer**: The Master Alert Queue in memory was converted to a fixed-size `collections.deque(maxlen=500)`, automatically discarding older low-priority alerts while keeping recent security events.
 2. **Log File Rotation**: When `devcore_master.jsonl` exceeds 10 MB, it is automatically rotated to `devcore_master.1.jsonl` and compressed, preserving only the last 5 rotations.
@@ -41,6 +46,7 @@ To restore stability without sacrificing forensic compliance, Siraugga re-engine
 ---
 
 ## 4. Why Order Matters in Security Telemetry
+[//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-4)
 1. **Drop Low-Priority Telemetry Before High-Priority**: If the alert queue fills during an active attack, the system must drop `INFO` pings before dropping `CRITICAL` privilege violation alerts.
 2. **Flush Memory Buffer Before Log Rotation**: The logger must write all pending memory chunks to the current file before rotating handles to avoid losing forensic records.
 3. **Atomic File Renaming**: Renaming log files using atomic filesystem operations prevents concurrent subagent writes from failing with file lock errors.
@@ -48,6 +54,7 @@ To restore stability without sacrificing forensic compliance, Siraugga re-engine
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-5)
 **Q: What is a JSONL file?**  
 A: JSON Lines (`.jsonl`) is a format where each line of a text file is a complete, valid JSON object, making it easy to stream and append events without parsing a giant array.
 

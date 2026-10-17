@@ -1,13 +1,18 @@
+[//]: # (DOC_ID: SIRA-DOC-05_36 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.36: From-Scratch Creation Guide: Local GGUF Runner & Token Cost Calculator
 
 ## Overview & Beginner Context
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-1)
 This guide teaches you how to write a Python script from scratch that connects to a local GGUF model via `llama-cli` and calculates the financial cost of AI tokens in South African Rands (ZAR).
 
 ---
 
 ## 1. Line-by-Line Construction
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-1)
 
 ### Block 1: Imports and Model Configuration (Lines 1–15)
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-2)
 ```python
 import subprocess
 import os
@@ -24,6 +29,7 @@ MODEL_RATES = {
 - Defines the local file path to the quantized GGUF model and sets pricing tiers per million tokens.
 
 ### Block 2: The Local Offline Runner (Lines 16–35)
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-3)
 ```python
 def query_local_model(prompt: str, model_path: str = DEFAULT_MODEL_PATH) -> str:
     """Executes llama-cli with zero network egress."""
@@ -45,6 +51,7 @@ def query_local_model(prompt: str, model_path: str = DEFAULT_MODEL_PATH) -> str:
 - Spawns `llama-cli` in a local subprocess with temperature set to 0.2 for deterministic extraction.
 
 ### Block 3: The Currency Translation Function (Lines 36–50)
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-4)
 ```python
 def calculate_cost_zar(model_key: str, in_tokens: int, out_tokens: int) -> float:
     rates = MODEL_RATES.get(model_key, MODEL_RATES["gemini-flash"])
@@ -56,6 +63,7 @@ def calculate_cost_zar(model_key: str, in_tokens: int, out_tokens: int) -> float
 ---
 
 ## 2. Complete Finished File
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-2)
 
 ```python
 #!/usr/bin/env python3
@@ -80,12 +88,14 @@ if __name__ == "__main__":
 ---
 
 ## 3. 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-3)
 1. Run `python3 script.py` -> Outputs calculated ZAR cost.
 2. Verify zero network sockets opened during local query.
 
 ---
 
 ## 4. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md`](/docs/devlog/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE.md`](/docs/devlog/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS.md`](/docs/devlog/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS)

@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_23 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Custom Pygame Screen Reader Chunk Reader from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-1)
 When text documents balloon into hundreds of thousands of lines, standard text editors and IDEs choke, crash Language Server Protocols, and freeze screen reader speech.
 
 This guide details how to build `manifesto_reader.py` from scratch. Using Python and Pygame, it bypasses standard editor memory buffers by loading text files in strict 100-line chunks, calculates reading time based on screen reader Words-Per-Minute (WPM), and provides low-latency keyboard navigation and fast search.
@@ -30,6 +33,7 @@ This guide details how to build `manifesto_reader.py` from scratch. Using Python
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-2)
 Save the following script as `chunk_reader.py`:
 
 ```python
@@ -156,6 +160,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Chunk Reader Execution
+[//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-3)
 1. **Withdraw Tkinter Window Before Dialog Display**: Calling `root.withdraw()` hides the empty parent window before `askstring()` appears, keeping the OS desktop clean.
 2. **Calculate Word Delay Before Updating Timestamp**: Setting `read_delay = calculate_delay(text)` before resetting `last_read_time` ensures the timer reflects the current sentence length.
 3. **Use Pygame Clock Tick**: Calling `clock.tick(30)` caps CPU usage, preventing the event loop from consuming 100% of a CPU core while waiting for keypresses.
@@ -163,6 +168,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-4)
 **Q: Why use `errors='ignore'` when opening files?**  
 A: Large files may contain non-UTF-8 bytes from raw scrapers. Ignoring bad bytes prevents Python from crashing with `UnicodeDecodeError`.
 

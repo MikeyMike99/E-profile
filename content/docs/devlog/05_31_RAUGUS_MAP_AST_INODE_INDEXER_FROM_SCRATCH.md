@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_31 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Raugus Map AST & Inode Indexer from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-1)
 Exposing raw physical file paths to autonomous agents creates attack surfaces for path traversal and filesystem evasion attacks.
 
 This guide details how to build `generate_raugusmap.py` from scratch. It parses the Abstract Syntax Tree (AST) of every Python file in a project, extracts hardware filesystem inodes (`st_ino`) to detect file renaming tricks, and generates an opaque virtual key phonebook (`raugus_map.json`).
@@ -32,6 +35,7 @@ This guide details how to build `generate_raugusmap.py` from scratch. It parses 
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-2)
 Save the following script as `map_generator.py`:
 
 ```python
@@ -132,6 +136,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in VFS Generation
+[//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-3)
 1. **Prune Ignore Dirs In-Place**: Modifying `dirs[:] = [...]` prevents `os.walk` from descending into massive `.git` or `node_modules` folders, speeding up indexing by 100x.
 2. **Fetch Inode Before Key Construction**: Extracting the inode before processing file contents ensures physical hardware verification occurs even on empty files.
 3. **Write Locked Flag on Critical Functions**: Marking critical functions (`write_locked: True`) at map generation guarantees pre-tool hooks enforce locks automatically.
@@ -139,6 +144,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-4)
 **Q: What does `dirs[:] = [...]` do in Python?**  
 A: It modifies the active directory list in-place inside `os.walk`, telling the crawler to completely skip those subfolders before searching them.
 

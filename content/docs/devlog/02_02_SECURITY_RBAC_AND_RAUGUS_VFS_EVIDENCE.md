@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_02 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.2: Source Evidence: Security RBAC & Raugus VFS Architecture
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-1)
 
 This chapter documents verbatim source citations from Siraugga's security subsystem (`security/security_manager.py`) and the Zero-Downtime Hot-Patch engine.
 
@@ -15,6 +18,7 @@ These citations provide concrete architectural proof of how Role-Based Access Co
 ---
 
 ## Source 1: File Classification Tiers & Path Canonicalization
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-2)
 
 - **Source File**: `<project_root>/security/security_manager.py`
 - **Location**: Lines 26–29 & Lines 329–374
@@ -47,12 +51,14 @@ def resolve_safe_path(self, target_base: str, rel_path: str, user: dict = None) 
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-3)
 1. **Immunity to Traversal**: Any attempt to escape `target_base` using `../` or sneaky symlinks is caught by `os.path.realpath()` and string containment validation.
 2. **Deterministic Role Gating**: Non-administrators are denied access to Core Engine, Admin Logs, and Forbidden directories before any file handle is opened.
 
 ---
 
 ## Source 2: Safe 3-Step Hot-Patch Sequence
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-4)
 
 - **Source File**: `<project_root>/core/routes/system.py` (Git Commit `b520f5f`)
 - **Location**: Hot-Patch Execution Engine
@@ -89,12 +95,14 @@ def execute_hot_patch_sequence():
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-5)
 1. **Zero Downtime**: Active WebSocket streams and running background tasks are not killed when server code is updated.
 2. **Self-Healing Resilience**: If an engineer uploads a patch with a syntax error, `py_compile.compile` catches it before the file replaces live code. If a runtime reload fails, the backup is immediately restored.
 
 ---
 
 ## Why Order Matters in Security & Hot-Patching
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-6)
 
 1. **Syntax Compilation Before Live File Replacement**:
    - `py_compile.compile(..., doraise=True)` must succeed *before* overwriting the live module. If broken code is copied to disk first, the application is left in a corrupted state if the reload fails.
@@ -104,9 +112,12 @@ def execute_hot_patch_sequence():
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-7)
 
 ### Q: Why do we use `rel_path.lstrip("/\\")`?
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-8)
 **A:** On Unix and Windows systems, a leading slash or backslash (like `/etc` or `\Windows`) tells `os.path.join()` to treat the path as an absolute root path, completely discarding the `base` folder. Stripping leading slashes neutralizes this bypass.
 
 ### Q: What is `importlib.reload()`?
+[//]: # (SECTION_ID: SIRA-DOC-02_02-SEC-9)
 **A:** When Python imports a module, it caches the compiled bytecode in `sys.modules`. `importlib.reload()` forces Python to re-read the file from disk and update the running application in memory without stopping the process.

@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_18 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pre-Flight Autonomous Self-Healer from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-1)
 When backend modules fail due to accidental syntax errors or corrupted patch deployments, standard servers crash abruptly on boot, taking down developer dashboards and terminating active WebSocket streams.
 
 The Pre-Flight Autonomous Self-Healer (`self_healer.py`) acts as a protective supervisor before the server imports any application modules. It verifies Python AST syntax across all core files, initiates instant rollback from backups if available, or autonomously invokes a headless repair CLI to fix the syntax error, verify the fix, and resume server boot with zero human intervention.
@@ -36,6 +39,7 @@ The Pre-Flight Autonomous Self-Healer (`self_healer.py`) acts as a protective su
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-2)
 Save the following script as `self_healer.py`:
 
 ```python
@@ -130,6 +134,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Self-Healing Execution
+[//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-3)
 1. **Compile Before Import**: Executing `py_compile.compile()` inspects the abstract syntax tree without executing module-level side effects or importing broken dependencies.
 2. **Rollback Before AI Repair**: Rolling back from a validated backup completes in < 5ms, avoiding unnecessary LLM API costs and network latency.
 3. **Re-Compile After Agent Repair**: Never trust an AI model's output blindly. Re-running `py_compile.compile(..., doraise=True)` provides deterministic verification before booting the server.
@@ -137,6 +142,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-4)
 **Q: Does `py_compile` execute any code?**  
 A: No! It only parses the code into Python bytecode (`.pyc`). If there are syntax errors (like missing colons or mismatched brackets), it raises an exception without running the file.
 

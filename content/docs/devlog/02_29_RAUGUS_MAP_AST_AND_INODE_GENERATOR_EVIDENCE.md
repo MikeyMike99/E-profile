@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Raugus Map AST & Inode Generator Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_29-SEC-1)
 This document contains source code evidence from `generate_raugusmap.py`. It details how DevCore scans Python source files, extracts function and variable AST symbols, records hardware filesystem inodes, and indexes sensitive vault directories into `security/raugus_map.json`.
 
 ---
 
 ## 2. AST Symbol Extraction Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_29-SEC-2)
 The generator uses Python's native `ast` module to catalog all executable symbols without running code:
 
 ```python
@@ -32,6 +36,7 @@ def parse_ast_for_file(filepath):
 ---
 
 ## 3. Hardware Inode Binding Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_29-SEC-3)
 To detect file renaming attacks, each file's physical hardware inode is recorded:
 
 ```python
@@ -46,6 +51,7 @@ def _get_inode(p):
 ---
 
 ## 4. Opaque Key Mapping & Sensitive Vault Tagging Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_29-SEC-4)
 Paths are transformed into opaque keys (`devcore.*`), and protected content vaults are registered:
 
 ```python
@@ -73,6 +79,7 @@ def generate_raugusmap(root_dir, existing_map=None):
 ---
 
 ## 5. Why Order Matters in VFS Map Generation
+[//]: # (SECTION_ID: SIRA-DOC-02_29-SEC-5)
 1. **Catch Syntax Errors Silently**: Using `try/except` during `ast.parse()` ensures a broken file does not halt the entire project mapping process.
 2. **Assign Inodes Before Relative Keying**: Extracting hardware inodes before computing relative paths guarantees physical identity is preserved regardless of path representations.
 3. **Register Sensitive Vaults Explicitly**: Hard-coding critical security directories ensures empty folders receive Tier-5 protection before user files are placed in them.
@@ -80,6 +87,7 @@ def generate_raugusmap(root_dir, existing_map=None):
 ---
 
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_29-SEC-6)
 **Q: Why parse AST instead of using regular expressions?**  
 A: Regexes get confused by multiline functions, decorators, or commented-out code. The `ast` parser understands exact Python syntax without false positives.
 

@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-03_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Manifesto Reader Chunk Loading Benchmark Logs
 
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-1)
 This benchmark evaluates memory consumption, startup latency, and screen reader responsiveness when processing a massive 317,706-line document (`DEVELOPERS_MANIFESTO.md`). It compares standard full-buffer editor loading against the 100-line streaming chunk architecture in `manifesto_reader.py`.
 
 ---
 
 ## 2. Benchmark Environment
+[//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-2)
 - **Hardware**: Intel Core i7-12700H, 32GB DDR5 RAM, NVMe PCIe Gen 4 SSD
 - **Screen Reader**: NVDA 2024.3 (Windows 11)
 - **Target File**: `DEVELOPERS_MANIFESTO.md` (317,706 lines / ~46.2 MB)
@@ -13,6 +17,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 ---
 
 ## 3. Comparative Benchmark Results
+[//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-3)
 
 ```text
 [BENCHMARK-RUN-1] Full-Buffer IDE Load (VS Code / Standard Editor)
@@ -35,6 +40,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 ---
 
 ## 4. WPM Speech Latency Calibration Metrics
+[//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-4)
 
 | Speech Rate (WPM) | Delay per Word | Estimated 10-Word Line Time | User Experience |
 | :--- | :--- | :--- | :--- |
@@ -46,6 +52,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 ---
 
 ## 5. Why Order Matters in Document Chunking
+[//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-5)
 1. **Load Chunk Before Calculating WPM**: The exact word count must be known before scheduling the auto-scroll delay for that specific line.
 2. **Seek Line Pointer Iteratively**: Scanning line-by-line up to `start_line` without keeping previous lines in memory keeps Python heap usage virtually flat.
 3. **Trigger Speech Before Updating Visual Coordinates**: In accessibility-first design, auditory feedback must precede or accompany visual layout changes.
@@ -53,6 +60,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 ---
 
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-6)
 **Q: How did `manifesto_reader.py` use only 18 MB of RAM for a 46 MB file?**  
 A: It never loads the entire file into a Python list! It opens the file, reads 100 lines into memory, displays them, and closes the file handle.
 

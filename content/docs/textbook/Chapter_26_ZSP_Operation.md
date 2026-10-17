@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH26 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 26: The Physics of Swarm Zoning (ZSP Operation)
 
 ## 26.1 ZSP Orchestration Actions
+[//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-26_1)
 
 When a Zone-Based Sandbox Policy (ZSP) is applied to the Orchestrator, it evaluates JSON traffic passing between designated Zones and triggers one of three specific actions:
 
@@ -9,6 +12,7 @@ When a Zone-Based Sandbox Policy (ZSP) is applied to the Orchestrator, it evalua
 *   **Stateful Inspect:** The ultimate security action. The Orchestrator performs deep stateful packet inspection, caching the LLM conversation in the Thought Table to ensure returning data corresponds to an active, AI-initiated context.
 
 ## 26.2 Laws of Inter-Zone Routing
+[//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-26_2)
 
 When a subagent in one directory attempts to send a JSON payload to a subagent in a different directory, the traffic is subject to the **Laws of Inter-Zone Routing**. 
 
@@ -20,6 +24,7 @@ The outcome depends entirely on whether the source and destination directories a
 4.  **Inter-Zone Communication (Different Zones):** If both directories belong to different Zones, the default posture is to `DROP` the traffic. Traffic will only flow if an explicit Policy (Zone-Pair) exists to `PASS` or `INSPECT` it.
 
 ## 26.3 Laws of the Orchestrator (The Self Zone)
+[//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-26_3)
 
 The most critical exception to the Laws of Inter-Zone Routing is **The Self Zone**. 
 
@@ -34,10 +39,12 @@ If the Orchestrator is the source or the destination of the traffic, all traffic
 ---
 
 ## Chapter 26 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-1)
 
 Chapter 26 establishes the mechanical physics of how JSON packets traverse a Zone-Based architecture. By enforcing the Zone Vacuum Rule (dropping traffic between zoned and unzoned directories) and enforcing a Default Deny between different zones, DevCore guarantees that subagent swarms cannot bleed into unauthorized territories. Meanwhile, the inverted logic of the Self Zone ensures the Orchestrator can always maintain telemetry and control over the active Sandbox.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 26 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional ZPF operation rules into their DevCore Agentic equivalents:
 

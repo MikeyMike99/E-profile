@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_38 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.38: Source Code Evidence: Thought Vector Obfuscation & Prompt Masking
 
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-1)
 This document cites primary architectural and security specifications from `docs/Siraugga_Textbook/Chapter_37_Obscuring_Data.md` and `Chapter_38_Integrity_Authenticity.md`, defining how DevCore performs **Prompt Masking**, prevents **Semantic Steganography**, and protects **Thought Vectors** using HMAC integrity checks.
 
 ---
 
 ## Source Citation 1: Thought Vector Obscurity & Prompt Masking (`docs/Siraugga_Textbook/Chapter_37_Obscuring_Data.md`)
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-2)
 
 ```markdown
 # Location: docs/Siraugga_Textbook/Chapter_37_Obscuring_Data.md
@@ -15,6 +19,7 @@ In DevCore, this is known as **Obscuring Thought Vectors**. By utilizing Data Ma
 data can be manipulated to look completely harmless while secretly containing sensitive logic.
 
 ## 37.2 Prompt Masking (Sanitization)
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-37_2)
 
 When an Admin wants to test a new Swarm architecture, they often need to use historical Modder prompts from 
 `transcript.jsonl`. However, these transcripts contain sensitive game storylines and API keys. 
@@ -26,11 +31,13 @@ To protect this data without breaking the AI's logic flow, the Admin uses **Prom
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-3)
 - DevCore applies algorithmic Prompt Masking to raw session transcripts, replacing production secrets and proprietary prompt structures with structurally valid dummy tokens before allowing traces to be processed by auditing agents.
 
 ---
 
 ## Source Citation 2: Cryptographic Thought Integrity (`security/mantrap.py` & HMAC Verification)
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-4)
 
 ```python
 # Location: <project_root>/security/swarm_telemetry.py
@@ -47,27 +54,33 @@ def verify_thought_frame_integrity(thought_text: str, salt: bytes, expected_mac:
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-5)
 - Inter-agent message envelopes and thought frames are authenticated using salted HMAC-SHA256 with constant-time digest comparison (`compare_digest`), preventing timing attacks and thought tampering.
 
 ---
 
 ## 3. Why Order Matters in Thought Vector Sanitization
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-3)
 1. **Mask Before Logging**: Prompt masking and secret scrubbing must execute in RAM *before* frames are appended to `transcript.jsonl` on disk.
 2. **Salt Before MAC Calculation**: The CSPRNG salt must be generated and prepended to the plaintext *prior* to computing the HMAC digest.
 
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-4)
 
 ### What is constant-time comparison (`hmac.compare_digest`)?
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-6)
 Standard string equality (`==`) stops comparing as soon as the first mismatched character is found, leaking timing information to an attacker. `hmac.compare_digest` takes exactly the same amount of CPU cycles regardless of whether the strings match, neutralizing timing attacks.
 
 ### Why is Semantic Steganography dangerous in AI agents?
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-7)
 Because language models interpret meaning rather than just keywords, an attacker can disguise a malicious instruction inside innocent-looking prose (e.g. an NPC poem). To a human, it looks harmless, but the AI executes the hidden command.
 
 ---
 
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-02_38-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md`](/docs/devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md`](/docs/devlog/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md`](/docs/devlog/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE)

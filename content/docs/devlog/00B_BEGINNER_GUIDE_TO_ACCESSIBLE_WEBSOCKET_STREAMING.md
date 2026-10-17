@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-00B | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 00B: Beginner Guide to Accessible WebSocket Streaming
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,10 +9,12 @@
 ---
 
 ## The Challenge: Streaming AI to Screen Readers
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-1)
 
 When artificial intelligence models write code, they generate continuous streams of tokens, tool calls, and execution logs. In traditional command-line interfaces, this creates an unmanageable experience for developers who use screen readers (such as NVDA or JAWS).
 
 ### Why Terminals Fail for Blind Developers
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-2)
 1. **Console Tearing**: When an AI streams output to the terminal while a developer is typing, the output collides with the cursor, garbling speech output.
 2. **Key Interception**: Interactive CLI prompts (like "Do you trust this folder? [Y/n]") require raw arrow keys. Screen readers intercept arrow keys for virtual cursor navigation, causing the CLI to freeze indefinitely.
 3. **Speech Flooding**: Dumping thousands of lines of raw compiler logs directly into terminal stdout causes screen readers to read continuously for minutes, drowning out vital feedback.
@@ -18,6 +22,7 @@ When artificial intelligence models write code, they generate continuous streams
 ---
 
 ## The Solution: Decoupled WebSocket Streaming
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-3)
 
 To solve these barriers, Siraugga isolates the AI engine in a detached background subprocess and streams structured events over WebSockets to an accessible web browser interface.
 
@@ -48,8 +53,10 @@ To solve these barriers, Siraugga isolates the AI engine in a detached backgroun
 ---
 
 ## Two Critical Streaming Pillars
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-4)
 
 ### 1. The 4-Second Keep-Alive Heartbeat
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-1)
 Windows WSL 2 networking enforces aggressive TCP timeouts, severing idle connections after 30 seconds of silence. If an AI agent takes 45 seconds to analyze a codebase, the socket dies silently.
 
 Siraugga solves this with a 4-second client heartbeat:
@@ -58,6 +65,7 @@ Siraugga solves this with a 4-second client heartbeat:
 - TCP connections remain actively registered in the Windows network stack.
 
 ### 2. The Guaranteed Delivery Queue (ACK Protocol)
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-2)
 When developers switch browser tabs or temporarily lose network connectivity, events must not be lost.
 
 1. **Monotonic Sequence (`seq`)**: Every event emitted by the server receives an incrementing integer (`seq: 1`, `seq: 2`, ...).
@@ -68,6 +76,7 @@ When developers switch browser tabs or temporarily lose network connectivity, ev
 ---
 
 ## Why Order Matters in WebSocket Streaming
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-5)
 
 1. **Heartbeat Startup Before Agent Execution**:
    - The keep-alive ping loop must start as soon as the WebSocket opens, *before* triggering long agent tasks. Otherwise, heavy startup workloads can stall the socket before the first ping fires.
@@ -79,12 +88,16 @@ When developers switch browser tabs or temporarily lose network connectivity, ev
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-6)
 
 ### Q: What is a WebSocket and why not just use regular HTTP?
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-7)
 **A:** Standard HTTP requires the browser to ask for data every time ("polling"). A WebSocket is an open, two-way pipe that stays connected, allowing the server to push new AI tokens to the screen the exact millisecond they are generated.
 
 ### Q: Why do screen readers need HTML instead of a terminal?
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-8)
 **A:** HTML has semantic tags (`<button>`, `<main>`, `<textarea>`, ARIA live regions) that tell screen readers what an element does. Terminals only have raw pixels and text characters, making it impossible for screen readers to differentiate between a button, an alert, and a code block.
 
 ### Q: What happens if my browser disconnects for 10 seconds?
+[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-9)
 **A:** Thanks to the ACK protocol, the server holds your unacknowledged messages in memory. When your browser reconnects, it sends its last received sequence number, and the server replays everything you missed seamlessly.

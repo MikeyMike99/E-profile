@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-04_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 04_16: Autonomous Self-Healing Boot Architecture
 
 An architectural guide to Siraugga's **Pre-Flight Supervisor & 3-Tier Self-Healing Loop**—ensuring continuous server availability by detecting syntax errors, performing instant rollbacks, and spawning headless auto-repair agents.
@@ -5,6 +7,7 @@ An architectural guide to Siraugga's **Pre-Flight Supervisor & 3-Tier Self-Heali
 ---
 
 ## Architectural Overview & Topology
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-1)
 
 In conventional web development, a single missing colon or unclosed parenthesis in a server file crashes the process at startup, leaving users with a dead connection.
 
@@ -50,6 +53,7 @@ Siraugga solves this via a **Dual-Layer Gateway and 3-Tier Self-Healing Pipeline
 ---
 
 ## The 3 Tiers of Self-Healing Explained
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-2)
 
 1. **Pre-Flight Staging Quarantine**:
    - Any patch staged in `core/patches/` is compiled before it touches live files. If invalid, it is quarantined immediately.
@@ -63,6 +67,7 @@ Siraugga solves this via a **Dual-Layer Gateway and 3-Tier Self-Healing Pipeline
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-3)
 
 In autonomous self-healing, recovery sequence protects stability:
 1. **Quarantine Staged Patches Before Core Engine Scan**: Broken patches must be filtered out first so they cannot contaminate the engine scan.
@@ -72,6 +77,7 @@ In autonomous self-healing, recovery sequence protects stability:
 ---
 
 ## Reusable Integration Recipe
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-4)
 
 To run pre-flight diagnostics and self-healing before starting your server:
 
@@ -95,16 +101,20 @@ def safe_start_application():
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-5)
 
 ### What is a "Headless Agent"?
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-6)
 A headless agent is an AI that runs entirely from the command line without opening a browser or chat window. It receives a task, modifies the code, and exits silently.
 
 ### Will this loop forever if the AI can't fix the bug?
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-7)
 No. The supervisor enforces a strict retry limit (`max_retries = 2`). If the file fails compilation twice, it halts and requests human assistance.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-8)
 - To understand why server crashes prompted this self-healing architecture, read [`01_PROBLEMS_ENCOUNTERED/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES.md`](/docs/devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES).
 - To inspect primary source citations of the pre-flight supervisor, view [`02_SOURCE_EVIDENCE/02_16_SELF_HEALING_BOOTSTRAP_AND_TRACEBACK_REPAIR_EVIDENCE.md`](/docs/devlog/02_16_SELF_HEALING_BOOTSTRAP_AND_TRACEBACK_REPAIR_EVIDENCE).
 - To build the complete self-healing pre-flight supervisor from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_18_PREFLIGHT_AUTONOMOUS_SELF_HEALER_FROM_SCRATCH.md`](/docs/devlog/05_18_PREFLIGHT_AUTONOMOUS_SELF_HEALER_FROM_SCRATCH).

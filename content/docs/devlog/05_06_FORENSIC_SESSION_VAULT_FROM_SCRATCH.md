@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_06 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.6: From-Scratch Creation Guide: Forensic Session Vault
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,6 +8,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-1)
 
 This guide walks you through building an encrypted **Forensic Session Vault** (`forensic_vault.py`) from a blank editor.
 
@@ -14,13 +17,16 @@ The vault solves a critical compliance dilemma: when developers clear their acti
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-2)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-3)
 ```bash
 nano forensic_vault.py
 ```
 
 ### Step 2: Implement Vault Storage & Metadata Mapping (Lines 1–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-4)
 ```python
 import hashlib
 import json
@@ -73,6 +79,7 @@ class ForensicVault:
 ---
 
 ## Why Order Matters in Forensic Archival
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-5)
 
 1. **Calculate Hash Before Moving Files**:
    - The SHA-256 integrity hash must be computed *before* copying or touching the file. This creates an unalterable cryptographic fingerprint proving the archive matches the exact live conversation.
@@ -82,6 +89,7 @@ class ForensicVault:
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-6)
 
 Verify that your vault archives transcripts and tracks ownership metadata:
 
@@ -126,9 +134,12 @@ with open('/tmp/vault_test/archive/session_ownership.json') as f:
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-7)
 
 ### Q: Why do we calculate a SHA-256 hash?
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-8)
 **A:** In legal compliance and cybersecurity audits, proving that forensic evidence has not been tampered with is essential. If anyone alters even a single letter in the archived transcript, the SHA-256 hash changes completely.
 
 ### Q: Who is allowed to read files in the vault directory?
+[//]: # (SECTION_ID: SIRA-DOC-05_06-SEC-9)
 **A:** In the Siraugga platform, the forensic vault is classified as Tier 3/Tier 5, meaning only authenticated system administrators can access or decrypt historical records.

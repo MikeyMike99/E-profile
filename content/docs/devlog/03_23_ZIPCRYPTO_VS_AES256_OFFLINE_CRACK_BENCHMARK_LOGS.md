@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-03_23 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # ZipCrypto vs AES-256 Offline Crack Benchmark Logs
 
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-1)
 This benchmark document records experimental results from the Active Threat Simulation Lab (`crack_master.py` running against archives in `playground/Zip-Files/`). It compares the brute-force velocity and attack resistance of legacy 1989 ZipCrypto against modern AES-256 encrypted archives.
 
 ---
 
 ## 2. Test Execution Trace
+[//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-2)
 
 ```text
 [OFFLINE-LAB-INIT] Loading dictionary wordlist: rockyou_sample.txt (100,000 words)...
@@ -42,6 +46,7 @@ This benchmark document records experimental results from the Active Threat Simu
 ---
 
 ## 3. Cryptographic Resistance Comparison
+[//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-3)
 
 | Metric | ZipCrypto (PKWARE 1989) | AES-256 (WinZip / pyzipper) |
 | :--- | :--- | :--- |
@@ -55,6 +60,7 @@ This benchmark document records experimental results from the Active Threat Simu
 ---
 
 ## 4. Why Order Matters in Cryptographic Benchmarks
+[//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-4)
 1. **Test Standard Wordlists Before Brute-Force**: Testing common passwords first reveals if human carelessness compromised security before running computationally heavy full sweeps.
 2. **Benchmark PBKDF2 Work Factors**: Measuring milliseconds per key test ensures key derivation is slow enough to foil attackers but fast enough to decrypt legitimately without UI lag.
 3. **Clean Decrypted Files Immediately**: Deleting extracted files as soon as verification completes prevents sensitive data from lingering in the test directory.
@@ -62,6 +68,7 @@ This benchmark document records experimental results from the Active Threat Simu
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-5)
 **Q: How did Target 2 get cracked without the password?**  
 A: ZipCrypto's internal state consists of only three 32-bit keys. If an attacker knows a few bytes of uncompressed data, they can calculate those three keys directly using linear algebra!
 

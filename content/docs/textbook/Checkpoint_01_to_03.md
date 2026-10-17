@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-TXT-CKPT01_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Module 1 Checkpoint Summary: Chapters 1 to 3
 
 This document serves as the official Module 1 Checkpoint, summarizing the core architectural security doctrines established across Chapters 1 through 3 of the DevCore framework.
@@ -5,9 +7,11 @@ This document serves as the official Module 1 Checkpoint, summarizing the core a
 ---
 
 ## Chapter 1: Asset Management & The Architecture of Paranoia
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-1)
 **Core Theme:** Defining the threat landscape and engineering layered, immutable defenses to protect the host infrastructure from both external attackers and internal autonomous AI agents.
 
 ### What Did I Learn in this Module? (Defense-in-Depth)
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-2)
 To prepare for any type of attack, DevOps engineers and security technicians must first identify assets, vulnerabilities, and threats. 
 
 **Asset Classification & Lifecycle:**
@@ -24,6 +28,7 @@ Identifying vulnerabilities requires a deep understanding of the game engine and
 To ensure the Siraugga infrastructure remains impenetrable, we implemented five distinct layers of protection: **Layering, Limiting (RBAC), Cryptographic Diversity, Rejecting Obscurity, and Operational Simplicity.**
 
 ### Key Architectural Concepts:
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-3)
 1. **Threat Identification:**
    * **Internal Threats:** Rogue Tier 2 Modders attempting path traversal, or legitimate Tier 3 Agents suffering from "Agentic Drift" (hallucinations resulting in destructive system calls).
    * **External Threats:** Adversaries attempting prompt injections via the WebSocket stream to hijack the Main Agent.
@@ -34,9 +39,11 @@ To ensure the Siraugga infrastructure remains impenetrable, we implemented five 
 ---
 
 ## Chapter 2: Operational Management & The Forensic Paradox
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-4)
 **Core Theme:** Controlling the execution environment, managing volatile telemetry, and deploying active interception tools to monitor the Zero-Trust grid.
 
 ### What Did I Learn in this Module? (Cybersecurity Operations Management)
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-5)
 **Configuration Management & OS Hardening:**
 Configuration management refers to identifying, controlling, and cryptographically auditing any changes made to the system’s established baseline. Documented configuration resources in Siraugga include Raugus routing maps, internal WebSocket/Port schemas, and API naming conventions. Creating a secure host OS environment requires configuring aggressive file-level access controls (RBAC), auditing all generated log files, and permanently disabling default unauthenticated endpoints.
 
@@ -49,6 +56,7 @@ The management of security log data demands rigid procedures for *generating, tr
 Traditional packet analyzers (packet sniffers) intercept and log network traffic. In Siraugga, this is handled by the **Semantic Sniffer**. This internal protocol analyzer performs five critical functions: *traffic logging, plugin disruption analysis (network problems), detection of sandbox misuse, detection of architectural intrusion attempts, and the immediate isolation of exploited agents.*
 
 ### Key Architectural Concepts:
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-6)
 1. **The Mathematical Baseline:**
    * Absolute enforcement of system state, including sandboxed `cwd` paths, strict `Strict Path Defenses` file descriptors, and the 4-second TCP keep-alive heartbeat.
 2. **The Forensic Paradox & Cold Storage:**
@@ -67,9 +75,11 @@ Traditional packet analyzers (packet sniffers) intercept and log network traffic
 ---
 
 ## Chapter 3: The Mandate of Governance (Business Policies)
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-7)
 **Core Theme:** Establishing the absolute rules of engagement for both human operators and autonomous AI agents through rigid, mathematically enforced policies.
 
 ### What Did I Learn in this Module? (Security Policies, Regulations, and Standards)
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-8)
 **The Foundation of Governance:**
 Business policies define the absolute standards of correct behavior for the architecture and its operators. In Siraugga, policies mathematically define the activities that are allowed on the Zero-Trust network, setting a rigid baseline of acceptable use. If behavior that violates this policy is detected—such as an AI hallucinating an unauthorized script—it is treated instantly as an active security breach. 
 
@@ -83,6 +93,7 @@ Because Siraugga acts as a remote web portal plugin, Bring Your Own Device/Code 
 Finally, there are external regulations regarding network data security. Tier 5 SysAdmins and DevCore engineers must be intimately familiar with the laws and codes of ethics that bind Information Systems Security (INFOSEC) professionals, ensuring the architecture remains compliant with global data privacy standards.
 
 ### Key Architectural Concepts:
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-9)
 1. **The Three Pillars of Governance:**
    * **Framework Policies (Company Policies):** Dictate acceptable system interaction and data privacy for the overall ecosystem.
    * **Entity Mandates (Employee Policies):** Define resource constraints. For AI agents, this means hardcoded API token budgets, CPU limits, and lifecycle timeouts.
@@ -98,6 +109,7 @@ Finally, there are external regulations regarding network data security. Tier 5 
 ---
 
 ### The Purpose of Siraugga (A Comparative Analysis)
+[//]: # (SECTION_ID: SIRA-TXT-CKPT01_03-SEC-10)
 As we conclude this checkpoint, we must remind ourselves *why* this architecture exists. What is the purpose of Siraugga compared to other AI development tools on the market, and why is it definitively safer?
 
 Legacy AI assistants (such as general-purpose chatbots or standard coding copilots) inevitably fall into two dangerous operational extremes:

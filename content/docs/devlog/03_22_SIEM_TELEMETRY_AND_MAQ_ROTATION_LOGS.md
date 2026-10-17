@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-03_22 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # SIEM Telemetry & MAQ Rotation Diagnostic Logs
 
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-1)
 This test suite verifies file rotation, deque memory constraints, and JSONL data integrity under heavy multi-agent swarm telemetry. It subjects `security/central_logger.py` to a flood of 50,000 security events to prove that storage remains bounded and zero logs are corrupted.
 
 ---
 
 ## 2. Test Execution Trace
+[//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-2)
 
 ```text
 [STRESS-TEST-INIT] Spawning 10 concurrent worker threads...
@@ -40,6 +44,7 @@ This test suite verifies file rotation, deque memory constraints, and JSONL data
 ---
 
 ## 3. Telemetry Performance Metrics Summary
+[//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-3)
 
 | Diagnostic Metric | Target Specification | Measured Result | Status |
 | :--- | :--- | :--- | :--- |
@@ -51,6 +56,7 @@ This test suite verifies file rotation, deque memory constraints, and JSONL data
 ---
 
 ## 4. Why Order Matters in Telemetry Diagnostics
+[//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-4)
 1. **Rotate File Before Creating New Writes**: Shifting existing files to backup indices before accepting new lines prevents appending to an already oversized file.
 2. **Verify JSON Integrity After Concurrency**: Testing parser validity after concurrent thread writes proves that atomic file write locks prevented intermingled line fragments.
 3. **Purge Excess Backups From Highest Index**: Deleting `log.5` before renaming `log.4` to `log.5` ensures the OS never encounters a file collision during rotation.
@@ -58,6 +64,7 @@ This test suite verifies file rotation, deque memory constraints, and JSONL data
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-5)
 **Q: How did 10 threads write to the same file without jumbling text?**  
 A: In modern operating systems, write operations opened in append mode (`a`) with complete lines ending in `\n` are typically atomic for payloads under 4 KB.
 

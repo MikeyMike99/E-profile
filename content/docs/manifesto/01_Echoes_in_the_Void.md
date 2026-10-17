@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: ECHO-MAN-01 | VERSION: v1.1 | SCOPE: Echoes of the World (Audio Game))
+
 # Chapter 1: ECHOES_OF_THE_WORLD (The True Origin)
 
 Every great technological ecosystem begins with some thing or another that could not be satisfied. For some, it is the pursuit of profit; for others, academic curiosity. But the foundation of my journey was forged in something much deeper: the uncompromising desire to reclaim a world that had faded into silence.
@@ -89,6 +91,7 @@ Getting that client-server authority model right was tricky. I had to determine 
 ---
 
 ### 🔗 Technical Cross-References & Architectural DNA
+[//]: # (SECTION_ID: ECHO-MAN-01-SEC-1)
 
 * **Origin Architecture Blueprint**:
   * [04_26 The Origin Architecture: Echoes of the World](/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD) — The core architectural blueprint, foundational breakthroughs, and four-corner coordinate math.

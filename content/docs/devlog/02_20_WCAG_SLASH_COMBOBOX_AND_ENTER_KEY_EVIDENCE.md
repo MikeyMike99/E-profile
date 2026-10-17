@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # WCAG Slash Combobox & Enter Key Resolution Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_20-SEC-1)
 This document contains source code evidence from `sandbox/templates/index.html` (commits `659a312` and `04627a1`). It documents how ARIA Combobox semantics and event listener coordination resolved the Enter key prompt submission conflict while complying with WCAG 2.1 AA screen reader standards.
 
 ---
 
 ## 2. ARIA Semantic Markup Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_20-SEC-2)
 The command menu was upgraded from an unlabelled `<div>` to a fully accessible ARIA 1.2 Combobox listbox:
 
 ```html
@@ -32,6 +36,7 @@ The command menu was upgraded from an unlabelled `<div>` to a fully accessible A
 ---
 
 ## 3. Enter Key Conflict Resolution Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_20-SEC-3)
 In earlier iterations, pressing Enter while highlighting a menu command submitted the prompt prematurely. The following check was added to `handleKeyDown` in `templates/index.html`:
 
 ```javascript
@@ -56,6 +61,7 @@ function handleKeyDown(e) {
 ---
 
 ## 4. Arrow Key Navigation and State Sync Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_20-SEC-4)
 Arrow keys update visual focus and ARIA attributes simultaneously:
 
 ```javascript
@@ -85,6 +91,7 @@ function navigateSlashMenu(direction) {
 ---
 
 ## 5. Why Order Matters in Event Handling
+[//]: # (SECTION_ID: SIRA-DOC-02_20-SEC-5)
 1. **Check Menu State Before Sending**: The event handler must check if `aria-selected="true"` exists before invoking `sendPrompt()`. If `sendPrompt()` executes first, incomplete commands are dispatched to the server.
 2. **Clear Prior Selection Before Setting New One**: Leaving multiple items with `aria-selected="true"` confuses assistive tech and produces erroneous screen reader readouts.
 3. **Scroll into View After State Assignment**: Updating accessibility attributes before calling `scrollIntoView()` ensures keyboard users don't trigger layout shifts before the item is recognized as active.
@@ -92,6 +99,7 @@ function navigateSlashMenu(direction) {
 ---
 
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_20-SEC-6)
 **Q: Why use `button role="option"` instead of an `<a>` or `<li>`?**  
 A: A button natively supports keyboard focus and click events, and assigning `role="option"` informs screen readers that it belongs to the parent `role="listbox"`.
 

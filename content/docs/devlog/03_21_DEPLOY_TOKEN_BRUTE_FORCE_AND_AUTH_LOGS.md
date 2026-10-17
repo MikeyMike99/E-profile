@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-03_21 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Deployment Token Brute-Force & Auth Diagnostic Logs
 
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-1)
 This test suite verifies the security, rate-limiting resistance, and credential isolation of the Headless Deployment Token protocol (`login.html` and `/api/auth/login`). It validates that valid tokens grant immediate access while automated brute-force attacks are halted by exponential rate limiting.
 
 ---
 
 ## 2. Test Execution Trace
+[//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-2)
 
 ```text
 [AUTH-TEST-INIT] Booting server in headless mode...
@@ -42,6 +46,7 @@ This test suite verifies the security, rate-limiting resistance, and credential 
 ---
 
 ## 3. Security Metrics & Verification Summary
+[//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-3)
 
 | Security Check | Expected Policy | Measured Behavior | Status |
 | :--- | :--- | :--- | :--- |
@@ -53,6 +58,7 @@ This test suite verifies the security, rate-limiting resistance, and credential 
 ---
 
 ## 4. Why Order Matters in Authentication Defense
+[//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-4)
 1. **Drop Unauthenticated WebSockets Before Accepting Frames**: Inspecting credentials during the HTTP upgrade prevents malicious actors from sending malicious JSON payloads into the server's event loop.
 2. **Apply IP Jail Before Evaluating Token String**: Checking if the caller is banned before comparing the submitted token prevents timing attacks and spares CPU resources.
 3. **Log Security Incidents Before Returning HTTP 429**: Writing the breach to the SIEM log before dispatching the response ensures forensic records exist even if the attacker terminates the socket early.
@@ -60,6 +66,7 @@ This test suite verifies the security, rate-limiting resistance, and credential 
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-5)
 **Q: Why was Attempt 6 blocked even though it guessed the correct token?**  
 A: Because the IP address was jailed after 5 failed attempts! Once jailed, the server rejects all requests from that IP address, preventing lucky late guesses.
 

@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_31 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Security Headers & CSP DAST Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_31-SEC-1)
 This document records source code evidence from `security/security_headers.py` and `core/routes/system.py`. It demonstrates how DevCore eliminates OWASP ZAP baseline vulnerability warnings (`[10020, 10021, 10038, 10063, 90004]`), applies Content Security Policy (CSP) headers, and triggers automated Red Team DAST scans.
 
 ---
 
 ## 2. Universal Security Headers Middleware Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_31-SEC-2)
 Applied to all outbound Quart responses via an `@app.after_request` hook:
 
 ```python
@@ -37,6 +41,7 @@ async def apply_security_headers(response):
 ---
 
 ## 3. CSP Reporting & Red Team Strike Routes Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_31-SEC-3)
 Handled inside `core/routes/system.py`:
 
 ```python
@@ -68,6 +73,7 @@ async def api_trigger_red_team():
 ---
 
 ## 4. Why Order Matters in Security Headers
+[//]: # (SECTION_ID: SIRA-DOC-02_31-SEC-4)
 1. **Apply Headers in `@after_request` Hook**: Registering the middleware globally guarantees that all API endpoints—including error pages (404 and 500)—carry security headers.
 2. **Return HTTP 204 on CSP Reports**: Returning `204 No Content` minimizes network overhead for background browser telemetry reporting.
 3. **Validate Tier 5 Role Before DAST Execution**: Because running a Red Team strike consumes significant CPU and network resources, strict RBAC authorization must precede task creation.
@@ -75,6 +81,7 @@ async def api_trigger_red_team():
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_31-SEC-5)
 **Q: What does `default-src 'self'` mean in CSP?**  
 A: It is a strict whitelist rule that says: by default, only load images, scripts, and fonts that originate from the exact same domain as the web page.
 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.1: From-Scratch Creation Guide: Asynchronous Quart Streaming Server
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,6 +8,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-1)
 
 This guide teaches beginner developers how to build an asynchronous Quart WebSocket server with a Guaranteed Delivery Queue (ACK protocol) and 4-second keep-alive heartbeats from a completely blank text editor.
 
@@ -14,14 +17,17 @@ By the end of this tutorial, you will have a working streaming backend that surv
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-2)
 
 ### Step 1: Open a Blank Editor
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-3)
 Create a new file named `server.py`:
 ```bash
 nano server.py
 ```
 
 ### Step 2: Write Imports and Global Deque Buffer (Lines 1–15)
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-4)
 ```python
 import asyncio
 import json
@@ -38,6 +44,7 @@ EVENT_BUFFER = deque(maxlen=1000)
 - **Line 9–10**: `EVENT_SEQ` tracks event ordering. `deque(maxlen=1000)` ensures memory never leaks by automatically discarding the oldest items if the buffer exceeds 1,000 entries.
 
 ### Step 3: Implement the WebSocket Streaming Route (Lines 16–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-5)
 ```python
 @app.websocket('/ws')
 async def ws_endpoint():
@@ -76,6 +83,7 @@ async def ws_endpoint():
 ```
 
 ### Step 4: Add the Entrypoint (Lines 46–50)
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-6)
 ```python
 if __name__ == '__main__':
     print("Starting Asynchronous Quart Streaming Server on Port 5000...")
@@ -85,6 +93,7 @@ if __name__ == '__main__':
 ---
 
 ## Why Order Matters in Server Architecture
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-7)
 
 1. **Global Deque Initialization Before Route Binding**:
    - The message buffer and sequence locks must exist in memory *before* binding the `/ws` decorator. If connections arrive before data structures are instantiated, requests crash with `NameError`.
@@ -96,6 +105,7 @@ if __name__ == '__main__':
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-8)
 
 Verify that your streaming server boots and responds to heartbeats:
 
@@ -118,9 +128,12 @@ asyncio.run(test())
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-9)
 
 ### Q: Why do we use `list(EVENT_BUFFER)` when replaying events?
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-10)
 **A:** In asynchronous programming, the underlying `deque` might have new items added while you are looping over it. Converting it to a temporary `list` creates a safe snapshot, preventing `RuntimeError: deque mutated during iteration`.
 
 ### Q: What is `popleft()`?
+[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-11)
 **A:** Standard lists delete from the beginning in $O(n)$ time by shifting every element. A `deque` uses a doubly-linked list that removes from the left in $O(1)$ instantaneous time, saving CPU cycles.

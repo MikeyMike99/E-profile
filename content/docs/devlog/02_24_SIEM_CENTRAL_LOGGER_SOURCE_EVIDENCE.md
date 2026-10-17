@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Central SIEM Logger & Master Alert Queue Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-1)
 This document contains source code evidence from `security/central_logger.py`. It details the central telemetry engine that aggregates security events across multi-agent swarms, rotates disk logs, and manages the in-memory Master Alert Queue (MAQ).
 
 ---
 
 ## 2. Event Model & Severity Enumeration Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-2)
 Security events follow a strict, standardized schema with cryptographic timestamps:
 
 ```python
@@ -45,6 +49,7 @@ class SecurityEvent:
 ---
 
 ## 3. Log Rotation & Master Alert Queue (MAQ) Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-3)
 The logger enforces file rotation when `devcore_master.jsonl` hits 10 MB and maintains a bounded memory queue:
 
 ```python
@@ -86,6 +91,7 @@ class CentralSIEMLogger:
 ---
 
 ## 4. Why Order Matters in Telemetry Logging
+[//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-4)
 1. **Check Rotation Before File Open**: Checking file size before opening in append mode ensures bloated files are rotated before new bytes are written.
 2. **Write Disk Before Memory Notification**: Guaranteeing the event is persisted on disk prevents losing intrusion records if an out-of-memory error crashes the server during memory queue dispatch.
 3. **UTC ISO Timestamps**: Using `time.gmtime()` prevents timezone confusion when developers in different regions analyze forensic records.
@@ -93,6 +99,7 @@ class CentralSIEMLogger:
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-5)
 **Q: Why use `deque(maxlen=1000)` instead of a Python `list`?**  
 A: A list grows infinitely until memory is exhausted. A `deque` automatically discards the oldest element once it reaches 1,000 items with O(1) performance.
 

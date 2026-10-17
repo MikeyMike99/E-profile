@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: ENCR-VAULT-LOG | VERSION: v1.2 | SCOPE: EncryptMe Multi-User Vault)
+
 # encrypt_me Engineering Development Log
 
 ## Sprint 1: Security Hardening & Social Engineering Defense
+[//]: # (SECTION_ID: ENCR-VAULT-LOG-SEC-1)
 * **Date:** Sunday, 01 February 2026 (18:00 – 20:29)
 * **Objective:** Mitigating social engineering and password leakage attack vectors.
 * **Achievements:**
@@ -12,6 +15,7 @@
 ---
 
 ## Sprint 2: Market Analysis & Cryptographic Landscape
+[//]: # (SECTION_ID: ENCR-VAULT-LOG-SEC-2)
 * **Date:** Tuesday, 03 February 2026
 * **Objective:** Industry benchmarking and future quantum-resistant key scheduling.
 * **Findings:**

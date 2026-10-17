@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH40 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 40: Public Key Cryptography and Tool Signing
 
 ## 40.1 Agentic Digital Signatures
+[//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-40_1)
 
 In a decentralized Swarm, anyone can connect to the Orchestrator's WebSocket. To prevent anonymous attackers from injecting malicious commands, the Orchestrator demands mathematical proof of identity for every critical action. This is achieved through **Agentic Digital Signatures**.
 
@@ -12,6 +15,7 @@ Digital signatures rely on Asymmetric Cryptography (Public/Private key pairs) to
 *(Note: DevCore natively supports the three DSS algorithms for generating signatures: DSA, RSA, and ECDSA).*
 
 ## 40.2 Tool Signing
+[//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-40_2)
 
 The most critical application of Digital Signatures in the Siraugga Engine is **Tool Signing** (Code Signing). 
 
@@ -20,6 +24,7 @@ When a Tier 5 Admin writes a new Python script or bash utility for the AI to use
 If a hacker manages to upload a malicious script to the `/playground/` and tricks the AI into executing it, the Orchestrator will intercept the execution. It will check the script for the Admin's digital signature. Because the hacker does not possess the Admin's Private Key, the script will be unsigned, and the Orchestrator will violently drop the execution, saving the Engine from compromise.
 
 ## 40.3 The Modder Execution Workflow
+[//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-40_3)
 
 When a Modder issues a highly sensitive command to the Swarm, the Orchestrator forces them to mathematically sign the prompt. The workflow operates as follows:
 
@@ -38,10 +43,12 @@ When a Modder issues a highly sensitive command to the Swarm, the Orchestrator f
 ---
 
 ## Chapter 40 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-1)
 
 Chapter 40 proves that Asymmetric Cryptography is used for far more than just hiding data—it is used to prove identity. By implementing Tool Signing, Admins prevent AIs from executing unverified malware. By requiring Modders to digitally sign their prompts, the Orchestrator establishes absolute Non-Repudiation, ensuring every action in the Swarm is mathematically traceable.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 40 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-2)
 
 *   **Public Key Cryptography** $\rightarrow$ **Public Key Cryptography:** The use of dual-key asymmetric math (RSA, ECDSA).
 *   **Digital Signatures** $\rightarrow$ **Agentic Digital Signatures:** An encrypted hash appended to a payload that proves identity, integrity, and non-repudiation.

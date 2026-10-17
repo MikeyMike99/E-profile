@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-04_10 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 04_10: Zero-Trust Subagent Audio Event Architecture
 
 An architectural guide to Siraugga's **Dual-Channel Event Pipeline**—separating conversational AI token streams from real-time auditory notifications using out-of-band OS kernel tail processes.
@@ -5,6 +7,7 @@ An architectural guide to Siraugga's **Dual-Channel Event Pipeline**—separatin
 ---
 
 ## The Dual-Channel Philosophy
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-1)
 
 In accessible software for screen reader developers, audio cues provide vital situational awareness. However, asking an AI model to decide when to make noises introduces latency, wastes tokens, and creates security risks.
 
@@ -46,6 +49,7 @@ Siraugga enforces a **Zero-Trust Audio Architecture**:
 ---
 
 ## Architectural Components
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-2)
 
 1. **The Native OS Tailer**:
    - Rather than polling Python `open()`, the agent manager launches an OS-native `tail -n 0 -F` (Linux) or PowerShell `Get-Content -Wait -Tail 0` (Windows) subprocess.
@@ -60,6 +64,7 @@ Siraugga enforces a **Zero-Trust Audio Architecture**:
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-3)
 
 In decoupled event pipelines, initialization sequence prevents missed cues:
 1. **Pre-Load Audio Buffers in Browser**: Audio files (`completed.wav`, `message.wav`) must be fetched and decoded into browser RAM during page load so playback is instantaneous.
@@ -69,6 +74,7 @@ In decoupled event pipelines, initialization sequence prevents missed cues:
 ---
 
 ## Reusable Integration Recipe
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-4)
 
 To add zero-trust audio notifications to your own multi-process agent pipeline in 2 minutes:
 
@@ -101,19 +107,24 @@ async def watch_subagent_events(transcript_path: str, broadcast_fn):
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-5)
 
 ### Why not let the AI send `{"sound": "completed"}`?
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-6)
 If the AI encounters a Python error, runs out of tokens, or gets stuck in a loop, it never sends the sound! By listening to the operating system transcript directly, the audio alert plays even if the AI crashes.
 
 ### Does this interfere with speech synthesizers like NVDA?
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-7)
 No. Short non-vocal audio chimes (chimes and clicks) play through the default audio output device without occupying the screen reader's virtual buffer.
 
 ### What happens if the transcript file doesn't exist yet?
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-8)
 The watcher runs a small 3-second retry loop (checking every 100ms) until the subagent creates the file, ensuring zero race-condition crashes.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-9)
 - To understand why standard Python file reading failed, read [`01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md`](/docs/devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS).
 - To inspect the primary source code of the tailer, view [`02_SOURCE_EVIDENCE/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE.md`](/docs/devlog/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE).
 - To build the complete audio watcher daemon from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_12_NATIVE_TRANSCRIPT_TAILER_AUDIO_ROUTER_FROM_SCRATCH.md`](/docs/devlog/05_12_NATIVE_TRANSCRIPT_TAILER_AUDIO_ROUTER_FROM_SCRATCH).

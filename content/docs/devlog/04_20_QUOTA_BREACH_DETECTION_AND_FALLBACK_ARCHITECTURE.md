@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-04_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Model Quota Breach Detection & Graceful Fallback Architecture
 
 ## 1. Architectural Concept & Core Objective
+[//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-1)
 Modern agentic workflows consume significant LLM context and rate limits. When developers selected heavy reasoning models (such as `pro` or high-effort reasoning aliases), sudden API rate limits (HTTP 429) or token exhaustion would cause catastrophic silent failures or sudden subagent crashes.
 
 The Quota Breach Detection & Fallback Architecture introduces an end-to-end protective feedback loop:
@@ -37,6 +40,7 @@ The Quota Breach Detection & Fallback Architecture introduces an end-to-end prot
 ---
 
 ## 2. Low-Effort Flash Default Strategy
+[//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-2)
 To prevent unexpected developer billing spikes and context starvation, all system layers enforce low-effort models by default:
 - **`server.py` WebSocket Handler**: Defaults empty model requests to `flash`.
 - **`agent_manager.py` Subprocess Launcher**: Defaults task configurations to `flash_lite` or `flash` unless explicitly overridden.
@@ -45,6 +49,7 @@ To prevent unexpected developer billing spikes and context starvation, all syste
 ---
 
 ## 3. UI Notification & ARIA Live Region Announcement
+[//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-3)
 When a fallback event arrives at the browser:
 1. **Banner Injection**: A sticky top banner element (`#quota-warning-banner`) is toggled from `hidden` to visible with high-contrast warning colors.
 2. **Selector Sync**: The `<select id="model-select">` value is programmatically updated to reflect the active fallback model.
@@ -53,6 +58,7 @@ When a fallback event arrives at the browser:
 ---
 
 ## 4. Why Order Matters in Quota Handling
+[//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-4)
 1. **Emit Notification Before Downstream Calls**: Alerting the client immediately upon catching the 429 error ensures the developer understands why response speeds or reasoning depths have shifted.
 2. **Update Dropdown Before Subsequent Prompts**: If the dropdown is not synchronized before the user sends their next message, the frontend will attempt to re-request the exhausted model, triggering an endless 429 loop.
 3. **Graceful Degradation Over Process Termination**: Instead of aborting the entire developer session, downgrading to Flash maintains workflow continuity.
@@ -60,6 +66,7 @@ When a fallback event arrives at the browser:
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-5)
 **Q: What HTTP status code signifies a quota breach?**  
 A: HTTP 429 (`Too Many Requests` or `RESOURCE_EXHAUSTED`), returned by upstream LLM API gateways.
 

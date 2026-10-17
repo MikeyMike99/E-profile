@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # PyWebView Desktop Wrapper Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-1)
 This document records source code evidence for the standalone native desktop wrapper in `desktop_app.py`. It integrates the Quart/Hypercorn ASGI backend with `pywebview`, providing a zero-dependency desktop UI for Windows and Linux without spawning external browser windows.
 
 ---
 
 ## 2. Console Redirection & Background Server Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-2)
 When compiled with `--windows-disable-console`, standard output and error handles are initialized to `None`. Writing to them results in silent crashes. `desktop_app.py` redirects them to local log files:
 
 ```python
@@ -28,6 +32,7 @@ except ImportError:
 ---
 
 ## 3. Hypercorn ASGI Threading Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-3)
 The Quart server is launched in a background daemon thread with its own `asyncio` event loop:
 
 ```python
@@ -59,6 +64,7 @@ def start_server():
 ---
 
 ## 4. Main Thread GUI Event Pump & Lifecycle Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-4)
 The primary thread blocks on `webview.start()`, gracefully signaling the server thread when the user closes the window:
 
 ```python
@@ -96,6 +102,7 @@ if __name__ == "__main__":
 ---
 
 ## 5. Why Order Matters in GUI Initialization
+[//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-5)
 1. **Redirect Stdout Before Imports**: If an imported module attempts to print while `sys.stdout` is `None`, Python raises an immediate `AttributeError` before error handlers can initialize.
 2. **Readiness Probe Before Window Launch**: Launching `webview.create_window` before the ASGI server socket is listening causes the window to display a connection error.
 3. **Daemon Threading for Server**: Setting `daemon=True` on the server thread ensures that if the main window exits abruptly, the operating system reaps the thread cleanly.
@@ -103,6 +110,7 @@ if __name__ == "__main__":
 ---
 
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-6)
 **Q: What does `sys.stdout = open(..., buffering=1)` mean?**  
 A: `buffering=1` enables line-buffering. Every time `print()` outputs a line, it writes to disk immediately rather than waiting in an in-memory buffer.
 

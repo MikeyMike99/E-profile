@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_10 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.10: From-Scratch Creation Guide: WSL/Windows File Bridge
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,6 +8,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-1)
 
 This guide walks you through building a **Two-Stage Windows-to-WSL File Transfer Bridge** (`wsl_io_bridge.py`) from a blank editor.
 
@@ -14,13 +17,16 @@ This utility completely eliminates the "Broken Pipe" and silent file truncation 
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-2)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-3)
 ```bash
 nano wsl_io_bridge.py
 ```
 
 ### Step 2: Implement the Two-Stage Transfer Function (Lines 1–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-4)
 ```python
 import os
 import subprocess
@@ -56,6 +62,7 @@ def transfer_to_wsl(file_content: str, linux_dest_path: str):
 ---
 
 ## Why Order Matters in Host-to-WSL Transfers
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-5)
 
 1. **Close Windows File Descriptor Before Invoking Copy**:
    - The file handle must exit the `with tempfile` context manager *before* `wsl.exe` tries to copy it. If Windows still holds an exclusive write lock, the Linux copy command will fail with a sharing violation.
@@ -67,6 +74,7 @@ def transfer_to_wsl(file_content: str, linux_dest_path: str):
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-6)
 
 Verify that your transfer bridge moves files without pipe corruption:
 
@@ -94,9 +102,12 @@ print('[PASS] Cross-OS file bridge verified with 100% byte integrity!')
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-7)
 
 ### Q: Why not use `wsl.exe bash -c "echo 'text' > file"`?
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-8)
 **A:** If your text contains single quotes, double quotes, dollar signs (`$`), or backticks, Bash will attempt to evaluate them as shell variables or commands, corrupting your text. Using file copies avoids all shell escaping issues.
 
 ### Q: Does this work for binary files (like images or zip archives)?
+[//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-9)
 **A:** Yes! Simply open the temporary file in binary mode (`mode='wb'`) and write raw bytes. The `wsl.exe cp` command will transfer the binary file flawlessly.

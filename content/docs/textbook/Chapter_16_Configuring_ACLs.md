@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 16: Configuring Agentic Control Lists
 
 ## 16.1 Crafting the Agentic Policy
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-16_1)
 
 Before a Tier 5 Admin configures a complex Agentic Control List (ACL) in the live engine, strict deployment procedures must be followed. A single typo in an ACL can instantly sever the connection for an entire Modder Swarm or accidentally grant an AI root access.
 
@@ -10,10 +13,12 @@ When configuring an ACL for the `Task Orchestrator Module`, it is mandated that 
 3.  **Test in the Crucible:** Always thoroughly test the ACL in the Staging Crucible to ensure it doesn't trigger an accidental Semantic Mantrap lock-out.
 
 ## 16.2 Standard and Extended ACL Syntax (`agy` CLI)
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-16_2)
 
 DevCore allows Admins to configure these lists via the native `agy` Command Line Interface. While legacy configurations used arbitrary numbers, **Named ACLs** are the absolute standard.
 
 ### Standard Named Agentic ACLs
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-1)
 Standard ACLs filter strictly based on the Agent's identity (UUID) or the Modder's subnet. To enter the standard configuration mode:
 
 ```bash
@@ -25,6 +30,7 @@ agy(config-std-nacl)# exit
 ```
 
 ### Extended Named Agentic ACLs
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-2)
 Extended ACLs are significantly more complex. They filter by Identity (UUID) *and* by Semantic Directory (similar to network Protocols and Ports). 
 
 ```bash
@@ -36,6 +42,7 @@ agy(config-ext-nacl)# permit tcp host Agent-104 any eq /playground/
 *Note: The `log` keyword can be appended to the end of any ACE. This forces the Orchestrator to generate an informational message in `transcript.jsonl` every time the rule is matched. Because logging is computationally expensive, it should only be used for active security auditing.*
 
 ## 16.3 Translating Ports to Semantic Directories
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-16_3)
 
 In traditional networking, extended ACLs filter based on Internet Protocols (TCP, UDP) and Port Numbers (80 for HTTP, 22 for SSH). In DevCore, these concepts translate directly to **Semantic Directories governed by the Raugus Resolver**.
 
@@ -52,6 +59,7 @@ agy(config)# acl extended 100 permit tcp any any eq 80
 ```
 
 ## 16.4 Stateful Agentic Firewalls (The `established` Keyword)
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-16_4)
 
 Perhaps the most critical security feature in the DevCore filtering engine is the `established` keyword, a 1st-generation firewall feature adapted to prevent **Prompt Injections**.
 
@@ -67,10 +75,12 @@ The `established` parameter dictates that a match only occurs if the returning J
 ---
 
 ## Chapter 16 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-3)
 
 Chapter 16 translates the dense syntax of legacy networking ACLs directly into the native Siraugga `agy` command line. By mapping traditional network ports to physical Sandbox directories via the Raugus Resolver, Tier 5 Admins can utilize standard ACL syntax to effortlessly lock down sensitive core engine files while leaving the `playground` folders open for the Swarm. Additionally, the introduction of the `established` keyword provides the framework its ultimate defense against external prompt injections, ensuring that the AI dictates the conversation, not the internet.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 16 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH16-SEC-4)
 
 To maintain absolute clarity, here is the master translation of traditional ACL syntax terminology into their DevCore Agentic equivalents established in this chapter:
 

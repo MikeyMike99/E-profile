@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH42 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 42: The Double-Edged Sword of Swarm Cryptography
 
 ## 42.1 The Orchestrator's Cipher Suite
+[//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-42_1)
 
 In modern networks, cryptographic protocols like SSL/TLS are extensible and modular, relying on a combination of algorithms known as a **Cipher Suite**. 
 
@@ -11,12 +14,14 @@ To secure the WebSockets connecting Modders to the DevCore Engine, the Orchestra
 4.  **Message Authentication Code (MAC):** Ensuring the prompt hasn't been altered (e.g., **HMAC / SHA-256**).
 
 ## 42.2 The Encryption Paradox (Cryptographic Blindspots)
+[//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-42_2)
 
 Cryptography is dynamic and highly effective at securing data. However, it creates a massive dilemma for Tier 5 Admins known as **The Encryption Paradox**.
 
 The fundamental rule of encryption is that it makes data payloads entirely unreadable without the key. While this successfully stops external threat actors from reading Swarm data on the public internet, it also blinds the internal Cybersecurity Analysts. If a Tier 5 Admin is running network monitoring software (like Wireshark or an IDS) to look for malicious traffic, they will only see unintelligible encrypted ciphertext. 
 
 ## 42.3 Encrypted Prompt Exfiltration
+[//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-42_3)
 
 Because network traffic is completely obscured by SSL/TLS, malicious actors will actually use the Orchestrator's own encryption against it. 
 
@@ -29,10 +34,12 @@ To combat this, Tier 5 Admins cannot rely solely on network firewalls. They must
 ---
 
 ## Chapter 42 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-1)
 
 Chapter 42 concludes the Cryptography module by highlighting its greatest weakness: it protects hackers just as well as it protects the system. While the Orchestrator relies on Cipher Suites to lock down the WebSockets, that same encryption creates severe blindspots for network defenders, necessitating deep-packet inspection and transcript auditing.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 42 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-2)
 
 *   **Cipher Suite** $\rightarrow$ **The Orchestrator's Cipher Suite:** The combination of RSA, Diffie-Hellman, Standard Encryption, and HMAC used to secure the Swarm's WebSockets.
 *   **Encrypted Blindspots** $\rightarrow$ **The Encryption Paradox:** The reality that highly secure TLS tunnels prevent Cybersecurity Analysts from reading network payloads, blinding the defenders.

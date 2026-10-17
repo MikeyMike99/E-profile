@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: JOSH-PLAY-05 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+
 # Chapter 5: Beginner's Step-by-Step Guide to Creating `compile_joshy.bat` From Scratch
 
 - **Previous**: [`04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md`](/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE)
@@ -6,6 +8,7 @@
 ---
 
 ## Introduction (From One Beginner Coder to Another)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-1)
 
 When you first open `compile_joshy.bat` (compile_joshy.bat) as a beginner developer, seeing 64 lines full of symbols like `@echo off`, `"%~dp0"`, `$LOCALAPPDATA`, `^`, and `%ERRORLEVEL%` can look intimidating.
 
@@ -19,10 +22,12 @@ This guide walks you through building `compile_joshy.bat` (compile_joshy.bat) **
 ---
 
 ## Step 0: What Is a `.bat` File & How Do I Create One Without the `.txt` Trap?
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-2)
 
 A **`.bat` file (Windows Batch File)** is simply a plain text file containing terminal commands that Windows runs for you automatically when you double-click it. Instead of typing a 28-line Nuitka compilation command into Command Prompt by hand every time you update your code, you save the command inside `compile_joshy.bat` once and run it whenever you need it.
 
 ### How to Create the Blank File Safely in Notepad
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-3)
 1. Open **Notepad** on Windows.
 2. Press `Ctrl + S` to open the **Save As** dialog.
 3. Navigate to your project folder (`<project_root>`).
@@ -32,6 +37,7 @@ A **`.bat` file (Windows Batch File)** is simply a plain text file containing te
 ---
 
 ## Step 1: Set Up the Window & Lock In the Correct Folder (Lines 1–3)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-4)
 
 The very first 3 lines you type at the top of your blank `.bat` file are:
 
@@ -42,6 +48,7 @@ cd /d "%~dp0"
 ```
 
 ### Beginner Line-by-Line Explanation
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-5)
 - **Line 1 (`@echo off`)**:
   By default, Windows prints every raw command on the screen *before* running it, which causes your screen reader to chatter through dozens of noisy lines of code. `@echo off` tells Windows: *"Hide the raw commands and only read aloud the clean status messages I ask you to print."*
 - **Line 2 (`title Compile JOSHY...`)**:
@@ -55,6 +62,7 @@ cd /d "%~dp0"
 ---
 
 ## Step 2: Print Clear Progress Announcements for Your Screen Reader (Lines 5–18)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-6)
 
 Next, we add friendly status lines so that as soon as you launch the `.bat` file, your screen reader tells you what is starting:
 
@@ -76,6 +84,7 @@ echo.
 ```
 
 ### Beginner Tips in This Block
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-7)
 - **`echo`** prints the words after it to the screen.
 - **`echo.`** (with a period right after `echo` and no space) prints a **blank empty line** to keep the screen tidy.
 - **Why does Line 15 have double percent signs (`%%LOCALAPPDATA%%`)?**
@@ -84,6 +93,7 @@ echo.
 ---
 
 ## Step 3: Start the Nuitka Command & Set Output Mode (Lines 20–23)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-8)
 
 Now we start building the actual Nuitka compiler command. Because the command has many options, we put a **caret symbol (`^`)** at the end of each line so Windows treats all the lines as one single command:
 
@@ -95,6 +105,7 @@ py -3.13 -m nuitka ^
 ```
 
 ### Why We Chose Each Option
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-9)
 1. **`py -3.13 -m nuitka ^`**:
    Uses the Windows Python Launcher (`py`) to specifically run your 64-bit Python 3.13 installation and start the `nuitka` compiler module (`-m nuitka`).
 2. **`--mode=onefile ^`**:
@@ -107,6 +118,7 @@ py -3.13 -m nuitka ^
 ---
 
 ## Step 4: Configure the Windows Setup Installer & Shortcuts (Lines 24–28)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-10)
 
 Right below `--output-filename=JOSHY.exe ^`, we add the 5 lines that build `JOSHY-Setup.exe`:
 
@@ -119,6 +131,7 @@ Right below `--output-filename=JOSHY.exe ^`, we add the 5 lines that build `JOSH
 ```
 
 ### Why Every Single One of These 5 Lines Matters
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-11)
 1. **`--windows-create-installer ^`**:
    Activates Nuitka's built-in NSIS installer creator so you get a professional Windows Setup wizard alongside your standalone `.exe`.
 2. **`--windows-installer-mode=user ^`**:
@@ -134,6 +147,7 @@ Right below `--output-filename=JOSHY.exe ^`, we add the 5 lines that build `JOSH
 ---
 
 ## Step 5: Stamp the Official Windows File & Product Metadata (Lines 29–33)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-12)
 
 Next, we add the 5 metadata lines:
 
@@ -146,12 +160,14 @@ Next, we add the 5 metadata lines:
 ```
 
 ### Why You Cannot Skip This Step
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-13)
 - **Mandatory Requirement**: When you use `--windows-create-installer` or `--windows-company-name`, Nuitka **requires** a 4-part version number (`1.0.0.0`). If you leave out `--product-version=1.0.0.0`, Nuitka stops with an immediate `FATAL: Version information is required` error.
 - These values also appear in Windows Task Manager, the Properties dialog of `JOSHY.exe`, and Windows **Installed Apps / Add or Remove Programs**!
 
 ---
 
 ## Step 6: Bundle the GUI, Audio Libraries, and Screen Reader Bridge (Lines 34–44)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-14)
 
 Now we tell Nuitka exactly which plugins, helper `.py` modules, and Python packages must be packed inside the executable:
 
@@ -170,6 +186,7 @@ Now we tell Nuitka exactly which plugins, helper `.py` modules, and Python packa
 ```
 
 ### Beginner Guide to `--enable-plugins`, `--include-module`, and `--include-package`
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-15)
 - **`--enable-plugins=tk-inter ^`**:
   `main.py` uses Python's `tkinter` library for its window. This plugin tells Nuitka to bundle all required Tcl/Tk window files.
 - **`--include-module=screenreader_speak ^` and `--include-module=nvda_client_data ^`**:
@@ -184,6 +201,7 @@ Now we tell Nuitka exactly which plugins, helper `.py` modules, and Python packa
 ---
 
 ## Step 7: Add Auto-Download, Auto-Cleanup, and the Main `.py` File (Lines 45–47)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-16)
 
 These are the final 3 lines of the Nuitka command:
 
@@ -194,6 +212,7 @@ These are the final 3 lines of the Nuitka command:
 ```
 
 ### Beginner Line-by-Line Explanation
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-17)
 1. **`--assume-yes-for-downloads ^`**:
    The first time Nuitka runs on a computer, it may need to download helper tools (like `depends.exe`, `ccache`, or `NSIS`). Without this flag, Nuitka pauses and waits for someone to type `y`—which can look like the build is frozen. This flag automatically answers `Yes`.
 2. **`--remove-output ^`**:
@@ -205,6 +224,7 @@ These are the final 3 lines of the Nuitka command:
 ---
 
 ## Step 8: Check for Success/Error & Keep the Window Open (Lines 49–63)
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-18)
 
 Finally, we add the completion announcement and `pause` at the bottom of the file:
 
@@ -227,6 +247,7 @@ pause
 ```
 
 ### Beginner Line-by-Line Explanation
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-19)
 - **`if %ERRORLEVEL% EQU 0`**:
   Whenever any program finishes running on Windows, it leaves behind a secret number called `%ERRORLEVEL%` (its exit code).
   - `0` (`EQU 0` means "equals zero") means **100% Success / No Errors**.
@@ -239,6 +260,7 @@ pause
 ---
 
 ## Step 9: The Complete Finished `compile_joshy.bat` File
+[//]: # (SECTION_ID: JOSH-PLAY-05-SEC-20)
 
 When you put Steps 1 through 8 together in one file, you get the exact `compile_joshy.bat` (compile_joshy.bat) in your project folder:
 

@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # KMS Keychain & Cold Storage Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-1)
 This document records source code evidence from `security/keychain.py` and `security/cold_storage.py`. It demonstrates how the system protects brain session transcripts using an enterprise Key Management Service (KMS) hierarchy and atomic cold-storage encryption.
 
 ---
 
 ## 2. KEK Derivation & Keychain Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-2)
 `security/keychain.py` derives a Key Encryption Key (KEK) using PBKDF2 with 100,000 iterations to protect an array of Data Encryption Keys (DEKs):
 
 ```python
@@ -37,6 +41,7 @@ def get_all_ciphers(self) -> list[Fernet]:
 ---
 
 ## 3. Atomic Cold Storage Locking Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-3)
 `security/cold_storage.py` searches brain transcripts, avoids double encryption, and atomically swaps ciphertext into place:
 
 ```python
@@ -73,6 +78,7 @@ def lock_brain():
 ---
 
 ## 4. Multi-Key Decryption Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-4)
 When unlocking cold storage, the engine cycles through historical ciphers until a matching key decrypts the token:
 
 ```python
@@ -88,6 +94,7 @@ for cipher in ciphers:
 ---
 
 ## 5. Why Order Matters in Cryptographic Locking
+[//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-5)
 1. **Derive KEK Before Loading Keychain**: The master key must be verified and transformed via PBKDF2 before `keychain.json` can be parsed.
 2. **Check Ciphertext Prefix Before Writing**: Verifying `b'gAAAAA'` prevents corrupted nested Fernet tokens.
 3. **Write Complete Data Before `os.replace`**: Closing the temporary file handle before executing `os.replace` ensures Windows does not raise file lock errors (`PermissionError`).
@@ -95,6 +102,7 @@ for cipher in ciphers:
 ---
 
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-6)
 **Q: What is `b'gAAAAA'`?**  
 A: Every token encrypted with Python's `cryptography.fernet` begins with `gAAAAA` in base64, indicating version 0x80 and a valid timestamp header.
 

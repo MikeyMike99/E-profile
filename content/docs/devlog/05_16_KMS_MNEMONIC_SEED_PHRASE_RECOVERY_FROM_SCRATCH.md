@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 05_16: KMS Mnemonic Seed Phrase Recovery From Scratch
 
 A step-by-step guide to writing the offline **KMS Mnemonic Seed Phrase Generator & Disaster Recovery Engine** (`kms_recovery.py`) line by line from a completely blank text editor window.
@@ -5,10 +7,12 @@ A step-by-step guide to writing the offline **KMS Mnemonic Seed Phrase Generator
 ---
 
 ## What We Are Building & Beginner Safety Rules
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-1)
 
 We are creating `kms_recovery.py`—a zero-dependency cryptographic tool that converts 128 bits of entropy into a 12-word human-readable seed phrase and deterministically derives a 256-bit AES master key using PBKDF2-HMAC-SHA512.
 
 ### Beginner Safety Directives
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-2)
 1. **Use `secrets`, Never `random`**: Python's `random` module uses Mersenne Twister, which is completely predictable by hackers. Always use `secrets.token_bytes()` for cryptography.
 2. **Normalize Unicode Strings (NFKD)**: Diacritics and accented characters vary across operating systems. We must normalize all strings to NFKD before hashing.
 3. **Never Save Plaintext Keys to Disk**: The derived key should only exist in volatile RAM memory during recovery operations.
@@ -16,8 +20,10 @@ We are creating `kms_recovery.py`—a zero-dependency cryptographic tool that co
 ---
 
 ## Step-by-Step Line Breakdown
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-3)
 
 ### Block 1: Imports & Wordlist Setup (Lines 1–25)
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-4)
 
 Open a blank file named `kms_recovery.py` and write:
 
@@ -42,6 +48,7 @@ WORDLIST = [
 ---
 
 ### Block 2: Seed Phrase Generation (Lines 26–50)
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-5)
 
 Add the function that generates a 12-word recovery mnemonic:
 
@@ -62,6 +69,7 @@ def generate_recovery_phrase(num_words: int = 12) -> str:
 ---
 
 ### Block 3: Deterministic Key Derivation (Lines 51–75)
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-6)
 
 Add the PBKDF2-HMAC-SHA512 derivation engine:
 
@@ -95,6 +103,7 @@ def derive_master_key(mnemonic_phrase: str, passphrase: str = "") -> bytes:
 ---
 
 ### Block 4: Command-Line Interface (Lines 76–100)
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-7)
 
 Complete the file with an interactive command-line interface:
 
@@ -117,6 +126,7 @@ if __name__ == "__main__":
 ---
 
 ## Complete Finished File Listing
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-8)
 
 ```python
 import hashlib
@@ -167,6 +177,7 @@ if __name__ == "__main__":
 ---
 
 ## 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-9)
 
 ```bash
 # 1. Test deterministic derivation
@@ -177,16 +188,20 @@ If it prints `KEY_LENGTH_BYTES: 32 (256-bit AES Valid)` and outputs a 64-charact
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-10)
 
 ### What is "Key Stretching"?
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-11)
 Key stretching takes a relatively short input (like 12 words) and runs it through thousands of mathematical hash loops. This makes it impossible for an attacker's computer to quickly guess millions of passwords per second.
 
 ### Why do we use SHA-512 instead of SHA-256 for the seed?
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-12)
 SHA-512 produces a 64-byte (512-bit) output, providing enough cryptographic entropy to generate both an AES encryption key (first 32 bytes) and an HMAC authentication key (second 32 bytes) from the same seed phrase.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-13)
 - To understand why relative key paths caused sandbox lockouts, read [`01_PROBLEMS_ENCOUNTERED/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md`](/docs/devlog/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS).
 - To inspect primary source citations, view [`02_SOURCE_EVIDENCE/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE.md`](/docs/devlog/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE).
 - To read the architectural deep dive, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE.md`](/docs/devlog/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE).

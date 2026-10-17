@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 27: Configuring Sandbox Zones via CLI
 
 ## 27.1 The 5 Phases of Swarm Configuration
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_1)
 
 Configuring a Zone-Based Sandbox Policy (ZSP) in DevCore requires a highly structured sequence. If a Tier 5 Admin attempts to bind a policy before creating it, the Orchestrator will throw a fatal syntax error. 
 
@@ -12,6 +15,7 @@ The configuration sequence requires 5 absolute phases using the `agy` CLI:
 5.  **Assign Directories** (Interfaces) to the appropriate Zones.
 
 ## 27.2 Phase 1 & 2: Zones and Intent-Maps
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_2)
 
 **Step 1: Create the Zones**
 Before applying rules, the conceptual zones must exist in the Orchestrator's memory.
@@ -31,6 +35,7 @@ agy match tool read_file
 ```
 
 ## 27.3 Phase 3 & 4: Policies and Zone-Pairs
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_3)
 
 **Step 3: Define Actions (Sandbox-Policy)**
 Once the Intent is mapped, you must define what the Orchestrator actually *does* with it using a Sandbox-Policy (Policy-Map). You link the Intent-Map to an Action (`inspect`, `drop`, or `pass`).
@@ -49,6 +54,7 @@ agy bind sandbox-policy PRIV_TO_PUB_POLICY
 ```
 
 ## 27.4 Phase 5: Assigning Directories
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_4)
 
 The final step is to physically assign Sandbox directories to the conceptual zones. 
 
@@ -61,6 +67,7 @@ agy zone assign /wss/modder_stream/ PUBLIC_MODDER
 The ZSP is now fully active. Any `web_search` traffic sourced from the Private Workspace destined for the Public network will be *statefully inspected*, guaranteeing return traffic is allowed back into the AI's context window.
 
 ## 27.5 Verifying the Swarm
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_5)
 
 To verify the active ZSP configuration and inspect active AI Swarm sessions, Tier 5 Admins can use the following verification commands:
 *   `agy show running-config`
@@ -71,10 +78,12 @@ To verify the active ZSP configuration and inspect active AI Swarm sessions, Tie
 ---
 
 ## Chapter 27 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-1)
 
 Chapter 27 provides the mechanical CLI commands required to translate conceptual zone architectures into living DevCore infrastructure. By separating Intent-Mapping (identifying the traffic) from Sandbox-Policies (acting on the traffic), Tier 5 Admins gain infinite modularity. They can write a single `SAFE_TOOLS` Intent-Map and apply it to a hundred different Zone-Pairs without rewriting the underlying tool list.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 27 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional ZPF CLI configurations into their DevCore Agentic equivalents:
 

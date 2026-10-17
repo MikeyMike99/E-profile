@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.33: Source Code Evidence: OpenHands Local Broker & Token Economics
 
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-1)
 This document cites primary source evidence demonstrating how DevCore integrates external agent runtimes with local quantized GGUF models and tracks token consumption metrics to convert API usage into localized financial costs (South African Rands / ZAR).
 
 ---
 
 ## Source Citation 1: Local Quantized Inference Pipeline (`security/local_brain_broker.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-2)
 
 ```python
 # Location: <project_root>/security/local_brain_broker.py
@@ -33,11 +37,13 @@ def execute_offline_model(prompt: str, model_path: str = None) -> str:
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-3)
 - DevCore provides a completely air-gapped, zero-network fallback execution environment using `llama-cli` with compact GGUF weights (Qwen 2.5 1.5B), preventing sensitive queries from ever reaching external cloud providers.
 
 ---
 
 ## Source Citation 2: Token Economics & Currency Conversion Telemetry
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-4)
 
 ```python
 # Location: <project_root>/security/swarm_telemetry.py
@@ -60,27 +66,33 @@ def calculate_session_cost_zar(model_name: str, input_tokens: int, output_tokens
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-5)
 - The orchestration telemetry engine calculates the exact financial impact of autonomous agent execution, preventing developers from incurring unexpected runaway bills by enforcing strict budget thresholds.
 
 ---
 
 ## 3. Why Order Matters in Token Budgeting
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-3)
 1. **Estimate Tokens Prior to Dispatch**: Token counts of input prompts must be calculated using tokenizer byte counts before sending the payload over the wire.
 2. **Local Screening Before Cloud Calling**: Prompts must pass through local PII scrubbing and lightweight summarization before determining whether cloud escalation is necessary.
 
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-4)
 
 ### What is a GGUF file?
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-6)
 GGUF is a binary file format created by the `llama.cpp` project to store quantized language model weights. It allows large models to run efficiently on consumer CPUs and laptops with low RAM usage.
 
 ### Why convert token costs to ZAR in the telemetry engine?
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-7)
 Most developers outside the United States pay cloud providers in local currency. Converting tokens directly to local currency (like South African Rands) makes the cost tangible and immediately actionable.
 
 ---
 
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-02_33-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md`](/docs/devlog/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS.md`](/docs/devlog/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE.md`](/docs/devlog/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE)

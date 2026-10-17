@@ -1,8 +1,11 @@
+[//]: # (DOC_ID: ECHO-CORE-MENU | VERSION: v1.2 | SCOPE: Echoes of the World (Audio Game))
+
 # 🧭 Menu Configuration Guide
 
 This document defines the expected structure and behavior of the `menus` dictionary used to drive the application's dynamic, tab-based interface.
 
 ## 🔹 Overview
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-1)
 
 Each top-level key in the `menus` dictionary is a dynamic menu identifier (e.g. `"MAIN_MENU"`, `"CREATE_CHARACTER"`).
 
@@ -10,12 +13,15 @@ Each top-level key in the `menus` dictionary is a dynamic menu identifier (e.g. 
 - If a menu includes `tab_list` and `tabs`, it's considered a **tabbed menu**.
 
 ## 🔹 Menu Types
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-2)
 
 ### 1. Simple Menus
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-1)
 Menus that don't contain tabs. Used for general selection or root navigation.  
 They do not define `tab_list` or `tabs`.
 
 ### 2. Tabbed, Menus
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-2)
 Contain two required entries:
 
 - `tab_list`: A list of strings, defining the order of tabs (e.g. `["EMAIL", "NAME", "SUBMIT"]`)
@@ -24,6 +30,7 @@ Contain two required entries:
 These keys must always appear together. If one is missing, the config is considered invalid.
 
 ## 🔹 Tab Entry Structure
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-3)
 
 Each entry inside `tabs` must define:
 
@@ -35,6 +42,7 @@ Each entry inside `tabs` must define:
 No additional flags (like `"edit"`) are required. All behavior is inferred from `type`.
 
 ## 🔹 Example
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-4)
 
 ```python
 menus = {

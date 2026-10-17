@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-03_14 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 03_14: Binary Stamp Extraction & Expiration Logs
 
 Diagnostic test execution logs and benchmark results verifying rapid binary trailer stamping, tail seek decryption, and master developer cryptographic auto-bypass.
@@ -5,6 +7,7 @@ Diagnostic test execution logs and benchmark results verifying rapid binary trai
 ---
 
 ## What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-1)
 
 We audited the portable executable distribution system implemented in `security/stamper.py`:
 - **Test 1: Stamping Speed Benchmark**: Measuring the elapsed time to duplicate a binary and append an AES-encrypted JSON payload.
@@ -15,6 +18,7 @@ We audited the portable executable distribution system implemented in `security/
 ---
 
 ## Exact Command Run
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-2)
 
 ```bash
 python3 -c "
@@ -61,6 +65,7 @@ os.remove(stamped_exe)
 ---
 
 ## Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-3)
 
 ```
 ======================================================
@@ -80,6 +85,7 @@ AUDIT_STATUS: PASS (Instant Stamping & Enforced Time-Lock Verified)
 ---
 
 ## How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-4)
 
 - **Instantaneous Stamping (<5ms)**: Appending the encrypted metadata to the bottom of the binary took under 5 milliseconds. In comparison, running Nuitka compilation takes over 8 minutes.
 - **Sub-Millisecond Decryption (0.38ms)**: By seeking directly to the last 4KB of the binary, the runtime extracted and decrypted the payload in 0.38ms without buffering the entire binary into memory.
@@ -88,6 +94,7 @@ AUDIT_STATUS: PASS (Instant Stamping & Enforced Time-Lock Verified)
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-5)
 
 In binary trailer stamping, read sequence validates payload integrity:
 1. **Seek to EOF First**: Calling `f.seek(0, 2)` must precede `f.tell()` to accurately determine total file size.
@@ -97,16 +104,20 @@ In binary trailer stamping, read sequence validates payload integrity:
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-6)
 
 ### What happens if a client tampers with the binary stamp using a hex editor?
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-7)
 Because the payload is encrypted with Fernet (AES-128-CBC + HMAC-SHA256), any modification to the bytes causes the HMAC signature check to fail, immediately throwing an `InvalidToken` error and locking the application.
 
 ### Can a client bypass the expiration by changing their computer's system clock?
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-8)
 In production deployments, the application compares the local clock against a remote NTP server or cryptographically signed server timestamp during WebSocket sync.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-9)
 - To understand why portable binaries required dynamic stamping, read [`01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md`](/docs/devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS).
 - To inspect primary source citations of the stamper utility, view [`02_SOURCE_EVIDENCE/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE.md`](/docs/devlog/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE).
 - To build the complete binary stamping tool from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_17_PE_BINARY_STAMPER_AND_VERIFIER_FROM_SCRATCH.md`](/docs/devlog/05_17_PE_BINARY_STAMPER_AND_VERIFIER_FROM_SCRATCH).

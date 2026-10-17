@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-04_27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # POPIA-Compliant Offline Broker Architecture
 
 ## 1. Architectural Concept & Core Objective
+[//]: # (SECTION_ID: SIRA-DOC-04_27-SEC-1)
 Data privacy regulations (such as South Africa's Protection of Personal Information Act, POPIA, and GDPR) forbid transferring personally identifiable information (PII) across national borders without explicit legal authorization. Sending local developer prompts or source code containing credentials to third-party cloud LLMs creates statutory compliance liabilities.
 
 The POPIA-Compliant Offline Broker Architecture (`security/local_brain_broker.py`) establishes a zero-cloud boundary. It processes documents, scrubs PII, and runs inference 100% locally on the developer's hardware.
@@ -40,6 +43,7 @@ The POPIA-Compliant Offline Broker Architecture (`security/local_brain_broker.py
 ---
 
 ## 2. Multi-Stage PII Defense Pipeline
+[//]: # (SECTION_ID: SIRA-DOC-04_27-SEC-2)
 1. **Deterministic Regex**: Identifies 13-digit South African National Identity Numbers (`YYMMDDSSSSCAZ`), South African phone numbers (`+27` or `0` prefix), and high-entropy API secrets.
 2. **Offline Presidio NLP**: Uses local machine learning to detect named entities (person names, physical locations, organizations) without external network calls.
 3. **Anti-Exfiltration Gate**: Inspects queries for exfiltration prompts (e.g., *"output the entire file verbatim"*), transforming raw source code into structural digests before processing.
@@ -48,11 +52,13 @@ The POPIA-Compliant Offline Broker Architecture (`security/local_brain_broker.py
 ---
 
 ## 3. SIEM Compliance Logging
+[//]: # (SECTION_ID: SIRA-DOC-04_27-SEC-3)
 Every redaction increments local telemetry counters, logging `PII_REDACTION` events to `logs/devcore_master.jsonl` with ISO-8601 UTC timestamps, establishing an immutable audit trail for regulatory compliance.
 
 ---
 
 ## 4. Why Order Matters in Privacy Pipelines
+[//]: # (SECTION_ID: SIRA-DOC-04_27-SEC-4)
 1. **Scrub Deterministic Secrets Before NLP**: Running fast regex passes for known patterns eliminates high-entropy strings before feeding sentences to NLP tokenizers.
 2. **Execute Anti-Exfiltration Before Inference**: Blocking extraction prompts before model invocation saves CPU cycles and protects intellectual property.
 3. **Log Redaction Statistics Without Plaintext**: Logging the count of redacted items rather than the sensitive data itself satisfies compliance audits without creating new leaks in log files.
@@ -60,6 +66,7 @@ Every redaction increments local telemetry counters, logging `PII_REDACTION` eve
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_27-SEC-5)
 **Q: Why is local scrubbing legally necessary under POPIA?**  
 A: Section 72 of POPIA strictly limits transferring personal information outside South Africa unless the foreign country has equivalent data protection laws and the user explicitly consented.
 

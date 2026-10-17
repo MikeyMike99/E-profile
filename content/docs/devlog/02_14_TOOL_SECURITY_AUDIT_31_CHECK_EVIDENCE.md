@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_14 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 02_14: Tool Security Audit & 31-Check Evidence
 
 Primary source evidence from the Siraugga security core demonstrating how the automated **31-Check Tool Security Audit** verifies RBAC tier boundaries, PreToolUse hook interceptions, AST code hygiene, and DLP canary sanitization across the agentic runtime.
@@ -5,6 +7,7 @@ Primary source evidence from the Siraugga security core demonstrating how the au
 ---
 
 ## Source Citation 1: Synthetic Hook Simulation (`security/tool_security_auditor.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-1)
 
 This excerpt displays how the audit harness tests PreToolUse hook boundaries by injecting synthetic payloads without side effects:
 
@@ -35,12 +38,14 @@ def simulate_hook(tool_name: str, args: dict) -> dict:
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-2)
 - **Isolated Hook Interception**: By feeding structured JSON payloads into `raugus_hook.py` via `stdin`, the test harness safely evaluates whether the security hook permits, blocks, or modifies tool execution before any command touches the host OS.
 - **Fast Boundary Verification**: The subprocess runs with a strict 30-second timeout and captures both `stdout` and `stderr` to detect unexpected thread hangs.
 
 ---
 
 ## Source Citation 2: Clean Workspace Purge Protocol (`security/tool_security_auditor.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-3)
 
 This excerpt demonstrates the automated purging of synthetic canary records from SIEM logs following an audit:
 
@@ -70,12 +75,14 @@ def purge_audit_logs():
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-4)
 - **Zero Evidence Pollution**: Synthetic attack tokens injected during continuous validation are pruned from production audit logs (`devcore_master.jsonl`, `master_alert_queue.jsonl`), preserving audit integrity.
 - **Compliance with Global Rule 1**: Fulfills the Clean Workspace Protocol by ensuring test artifacts never pollute production data stores.
 
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-5)
 
 In automated security audits, check sequencing prevents false positives and test deadlocks:
 1. **Audit Static AST Hygiene Before Running Code**: Inspecting source files with Python's `ast.parse()` must happen *before* executing tools to catch forbidden imports (`pickle`, `os.system`) without running them.
@@ -85,8 +92,10 @@ In automated security audits, check sequencing prevents false positives and test
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-6)
 
 ### What are the 5 stages of the Tool Security Audit?
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-7)
 - **Stage 1**: Raugus Map & RBAC Clearance.
 - **Stage 2**: PreToolUse Hook Interception.
 - **Stage 3**: AST Static Code Hygiene.
@@ -94,14 +103,17 @@ In automated security audits, check sequencing prevents false positives and test
 - **Stage 5**: SIEM and Alert Queue Logging.
 
 ### What is an AST (Abstract Syntax Tree) check?
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-8)
 An AST check parses Python code into a tree of grammatical nodes without executing it. It allows the security engine to mathematically prove that a script does not call forbidden functions like `eval()` or `os.system()`.
 
 ### Why are canary tokens used in security audits?
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-9)
 A canary token is a harmless synthetic string (like `canary@secret.internal`). The auditor injects it into data streams to verify that privacy filters (like Microsoft Presidio) catch and redact sensitive strings before they leak to the UI.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-10)
 - To understand why automated validation is required, read [`01_PROBLEMS_ENCOUNTERED/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md`](/docs/devlog/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS).
 - To view diagnostic scan logs covering all 31 checks, visit [`03_DIAGNOSTIC_TESTS/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS.md`](/docs/devlog/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS).
 - To examine the full 31-stage architecture, follow [`04_SOLUTIONS_AND_ARCHITECTURE/04_13_THE_31_STAGE_TOOL_SECURITY_AUDIT_ARCHITECTURE.md`](/docs/devlog/04_13_THE_31_STAGE_TOOL_SECURITY_AUDIT_ARCHITECTURE).

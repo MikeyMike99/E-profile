@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 02.1: Source Evidence: Server & Agent Streaming Architecture
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,12 +9,14 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-1)
 
 This chapter presents primary source citations and Git forensic evidence proving how Siraugga's asynchronous WebSocket architecture and detached subprocess orchestration are implemented in the production codebase.
 
 ---
 
 ## Source 1: The ACK Protocol & Keep-Alive Loop
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-2)
 
 - **Source File**: `<project_root>/core/server.py`
 - **Location**: Lines 458–521
@@ -38,6 +42,7 @@ This chapter presents primary source citations and Git forensic evidence proving
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-3)
 1. **WSL Connection Survival**: Explicitly handles incoming 4-second `ping` frames and replies with `pong`, keeping the virtual network bridge alive.
 2. **Reconnection Recovery**: The `sync` message queries `agent_mgr.sync_client` with `last_seq`, allowing the browser to catch up on dropped tokens.
 3. **Memory Safety**: The `ack` handler notifies `agent_mgr.handle_ack(seq)`, safely pruning older events from the memory buffer.
@@ -45,6 +50,7 @@ This chapter presents primary source citations and Git forensic evidence proving
 ---
 
 ## Source 2: Unbuffered Subprocess Execution & Environment Whitelist
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-4)
 
 - **Source File**: `<project_root>/agents/agent_manager.py` (Historical Git Commit `f6e3adf`)
 - **Location**: Subprocess Execution Environment Setup
@@ -64,6 +70,7 @@ This chapter presents primary source citations and Git forensic evidence proving
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-5)
 1. **Zero Buffer Lag**: Git commit `f6e3adf` injected `PYTHONUNBUFFERED = "1"`, eliminating Python's default 4KB stdout buffer and allowing immediate real-time token streaming.
 2. **UTF-8 Integrity**: Hardcoding `PYTHONIOENCODING = "utf-8"` prevents process crashes when AI models emit emojis or non-ASCII characters.
 3. **Environment Sanitization**: Only non-sensitive host variables (`PATH`, `HOME`, `USER`) are forwarded to the agent; secret API keys are never directly exposed.
@@ -71,10 +78,12 @@ This chapter presents primary source citations and Git forensic evidence proving
 ---
 
 ## Source 3: Git Evolution: From Terminal Deadlock to Headless Flags
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-6)
 
 - **Source**: Historical Git commits vs Modern Subprocess Invocation
 
 ### Early Vulnerable Code (Git history)
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-7)
 ```python
 # FLAWED: Spawning agent with default interactive TTY prompt
 cmd = ["agy", "start", "--prompt", user_prompt]
@@ -83,6 +92,7 @@ process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 ```
 
 ### Hardened Production Code (`agents/agent_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-8)
 ```python
 # HARDENED: Explicit automation and bypass flags
 cmd = [
@@ -96,11 +106,13 @@ cmd = [
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-9)
 Passing `--trust` and `--headless` at process startup removes the interactive prompt from the CLI, enabling seamless background execution for screen readers.
 
 ---
 
 ## Why Order Matters in Streaming Architecture
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-10)
 
 1. **Unbuffer Environment Before Process Spawn**:
    - Setting `PYTHONUNBUFFERED=1` must occur in the environment dictionary *before* calling `create_subprocess_exec`. You cannot unbuffer a subprocess stream after it has launched.
@@ -110,9 +122,12 @@ Passing `--trust` and `--headless` at process startup removes the interactive pr
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-11)
 
 ### Q: Why does Python buffer output by default?
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-12)
 **A:** Python buffers output in memory chunks (typically 4,096 bytes) to reduce the number of system calls and speed up batch processing. For interactive AI chat, this is disastrous because you see nothing until 4,000 characters have finished generating.
 
 ### Q: Why do we whitelist environment variables instead of passing `os.environ`?
+[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-13)
 **A:** In shared operating systems, `os.environ` often contains cloud credentials, database connection strings, or private auth tokens. Passing `os.environ` blindly would allow an untrusted agent or prompt injection to leak system secrets.

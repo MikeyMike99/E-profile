@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-AGENT_RBAC_ARC | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Antigravity Agent & E-Profile: Role-Based Access Control (RBAC) Architecture
 
 This document defines the 5-tier security and privilege hierarchy for the E-Profile ecosystem and its integration with the Antigravity Agent. 
@@ -7,6 +9,7 @@ The core philosophy of this architecture is **Strict Decoupling of Host and Appl
 ---
 
 ## Level 5: Super Admin (System Owner)
+[//]: # (SECTION_ID: SIRA-DOC-AGENT_RBAC_ARC-SEC-1)
 The Super Admin is the ultimate authority of the ecosystem (the deployment owner). 
 
 * **Definition & Purpose:** The Super Admin manages the underlying infrastructure, the host operating system (e.g., PythonAnywhere, AWS), and the core architectural logic of the agent and web server itself.
@@ -18,6 +21,7 @@ The Super Admin is the ultimate authority of the ecosystem (the deployment owner
 ---
 
 ## Level 4: Admin (Application Manager)
+[//]: # (SECTION_ID: SIRA-DOC-AGENT_RBAC_ARC-SEC-2)
 The Admin has absolute control over the *business logic* and *data* of the application, but zero control over the host infrastructure.
 
 * **Definition & Purpose:** The Admin manages users, databases, configurations, and the general operation of the application they are plugged into. They do not need (and are barred from) modifying the underlying host server or the agent's core source code.
@@ -29,6 +33,7 @@ The Admin has absolute control over the *business logic* and *data* of the appli
 ---
 
 ## Level 3: Dev Team (Scoped Contributor)
+[//]: # (SECTION_ID: SIRA-DOC-AGENT_RBAC_ARC-SEC-3)
 The Dev Team consists of internal engineers assigned to specific modules or tickets.
 
 * **Definition & Purpose:** Developers write, debug, and maintain code for specific features. Their access is compartmentalized strictly to their assigned tickets or project domains.
@@ -40,6 +45,7 @@ The Dev Team consists of internal engineers assigned to specific modules or tick
 ---
 
 ## Level 2: Guest / Client (Plugin Creator)
+[//]: # (SECTION_ID: SIRA-DOC-AGENT_RBAC_ARC-SEC-4)
 Guests or Clients are external users permitted to extend the application for their own localized needs.
 
 * **Definition & Purpose:** Clients can write custom integrations, themes, and plugins without needing internal developer resources.
@@ -51,6 +57,7 @@ Guests or Clients are external users permitted to extend the application for the
 ---
 
 ## Level 1: Least Privilege (End User)
+[//]: # (SECTION_ID: SIRA-DOC-AGENT_RBAC_ARC-SEC-5)
 The End User is the standard consumer of the application.
 
 * **Definition & Purpose:** Standard users interacting with the frontend application, requiring support, navigation assistance, or basic chatbot interactions.
@@ -62,6 +69,7 @@ The End User is the standard consumer of the application.
 ---
 
 ## Implementation Roadmap
+[//]: # (SECTION_ID: SIRA-DOC-AGENT_RBAC_ARC-SEC-6)
 To enforce this architecture, the current binary `is_admin` check inside the `AgentTaskManager` must be replaced with a tiered authorization payload. 
 
 The host application (E-Profile) will authenticate the user and pass an un-forgeable token to the Agent declaring their exact Tier (1-5). The Agent will instantly lock its internal configuration boundaries based on that integer before processing a single prompt.

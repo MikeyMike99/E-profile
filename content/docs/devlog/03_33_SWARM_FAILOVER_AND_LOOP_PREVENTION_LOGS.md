@@ -1,18 +1,24 @@
+[//]: # (DOC_ID: SIRA-DOC-03_33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 03.33: Diagnostic Tests & Logs: Swarm Failover & Conversational Loop Suppression
 
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-1)
 This document records diagnostic test runs verifying the **Semantic Tree Protocol (STP)** loop suppression engine and measuring the failover recovery speed of the **RAIA (Redundant Array of Independent Agents)** supervisor when an active primary agent process crashes or enters a simulated hallucination loop.
 
 ---
 
 ## 1. Test Execution & Diagnostic Log
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-1)
 
 ### What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-2)
 1. Detection and suppression of infinite subagent messaging loops using semantic hashing and hop-count limits.
 2. Rapid failover from a crashing primary agent to a hot standby replica.
 3. Token conservation during simulated conversational deadlocks.
 
 ### Exact Simulation Script
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-3)
 ```python
 # Multi-Agent Loop Suppression & Failover Test
 from security.swarm_telemetry import SwarmSupervisor, STPController
@@ -32,6 +38,7 @@ for msg in conversation_history:
 ```
 
 ### Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-4)
 ```
 [STP_INIT]: Semantic Tree Protocol active. Root node: Orchestrator_Main.
 [STP_HOP_1]: Agent_Alpha -> Agent_Beta (Hop 1/4 - ALLOWED).
@@ -51,6 +58,7 @@ for msg in conversation_history:
 ---
 
 ## 2. Loop Suppression & Token Conservation Matrix
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-2)
 
 ```
 Multi-Agent Loop Stress Test (10 Simulated Autonomous Cycles):
@@ -65,28 +73,34 @@ Efficiency Gain:          97.05% reduction in wasted token expenditure.
 ```
 
 ### How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-5)
 - The Semantic Tree Protocol successfully intercepted the conversational loop on the third message hop, preserving over 460,000 tokens.
 - The RAIA failover mechanism transferred workspace execution context to the hot standby replica in under 40 milliseconds with zero user intervention.
 
 ---
 
 ## 3. Why Order Matters in Swarm Governance
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-3)
 1. **Compute Semantic Fingerprint Before Routing**: The message body must be hashed and checked against the sliding history window before dispatching the payload to the recipient agent.
 2. **Snapshot Working State Before Triggering Failover**: When terminating a malfunctioning worker, preserve its pending file diffs to allow the successor agent to diagnose the failure cleanly.
 
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-4)
 
 ### What is a "Semantic Fingerprint"?
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-6)
 A semantic fingerprint is a compact mathematical representation (vector hash) of a message's core meaning. If an agent rephrases "Please verify test suite results" to "Kindly confirm the test outcomes", the semantic similarity detector recognizes that the intent is identical and stops the loop.
 
 ### How does N+1 redundancy work with AI agents?
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-7)
 If a task requires 1 active worker, N+1 means having 1 spare worker waiting in standby. If you have 3 active workers, N+1 means keeping a 4th standby worker ready to replace whichever one fails first.
 
 ---
 
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md`](/docs/devlog/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE.md`](/docs/devlog/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE.md`](/docs/devlog/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE)

@@ -1,18 +1,23 @@
+[//]: # (DOC_ID: SIRA-TXT-CH39 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 39: Context Fingerprinting and Salting
 
 ## 39.1 Establishing Swarm Fixity
+[//]: # (SECTION_ID: SIRA-TXT-CH39-SEC-39_1)
 
 In a decentralized environment where thousands of `transcript.jsonl` files are generated daily, Tier 5 Admins need absolute mathematical proof that an AI's conversational history hasn't been altered before conducting a security audit.
 
 By generating a SHA-512 cryptographic hash of the raw transcript file, the Admin establishes **Fixity**. Fixity proves that the bit-for-bit clone of the digital media is completely unaltered and uncorrupted, allowing the Admin to examine the file for evidence of Prompt Injections without risking contamination of the original.
 
 ## 39.2 Protecting Modder Secrets 
+[//]: # (SECTION_ID: SIRA-TXT-CH39-SEC-39_2)
 
 Because DevCore operates on a BYOK (Bring Your Own Key) model, Modders must input their highly sensitive LLM API keys into the Orchestrator. 
 
 If the Tier 5 Admin's Orchestrator database is compromised, storing these API keys in plaintext would be catastrophic. Instead, the Orchestrator uses a hashing algorithm to turn the API key into a fixed-length digital fingerprint. The Orchestrator deletes the plaintext key and only writes the digital hash to the hard drive. 
 
 ## 39.3 Hash Cracking and Rainbow Tables
+[//]: # (SECTION_ID: SIRA-TXT-CH39-SEC-39_3)
 
 Just because an API key is hashed does not mean it is completely safe. Attackers use three primary methods to crack stolen hashes:
 1.  **Dictionary Attacks:** Using a massive file of common passwords or API key formats, calculating the hashes for all of them, and comparing them against the stolen database.
@@ -20,6 +25,7 @@ Just because an API key is hashed does not mean it is completely safe. Attackers
 3.  **Rainbow Tables:** Massive, pre-computed lookup tables containing billions of plaintext passwords and their corresponding hashes. If an attacker steals a hashed database, they simply look up the hash in the Rainbow Table to instantly reveal the plaintext password.
 
 ## 39.4 Salting the Swarm and Token Stretching
+[//]: # (SECTION_ID: SIRA-TXT-CH39-SEC-39_4)
 
 If two Modders use the exact same weak password, their resulting hashes will be identical. An attacker using a Rainbow table will crack them instantly. 
 
@@ -33,10 +39,12 @@ Finally, DevCore implements **Token Stretching (Key Stretching)**. The Orchestra
 ---
 
 ## Chapter 39 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH39-SEC-1)
 
 Chapter 39 details the real-world application of cryptographic hashes. While hashing provides Fixity for digital forensics, it is primarily used to securely store passwords and BYOK API keys. Because basic hashing is vulnerable to Dictionary, Brute-Force, and Rainbow Table attacks, Tier 5 Admins must utilize CSPRNG Salting and Token Stretching to ensure stolen data remains unbreakable.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 39 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH39-SEC-2)
 
 *   **Fixity** $\rightarrow$ **Fixity:** The exact mathematical proof (via SHA-512) that a digital `transcript.jsonl` file has not been tampered with or corrupted.
 *   **Cracking Passwords** $\rightarrow$ **Cracking Modder Secrets:** Using Dictionary or Brute-Force attacks to guess the plaintext of a stolen hash.

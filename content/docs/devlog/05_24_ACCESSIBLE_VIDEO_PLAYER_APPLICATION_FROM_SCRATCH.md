@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Accessible Video Player Application from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-1)
 Standard web video players rely on visual timelines and mouse hover effects, and embedding third-party players inside iframes frequently traps keyboard navigation.
 
 This guide provides a standalone, single-file implementation of an accessible HTML5 video player. It decouples playback controls from the video frame, binds global keyboard shortcuts, emits auditory status updates to an `aria-live` region, and saves playback position asynchronously to JSON.
@@ -35,6 +38,7 @@ This guide provides a standalone, single-file implementation of an accessible HT
 ---
 
 ## 2. Complete HTML & JavaScript Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-2)
 Save the following standalone file as `accessible_player.html`:
 
 ```html
@@ -150,6 +154,7 @@ Save the following standalone file as `accessible_player.html`:
 ---
 
 ## 3. Why Order Matters in Media Player Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-3)
 1. **Check Form Focus Before Handling Spacebar**: If a user is typing in a comment or prompt box, ignoring the event prevents spacebar from interrupting typing.
 2. **Set Text Content of Live Region on Action**: Firing announcements immediately gives auditory confirmation while video decoding buffers the requested frame.
 3. **Save State on Pause Event**: Saving progress immediately when the user pauses prevents state loss if the browser tab is abruptly terminated.
@@ -157,6 +162,7 @@ Save the following standalone file as `accessible_player.html`:
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-4)
 **Q: Why is `aria-hidden="true"` placed on `timeText`?**  
 A: Visual time displays update multiple times per second. Hiding it from screen readers prevents assistive software from speaking numbers constantly while video is playing.
 

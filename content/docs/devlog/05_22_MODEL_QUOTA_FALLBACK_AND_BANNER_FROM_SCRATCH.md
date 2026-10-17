@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_22 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Model Quota Fallback & Accessible Banner from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_22-SEC-1)
 When developers run intensive coding tasks with heavy reasoning models (such as `pro` or high-effort reasoning configurations), API rate limits (HTTP 429) can exhaust quotas without warning. Without graceful handling, the application either crashes silently or strands the user in broken loops.
 
 This guide details how to implement an end-to-end quota breach detection and fallback system. When a rate limit is detected in the backend CLI stream, the server downgrades execution to a fast Flash model, dispatches a `model_fallback` WebSocket event, and updates the frontend UI with an accessible warning banner and ARIA live region announcement.
@@ -26,6 +29,7 @@ This guide details how to implement an end-to-end quota breach detection and fal
 ---
 
 ## 2. Complete Python Backend Handler
+[//]: # (SECTION_ID: SIRA-DOC-05_22-SEC-2)
 Save the following snippet in your backend stream parser (`agent_manager.py`):
 
 ```python
@@ -67,6 +71,7 @@ async def process_cli_stream(stream_generator, ws_send_func, current_model: str)
 ---
 
 ## 3. Complete Frontend HTML & JavaScript Handler
+[//]: # (SECTION_ID: SIRA-DOC-05_22-SEC-3)
 Add the banner and JavaScript listener to `index.html`:
 
 ```html
@@ -120,6 +125,7 @@ Add the banner and JavaScript listener to `index.html`:
 ---
 
 ## 4. Why Order Matters in Quota Handling
+[//]: # (SECTION_ID: SIRA-DOC-05_22-SEC-4)
 1. **Dispatch Fallback Before Dropping the Line**: Sending the `model_fallback` event immediately informs the user before subsequent token streams fail or stall.
 2. **Update Dropdown Value Before User Retries**: Synchronizing the `<select>` element prevents the next user prompt from blindly re-triggering the same 429 rate limit.
 3. **Use `role="alert"` and `aria-live="assertive"`**: Rate limit downgrades alter the intelligence and speed of the session; assertive priority ensures screen reader users hear the alert immediately.
@@ -127,6 +133,7 @@ Add the banner and JavaScript listener to `index.html`:
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_22-SEC-5)
 **Q: Why fall back to Flash instead of stopping the task?**  
 A: Workflows often involve simple tool commands or text summaries. Flash models have higher rate limits and lower token costs, allowing the developer to finish their session smoothly.
 

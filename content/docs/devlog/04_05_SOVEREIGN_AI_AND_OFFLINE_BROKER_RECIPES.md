@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-04_05 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 04.5: Architecture Solutions: Sovereign AI & Offline Broker Recipes
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-1)
 
 Following the lessons learned from enterprise pre-authorization roadblocks (`AADSTS65002`) and institutional data compliance audits (DEVLOG Chapters 70–72), Siraugga transitioned to a **Sovereign Local Intelligence Architecture**.
 
@@ -15,10 +18,12 @@ This guide provides copy-paste recipes for setting up an offline local model bro
 ---
 
 ## Recipe 1: Setting Up the Local Sovereign Proxy Broker
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-2)
 
 Instead of allowing the AI CLI to connect directly to external cloud servers, Siraugga routes all traffic through a local proxy endpoint on Port 5000.
 
 ### Step 1: Configure the Subprocess Environment in `agent_manager.py`
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-3)
 Pass local broker URLs and synthetic dummy tokens:
 
 ```python
@@ -39,6 +44,7 @@ def get_sovereign_environment():
 ```
 
 ### Step 2: Implement the Local Broker Route in `core/routes/proxy.py`
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-4)
 ```python
 from quart import Blueprint, request, jsonify
 
@@ -66,6 +72,7 @@ async def sovereign_broker(model_name):
 ---
 
 ## Recipe 2: The 4-Layer Forensic Purge Script
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-5)
 
 When enterprise compliance requires purging proprietary data from an agentic workspace, use this deterministic cleanup sequence:
 
@@ -102,6 +109,7 @@ echo "[SUCCESS] 4-Layer Forensic Purge Complete. Workspace 100% compliant."
 ---
 
 ## Why Order Matters in Sovereign Architecture
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-6)
 
 1. **Proxy Environment Flags Before Subprocess Startup**:
    - `GEMINI_BASE_URL` must be set in the process environment *before* spawning the CLI. If the CLI starts without the redirect, it attempts to contact public internet servers over WAN.
@@ -111,9 +119,12 @@ echo "[SUCCESS] 4-Layer Forensic Purge Complete. Workspace 100% compliant."
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-7)
 
 ### Q: Why pass a dummy token like `sovereign_dummy_token`?
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-8)
 **A:** Many AI SDKs check for the existence of an API key at startup and throw an error if the string is empty. Providing a synthetic dummy token satisfies the SDK while the proxy routes traffic to your local offline model.
 
 ### Q: What is `VACUUM` in SQLite?
+[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-9)
 **A:** When you delete rows from a database, SQLite simply marks the space as free rather than erasing it from disk. `VACUUM` physically wipes and defragments the database file on your hard drive.

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-03_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 03_16: Directory Tiering & Sandbox Jail Audit Logs
 
 Diagnostic test execution logs and validation traces evaluating **Directory-Level Tiering** and workspace path confinement across RBAC roles in `security/security_manager.py`.
@@ -5,6 +7,7 @@ Diagnostic test execution logs and validation traces evaluating **Directory-Leve
 ---
 
 ## What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-1)
 
 We audited the file classification and access control enforcement engine against diverse paths:
 - **Test 1: Nested Core Files**: Testing whether files with innocent extensions (`.json`, `.html`) residing inside protected directories (`core/ui_config.json`, `templates/index.html`) are classified as `TIER_CORE_ENGINE`.
@@ -15,6 +18,7 @@ We audited the file classification and access control enforcement engine against
 ---
 
 ## Exact Command Run
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-2)
 
 ```bash
 python3 -c "
@@ -45,6 +49,7 @@ for path, expected in test_paths:
 ---
 
 ## Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-3)
 
 ```
 ======================================================
@@ -67,6 +72,7 @@ AUDIT_STATUS: PASS (100% Boundary Containment Verified)
 ---
 
 ## How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-4)
 
 - **Elimination of the Extension Flaw**: The test confirmed that `.json` and `.html` files inside `core/` and `templates/` were correctly classified as `core_engine`. Flat filename checks no longer create security blind spots.
 - **Strict Sandbox Confinement**: The `gamedev` role was granted full access to edit game assets inside `playground/` while being completely blocked from viewing or altering system configuration files.
@@ -75,6 +81,7 @@ AUDIT_STATUS: PASS (100% Boundary Containment Verified)
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-5)
 
 In RBAC boundary enforcement, path evaluation sequence ensures containment:
 1. **Normalize Path String Before Checking Directory Parts**: Slashes must be normalized to prevent tricking the scanner with mixed slashes (`core\ui_config.json`).
@@ -84,16 +91,20 @@ In RBAC boundary enforcement, path evaluation sequence ensures containment:
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-6)
 
 ### Why is `core/ui_config.json` considered core engine?
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-7)
 `ui_config.json` controls which AI models are displayed in the user interface and how requests are routed. If a game developer could edit this file, they could change backend settings or redirect traffic to unauthorized endpoints.
 
 ### What is the `playground/` folder?
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-8)
 `playground/` is the dedicated workspace where game developers and modders build their projects. It is physically separated from the engine source code so experiments cannot damage server files.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-9)
 - To understand the vulnerability that prompted directory tiering, read [`01_PROBLEMS_ENCOUNTERED/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md`](/docs/devlog/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING).
 - To inspect primary source citations of the security manager, view [`02_SOURCE_EVIDENCE/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE.md`](/docs/devlog/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE).
 - To build the complete zero-trust RBAC engine from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH.md`](/docs/devlog/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH).

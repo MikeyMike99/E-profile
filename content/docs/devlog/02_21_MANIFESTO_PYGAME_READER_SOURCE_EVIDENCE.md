@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_21 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pygame Screen Reader Chunk Reader Source Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_21-SEC-1)
 This document records source code evidence from `docs/manifesto_reader.py`. Engineered during the 24-hour documentation sprint, this custom Pygame tool bypassed crushed IDEs and memory-locked screen readers to read a 317,000-line monolithic markdown file in 100-line chunks with synchronized speech timing.
 
 ---
 
 ## 2. 100-Line Chunk Loading Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_21-SEC-2)
 Rather than buffering tens of megabytes into memory, `manifesto_reader.py` streams strict 100-line slices:
 
 ```python
@@ -33,6 +37,7 @@ def load_chunk(filepath, start_line, chunk_size):
 ---
 
 ## 3. Screen Reader WPM Reading Time Estimation Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_21-SEC-3)
 To enable automatic scrolling that matches the rapid speech of blind developers, the script dynamically calculates delay based on Words-Per-Minute (WPM):
 
 ```python
@@ -48,6 +53,7 @@ def estimate_reading_time(text, wpm):
 ---
 
 ## 4. Pygame Event Loop & Fast Search Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_21-SEC-4)
 The reader uses Pygame to trap keystrokes without IDE interference and integrates a Tkinter dialog for instant string searches:
 
 ```python
@@ -82,6 +88,7 @@ if event.key == pygame.K_f and (event.mod & pygame.KMOD_CTRL):
 ---
 
 ## 5. Why Order Matters in Chunk Reading
+[//]: # (SECTION_ID: SIRA-DOC-02_21-SEC-5)
 1. **Withdraw Tkinter Root Before Dialog**: Hiding the main Tkinter root window (`root.withdraw()`) prevents an empty window from lingering and stealing OS focus from Pygame.
 2. **Read Line Slices Sequentially**: Slicing the file by enumerating lines up to `start_line + CHUNK_SIZE` avoids loading subsequent lines into memory.
 3. **Speak New Line Before Incrementing Index**: Triggering `screenreader_speak()` immediately upon index change ensures auditory output synchronizes with visual display coordinates.
@@ -89,6 +96,7 @@ if event.key == pygame.K_f and (event.mod & pygame.KMOD_CTRL):
 ---
 
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_21-SEC-6)
 **Q: Why use Pygame to read text?**  
 A: Pygame provides raw, low-level keyboard event handling that ignores desktop shortcuts, allowing the developer to build custom auto-read controls without IDE conflicts.
 

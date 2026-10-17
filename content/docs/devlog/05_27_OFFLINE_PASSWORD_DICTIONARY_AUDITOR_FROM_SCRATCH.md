@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Offline Password Dictionary Auditor from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_27-SEC-1)
 Developers often assume that putting a password on a `.zip` archive guarantees complete data security. In reality, standard zip files historically used legacy **ZipCrypto**, which can be cracked in seconds.
 
 This guide details how to build `crack_master.py` from scratch. It builds an active password auditor that benchmarks dictionary attack velocity against zip files, demonstrates how ZipCrypto collapses under automated attacks, and proves why AES-256 encryption is mandatory.
@@ -30,6 +33,7 @@ This guide details how to build `crack_master.py` from scratch. It builds an act
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_27-SEC-2)
 Save the following script as `crack_master.py`:
 
 ```python
@@ -89,6 +93,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Security Auditing
+[//]: # (SECTION_ID: SIRA-DOC-05_27-SEC-3)
 1. **Read Single File Stream Before Full Extraction**: Calling `zf.read(first_file)` tests the password in milliseconds without writing entire files to disk.
 2. **Benchmark High-Frequency Wordlists First**: Testing common passwords first quickly catches human mistakes before launching computationally expensive sweeps.
 3. **Clean Decrypted Files Immediately**: Adhering to the Clean Workspace Protocol guarantees that decrypted plaintext secrets are never left behind in the workspace.
@@ -96,6 +101,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_27-SEC-4)
 **Q: Why does `zf.read()` throw a `RuntimeError` on wrong passwords?**  
 A: Python's `zipfile` raises `RuntimeError("Bad password for file")` when the CRC check fails, allowing the loop to catch it and try the next password.
 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_11 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 05_11: Cross-Platform Semantic Mantrap From Scratch
 
 A step-by-step guide to writing the cross-platform **Semantic Mantrap** (`mantrap.py`) line by line from a completely blank text editor window.
@@ -5,10 +7,12 @@ A step-by-step guide to writing the cross-platform **Semantic Mantrap** (`mantra
 ---
 
 ## What We Are Building & Beginner Safety Rules
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-1)
 
 We are constructing `mantrap.py`—a lightweight module that provides atomic file-locking and race-condition prevention across both Linux/WSL and native Windows.
 
 ### Beginner Safety Directives
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-2)
 1. **Never Lock Empty Files on Windows**: `msvcrt.locking` throws an error if attempting to lock a 0-byte file. We will write 1 dummy byte (`"X"`) upon creation.
 2. **Always Use `try...finally`**: An exclusive lock must *always* be released in a `finally` block so that crashes or interruptions never freeze the system.
 3. **OS-Agnostic Imports**: Never import `fcntl` directly on Windows or `msvcrt` directly on Linux without wrapping them in `try...except ImportError`.
@@ -16,8 +20,10 @@ We are constructing `mantrap.py`—a lightweight module that provides atomic fil
 ---
 
 ## Step-by-Step Line Breakdown
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-3)
 
 ### Block 1: Imports & OS Detection (Lines 1–15)
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-4)
 
 Open a blank file named `mantrap.py` and write:
 
@@ -47,6 +53,7 @@ MANTRAP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lo
 ---
 
 ### Block 2: The Context Manager & Lock Acquisition (Lines 17–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-5)
 
 Add the `SemanticMantrap` class and context manager:
 
@@ -91,6 +98,7 @@ class SemanticMantrap:
 ---
 
 ### Block 3: Guaranteed Lock Release (Lines 46–60)
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-6)
 
 Complete the function with the `finally` cleanup block:
 
@@ -115,6 +123,7 @@ Complete the function with the `finally` cleanup block:
 ---
 
 ## Complete Finished File Listing
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-7)
 
 ```python
 import os
@@ -176,6 +185,7 @@ class SemanticMantrap:
 ---
 
 ## 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-8)
 
 ```bash
 # 1. Test basic acquisition and release
@@ -190,16 +200,20 @@ If it prints `Inside chamber successfully!` without errors, your cross-platform 
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-9)
 
 ### What does `r+` mean in `open()`?
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-10)
 `r+` opens the file for both reading and writing without erasing its contents. Standard `w` erases the file immediately, which would delete our Windows 1-byte marker!
 
 ### What happens if I forget to close `lock_fd`?
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-11)
 Python will eventually close it when the garbage collector runs, but leaving open file descriptors can cause Windows to report "File in use by another process". Explicitly closing it in `finally` is a critical best practice.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-12)
 - To understand why uncoordinated concurrency broke the server, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).
 - To inspect diagnostic benchmark logs, visit [`03_DIAGNOSTIC_TESTS/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS.md`](/docs/devlog/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS).
 - To explore the architectural deep dive, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE.md`](/docs/devlog/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE).

@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 17: Modifying Agentic Control Lists
 
 ## 17.1 Hot-Patching Agentic Filters
+[//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-17_1)
 
 After an Agentic Control List (ACL) is deployed to the active Orchestrator, it often requires modification. A Tier 5 Admin might realize an ACE (Agentic Control Entry) is accidentally blocking a legitimate QA Agent from testing a level, or worse, a typo in a UUID has left the `core_engine` exposed. 
 
@@ -13,6 +16,7 @@ There are two primary methods for hot-patching an active ACL:
 ---
 
 ## 17.2 The Crucible Purge (Text Editor Method)
+[//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-17_2)
 
 The Crucible Purge is the brute-force method of updating an Agentic Control List. If an ACL has dozens of complex rules and multiple typos are discovered, it is often safer to pull the entire list offline, fix it in a text editor, and push it back.
 
@@ -34,6 +38,7 @@ Because appending new rules simply adds them to the absolute bottom of the list 
 ---
 
 ## 17.3 Agentic Sequence Injection (Sequence Numbers)
+[//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-17_3)
 
 To avoid the dangerous exposure window of a full Purge, DevCore supports **Agentic Sequence Injection**. 
 
@@ -63,10 +68,12 @@ The Orchestrator instantly updates the in-memory ACL. The AI Swarm experiences z
 ---
 
 ## Chapter 17 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-1)
 
 Chapter 17 outlines the critical administrative procedures required to maintain a live, Zero-Trust environment. Mistakes in security configurations are inevitable, but bringing down the entire game server to fix them is a relic of older architectures. By utilizing Agentic Sequence Injection, Tier 5 Admins can surgically rewrite the rules of reality for the AI Swarm without ever breaking the WebSocket streams.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 17 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional ACL modification methods into their DevCore Agentic equivalents:
 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-01_08 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 01.8: Problems Encountered: The Enterprise Pre-Authorization Wall (AADSTS65002)
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-1)
 
 When navigating enterprise governance, organizations often attempt to leverage institutional cloud services (such as Microsoft 365 Copilot and Azure AD) to inherit enterprise compliance automatically.
 
@@ -17,8 +20,10 @@ This chapter analyzes why headless enterprise authentication failed and why it s
 ---
 
 ## The Incident: Hitting Error `AADSTS65002`
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-2)
 
 ### What Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-3)
 To test whether Siraugga could authenticate headlessly through an organizational Microsoft 365 Copilot tenant, the team built an OAuth 2.0 test harness using the Microsoft Authentication Library (`msal`). 
 
 We initiated a headless Device Code Flow (`initiate_device_flow`):
@@ -37,6 +42,7 @@ from the API owner before requesting tokens for that API.
 ```
 
 ### Why It Happened: The Enterprise Illusion
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-4)
 Many developers assume that because an employee or student can log into Microsoft Word or Copilot on the web, their scripts can programmatically consume that same intelligence via APIs. 
 
 This is an illusion:
@@ -47,6 +53,7 @@ This is an illusion:
 ---
 
 ## The Architectural Pivot: Sovereign Independence
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-5)
 
 Rather than remaining chained to external enterprise bureaucracy, the team made a permanent architectural pivot: **Zero Cloud Entanglement**.
 
@@ -66,6 +73,7 @@ Rather than remaining chained to external enterprise bureaucracy, the team made 
 ```
 
 ### The Three Sovereignty Pillars
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-6)
 1. **Local-First Model Orchestration**: Siraugga prioritizes offline, self-hosted LLM endpoints running directly on local developer hardware.
 2. **Self-Contained Security**: Rather than relying on cloud vendor firewalls, data classification is enforced locally via the **Raugus Resolver** and **Semantic Egress Firewall**.
 3. **Clean-Room Defense**: Operating completely independent of enterprise cloud infrastructure guarantees 100% sovereign code ownership with zero intellectual property claims from institutional landlords.
@@ -73,6 +81,7 @@ Rather than remaining chained to external enterprise bureaucracy, the team made 
 ---
 
 ## Why Order Matters in Authentication Architecture
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-7)
 
 1. **Verify Token Scopes Before Interactive Prompts**:
    - Applications must verify client registration authority *before* displaying device codes to users. Prompts that authenticate users only to fail at token grant waste human time and damage UX.
@@ -82,9 +91,12 @@ Rather than remaining chained to external enterprise bureaucracy, the team made 
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-8)
 
 ### Q: What is MSAL?
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-9)
 **A:** MSAL stands for Microsoft Authentication Library. It is an official SDK used by developers to authenticate users against Microsoft Azure Active Directory (now called Microsoft Entra ID).
 
 ### Q: What is Device Code Flow?
+[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-10)
 **A:** It is an OAuth 2.0 flow designed for headless devices (like smart TVs, game consoles, or terminal scripts) that lack a web browser. The device displays a short code and a URL, allowing the user to approve the login from their smartphone or computer.

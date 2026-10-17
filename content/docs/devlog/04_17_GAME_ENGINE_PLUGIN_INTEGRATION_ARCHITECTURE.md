@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-04_17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 04_17: Game Engine Plugin Integration Architecture
 
 An architectural guide to integrating Siraugga into third-party game engines (Godot, Unreal Engine, Unity) as an out-of-process, zero-trust **Headless AI Daemon**.
@@ -5,6 +7,7 @@ An architectural guide to integrating Siraugga into third-party game engines (Go
 ---
 
 ## Architectural Overview & Topology
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-1)
 
 Embedding generative AI into video games traditionally risks freezing game frame rates and exposing game source code to hallucinating agents.
 
@@ -48,6 +51,7 @@ Siraugga enforces an **Out-of-Process Game Plugin Architecture**:
 ---
 
 ## The Two UI Rendering Methodologies
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-2)
 
 1. **In-Game Web View Overlay (Chromium Embedded Framework - CEF)**:
    - The game engine renders an internal web browser overlay targeting `http://localhost:5000`.
@@ -59,6 +63,7 @@ Siraugga enforces an **Out-of-Process Game Plugin Architecture**:
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-3)
 
 In game engine daemon lifecycle management, sequencing prevents orphaned processes:
 1. **Spawn Daemon in Engine Initialization**: Start the headless `.exe` during game engine bootstrap so socket ports are bound before the title screen appears.
@@ -68,6 +73,7 @@ In game engine daemon lifecycle management, sequencing prevents orphaned process
 ---
 
 ## Reusable Integration Recipe (GDScript / Godot Example)
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-4)
 
 ```gdscript
 extends Node
@@ -93,16 +99,20 @@ func send_player_message(player_text):
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-5)
 
 ### Why can't the AI modify the game's C++ source code?
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-6)
 The game engine starts the agent with its root directory set strictly to `C:\Game\Player_Mods\`. Any tool call attempting to navigate backwards (`../../`) is intercepted and blocked by the Security Manager.
 
 ### Does running the agent slow down my game's FPS?
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-7)
 No. Because the agent runs as a separate operating system process, all AI calculations occur on background CPU cores without interrupting the game's 60 FPS rendering loop.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-8)
 - To understand why desktop window wrapping and game plugins required headless compilation, read [`01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md`](/docs/devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS).
 - To inspect primary source citations of the game integration spec, view [`02_SOURCE_EVIDENCE/02_18_GAME_ENGINE_HEADLESS_DAEMON_EVIDENCE.md`](/docs/devlog/02_18_GAME_ENGINE_HEADLESS_DAEMON_EVIDENCE).
 - To write a lightweight game engine WebSocket bridge script from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_19_GAME_ENGINE_WEBSOCKET_BRIDGE_FROM_SCRATCH.md`](/docs/devlog/05_19_GAME_ENGINE_WEBSOCKET_BRIDGE_FROM_SCRATCH).

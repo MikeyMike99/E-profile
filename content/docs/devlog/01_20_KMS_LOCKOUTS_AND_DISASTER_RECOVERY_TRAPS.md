@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-01_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 01_20: KMS Lockouts & Disaster Recovery Traps
 
 In zero-trust architectures, sensitive configurations and forensic audit vaults are protected by cryptographic encryption. This chapter details the catastrophic risk of **Key Management System (KMS) Lockouts** caused by sandbox path divergence, and how **BIP-39 Mnemonic Seed Phrase Disaster Recovery** ensures permanent data recoverability.
@@ -5,6 +7,7 @@ In zero-trust architectures, sensitive configurations and forensic audit vaults 
 ---
 
 ## What Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-1)
 
 While securing forensic session vaults and sensitive credentials with AES-256-GCM encryption, the platform encountered critical data-loss events:
 - **Sandbox Pathing Lockouts**: The KMS looked for the master key using a relative path (`./security/master.key`). When an autonomous agent switched its working directory to a sub-workspace (`/projects/game_demo/`), the KMS resolved the path to `/projects/game_demo/security/master.key`, failed to find it, generated a fresh key, and permanently orphaned all historical vault data!
@@ -14,6 +17,7 @@ While securing forensic session vaults and sensitive credentials with AES-256-GC
 ---
 
 ## Why It Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-2)
 
 The root causes trace back to naive filesystem assumptions and missing cryptographic escrow:
 - **Relative Path Vulnerability**: Relative file paths (`./...`) are dependent on the current process working directory (`os.getcwd()`). Because agent commands dynamically shift working directories, relative paths must never be used for security-critical assets.
@@ -31,6 +35,7 @@ KMS uses canonical /secure/vault/master.key + 12-Word Mnemonic Phrase ---> 100% 
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-3)
 
 In cryptographic bootstrapping and key derivation, the sequence of execution determines key validity:
 1. **Resolve Canonical Master Path Before Access**: The KMS must resolve the absolute, canonical system path for the key file before checking process working directories.
@@ -40,19 +45,24 @@ In cryptographic bootstrapping and key derivation, the sequence of execution det
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-4)
 
 ### What is a BIP-39 Mnemonic Seed Phrase?
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-5)
 BIP-39 is a cryptographic standard that converts 128 or 256 bits of random entropy into an easy-to-read sequence of 12 or 24 English words (like `apple river ocean copper...`). It allows humans to record cryptographic keys securely on paper.
 
 ### Why is AES-GCM preferred over standard AES-CBC?
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-6)
 AES-CBC only encrypts data; it does not prove that the data wasn't tampered with. AES-GCM is an Authenticated Encryption mode that includes a cryptographic tag. If even one byte of ciphertext is modified, decryption immediately aborts with an authentication error.
 
 ### How does Siraugga recover if the master key file is deleted?
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-7)
 The developer enters the 12-word seed phrase into the offline recovery utility. The script executes PBKDF2-HMAC-SHA512 over the mnemonic, deterministically reconstructs the exact 256-bit AES key, and restores full vault access.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-01_20-SEC-8)
 - To inspect the primary source implementation of KMS key loading and seed phrase derivation, read [`02_SOURCE_EVIDENCE/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE.md`](/docs/devlog/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE).
 - To view the diagnostic test logs verifying deterministic key recovery, visit [`03_DIAGNOSTIC_TESTS/03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS.md`](/docs/devlog/03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS).
 - To build the complete mnemonic disaster recovery script from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH.md`](/docs/devlog/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH).

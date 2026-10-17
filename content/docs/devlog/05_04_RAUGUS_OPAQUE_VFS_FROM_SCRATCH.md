@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_04 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.4: From-Scratch Creation Guide: Raugus Opaque VFS Resolver
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-1)
 
 This guide walks you through building an **Opaque Key Resolver** (`raugus_resolver.py`) from a blank editor window.
 
@@ -15,13 +18,16 @@ The Resolver acts as a gatekeeper that allows AI agents to inspect and modify sp
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-2)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-3)
 ```bash
 nano raugus_resolver.py
 ```
 
 ### Step 2: Implement Key Registry & AST Scanner (Lines 1–35)
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-4)
 ```python
 import ast
 import json
@@ -61,6 +67,7 @@ class RaugusResolver:
 ```
 
 ### Step 3: Implement `read_by_key` with Tier Gating (Lines 36–55)
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-5)
 ```python
     def read_by_key(self, key: str, user_tier: int = 1) -> str:
         """Reads code by opaque key. Physical path is never exposed."""
@@ -88,6 +95,7 @@ class RaugusResolver:
 ---
 
 ## Why Order Matters in Opaque VFS Engines
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-6)
 
 1. **Verify Key Existence Before Opening File Descriptors**:
    - Checking `key in self.key_map` must occur *before* attempting file I/O. If an attacker inputs `../../etc/passwd`, the resolver throws `KeyError` immediately without touching the filesystem.
@@ -97,6 +105,7 @@ class RaugusResolver:
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-7)
 
 Verify that your resolver indexes functions and protects against unauthorized access:
 
@@ -137,9 +146,12 @@ print('[PASS] Admin Read Success:\n', code.strip())
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-8)
 
 ### Q: Why is `start_line - 1` used when slicing lines?
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-9)
 **A:** Python's AST line numbers are 1-indexed (the first line is line 1). Python lists are 0-indexed (the first element is index 0). Subtracting 1 aligns the coordinates accurately.
 
 ### Q: Does this prevent hackers from seeing where files live on the server?
+[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-10)
 **A:** Yes! The client only ever sends and receives the string `"app.demo::secret_func"`. The actual Linux directory path remains hidden on the server.

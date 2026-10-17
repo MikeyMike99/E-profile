@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-MAN-FOREWORD | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Foreword: The Cost of Memory
 
 You can build the most incredible, complex systems in the world, but if you don't document them, they eventually turn into ghosts. 

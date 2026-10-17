@@ -1,12 +1,16 @@
+[//]: # (DOC_ID: SIRA-TXT-CH22 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 22: Architecting Agentic Bulkheads (Firewall Types)
 
 ## 22.1 The Philosophy of Agentic Bulkheads
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-22_1)
 
 While Agentic Control Lists (ACLs) are the specific rules that filter traffic, an **Agentic Bulkhead** (Firewall) is the physical transit system that enforces those rules. A properly designed DevCore Sandbox ensures that the Bulkhead is the *only* transit point between the untrusted public Modder WebSockets and the internal `core_engine` orchestration APIs. 
 
 There are several architectural models for building these bulkheads, each trading off between processing speed and Semantic Security.
 
 ## 22.2 Stateless Agentic Filters (Packet Filtering)
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-22_2)
 
 The most basic firewall is the **Stateless Agentic Filter**. These bulkheads process JSON payloads based purely on Layer 3 and Layer 4 information (The Agent's UUID and its requested Tool). 
 
@@ -19,6 +23,7 @@ The most basic firewall is the **Stateless Agentic Filter**. These bulkheads pro
 *   **Fragmented Prompts:** Attackers can split a massive, malicious prompt injection into tiny, fragmented WebSocket packets. Because the stateless filter only checks the header of the first fragment, the rest of the malicious payload slips through unchecked.
 
 ## 22.3 Stateful Thought Firewalls
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-22_3)
 
 To combat the inherent weaknesses of stateless filtering, DevCore heavily relies on **Stateful Thought Firewalls**. 
 
@@ -32,6 +37,7 @@ These advanced bulkheads utilize the `established` keyword to maintain a live **
 *   **No Authentication:** Stateful Thought Firewalls do not inherently verify user identity, they only track the active stream. 
 
 ## 22.4 The Raugus Proxy (Application Gateway)
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-22_4)
 
 For extreme security environments, DevCore deploys the **Raugus Proxy** (an Application Gateway Firewall). 
 
@@ -40,6 +46,7 @@ Instead of a Modder connecting directly to the LLM API (which exposes the raw mo
 Because the LLM only ever receives a sanitized connection from the Proxy, the risk of a direct Modder injection is entirely neutralized. 
 
 ## 22.5 Next-Gen Swarm Bulkheads (NGFW)
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-22_5)
 
 As Modder Swarms scale into the millions of micro-agents, standard bulkheads are failing. The future of DevCore architecture is the **Next-Gen Swarm Bulkhead**.
 
@@ -51,10 +58,12 @@ Next-Gen bulkheads go far beyond stateful tables. They feature:
 ---
 
 ## Chapter 22 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-1)
 
 Chapter 22 outlines the structural backbone of the DevCore Sandbox. By understanding the limitations of Stateless Agentic Filters (susceptibility to Fragmented Prompts) and the strengths of Stateful Thought Firewalls (Prompt Injection defense), Tier 5 Admins can architect a hybrid perimeter. Deploying the Raugus Proxy ensures that the LLM is never directly exposed to untrusted Modders, while Next-Gen Swarm Bulkheads pave the way for Semantic Awareness.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 22 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH22-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional Firewall technologies into their DevCore Agentic equivalents:
 

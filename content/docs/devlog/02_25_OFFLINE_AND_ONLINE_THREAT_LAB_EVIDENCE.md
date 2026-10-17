@@ -1,11 +1,15 @@
+[//]: # (DOC_ID: SIRA-DOC-02_25 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Active Threat Lab (Offline Crack & Online Brute) Evidence
 
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-1)
 This document records source code evidence from the active penetration testing laboratories located in `playground/Offline_Crack_Lab/crack_master.py` and `playground/Online_Brute_Lab/brute_api.py`. These scripts validate password hashing resilience, zip archive encryption resistance, and API rate-limiting thresholds.
 
 ---
 
 ## 2. Offline Dictionary Cracking Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-2)
 `crack_master.py` tests password cracking velocity against ZipCrypto vs AES-256 encrypted archives:
 
 ```python
@@ -45,6 +49,7 @@ def test_aes256_crack(zip_path: str, wordlist: list[str]) -> tuple[bool, str, fl
 ---
 
 ## 3. Online API Brute-Force Simulation Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-3)
 `brute_api.py` verifies that the authentication gateway actively blocks rapid dictionary guessing:
 
 ```python
@@ -78,6 +83,7 @@ def simulate_brute_force_attack(attempts: int = 10):
 ---
 
 ## 4. Why Order Matters in Threat Simulation
+[//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-4)
 1. **Test Offline Resilience Before Network Exposure**: Confirming that sensitive backups use AES-256 ensures an attacker who steals an archive cannot read it offline.
 2. **Handle Exceptions Gracefully During Wordlist Sweeps**: Catching `RuntimeError` and `BadZipFile` without terminating the process allows testing thousands of passwords per second.
 3. **Trigger Rate Limiting Before Resource Exhaustion**: The API gateway must return HTTP 429 before CPU-heavy PBKDF2 hashing routines exhaust server thread pools.
@@ -85,6 +91,7 @@ def simulate_brute_force_attack(attempts: int = 10):
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-5)
 **Q: Why does ZipCrypto crack so much faster than AES-256?**  
 A: ZipCrypto uses a lightweight CRC32-based stream cipher designed in 1989 for slow 386 computers. Modern CPUs can test millions of ZipCrypto keys per second.
 

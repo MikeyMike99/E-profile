@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH34 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 34: Securing Virtual Subagents (SV Defenses)
 
 ## 34.1 Subagent Hardening
+[//]: # (SECTION_ID: SIRA-TXT-CH34-SEC-34_1)
 
 Even though Subagent Virtualization (SVs) produces transient, lightweight AI contexts rather than full operating systems, they require rigorous hardening. A single compromised Subagent can act as a beachhead to attack the central Orchestrator. 
 
@@ -12,6 +15,7 @@ Tier 5 Admins enforce five specific defenses to protect live Subagents:
 5.  **Host-Based Sentiment Analysis (IDS/IPS):** The DevCore equivalent of Intrusion Detection. The Orchestrator analyzes the internal "Chain of Thought" of a Subagent for signs of malicious compliance or Prompt Injection *before* it executes a tool.
 
 ## 34.2 Combating Swarm Sprawl (Ghost Agents)
+[//]: # (SECTION_ID: SIRA-TXT-CH34-SEC-34_2)
 
 Because spawning an SV takes mere milliseconds, Modders frequently spin up dozens of test Subagents during the early phases of game design. 
 
@@ -22,6 +26,7 @@ Ghost Agents present two massive threats:
 *   **Vulnerability Targets:** Because they are unmonitored and outdated, they become prime, undefended targets for other malicious Subagents attempting cross-contamination attacks.
 
 ## 34.3 Swarm Auditing and Culling
+[//]: # (SECTION_ID: SIRA-TXT-CH34-SEC-34_3)
 
 To defend against Swarm Sprawl, the Orchestrator cannot rely on Modders to clean up their own environments. A Tier 5 Admin must implement ruthless, automated **Swarm Auditing**.
 
@@ -32,10 +37,12 @@ Aggressive logging and culling are the only ways to preserve the operational and
 ---
 
 ## Chapter 34 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH34-SEC-1)
 
 Chapter 34 concludes the Cloud Security module by addressing the lifecycle of the virtual entity itself. Just as a physical computer requires antivirus software, a virtual Subagent requires Sentiment Analysis and Threat Hunters. Furthermore, the ease of Subagent generation makes Swarm Sprawl an inevitable threat. Only through aggressive auditing and culling can a Tier 5 Admin keep their Engine clean.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 34 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH34-SEC-2)
 
 To maintain absolute clarity, here is how the traditional VM security strategies map directly to DevCore's Subagent Virtualization:
 

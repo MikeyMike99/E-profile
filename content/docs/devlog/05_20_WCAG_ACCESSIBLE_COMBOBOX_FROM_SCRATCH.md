@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # WCAG Accessible Slash Command Combobox from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-1)
 A common flaw in modern chat web applications is the uncoordinated slash command menu. When a developer types `/` and uses keyboard arrows to select a command, standard event handlers often submit the incomplete prompt on Enter or trap screen reader focus, violating accessibility standards.
 
 This guide provides a standalone, zero-framework implementation of a WCAG 2.1 AA compliant ARIA Combobox. It coordinates keyboard events, manages virtual focus via `aria-activedescendant`, and cleanly separates command selection from prompt submission.
@@ -25,6 +28,7 @@ This guide provides a standalone, zero-framework implementation of a WCAG 2.1 AA
 ---
 
 ## 2. Complete HTML & JavaScript Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-2)
 Save the following standalone file as `combobox.html`:
 
 ```html
@@ -175,6 +179,7 @@ Save the following standalone file as `combobox.html`:
 ---
 
 ## 3. Why Order Matters in Combobox Event Logic
+[//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-3)
 1. **Intercept Keydown Before Default Form Submission**: Catching `Enter` in the menu check and invoking `e.preventDefault()` halts prompt transmission before the server receives partial commands.
 2. **Assign Active Descendant Before Announcement**: Screen reader live regions must refer to IDs that have already been stamped with `aria-selected="true"`.
 3. **Reset State on Close**: Completely clearing `aria-activedescendant` and resetting `activeIndex = -1` guarantees subsequent typing starts from a clean virtual slate.
@@ -182,6 +187,7 @@ Save the following standalone file as `combobox.html`:
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-4)
 **Q: Why keep focus on the `<textarea>` instead of focusing the `<button>`?**  
 A: Moving focus into the button forces screen readers to exit "Forms Mode" or "Edit Mode", stopping users from continuing to type their prompt.
 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-04_02 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 04.2: Architecture Solutions: The 5-Tier Zero-Trust Hierarchy
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-1)
 
 In multi-tenant agentic platforms where third-party developers, community modders, and autonomous AI agents collaborate, a single unhardened endpoint can compromise the entire host operating system.
 
@@ -15,6 +18,7 @@ This chapter presents the deep architectural design of Siraugga's **5-Tier Zero-
 ---
 
 ## The 5 Architectural Tiers
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-2)
 
 ```text
 +-------------------------------------------------------------------------------+
@@ -55,6 +59,7 @@ This chapter presents the deep architectural design of Siraugga's **5-Tier Zero-
 ---
 
 ## Role-Based Access Control (RBAC) Matrix
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-3)
 
 | User Role | Tier 1 (Assets) | Tier 2 (Engine) | Tier 3 (Logs) | Tier 4 (Forbidden) | Tier 5 (Root) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -65,6 +70,7 @@ This chapter presents the deep architectural design of Siraugga's **5-Tier Zero-
 ---
 
 ## Workspace Confinement & The Jailed Agent
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-4)
 
 When an unprivileged developer (`gamedev` or `modder`) prompts the AI:
 1. **Isolated CWD**: The `agent_manager` sets `cwd` strictly to their designated project folder (`projects/game_demo/`).
@@ -74,6 +80,7 @@ When an unprivileged developer (`gamedev` or `modder`) prompts the AI:
 ---
 
 ## Why Order Matters in Multi-Tier Security
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-5)
 
 1. **Verify Role Clearance Before Directory Listing**:
    - The security manager must filter files *during* the directory traversal loop, not on client delivery. If Tier 2 or Tier 4 files are sent to the client and hidden only via CSS, attackers can inspect raw JSON network payloads.
@@ -83,9 +90,12 @@ When an unprivileged developer (`gamedev` or `modder`) prompts the AI:
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-6)
 
 ### Q: Why shouldn't an admin edit `.env` through the web portal?
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-7)
 **A:** If an admin account's session token is ever hijacked via cross-site scripting (XSS), an attacker could immediately read all database passwords from `.env`. Blocking Tier 4 across all web APIs enforces defense-in-depth.
 
 ### Q: What is the difference between `gamedev` and `modder`?
+[//]: # (SECTION_ID: SIRA-DOC-04_02-SEC-8)
 **A:** `gamedev` users can write, edit, and create new game assets inside their designated folder. `modder` users have read-only access; they can test and review code, but save operations are blocked by the backend.

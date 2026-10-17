@@ -1,13 +1,18 @@
+[//]: # (DOC_ID: SIRA-DOC-05_39 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.39: From-Scratch Creation Guide: RAIA Swarm Supervisor & Loop Suppressor
 
 ## Overview & Beginner Context
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-1)
 This guide teaches you how to write an autonomous multi-agent supervisor in Python from scratch. It implements the **Semantic Tree Protocol (STP)** to prevent conversational loops and manages an N+1 standby array of worker agents (**RAIA**).
 
 ---
 
 ## 1. Line-by-Line Construction
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-1)
 
 ### Block 1: The STP Loop Detector (Lines 1–30)
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-2)
 ```python
 import hashlib
 import time
@@ -40,6 +45,7 @@ class STPController:
 - Tracks hop counts and message signatures to forcefully mute repeating loops.
 
 ### Block 2: The RAIA Failover Supervisor (Lines 31–60)
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-3)
 ```python
 class RAIASupervisor:
     """Manages hot standby agent replicas for N+1 high availability."""
@@ -60,19 +66,23 @@ class RAIASupervisor:
 ---
 
 ## 2. 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-2)
 1. Send repetitive messages between agents -> STP stops execution on the 2nd duplicate.
 2. Simulate worker failure -> Supervisor promotes standby worker.
 
 ---
 
 ## 3. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-3)
 
 ### What is a "Hop Count"?
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-4)
 A hop count measures how many times a message has traveled from one agent to another. Capping hops at 4 ensures that agents cannot message each other back and forth forever.
 
 ---
 
 ## 4. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md`](/docs/devlog/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE.md`](/docs/devlog/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS.md`](/docs/devlog/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS)

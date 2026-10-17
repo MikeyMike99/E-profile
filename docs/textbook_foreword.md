@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-TEXTBOOK_FOREW | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # The Antigravity Architecture: A Hacker's Manifesto (Foreword)
 
 *The itch has become a reality.*

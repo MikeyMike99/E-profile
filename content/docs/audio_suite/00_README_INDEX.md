@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: JOSH-PLAY-00 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+
 # JOSHY Screen Reader & Nuitka Packaging Documentation Index
 
 Welcome to the technical documentation and future compilation guide for the **JOSHY Audio Playback Suite**.
@@ -7,6 +9,7 @@ This folder documents the complete investigation, source code evidence, diagnost
 ---
 
 ## Documentation Directory Contents
+[//]: # (SECTION_ID: JOSH-PLAY-00-SEC-1)
 
 The documentation is organized into five focused, screen-reader-friendly guides:
 
@@ -36,6 +39,7 @@ The documentation is organized into five focused, screen-reader-friendly guides:
 ---
 
 ## Project File Map
+[//]: # (SECTION_ID: JOSH-PLAY-00-SEC-2)
 
 | File | Location | Role |
 | :--- | :--- | :--- |
@@ -49,6 +53,7 @@ The documentation is organized into five focused, screen-reader-friendly guides:
 ---
 
 ## Quick Checklist for Future Recompilations
+[//]: # (SECTION_ID: JOSH-PLAY-00-SEC-3)
 
 If you ever modify `main.py` (t.py) in the future and want to rebuild both `JOSHY.exe` and `JOSHY-Setup.exe`:
 
@@ -61,6 +66,7 @@ If you ever modify `main.py` (t.py) in the future and want to rebuild both `JOSH
 ---
 
 ## New to Screen Readers or Accessible Coding? Start Here First!
+[//]: # (SECTION_ID: JOSH-PLAY-00-SEC-4)
 
 If you are a beginner developer reading this documentation for the first time—and you did not build `JOSHY.exe` and have never worked with screen readers before—read **[`00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY.md`](/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY)** before diving into Chapter 1.
 
@@ -74,6 +80,7 @@ It answers the core questions a beginner coder asks when opening this folder:
 ---
 
 ## Chapter 5 Added: Building the `.bat` File From Scratch
+[//]: # (SECTION_ID: JOSH-PLAY-00-SEC-5)
 
 6. **[`05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE.md`](/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE)**
    - A complete beginner's guide to creating `compile_joshy.bat` (compile_joshy.bat) from a blank Notepad file, explaining every batch command (`@echo off`, `cd /d "%~dp0"`, `^`, `$LOCALAPPDATA` vs. `%%LOCALAPPDATA%%`, `%ERRORLEVEL%`, `pause`) and every Nuitka flag line by line.

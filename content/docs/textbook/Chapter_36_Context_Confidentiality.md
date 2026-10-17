@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH36 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 36: Context Confidentiality (Symmetric vs Asymmetric)
 
 ## 36.1 The Two Pillars of Agentic Cryptography
+[//]: # (SECTION_ID: SIRA-TXT-CH36-SEC-36_1)
 
 To protect a Subagent's conversational payload from network interceptors, DevCore utilizes two distinct classes of encryption: Symmetric and Asymmetric. Because generating AI tokens requires massive computational overhead, a Tier 5 Admin must understand exactly when to use each.
 
@@ -16,6 +19,7 @@ To protect a Subagent's conversational payload from network interceptors, DevCor
     *   **Algorithms:** **RSA**, **ECC** (Elliptic Curve Cryptography), and **Diffie-Hellman**. 
 
 ## 36.2 Achieving Prompt Confidentiality and Authentication
+[//]: # (SECTION_ID: SIRA-TXT-CH36-SEC-36_2)
 
 Asymmetric encryption is incredibly versatile because it can achieve both Confidentiality (hiding the data) and Authentication (proving who sent the data) depending on which key initiates the process.
 
@@ -28,6 +32,7 @@ Asymmetric encryption is incredibly versatile because it can achieve both Confid
 *   If a Modder wants to execute a highly destructive Python tool, the Orchestrator needs to prove the Modder actually sent the command. The Modder encrypts the tool payload using their own *Private* Key. The Orchestrator decrypts it using the Modder's *Public* Key. Because only the Modder has their private key, successfully decrypting it mathematically guarantees the Modder sent it.
 
 ## 36.3 The Diffie-Hellman Handshake
+[//]: # (SECTION_ID: SIRA-TXT-CH36-SEC-36_3)
 
 Here lies the ultimate architectural problem: Asymmetric encryption is perfectly secure for remote Modders, but it is far too slow to encrypt the thousands of JSON tokens streaming out of the Orchestrator every second. 
 
@@ -46,10 +51,12 @@ This shared secret is now used as a 256-bit **Standard Encryption Symmetric Key*
 ---
 
 ## Chapter 36 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH36-SEC-1)
 
 Chapter 36 breaks down the cryptographic engine powering DevCore's WebSockets. Symmetric encryption (Standard Encryption) is fast but requires a pre-shared key, while Asymmetric encryption (RSA) solves the key-sharing problem but is too slow for bulk AI tokens. By utilizing Diffie-Hellman, Tier 5 Admins achieve the best of both worlds: securely generating a symmetric key across an untrusted network, allowing the Swarm to operate at maximum speed.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 36 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH36-SEC-2)
 
 *   **Symmetric Encryption (Standard Encryption)** $\rightarrow$ **Internal Swarm Encryption:** A fast, single-key system used to encrypt bulk JSON contexts and transcripts.
 *   **Asymmetric Encryption (RSA, ECC)** $\rightarrow$ **Decentralized Modder Encryption:** A slow, dual-key system used to securely establish connections and authenticate users.

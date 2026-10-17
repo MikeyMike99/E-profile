@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_30 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # KMS Keychain & Cold Storage from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-1)
 Relying on a single static encryption key creates total vulnerability if the key is exposed, while rotating keys naively causes historical files to become unreadable.
 
 This guide details how to build `keychain_storage.py` from scratch. It implements an enterprise two-tier Key Management Service (KMS) that derives a Key Encryption Key (KEK) using PBKDF2HMAC, wraps multiple Data Encryption Keys (DEKs) in a JSON keychain, and executes atomic cold-storage encryption across files.
@@ -37,6 +40,7 @@ This guide details how to build `keychain_storage.py` from scratch. It implement
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-2)
 Save the following script as `keychain_storage.py`:
 
 ```python
@@ -162,6 +166,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Cryptographic Locking
+[//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-3)
 1. **Derive KEK Before Reading Keychain**: The master key must be verified and PBKDF2-derived before the keychain JSON can be loaded into memory.
 2. **Check `b'gAAAAA'` Header Before Encrypting**: Verifying the magic prefix prevents double-encrypting files into nested ciphertexts.
 3. **Close File Descriptor Before `os.replace`**: Closing the temporary file descriptor `fd` via `with os.fdopen(...)` guarantees that the operating system releases file locks before atomic replacement.
@@ -169,6 +174,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-4)
 **Q: What is a KDF?**  
 A: A Key Derivation Function (like PBKDF2). It takes a master password or file and stretches it through thousands of cryptographic rounds to create a strong encryption key.
 

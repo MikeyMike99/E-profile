@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-TXT-CH33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 33: Token Data Security (Context Cryptography)
 
 ## 33.1 The Three States of Context
+[//]: # (SECTION_ID: SIRA-TXT-CH33-SEC-33_1)
 
 In a massive DevCore Swarm, an AI's entire reality consists of data—specifically, conversational tokens (Context). Proprietary game code, NPC dialogue, and Modder prompts must be fiercely protected across three distinct states:
 
@@ -9,6 +12,7 @@ In a massive DevCore Swarm, an AI's entire reality consists of data—specifical
 *   **Context in Process:** The active tokens currently loaded into system RAM or on the Edge GPU during the actual generation of an AI's thought.
 
 ## 33.2 Context Cryptography
+[//]: # (SECTION_ID: SIRA-TXT-CH33-SEC-33_2)
 
 To protect proprietary game development from corporate espionage or interceptors, Tier 5 Admins rely on **Context Cryptography**. Encryption scrambles a readable prompt (plaintext) into disguised, unreadable tokens (ciphertext). It requires a cryptographic key to reverse the process.
 
@@ -17,6 +21,7 @@ DevCore utilizes two distinct classes of encryption:
 *   **Decentralized Modder Encryption (Asymmetric):** Uses two different keys—a public key for encryption and a private key for decryption. When a remote Modder connects to the Orchestrator, they use algorithms like RSA or ECC (Elliptic Curve Cryptography) to securely encrypt their Context in Transit. Only the Orchestrator possesses the private key required to decrypt the Modder's prompt. 
 
 ## 33.3 Semantic Hashing and History Verification
+[//]: # (SECTION_ID: SIRA-TXT-CH33-SEC-33_3)
 
 While encryption protects context from being *read*, it does not protect it from being *altered*. To ensure the integrity of the AI's memory, the Orchestrator uses **Semantic Hashing**.
 
@@ -29,10 +34,12 @@ This is a critical defense against **Gaslighting (Prompt Injection)**. If a mali
 ---
 
 ## Chapter 33 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH33-SEC-1)
 
 Chapter 33 establishes the cryptographic boundaries of an AI's memory. By layering Standard Encryption symmetric encryption for stored data, RSA asymmetric encryption for WebSocket transit, and SHA-256 Semantic Hashing to guarantee the integrity of conversational history, Tier 5 Admins ensure that proprietary Swarm logic remains unbreakable.
 
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 33 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH33-SEC-2)
 
 To maintain absolute clarity, here is how the traditional Data Security domains map directly to DevCore's Engine:
 

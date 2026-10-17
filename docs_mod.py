@@ -287,6 +287,24 @@ def render_doc_content(category, doc_slug, viewer_tier=1):
         cleaned_text = clean_markdown_text(raw_text)
         sanitized_text = filter_document_by_sensitivity(cleaned_text, viewer_tier=viewer_tier)
         html_body = markdown.markdown(sanitized_text, extensions=['fenced_code', 'tables', 'nl2br'])
+        doc_id = doc_meta.get('doc_id')
+        if doc_id:
+            sec_idx = 1
+            def _attach_h_id(match):
+                nonlocal sec_idx
+                tag = match.group(1)
+                attrs = match.group(2)
+                inner = match.group(3)
+                clean = re.sub(r'<[^>]+>', '', inner).strip()
+                num_m = re.match(r'^\s*(\d+(?:\.\d+)*)\.?\s+(.+)$', clean)
+                sec_num = num_m.group(1).replace('.', '_') if num_m else str(sec_idx)
+                if not num_m:
+                    sec_idx += 1
+                sec_id = f"{doc_id}-SEC-{sec_num}"
+                if 'id=' not in attrs:
+                    return f'<{tag} id="{sec_id}"{attrs}>{inner}</{tag}>'
+                return match.group(0)
+            html_body = re.sub(r'<(h[23])([^>]*)>(.*?)</\1>', _attach_h_id, html_body, flags=re.DOTALL)
     except Exception as e:
         html_body = f"<p>Error rendering document: {e}</p>"
 

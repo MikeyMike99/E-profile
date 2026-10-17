@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-01_34 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # PreToolUse Hook Interception & Write-Lock Traps
 
 ## 1. The Problem: The Native Tool Bypass Trap
+[//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-1)
 Autonomous AI agents are equipped with powerful native file-editing tools such as `replace_file_content`, `write_to_file`, `edit_lines`, and `run_command`. While web API routes can enforce Role-Based Access Control (RBAC), an autonomous agent running inside the workspace can invoke its tools directly, completely bypassing web-level route guards.
 
 If a junior subagent decides to overwrite `security/security_manager.py` or modify the system's token validation function, executing the tool call immediately compromises the host before post-execution audits can react.
@@ -26,11 +29,13 @@ If a junior subagent decides to overwrite `security/security_manager.py` or modi
 ---
 
 ## 2. Granular Function Write-Locks
+[//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-2)
 Even within permissible files, certain functions are mission-critical (such as password verification, hot-patch execution, or cryptographic seed derivation). Allowing an agent to modify an entire file when it only needed to update a helper utility risks accidentally deleting critical security routines.
 
 ---
 
 ## 3. The Solution: PreToolUse Interception & AST Write Locks
+[//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-3)
 Siraugga instituted the Raugus PreToolUse Interception Hook (`.agents/raugus_hook.py`):
 1. **Synchronous Interception**: Before the AI engine executes ANY tool call, the payload is piped through `raugus_hook.py`.
 2. **AST Function-Level Verification**: The hook extracts AST symbol ranges from the incoming edit to determine which specific functions are targeted.
@@ -40,6 +45,7 @@ Siraugga instituted the Raugus PreToolUse Interception Hook (`.agents/raugus_hoo
 ---
 
 ## 4. Why Order Matters in Tool Interception
+[//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-4)
 1. **Intercept Before OS Execution**: Inspecting payloads *before* execution prevents unauthorized disk mutations from ever touching the storage controller.
 2. **Parse AST Before Applying Diff**: Verifying that the proposed replacement code forms valid Python syntax prevents agents from writing broken syntax trees into live code.
 3. **Log Intrusion Alert Before Returning Denial**: Writing to the SIEM log before returning `{"decision": "deny"}` guarantees the audit trail is recorded even if the subagent crashes upon refusal.
@@ -47,6 +53,7 @@ Siraugga instituted the Raugus PreToolUse Interception Hook (`.agents/raugus_hoo
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-5)
 **Q: What is a PreToolUse hook?**  
 A: A protective middleware script that runs automatically every time an AI agent attempts to use a tool, giving administrators the power to inspect, approve, or deny the action.
 

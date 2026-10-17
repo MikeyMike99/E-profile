@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.3: From-Scratch Creation Guide: Zero-Trust RBAC & Path Defense
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,6 +8,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-1)
 
 This guide teaches beginner developers how to build Siraugga's core security engine (`security_manager.py`) from a completely blank text file.
 
@@ -14,13 +17,16 @@ You will implement the complete 5-Tier classification system and the cryptograph
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-2)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-3)
 ```bash
 nano security_manager.py
 ```
 
 ### Step 2: Define Tier Constants & Constructor (Lines 1–20)
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-4)
 ```python
 import os
 
@@ -39,6 +45,7 @@ class SecurityManager:
 - **Line 11–12**: Normalizes `base_dir` using `os.path.realpath` upon engine boot.
 
 ### Step 3: Implement File Classification Logic (Lines 21–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-5)
 ```python
     def classify_file(self, rel_path: str) -> str:
         """Classifies a relative path into its security tier."""
@@ -62,6 +69,7 @@ class SecurityManager:
 ```
 
 ### Step 4: Implement Path Traversal Defense (Lines 46–70)
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-6)
 ```python
     def resolve_safe_path(self, target_base: str, rel_path: str, user: dict = None) -> str:
         """Resolves path, blocks directory escapes, and validates role permissions."""
@@ -87,6 +95,7 @@ class SecurityManager:
 ---
 
 ## Why Order Matters in Security Enforcement
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-7)
 
 1. **Path Canonicalization Before Tier Evaluation**:
    - `os.path.realpath()` must execute *before* calling `classify_file()`. If an attacker submits `assets/../../server.py`, classifying the raw string thinks it is in `assets/` (Tier 1), but canonicalizing reveals it is actually targeting `server.py` (Tier 2).
@@ -96,6 +105,7 @@ class SecurityManager:
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-8)
 
 Verify that your security manager blocks traversal attempts and classifies tiers accurately:
 
@@ -129,9 +139,12 @@ Test 2 (Engine): core_engine
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-9)
 
 ### Q: Why do we check `p in ('.git', 'venv', '.env')` against split path parts?
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-10)
 **A:** Checking `'.git' in clean_path` would falsely flag a legitimate file named `digital_notes.txt`. Splitting by slashes ensures we only match true directory names.
 
 ### Q: What does `fail closed` mean in cybersecurity?
+[//]: # (SECTION_ID: SIRA-DOC-05_03-SEC-11)
 **A:** "Fail closed" means that if an unexpected error occurs or an unrecognized file type is encountered, the system automatically denies access rather than assuming it is safe.

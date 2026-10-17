@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-RBAC_TEXTBOOK_ | VERSION: v1.1 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 5: Tier 1 - Least Privilege (End User)
 
 ## Introduction: The Chaos of the Player
+[//]: # (SECTION_ID: SIRA-DOC-RBAC_TEXTBOOK_-SEC-1)
 Gamers are the ultimate chaos variable. If you build a sandbox, they will immediately try to break it, cheat, and submit thousands of frivolous bug reports. I realized early on that a massive player base requires an equally massive customer support team just to filter the noise.
 
 But instead of just filtering the players, I decided to empower them to forge their own realms. 
@@ -8,16 +11,19 @@ But instead of just filtering the players, I decided to empower them to forge th
 I flipped the concept of "Least Privilege" on its head. When connected to my core server, the End User is subjected to rigorous, AI-driven bureaucracy. But when they unplug and go offline, they are handed the keys to their own localized kingdom, capable of reshaping the game and distributing it virally.
 
 ## Section 1: The Interrogation Agent (Server-Side Pipeline)
+[//]: # (SECTION_ID: SIRA-DOC-RBAC_TEXTBOOK_-SEC-2)
 When a player wants to report a bug, they must survive my pipeline.
 
 * **The Interrogation:** The player clicks a button, and my local AI acts as a hostile interrogator. It asks annoying questions to determine if the player is actually experiencing a bug or just trying to cheat. 
 * **The Voting Board & QA:** If legit, the AI synthesizes a generic ticket and posts it to a community Voting Board. Once it hits a critical mass, the Admin escalates it to a Dev with a strict countdown timer. The original voters actually receive a localized test copy of the Dev's fix to act as the QA team.
 
 ## Section 2: The Offline Playground
+[//]: # (SECTION_ID: SIRA-DOC-RBAC_TEXTBOOK_-SEC-3)
 The true magic happens when the player disconnects from my server. 
 If the client is offline, the player gets "Local God Mode." They can use the Agent to drastically alter gameplay mechanics, turn the sky green, and make wolves fly. Because it's offline, my core E-Profile server remains pristine and completely ignorant of their chaos.
 
 ## Section 3: Hardware Binding & The Viral EXE (P2P Realms)
+[//]: # (SECTION_ID: SIRA-DOC-RBAC_TEXTBOOK_-SEC-4)
 This was the most exciting part to engineer. What happens if a player creates an incredible offline game mode and wants to play it with their friends?
 
 By default, I cryptographically bound the downloaded EXE to the specific hardware (MAC address/motherboard) of the machine it was downloaded to. Piracy is blocked natively.

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-01_02 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 01.2: Problems Encountered: WebSocket Dropouts & Refresh Crashes
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-1)
 
 As the Siraugga web portal scaled to handle heavier AI tasks, two severe stability bugs emerged:
 1. **The Page Refresh Trap**: Refreshing the browser mid-task caused running AI subprocesses to terminate abruptly.
@@ -17,11 +20,14 @@ This chapter documents the forensic investigation and engineering solutions impl
 ---
 
 ## Issue 1: The Page Refresh Trap (Task Termination)
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-2)
 
 ### What Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-3)
 In early implementations, when a user pressed `F5` or reloaded the browser page while the AI was generating code, the running AI task vanished. The terminal process was killed, leaving unfinished, half-written files scattered across the workspace.
 
 ### Why It Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-4)
 The agent execution was originally bound directly to the lifespan of the WebSocket connection handler:
 
 ```python
@@ -41,8 +47,10 @@ When the browser reloaded, the WebSocket closed. The server's connection cleanup
 ---
 
 ## Issue 2: The 30-Second WSL Dropout Crisis
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-5)
 
 ### What Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-6)
 During long agent operations (such as indexing multi-file codebases or running test suites), the browser would suddenly display:
 ```text
 WebSocket Connection Closed (Code 1006 / Abnormal Closure)
@@ -50,6 +58,7 @@ WebSocket Connection Closed (Code 1006 / Abnormal Closure)
 The conversation stalled, and the user had to refresh and restart their query.
 
 ### Why It Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-7)
 Two distinct architectural bottlenecks caused these drops:
 
 1. **WSL 2 TCP Idle Timeout**: The Windows Subsystem for Linux (WSL 2) virtual network switch terminates idle TCP connections after exactly 30 seconds of network silence. If the AI was executing a complex command without emitting tokens, no packets crossed the wire, triggering a silent TCP reset.
@@ -58,15 +67,18 @@ Two distinct architectural bottlenecks caused these drops:
 ---
 
 ## The Architectural Solution
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-8)
 
 To achieve 100% resilient streaming, the system was refactored with three decoupled layers:
 
 ### 1. Detached Background Task Manager
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-1)
 `AgentManager` was decoupled from the WebSocket lifecycle. When a task starts, it is stored in a server-wide registry:
 - Browser refresh only drops the viewer, not the worker.
 - When the browser reconnects, it queries `agent_manager.get_active_task()`, seamlessly resuming the live stream.
 
 ### 2. The 4-Second Client Keep-Alive Heartbeat
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-2)
 The browser's JavaScript engine transmits an explicit heartbeat every 4 seconds:
 ```javascript
 setInterval(() => {
@@ -78,11 +90,13 @@ setInterval(() => {
 This guarantees constant packet traffic, preventing WSL 2 from terminating the TCP socket.
 
 ### 3. Non-Blocking Asynchronous I/O
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-3)
 All heavy file reading and subprocess streams are read using `asyncio.StreamReader` and dispatched asynchronously. The event loop is never blocked, ensuring WebSocket heartbeats are serviced within milliseconds.
 
 ---
 
 ## Why Order Matters in Stream Resilience
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-9)
 
 1. **Register Task in Global Store Before Starting Subprocess**:
    - The task ID and state must be recorded in the global manager *before* spawning `asyncio.create_subprocess_exec`. If an immediate error occurs on startup, the cleanup handler can inspect the record.
@@ -92,9 +106,12 @@ All heavy file reading and subprocess streams are read using `asyncio.StreamRead
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-10)
 
 ### Q: What is Code 1006 in WebSockets?
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-11)
 **A:** Code 1006 indicates an "Abnormal Closure." It means the connection was severed abruptly at the network or operating system level without sending a proper close handshake.
 
 ### Q: Why does WSL 2 have stricter network timeouts than native Linux?
+[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-12)
 **A:** WSL 2 runs inside a lightweight Hyper-V virtual machine connected to Windows via a virtual Network Address Translation (NAT) bridge. Virtual NAT tables aggressively prune idle connection entries to save host resources.

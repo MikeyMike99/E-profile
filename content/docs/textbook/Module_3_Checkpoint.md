@@ -1,13 +1,18 @@
+[//]: # (DOC_ID: SIRA-TXT-MOD3_CKPT | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Module 3 Checkpoint: Master Summary & Review
 
 ## Part 1: Chapter-by-Chapter Summaries
+[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-1)
 
 ### Chapter 10: Access Controls
+[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-2)
 *   **Physical Controls:** Actual barriers preventing direct contact with systems. In DevCore, this translates to the physical isolation of the Host OS from the `wsl.exe` Sandboxes (Agentic Mantraps).
 *   **Logical Controls:** Hardware/software solutions to manage resources. DevCore utilizes Agentic ACLs and WSS encryption to manage data flow.
 *   **Administrative Controls:** The three core security services—Authentication (Identification/FAIM), Authorization (Tool Whitelists), and Accounting (Traceability via `transcript.jsonl`). Multi-factor authentication is strictly enforced.
 
 ### Chapter 11: Access Control Concepts
+[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-3)
 *   **CIA Triad:** The foundation of information security (Confidentiality, Integrity, Availability), enforced by encrypting all network data.
 *   **Zero Trust:** "Never trust, always verify." The traditional edge boundary is dead. In DevCore, every single tool execution requested by an AI is considered a perimeter and must be re-verified by the Raugus Resolver. 
 *   **Pillars of Trust:** Zero trust for workforce (Modders), workloads (Subagents), and workplace (Sandboxes).
@@ -15,17 +20,20 @@
 *   **Privilege Escalation:** The primary threat (Agentic Jailbreaking), where vulnerabilities are exploited to grant unauthorized AI agents Tier 5 root access.
 
 ### Chapter 12: Account Management
+[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-4)
 *   **Account Types & Least Privilege:** System roles are divided into Tier 5 (Admins), Tier 2 (Users/Modders), Tier 3 (Service/AIs), and Tier 1 (Guests). Agents are granted "need to know" permissions via specific Tool Whitelists (Read, Write, Execute).
 *   **Authentication Management:** Aims for secure sign-in via SSO (Federated Agentic Identity Management - FAIM), OAuth (Third-Party AI Delegation), Password Vaults, and KBA (System Prompt Validation).
 *   **Protocols & HMAC:** Secure protocols authenticate data to prevent unauthorized access. DevCore employs Semantic HMAC (for WebSocket hashing), EAP, Semantic CHAP (mid-task challenges), RADI (RADIUS for quick NPC auth), TACAS+ (encrypted TCP for Admins), and Cerberus (Kerberos Ticket system).
 
 ### Chapter 13: AAA Usage and Operation
+[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-5)
 *   **Security Policy & Centralized AAA:** A network must control who connects and what they do. DevCore relies on Centralized AAA (`App Router Module`) which is highly scalable and maintains strict authorization databases independent of the local clients.
 *   **AAA Accounting:** Mandates a system that tracks exactly what an authenticated entity did. DevCore collects connection, system, and most importantly, EXEC (Command) accounting—logging every `run_command` bash string executed by the swarm directly into the AAA logs (`transcript.jsonl`).
 
 ---
 
 ## Part 2: Review Against 3.5 Source Text
+[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-6)
 
 *The following is a verification check ensuring the Siraugga Engine chapters mathematically align with the official 3.5 Access Control Summary:*
 

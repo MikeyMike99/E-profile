@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_02 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.2: From-Scratch Creation Guide: Accessible Web Portal & Flip Card
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-1)
 
 This guide walks you through building an accessible, screen-reader-optimized web frontend (`index.html`) from a blank file.
 
@@ -18,13 +21,16 @@ You will implement three core features:
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-2)
 
 ### Step 1: Open a Blank HTML File
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-3)
 ```bash
 nano templates/index.html
 ```
 
 ### Step 2: HTML Skeleton & ARIA Live Regions (Lines 1–25)
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-4)
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +56,7 @@ nano templates/index.html
 ```
 
 ### Step 3: Resilient WebSocket Client & Keep-Alive Loop (Lines 26–65)
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-5)
 ```html
     <script>
         let ws;
@@ -111,6 +118,7 @@ nano templates/index.html
 ---
 
 ## Why Order Matters in Client-Side Architecture
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-6)
 
 1. **Auto-Focus Immediately Upon Modal Reveal**:
    - Calling `editor.focus()` must occur *immediately after* removing the `hidden` class. If focus is set before unhiding, browsers ignore the focus call, leaving screen reader users lost in the background document.
@@ -120,6 +128,7 @@ nano templates/index.html
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-7)
 
 1. Open `http://127.0.0.1:5000` in Google Chrome or Mozilla Firefox.
 2. Press `F12` and inspect the **Console** tab:
@@ -131,9 +140,12 @@ nano templates/index.html
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-8)
 
 ### Q: What does `aria-live="polite"` do?
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-9)
 **A:** It tells screen readers to announce new messages as soon as the user finishes speaking or navigating, rather than rudely interrupting them mid-sentence (`aria-live="assertive"`).
 
 ### Q: Why not use a rich visual editor like TinyMCE?
+[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-10)
 **A:** Visual editors generate deeply nested, irregular HTML that breaks screen reader navigation shortcuts. A plain `<textarea>` guarantees standard arrow navigation and full compatibility.

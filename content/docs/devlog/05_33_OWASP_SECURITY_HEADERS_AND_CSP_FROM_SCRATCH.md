@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # OWASP Security Headers & CSP from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-1)
 Web developer applications often suffer from baseline OWASP vulnerabilities like Clickjacking, MIME-Sniffing, and Cross-Site Scripting because default frameworks do not attach HTTP security headers.
 
 This guide details how to build `security_headers.py` and its accompanying CSP violation report collector in Quart from scratch. It injects anti-clickjacking headers, MIME-type locks, a balanced Content Security Policy, and an endpoint to capture browser violation reports.
@@ -35,6 +38,7 @@ This guide details how to build `security_headers.py` and its accompanying CSP v
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-2)
 Save the following script as `secure_headers_app.py`:
 
 ```python
@@ -94,6 +98,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Security Middleware
+[//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-3)
 1. **Apply Headers in `@after_request` Hook**: Registering headers on the outbound response hook ensures that even 404 or 500 error pages carry clickjacking protection.
 2. **Include `report-uri` in Policy**: Adding the report directive ensures browsers alert you if an external dependency changes its hosting domain before users report bugs.
 3. **Return HTTP 204 from Report Endpoint**: Returning an empty 204 response prevents browsers from spending CPU cycles parsing response bodies for telemetry pings.
@@ -101,6 +106,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-4)
 **Q: What is MIME-sniffing?**  
 A: When a server sends an image or text file, some browsers try to "guess" the file type by inspecting the content. If an attacker uploaded a malicious script disguised as a `.txt` file, the browser might execute it! `nosniff` completely prevents this.
 

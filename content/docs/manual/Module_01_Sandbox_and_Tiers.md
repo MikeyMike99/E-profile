@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-OPS-MOD01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Module 1: The DevCore Sandbox & Tier Architecture
 
 ## What Will I Learn in this Module?
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-1)
 This module establishes the foundational security architecture of the Siraugga Engine. You will learn:
 * **Asset Management & The Attack Surface:** How to identify, map, and classify every script, database, and daemon in the environment to eliminate blind spots.
 * **The Danger of Autonomous Agents:** Why giving an AI access to a terminal requires strict isolation to prevent catastrophic Prompt Injection attacks.
@@ -10,18 +13,21 @@ This module establishes the foundational security architecture of the Siraugga E
 ---
 
 ## 1.1 Asset Management & The Siraugga Paradigm
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-1_1)
 
 When an empire expands, its shadow grows with it. Look at any massive organization—every new acquisition, every shiny new merger, just adds more doors that can be kicked down. Most of these corporate giants only have a vague, blurry idea of what they actually own, leaving massive blind spots in their armor.
 
 Let's get one thing straight: every single device, script, database, and rogue laptop owned by the organization is an **asset**. Collectively, these assets form your **Attack Surface**. They are the bleeding targets that threat actors—both human and algorithmic—are constantly probing in the dark. You can't protect what you can't see.
 
 ### The Core Problem: The Danger of Autonomous Agents
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-2)
 As the industry pivots toward AI-driven development, a new, catastrophic vulnerability has emerged: the **Agentic Execution flaw**. When you give an AI Agent access to a terminal to write code or execute scripts, you are essentially handing root-level keys to a ghost. If a prompt injection attack succeeds, or if a third-party modder attempts a path-traversal attack, the Agent could be weaponized to format the server, steal environment variables, or rewrite the core engine.
 
 **Siraugga** was built to solve this exact crisis. It is a Zero-Trust, event-driven orchestration framework designed to allow third-party developers and autonomous AI Agents to safely interact with a host system without ever compromising the core infrastructure. It achieves this through a philosophy of **Absolute Visibility** and **Hostile Sandboxing**.
 
 
 ## 1.2 The Five-Tier Access Control System (RBAC & The Sandbox)
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-1_2)
 
 To protect the mapped attack surface from Agentic Drift and rogue Modders, Siraugga enforces strict, non-negotiable **Role-Based Access Control (RBAC)** through a File Classification Tier system. 
 
@@ -35,6 +41,7 @@ The infrastructure is compartmentalized into the following definitive tiers:
 *   **Tier 5 (The Core Engine & Admins):** The beating heart of the system (`App Router Module`, `Task Orchestrator Module`). These assets are completely invisible to anyone without absolute Tier 5 Administrator clearance. Admins have full, unfettered access to all workspaces and logs.
 
 ### The Semantic Firewall in Action (Examples of Access Control)
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-3)
 Rather than a traditional firewall that simply blocks IP ports, Siraugga uses a **Semantic Firewall (The Raugus Resolver)** to enforce these tiers dynamically by analyzing the *intent* of the payload.
 
 **Examples of Tiered Enforcement:**
@@ -44,21 +51,25 @@ Rather than a traditional firewall that simply blocks IP ports, Siraugga uses a 
 
 
 ## 1.3 Asset Accountability & Identity Management (IAM)
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-1_3)
 
 An orphaned asset or an unidentified Subagent is an invitation for disaster. Siraugga enforces strict, unyielding accountability. Every single information asset, every line of application software, and every AI process must be cryptographically chained to a verified owner.
 
 ### The Asset Identification Protocol
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-4)
 Before any asset or Subagent is mapped and secured, it must be ruthlessly categorized:
 *   **The Data Custodian:** Every environment variable and JSON payload must have an assigned owner. If the data leaks, the Orchestrator knows exactly whose namespace was breached.
 *   **The Execution Master:** Every script and automation module must be cryptographically bound to an operator. If a script attempts a privilege escalation, the system knows precisely who authorized the weapon.
 
 ### Agentic Identity Management
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-5)
 In traditional IAM, a user types a password to prove who they are. In the Siraugga framework, an AI Subagent does not have a password. Instead, its identity is established the moment it is spawned.
 *   **Inherited Modder Identity:** If a Tier 2 Modder spawns a Subagent, that Subagent inherits the Modder's unique cryptographic ID. Any tool call the Subagent makes is billed and logged against the Modder's account.
 *   **Agentic Archetypes (The Biological Hash):** The intrinsic identity of an AI is its System Prompt (e.g., `Research`, `Coding`). The Semantic Firewall uses this "biological hash" to ensure a `Research` agent cannot execute tools reserved for a `Coding` agent.
 
 
 ## 1.4 Sandbox Event Logging (HIDS)
+[//]: # (SECTION_ID: SIRA-OPS-MOD01-SEC-1_4)
 
 While the File Classification Tiers prevent a Subagent from breaking out of the Sandbox, Tier 5 Admins still need to monitor what the Subagent is doing *inside* the isolated execution environment. 
 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-01_15 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 01_15: The Quota Wall, Amnesia & Context Exhaustion Traps
 
 As development sessions grow in complexity, autonomous coding agents accumulate vast histories of tool calls, terminal traces, and subagent transcripts. This chapter examines the twin crises of the **Quota Wall** and **Agent Amnesia**, and how semantic compaction prevents context exhaustion without sacrificing system recall.
@@ -5,6 +7,7 @@ As development sessions grow in complexity, autonomous coding agents accumulate 
 ---
 
 ## What Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-1)
 
 During prolonged multi-step refactoring sessions spanning hours of continuous work, the orchestrator experienced severe cognitive and operational failures:
 - **The Amnesia Crisis**: Around turn 25–30, the agent began "forgetting" fundamental rules established in turn 1. It attempted to recreate already existing files, reverted established architectural decisions, and asked questions that had been answered an hour earlier.
@@ -14,6 +17,7 @@ During prolonged multi-step refactoring sessions spanning hours of continuous wo
 ---
 
 ## Why It Happened
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-2)
 
 The root causes stem from the linear, append-only nature of conversational context windows:
 - **Unbounded Context Inflation**: Reading a 500-line file into memory consumes ~4,000 tokens. Doing this ten times across multiple subagents rapidly exhausts a 128K or 200K token budget.
@@ -31,6 +35,7 @@ Semantic Compaction:
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-3)
 
 Preserving intelligence across long horizons requires a strict order of memory hierarchy:
 1. **Preserve System Rules & Tiers First**: Security rules, RBAC tiers, and active workspace paths must reside at the very top of the prompt buffer and must *never* be evicted or truncated.
@@ -40,19 +45,24 @@ Preserving intelligence across long horizons requires a strict order of memory h
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-4)
 
 ### What is "Semantic Compaction"?
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-5)
 Instead of keeping 50 pages of raw terminal outputs, a background routine extracts only the essential conclusions (e.g., "Step 4: Hot-patch compiler verified clean syntax; backup saved to core/backups/server.py") and discards the raw bytes.
 
 ### Why not just use a larger context model (e.g., 1M tokens)?
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-6)
 Larger context windows increase latency significantly (longer time to first token) and introduce the "Needle In A Haystack" problem, where the model misses crucial instructions buried in hundreds of thousands of words.
 
 ### Where does Siraugga store persistent memory?
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-7)
 Long-term context is stored outside the LLM in structured JSON files (`session_ownership.json`, `project_manager` metadata, and Raugus VFS AST maps). The agent queries these on demand rather than keeping everything in active memory.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-8)
 - To see how the server buffers and manages event streams without overflowing memory, read [`04_SOLUTIONS_AND_ARCHITECTURE/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL.md`](/docs/devlog/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL).
 - To examine diagnostic logs showing token usage before and after semantic compaction, visit [`03_DIAGNOSTIC_TESTS/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS.md`](/docs/devlog/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS).
 - To build an asynchronous deque buffer from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH.md`](/docs/devlog/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH).

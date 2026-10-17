@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: EPRF-PORT-LOG | VERSION: v1.4 | SCOPE: E-Profile Portal)
+
 # E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal
 > **Author:** Michael Robberts (Cybersecurity Scholar & Systems Architect)  
 > **Timeline:** September 2025 – October 2026  
@@ -8,6 +10,7 @@
 ---
 
 ## Executive Summary
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-1)
 
 The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What began in September 2025 as a fragile, 153-line monolithic Python prototype ([`e_profile.py`](file:///mnt/c/Users/michael/Documents/e_profile.py)) has evolved into an enterprise-grade portfolio engine.
 
@@ -24,10 +27,12 @@ This Devlog provides an exhaustive forensic breakdown of the architectural miles
 ---
 
 ## Chapter 1: The Genesis — The 150-Line Monolithic Prototype (September 2025)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-2)
 
 Every fortress begins with a single brick. In September 2025, during the initial phase of transition toward dedicated cybersecurity studies, the original version of E-Profile was conceived as a lightweight Flask script: [`C:\Users\michael\Documents\e_profile.py`](file:///mnt/c/Users/michael/Documents/e_profile.py).
 
 ### 1.1 Forensic Code Inspection of the Monolith
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-1_1)
 ```python
 from flask import Flask, request, render_template_string
 from pathlib import Path
@@ -87,6 +92,7 @@ def home():
 ```
 
 ### 1.2 Vulnerability & Architectural Surface Analysis
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-1_2)
 While functional for basic HTML rendering, an objective cybersecurity review revealed severe architectural liabilities:
 - **String Template Injection Risk (`render_template_string` / raw f-string)**: The monolithic HTML was constructed via Python f-string concatenation. Injected markdown containing unescaped HTML entities or script tags would render directly in the client context, exposing visitors to Cross-Site Scripting (XSS).
 - **Zero Access Control & Boundary Defense**: Every document in `CONTENT_DIR` was treated with equal clearance. There was no concept of privileged documents, administrative tokens, or draft states.
@@ -97,10 +103,12 @@ While functional for basic HTML rendering, an objective cybersecurity review rev
 ---
 
 ## Chapter 2: The Remote Deployment Crucible & The "Trojan Horse" Bootstrap (July – September 2026)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-3)
 
 In July 2026, transitioning E-Profile to a remote public environment (PythonAnywhere WSGI hosting) introduced rigorous operational and infrastructure constraints.
 
 ### 2.1 The Remote WSGI Environment Constraints
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-2_1)
 Deploying to a remote, restricted PaaS platform created three distinct operational hurdles:
 1. **Outbound Firewall Restrictions**: PythonAnywhere free/standard tiers strictly restrict outbound TCP connections, permitting only whitelisted HTTP/HTTPS endpoints and blocking outbound SSH (Port 22). Standard git workflows relying on `git@github.com` keys immediately failed.
 2. **Non-Interactive Shell Execution**: Web applications running as WSGI daemons execute in headless subprocesses without interactive TTY terminals. Any script prompting for interactive credentials (`Username for 'https://github.com':`) stalled indefinitely, causing 504 Gateway Timeouts.
@@ -110,6 +118,7 @@ Deploying to a remote, restricted PaaS platform created three distinct operation
    - Commit `fbca68d`: Programmed automated submodule synchronization directly into [`file_mod.py`](file:///mnt/c/Users/michael/Documents/e_profile/file_mod.py).
 
 ### 2.2 The "Trojan Horse" Migration Architecture (`post_sync.py`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-2_2)
 To solve the problem of provisioning remote environments without shell access, a deployment pattern designated the **"Migration Trojan Horse"** was designed and implemented across commits `abeafcc`, `f8b2c89`, and `0c1c714`:
 
 ```
@@ -152,6 +161,7 @@ except Exception as e:
 ```
 
 ### 2.3 Key Hygiene & Forensic Credential Sanitization
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-2_3)
 During the fast-paced deployment iteration in July 2026, an operational security review detected that an SSH public key file (`.pub`) had been inadvertently committed to the git index.
 
 Immediate remediation was executed across commits `7c729ad` and `5188475`:
@@ -162,10 +172,12 @@ Immediate remediation was executed across commits `7c729ad` and `5188475`:
 ---
 
 ## Chapter 3: Blueprint Decoupling, Schema Evolution, and Surgical Patching (August – September 2026)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4)
 
 By August 2026, the monolithic structure had been completely disassembled into a resilient, decoupled micro-blueprint architecture registered inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py).
 
 ### 3.1 Modular Blueprint Topology
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-3_1)
 ```
                          +------------------------+
                          |       server.py        |
@@ -190,6 +202,7 @@ By August 2026, the monolithic structure had been completely disassembled into a
 ```
 
 ### 3.2 Schema Migration Engine (`data_migrator.py`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-3_2)
 Managing user permissions, administrative profiles, and feature toggles required moving away from ad-hoc JSON key-value stores. In July 2026, [`data_migrator.py`](file:///mnt/c/Users/michael/Documents/e_profile/data_migrator.py) was built to implement schema versioning and transactional upgrades:
 
 ```python
@@ -220,6 +233,7 @@ def verify_and_migrate_profiles(filepath: Path, sys_log=None):
 - **ABAC Envelope Normalization**: Upgrades arbitrary role strings (`role: "admin"`) into formal Attribute-Based Access Control permissions (`is_admin: True`, `permissions: ["master:view_certs", "master:view_blogs"]`).
 
 ### 3.3 Concrete Syntax Tree (CST) Surgery & Heart Draft System (`surgery.py`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-3_3)
 Live server hot-patching is vulnerable to race conditions and file corruption if an entire source file is overwritten during an active request. To resolve this, [`surgery.py`](file:///mnt/c/Users/michael/Documents/e_profile/surgery.py) was built using `libcst` (Concrete Syntax Tree) to parse Python source code into an AST and apply surgical modifications exclusively between target markers:
 
 ```python
@@ -266,8 +280,10 @@ To guarantee zero-corruption:
 ---
 
 ## Chapter 4: The 5-Tier Zero-Trust Role-Based Access Control (RBAC) & The Lockout Paradox
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-5)
 
 ### 4.1 The 5-Tier Zero-Trust Matrix
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4_1)
 Security in E-Profile is not a binary logged-in/anonymous toggle. It is governed by a 5-tier classification matrix:
 
 | Tier | Role Designation | Access Scope & Clearances | Authentication Vector |
@@ -279,6 +295,7 @@ Security in E-Profile is not a binary logged-in/anonymous toggle. It is governed
 | **Tier 5** | Super Administrator | Complete root sovereignty: CST code surgery, server hot-reloading, database migration, raw log access. | Admin Passphrase + Salted Hash |
 
 ### 4.2 Session Hardening & Cryptographic Hygiene
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4_2)
 Inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py), session cookies are fortified against theft, replay attacks, and script injection:
 ```python
 app.secret_key = os.environ.get("SECRET_KEY", "SECURE_KEY_2026_PROTOTYPE")
@@ -291,6 +308,7 @@ app.config.update(
 ```
 
 ### 4.3 "The Lockout Paradox" & The Siraugga Cross-Reference (Commit `8b55c2d`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4_3)
 
 One of the most profound cybersecurity insights gained across both **E-Profile** and the **Siraugga Framework** was documented in commit `8b55c2d` under the heading **The Lockout Paradox**:
 
@@ -351,6 +369,7 @@ Porting the solution directly from Siraugga's Tier 5 Recovery Protocol, E-Profil
 </details>
 
 ### 4.4 Privacy-First Native Analytics (`traffic_metrics.json`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4_4)
 Modern cybersecurity mandates compliance with privacy regulations (South Africa's POPIA and Europe's GDPR). E-Profile rejects intrusive third-party trackers (such as Google Analytics) in favor of a native, privacy-first analytics engine inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py):
 
 ```python
@@ -392,16 +411,19 @@ def log_traffic():
 ---
 
 ## Chapter 5: Screen Reader Accessibility as an Operational Physical Access Point (SecOps & WCAG Synergy)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-6)
 
 In conventional software development, accessibility is frequently treated as an afterthought or a compliance checkbox. In E-Profile, accessibility is engineered as **an operational security prerequisite**.
 
 ### 5.1 The Threat Model of Inaccessible Security Tooling
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-5_1)
 For a blind cybersecurity practitioner, the screen reader (such as NVDA, JAWS, or Orca) is not merely a peripheral; **it is the operational physical access point**.
 - If a security portal implements an inaccessible modal dialog that traps keyboard focus, the blind administrator is locked inside the element, unable to inspect firewall logs during an active breach.
 - If dynamic incident alerts are injected into the DOM without ARIA live regions (`aria-live="polite"`), the threat event remains completely silent to the screen reader.
 - If clicking an item causes an unannounced full-page reload, the virtual focus point is torn from the user's reading position and discarded at the top of the DOM, degrading operational incident response velocity.
 
 ### 5.2 Accessibility Architectural Patterns in E-Profile
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-5_2)
 1. **ARIA Landmarks & Non-Interference Navigation**:
    - The DOM is strictly partitioned into standard landmarks: `<header role="banner">`, `<nav aria-label="Primary Navigation">`, `<main id="mainContent">`, and `<footer role="contentinfo">`.
    - Skip links (`<a href="#mainContent" class="skip-link">Skip to main content</a>`) provide instant bypass of navigational headers for keyboard users.
@@ -426,10 +448,12 @@ For a blind cybersecurity practitioner, the screen reader (such as NVDA, JAWS, o
 ---
 
 ## Chapter 6: The Central Documentation Vault, Sensitivity Scoring, and Master-Detail SPA (October 2026)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-7)
 
 In October 2026, E-Profile achieved its current milestone: the unification of all project documentation under a centralized, private documentation vault and the deployment of a zero-reload Master-Detail Single Page Application (SPA) docs explorer.
 
 ### 6.1 The Central Documentation Vault (`Central_Docs`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-6_1)
 Previously, documentation was fragmented across isolated project workspaces (`DevCore`, `Audio_pllayback_suite`, `Echoes of the World`). This fragmentation created synchronization drift and manual duplication overhead.
 
 To solve this, the **Central Documentation Vault** ([`MikeyMike99/Central_Docs`](https://github.com/MikeyMike99/Central_Docs)) was established as an authoritative, private repository. A zero-touch automated bridge was constructed:
@@ -437,6 +461,7 @@ To solve this, the **Central Documentation Vault** ([`MikeyMike99/Central_Docs`]
 - **E-Profile Native Discovery Engine (`docs_mod.py`)**: When E-Profile boots or receives a request, `auto_sync_if_needed()` compares modification timestamps between `Central_Docs` and `docs_catalog.json`. If updates are detected, it invokes [`sync_to_eprofile.py`](file:///mnt/c/Users/michael/Documents/Central_Docs/scripts/sync_to_eprofile.py) to rebuild catalogs in under 200ms with zero server restarts.
 
 ### 6.2 Multi-Tier Section Sensitivity Scoring Engine (`sensitivity_engine.py`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-6_2)
 Not all technical documentation can be shared publicly. Certain chapters contain cryptographic recovery seeds, internal AST patch keys, and kernel hook specifications. 
 
 Rather than maintaining separate, bifurcated documentation trees (which inevitably diverge), the system implements an AST-like **Section Sensitivity Scoring Engine**:
@@ -470,6 +495,7 @@ Rather than maintaining separate, bifurcated documentation trees (which inevitab
 By employing *silent adaptive redaction*, public viewers see an articulate, complete engineering guide without disruptive `[CLASSIFIED]` tags. This prevents attackers from knowing where sensitive infrastructure points exist.
 
 ### 6.3 Defeating the DevTools & Page Inspection Threat Model (Server-Side Redaction vs. CSS Hiding)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-6_3)
 
 A common security vulnerability on amateur web applications is attempting to hide sensitive information on the client side using CSS or JavaScript:
 ```html
@@ -492,6 +518,7 @@ In E-Profile, this attack vector is structurally neutralized through **Strict Se
 In zero-trust architecture: **What is never transmitted cannot be inspected.**
 
 ### 6.4 The Master-Detail SPA Docs Explorer (`docs.html` & `docs_mod.py`)
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-6_4)
 In commit `78d837b`, the documentation UI was completely rebuilt into a Master-Detail Single Page Application.
 
 **The Accessibility Problem Solved**:
@@ -532,6 +559,7 @@ In the legacy implementation, clicking a chapter in the navigation list performe
 ---
 
 ## Chapter 7: Forensic Commit Index & Architectural Verification
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-8)
 
 The following commit timeline documents the empirical evolution of the E-Profile codebase across major architectural milestones:
 
@@ -556,6 +584,7 @@ The following commit timeline documents the empirical evolution of the E-Profile
 ---
 
 ## Chapter 8: Conclusion & The Sovereignty Dividend
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-9)
 
 The evolution of E-Profile from a 153-line prototype into a zero-trust, screen-reader-sovereign fortress proves that cybersecurity and accessibility are complementary engineering disciplines.
 

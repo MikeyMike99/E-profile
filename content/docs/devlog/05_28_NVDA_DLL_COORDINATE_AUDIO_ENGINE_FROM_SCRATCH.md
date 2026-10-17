@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-05_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # NVDA DLL Coordinate Audio Engine from Scratch
 
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-1)
 Standard game loops and command-line scripts rely on visual monitors. For blind developers, terminal output often results in the frustrating "blank, blank, blank" screen reader silence.
 
 This guide details how to build the foundational 3D coordinate movement engine from scratch (`echoes_engine.py`). Using Python `ctypes`, it loads `NVDAController.dll` directly into process memory, calculates spatial coordinates on an 8-way directional compass, announces position instantly in the player's ear, and saves world state to JSON.
@@ -33,6 +36,7 @@ This guide details how to build the foundational 3D coordinate movement engine f
 ---
 
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-2)
 Save the following script as `echoes_engine.py`:
 
 ```python
@@ -133,6 +137,7 @@ if __name__ == "__main__":
 ---
 
 ## 3. Why Order Matters in Audio Game Loops
+[//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-3)
 1. **Define `c_wchar_p` Before Calling DLL**: Failing to declare the argument type results in Python passing standard 8-bit strings to a 16-bit wide character function, producing memory corruption.
 2. **Check Bounds Before Mutating State**: Testing collision boundaries before modifying `self.player_pos` ensures the player never enters an invalid spatial coordinate.
 3. **Save State Immediately After Position Shift**: Writing to `player_log.json` on each move guarantees world continuity even if the user abruptly terminates the process.
@@ -140,6 +145,7 @@ if __name__ == "__main__":
 ---
 
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-4)
 **Q: What is a wide character pointer (`c_wchar_p`)?**  
 A: A pointer to a sequence of 16-bit Unicode characters used natively by Windows API functions to support international text.
 

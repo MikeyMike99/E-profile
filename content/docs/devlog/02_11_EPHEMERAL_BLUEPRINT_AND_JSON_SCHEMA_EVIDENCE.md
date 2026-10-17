@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_11 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 02_11: Ephemeral Blueprint & JSON Schema Evidence
 
 Primary source evidence from the Siraugga ephemeral plugin suite illustrating how the **Zero-Modification Architecture** uses Python format normalizers to adapt dynamic JSON data into immutable frontend templates.
@@ -5,6 +7,7 @@ Primary source evidence from the Siraugga ephemeral plugin suite illustrating ho
 ---
 
 ## Source Citation 1: Question Structure Normalization (`format_exam.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-1)
 
 This excerpt displays how raw LLM output is parsed and normalized to match the strict schema expected by the frontend template:
 
@@ -44,12 +47,14 @@ This excerpt displays how raw LLM output is parsed and normalized to match the s
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-2)
 - **Schema Mapping Over Code Rewriting**: Instead of rewriting the HTML/JS frontend to support string answers or varied key names, `format_exam.py` transforms the JSON data (`correct_answer` string to `correct_index` integer).
 - **Graceful Fallbacks**: If an option is missing from the list, line 29 safely defaults `correct_index = 0` rather than throwing an unhandled exception in the browser.
 
 ---
 
 ## Source Citation 2: Complex Component Flattening (`format_exam.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-3)
 
 This excerpt shows how complex multi-blank dropdowns are transformed into deterministic single-blank templates:
 
@@ -77,12 +82,14 @@ This excerpt shows how complex multi-blank dropdowns are transformed into determ
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-4)
 - **Template Simplicity Guarantee**: Complex nested blank dictionaries are automatically mapped to standardized `[BLANK]` placeholders. The HTML frontend only needs to render one universal blank-filling component.
 - **Strict Separation of Concerns**: Front-end markup remains pristine and untouched; all complexity is resolved server-side before delivery.
 
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-5)
 
 In schema-driven application rendering, transformation order prevents malformed states:
 1. **Load Raw JSON Before Transforming**: Always load and parse the raw JSON file into a Python dictionary (`json.load(f)`) before modifying any keys.
@@ -92,19 +99,24 @@ In schema-driven application rendering, transformation order prevents malformed 
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-6)
 
 ### Why does the template require `correct_index` as a number instead of text?
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-7)
 In frontend JavaScript, comparing numbers (`selectedOptionIndex === question.correct_index`) is faster and avoids bugs caused by whitespace, capitalization, or special character mismatches.
 
 ### What happens if an AI outputs `"question"` instead of `"text"`?
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-8)
 Line 20 detects if `"question"` exists and renames it to `"text"`. This ensures backward compatibility with different LLM prompting styles without altering the frontend.
 
 ### Can I add a timer using this script?
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-9)
 Yes. The script checks for top-level keys like `"time_limit_minutes"`. If present in the JSON payload, the frontend template automatically activates its countdown clock.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-02_11-SEC-10)
 - To understand why agents must never edit core HTML templates, read [`01_PROBLEMS_ENCOUNTERED/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS.md`](/docs/devlog/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS).
 - To view the architectural blueprint of ephemeral plugins, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_11_ZERO_MODIFICATION_EPHEMERAL_PLUGIN_ARCHITECTURE.md`](/docs/devlog/04_11_ZERO_MODIFICATION_EPHEMERAL_PLUGIN_ARCHITECTURE).
 - To build the complete exam normalizer and schema engine from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH.md`](/docs/devlog/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH).

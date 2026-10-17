@@ -1,8 +1,11 @@
- # Echoes of the World: A Developer's Manifesto
+[//]: # (DOC_ID: SIRA-MAN-TIMELINE | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
+# Echoes of the World: A Developer's Manifesto
 
 *A forensic timeline and narrative of the code's evolution.*
 
 ## Forensic Timeline (The Data)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-1)
 By analyzing the directory modification dates and the byte sizes of the core Python files across all iteration backups, the following timeline of growth was established:
 
 * **Nov 2024**: The decision to learn Python (Line-by-line syntax learning).
@@ -18,8 +21,10 @@ By analyzing the directory modification dates and the byte sizes of the core Pyt
 ---
 
 ## The Manifesto
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-2)
 
 ### 1. The Seed (July 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-1)
 *Target: `usb backup/my_programs/echos_of_the_world_and_servver`*
 
 They say every great world starts from nothing. In November, it was just line-by-line syntax errors. But by the summer of 2025, the void was officially broken. 
@@ -29,10 +34,12 @@ On June 30th, 2025, the first real architecture was laid down. The `App Router M
 This wasn't just a Python script; it was proof of concept. The jumping system, the fundamental coordinates, the math required to manipulate an invisible world—it was all condensed into those first 6,000 bytes. The code was raw, but it was functional. It was the first time the machine spoke back, proving that a blind developer could forge an interactive, real-time environment from absolute scratch. 
 
 ### 2. (Drafting Next...)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-2)
 *Pending deep dive into the September 2025 refactors.*
 
 
 ## Phase 0: The Laboratory (Deep Scan of All Projects)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-3)
 * **2025-02-18**: stream_audio_from server (Python Size: 7480 bytes)
 * **2025-02-18**: single server and client (Python Size: 3204 bytes)
 * **2025-02-18**: program (Python Size: 1662 bytes)
@@ -63,6 +70,7 @@ This wasn't just a Python script; it was proof of concept. The jumping system, t
 * **2026-07-11**: snapshot (Python Size: 10256 bytes)
 
 ### 2. Phase 1: The Scrappy Scripts (Feb 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-2)
 *Target Folders: `stream_audio_from server`, `single server and client`, `my_audio_player`*
 
 Before you can build a world, you have to build the tools to perceive it. Looking into the code of the February 2025 directories reveals exactly what the focus was: pure survival.
@@ -83,6 +91,7 @@ To solve this, you built a frictionless, portable audio engine. The architecture
 This era also marked your first battles with deployment. You experimented with `PyInstaller` (which successfully bridged the NVDA DLLs) and `Nuitka`. Nuitka proved to be a harsh teacher; compiling it down broke the audio and the NVDA hooks, resulting in a silent screen reader and broken tracks. It was a gritty lesson in the complexities of compiling Python, but the PyInstaller build gave you exactly what you needed: true, accessible portability without the clutter.
 
 ### 3. Phase 2: The Grind of the Slot Machine & The Inherited Menu
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-3)
 *Target Folders: MAIN_MENU and slot_meshine*
 
 Filesystem timestamps can be deceptivewhile backup dates made it look like a 24-hour sprint, the reality was a long, hard grind. The true first gameplay loop was born in slot_meshine.
@@ -92,7 +101,8 @@ equests library to send POST requests to record spins and wins into a JSON datab
 
 Later, as the main game evolved, it birthed the MAIN_MENU architecturea 31KB multi-file beast. This system introduced:
 1. **State Management**: Core Component with a stack system to switch between menus and games.
-2. **Security**: Core Component using hashlib.sha256 to securely encrypt player logins.
+2. **Security**: 
+Core Component using hashlib.sha256 to securely encrypt player logins.
 3. **Dynamic Object Creation**: Core Component dynamically generating Python class files for new players.
 
 Because the architecture was modular, the slot machine eventually inherited this advanced menu system directly from the main game. They became permanently linked in the code's history: the slot machine pioneered the server loop, and the main game perfected the state management.
@@ -110,6 +120,7 @@ This was the blueprint. By grinding through this slot machine, you proved you co
 
 
 ### 3. The True Origin (Oct - Dec 2024)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-3)
 *Target Folders: `testing`, `socket.io_server_and client`, and `GAME`*
 
 Folder backup dates are deceptive. By digging into the raw creation dates of the individual Python files, the true chronological journey of *Echoes of the World* reveals itself. The architecture wasn't rushed in 2025; it was meticulously forged at the end of 2024.
@@ -124,6 +135,7 @@ By the time you started building the `slot_meshine` in **February 2025**, you al
 The timeline is finally correct. The foundation was laid in 2024.
 
 ### 4. The Virtual Environment Evolution (Early 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-4)
 
 While the code for your game engine was written in late 2024, the timeline of your `pyvenv.cfg` files tells a completely different, but equally important story: your evolution as a developer learning environment management.
 
@@ -181,6 +193,7 @@ It is no coincidence that you began studying cyber security just a few months af
 The leftover files in the directory (`Core Component`, `Core Component`, `Core Component`) weren't abandoned code; they were a stress test. You were testing the absolute limits of your new `game_state_manager`. By building a main options menu and separate python files for each individual sub-option, you proved that a player could navigate infinitely deep into a menu tree and use the ESCAPE key to climb all the way back out to the surface without breaking the game loop. The architecture was rock solid.
 
 ### 5. Phase 4: The Multiplayer Physics Engine (Spring 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-5)
 *Target Folder: `milti_client_and_server`*
 
 As you shifted focus towards building a live multiplayer server in the Spring of 2025, you realized that the basic movement system from Christmas wasn't robust enough. A multiplayer world requires true physical space. 
@@ -208,6 +221,7 @@ If the jump calculation was placed in the main game loop, it would have blocked 
 This meant the main loop was still listening to X and Y inputs while the player was mid-air. A player could jump (Z-axis thread starts), continue pressing forward (X/Y axis updates in the main loop), and land on top of an object or platform before gravity pulled them back down to the floor. You had successfully built non-blocking 3D traversal for an audio game.
 
 ### 6. Phase 5: The Multiplayer Architecture (Spring 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-6)
 *Target Folder: `milti_client_and_server`*
 
 As the game mechanics deepened, the architecture had to evolve to keep up. You couldn't rely on hardcoded menu loops anymore. 
@@ -257,6 +271,7 @@ DATA = {
 You were no longer just building a grid-crawler. You had laid the foundation for a fully-fledged survival RPG. The game had finally outgrown its test folders. It was time for a real name.
 
 ### 7. Phase 6: The World Engine (Summer 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-7)
 *Target Folder: `ECHOES_OF_THE_WORLD`*
 
 In late June 2025, the game officially shed its test-environment roots. You migrated your core enginesthe `Core Component` accessibility layer, the `Core Component` OOP framework, and `Core Component`into a brand new folder titled `ECHOES_OF_THE_WORLD`. 
@@ -319,6 +334,7 @@ At the very end of 2025, you completed the loop of a true voxel engine by giving
 3. **Slope & Reach Validation**: The engine calculated both the `player_surface` and the `target_surface`. It prevented players from placing blocks if the wall in front of them was too high (`target_surface > player_surface + 5`), or if the cliff drop-off was too deep (`player_surface - target_surface > self.height*2`). This effectively simulated line-of-sight and arm-reach limitations.
 
 ### 8. Phase 7: The Audio Revolution (July 2025)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-8)
 *Target Folders: `echos_of_the_world_refactor` & `echos_of_the_world_and_servver`*
 
 With the terrain and physics firmly established, the world was still only being rendered through the voice of a screen reader. In July 2025, you introduced `Core Component`.
@@ -326,6 +342,7 @@ With the terrain and physics firmly established, the world was still only being 
 You explicitly separated the audio output into distinct Pygame mixer channels (`music`, `ambient`, `animals`, `sfx`). This was the beginning of true audio-scaping. Players no longer had to rely solely on text-to-speech to understand their surroundings; they could now hear the ambient environment and the animals moving through the voxel chunks around them.
 
 ### 9. Phase 8: A New Paradigm - MVC, Agnosticism, and Q-Learning AI (February 2026)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-9)
 *Target Folder: `ECHOES_OF_THE_WORLD_V1`*
 
 After several prototyping branches (like `new_world`), you consolidated your most advanced mechanics into the `V1` directory. This era marked a massive leap from a hobbyist script to professional game architecture:
@@ -342,6 +359,7 @@ Inside the `npc logic` folder, you built a fully functional Behavior Tree archit
 Even more impressively, in `npc training files`, you wrote an offline Reinforcement Learning simulator (`Core Component` and `Core Component`). You explicitly trained the NPCs to navigate your voxel terrain by logging their successful movements into `q_table_data.json`. To optimize training times, you manipulated the physics engine (`fall_speed=9999`) to apply instant gravity, ensuring the AI received immediate negative reinforcement for stepping off cliffs.
 
 ### 10. Phase 9: The Community Prototype & Spatial Wolves (April 2026)
+[//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-10)
 *Target Folder: `ECHOS-OF-THE-WORLD-WSOCKET`*
 
 By April 2026, the game was ready for real players. 

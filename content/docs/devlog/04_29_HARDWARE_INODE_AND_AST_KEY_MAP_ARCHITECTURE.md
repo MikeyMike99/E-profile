@@ -1,6 +1,9 @@
+[//]: # (DOC_ID: SIRA-DOC-04_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Hardware Inode & AST Key Map Architecture
 
 ## 1. Architectural Concept & Core Objective
+[//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-1)
 Conventional access control models bind security permissions strictly to physical filesystem paths (e.g., `/core/server.py`). However, path-based access control fails against autonomous subagents that can rename files, create symlinks, or move files into unmonitored directories.
 
 The Hardware Inode & AST Key Map Architecture (`generate_raugusmap.py` and `security/raugus_map.json`) decouples permissions from physical paths. It anchors access control to **hardware filesystem inodes** (`st_ino`) and maps code to **semantic AST keys** (`devcore.*::symbol`).
@@ -32,11 +35,13 @@ The Hardware Inode & AST Key Map Architecture (`generate_raugusmap.py` and `secu
 ---
 
 ## 2. Inode Evasion Immunity
+[//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-2)
 Even if an agent or malicious process executes `mv core/server.py core/tmp_server.py`, the filesystem's hardware inode remains unchanged. When the Raugus Resolver inspects the file, it looks up the inode in `raugus_map.json` and immediately re-attaches the original Tier-2 Core Engine security policy.
 
 ---
 
 ## 3. Semantic AST Granularity & Zero Line Drift
+[//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-3)
 Instead of addressing code by static line numbers, the architecture identifies symbols by their AST node names (`FunctionDef`, `AsyncFunctionDef`, `ClassDef`). When an edit is requested:
 1. The resolver parses the current file AST into memory.
 2. It locates the target symbol by name.
@@ -45,6 +50,7 @@ Instead of addressing code by static line numbers, the architecture identifies s
 ---
 
 ## 4. Why Order Matters in VFS Mapping
+[//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-4)
 1. **Query Hardware Inode Before Path Strings**: Comparing inodes before path names detects symlink swaps and file renames instantly.
 2. **Parse AST on Clean Files Before Writing Map**: Verifying that source code parses without syntax errors ensures corrupt trees are not saved to the phonebook.
 3. **Register Sensitive Vaults Explicitly**: Tagging confidential folders (like exam question vaults) guarantees they are hidden even before files are added.
@@ -52,6 +58,7 @@ Instead of addressing code by static line numbers, the architecture identifies s
 ---
 
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-5)
 **Q: What is a semantic AST key?**  
 A: A virtual string that represents an exact function or class (like `devcore.core.routes.system.py::reload_system`) without exposing the real file path on disk.
 

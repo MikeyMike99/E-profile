@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-05_07 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Pillar 05.7: From-Scratch Creation Guide: Bootstrap Supervisor Gateway
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -7,6 +9,7 @@
 ---
 
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-1)
 
 This guide walks you through building the **Bootstrap Gateway & Supervisor** (`bootstrap_gateway.py`) from a blank editor.
 
@@ -15,13 +18,16 @@ You will implement pre-flight syntax compilation checks to prevent startup crash
 ---
 
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-2)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-3)
 ```bash
 nano bootstrap_gateway.py
 ```
 
 ### Step 2: Implement Pre-Flight Syntax Compiler (Lines 1–25)
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-4)
 ```python
 import os
 import py_compile
@@ -45,6 +51,7 @@ def preflight_check(directory: str) -> bool:
 ```
 
 ### Step 3: Implement Dual-Layer WebSocket Proxy (Lines 26–65)
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-5)
 ```python
 gateway_app = Quart(__name__)
 BACKEND_WS_URL = "ws://127.0.0.1:5001/ws"
@@ -76,6 +83,7 @@ async def proxy_endpoint():
 ---
 
 ## Why Order Matters in Gateway Execution
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-6)
 
 1. **Preflight Compilation Before Quart Instantiation**:
    - `preflight_check()` must return `True` *before* the application starts listening for connections. Starting the server while modules have syntax bugs causes crashes on the first incoming user request.
@@ -85,6 +93,7 @@ async def proxy_endpoint():
 ---
 
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-7)
 
 Verify that your gateway detects syntax errors and reports pre-flight status cleanly:
 
@@ -111,9 +120,12 @@ with tempfile.TemporaryDirectory() as td:
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-8)
 
 ### Q: Why run the backend on Port 5001?
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-9)
 **A:** By reserving Port 5000 for the Gateway, users always see a responsive interface. The actual server logic runs on Port 5001, allowing administrators to hot-swap or restart the backend without changing the URL.
 
 ### Q: What is `py_compile`?
+[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-10)
 **A:** `py_compile` is a built-in Python module that compiles `.py` source code into `.pyc` bytecode without executing it, catching syntax errors immediately.

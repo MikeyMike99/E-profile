@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DOC-02_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+
 # Chapter 02_09: Semantic Mantrap & File Locking Evidence
 
 Primary source evidence from the Siraugga security core demonstrating how cross-platform thread synchronization, atomic file locking, and deadlock prevention are implemented across Linux and Windows.
@@ -5,6 +7,7 @@ Primary source evidence from the Siraugga security core demonstrating how cross-
 ---
 
 ## Source Citation 1: OS-Agnostic Lock Detection (`security/mantrap.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-1)
 
 This code excerpt shows how the system dynamically discovers the host kernel type at module import time without crashing on missing libraries:
 
@@ -24,12 +27,14 @@ except ImportError:
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-2)
 - **Zero Host Crashes**: The code wraps OS-specific imports in nested `try...except ImportError` blocks. Importing `fcntl` on Windows or `msvcrt` on Linux fails gracefully without crashing the Python interpreter.
 - **Dynamic Platform Identification**: Sets `OS_TYPE` globally so runtime functions select the appropriate locking API without repeated OS checks.
 
 ---
 
 ## Source Citation 2: The Execution Chamber Context Manager (`security/mantrap.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-3)
 
 This excerpt displays the context manager that locks the resource before yielding control and guarantees unlock upon exit:
 
@@ -85,12 +90,14 @@ def execution_chamber(target_db_path: str, agent_id: str = "System"):
 ```
 
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-4)
 - **Windows Byte-Range Requirement**: `msvcrt.locking` cannot lock a zero-byte file on Windows. Lines 35–38 ensure the lock file contains at least 1 byte (`"X"`), preventing silent Win32 locking errors.
 - **Guaranteed Lock Release**: Placing `LOCK_UN` and `LK_UNLCK` inside a `finally` block guarantees that even if a subagent throws an uncaught exception, the lock descriptor is unlocked and closed cleanly.
 
 ---
 
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-5)
 
 In multi-process synchronization, order prevents race conditions and data corruption:
 1. **Sanitize Lock Path Before File Creation**: Transforming slashes and colons into underscores (`safe_name`) ensures valid filename formatting across both Linux and NTFS filesystems before invoking `open()`.
@@ -100,19 +107,24 @@ In multi-process synchronization, order prevents race conditions and data corrup
 ---
 
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-6)
 
 ### What does `@contextmanager` do?
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-7)
 It is a Python decorator from `contextlib` that lets you write a generator using `yield` that works with the `with` statement (`with SemanticMantrap.execution_chamber("db.json"): ...`).
 
 ### Why do we lock a `.lock` file instead of locking the database file itself?
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-8)
 Locking a dedicated `.lock` file prevents interfering with other software (like text editors or backup tools) that might want to inspect the database file. If the database file is locked directly, third-party tools crash.
 
 ### What is the difference between `LOCK_EX` and `LOCK_SH`?
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-9)
 `LOCK_EX` (Exclusive Lock) permits only one single process to access the resource; all others must wait. `LOCK_SH` (Shared Lock) allows multiple readers to read simultaneously, but blocks any writers.
 
 ---
 
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-10)
 - To understand the problems that necessitated this mantrap, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).
 - To view diagnostic stress test logs under high concurrency, visit [`03_DIAGNOSTIC_TESTS/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS.md`](/docs/devlog/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS).
 - To write your own cross-platform mantrap from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH.md`](/docs/devlog/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH).
