@@ -1,0 +1,58 @@
+# Chapter 01_24: Desktop Window Wrapping & PyWebView Traps
+
+Running developer portals inside standard web browsers introduces tab clutter, accidental disconnections, and browser security restrictions. This chapter details how running inside external browsers degraded developer focus, and how wrapping the frontend into a native desktop window via **PyWebView (Microsoft WebView2)** created a dedicated, self-contained application.
+
+---
+
+## What Happened
+
+During early developer trials where Siraugga operated as a local web server (`http://localhost:5000`) accessed via Google Chrome or Microsoft Edge:
+- **Accidental Disconnections**: Developers routinely closed the browser tab by mistake while closing research tabs, dropping active WebSocket streams and aborting long-running agent tasks.
+- **Multiple Tab Desynchronization**: Opening multiple browser tabs to the same URL created duplicate WebSocket clients that competed for the same monotonic event sequence, corrupting ACK state.
+- **Browser Accessibility Clutter**: Screen readers had to navigate through browser address bars, extensions, and bookmarks before reaching the developer portal interface.
+
+---
+
+## Why It Happened
+
+The issues stemmed from treating a mission-critical developer command center as an ephemeral webpage:
+- **Lack of Dedicated Window Chrome**: In standard browsers, there is no application boundary. The web app is trapped within the browser's generic lifecycle.
+- **Browser Sandboxing Boundaries**: Modern web browsers restrict local IPC, clipboard access, and filesystem interactions, forcing clumsy workarounds.
+- **Electron Bloat**: Bundling a full Chromium browser via Electron would have added 200MB+ to the executable size and consumed 500MB of RAM.
+
+```
+Standard Browser Tab:
+Chrome/Edge Window [Tab 1 | Tab 2 | DevCore Tab] ---> Accidental Ctrl+W closes active agent task!
+
+Dedicated Native PyWebView Window:
+Siraugga Desktop App (WebView2 Native Core) ---> Dedicated Process, Zero Tab Clutter, Direct Hotkeys!
+```
+
+---
+
+## The "Why Order Matters" Principle
+
+In native desktop window wrapping, initialization sequence controls lifecycle stability:
+1. **Boot ASGI Backend Server First**: The background Quart/Hypercorn server must bind to its local port and confirm healthy status before the desktop window is launched.
+2. **Initialize WebView Engine**: The GUI window must target the verified local URL (`http://127.0.0.1:5000`). Opening the window before the server is ready produces a blank white error screen.
+3. **Bind Window Close Event to Clean Shutdown**: Closing the native desktop window must trigger a graceful shutdown signal to the backend server and its child subprocesses.
+
+---
+
+## Beginner Coder Q&A
+
+### What is PyWebView?
+PyWebView is a lightweight Python library that opens a native GUI window displaying web content. On Windows, it uses Microsoft Edge WebView2, which is already built into Windows 10 and 11, requiring zero large downloads.
+
+### Why not use Electron?
+Electron bundles an entire copy of Google Chromium and Node.js with every application, resulting in 200MB+ installer files. PyWebView produces standalone executables under 45MB while using native Windows memory management.
+
+### Can screen readers interact with PyWebView windows?
+Yes! Because Microsoft WebView2 uses native Windows UI Automation (UIA) APIs, NVDA, JAWS, and Narrator treat the window exactly like a modern accessible desktop application.
+
+---
+
+## Next Steps & Related Chapters
+- To see the primary source implementation of the portable distribution architecture, read [`02_SOURCE_EVIDENCE/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE.md`](/docs/devlog/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE).
+- To view the complete portable distribution architecture blueprint, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_15_PORTABLE_EXECUTABLE_AND_BINARY_STAMPING_ARCHITECTURE.md`](/docs/devlog/04_15_PORTABLE_EXECUTABLE_AND_BINARY_STAMPING_ARCHITECTURE).
+- To build a native desktop window wrapper from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH.md`](/docs/devlog/05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH).

@@ -15,6 +15,7 @@ from projects_mod import projects_bp, get_projects_data
 from surgery import surgery_bp  # Or wherever your surgery.py is located
 from cert_mod import cert_bp, get_certifications_data
 from echos_mod import echos_bp
+from docs_mod import docs_bp
 
 # --- 2. APP INITIALIZATION ---
 config = Config()
@@ -48,6 +49,7 @@ from sync_mod import sync_bp
 app.register_blueprint(sync_bp, url_prefix='/api')
 
 app.register_blueprint(echos_bp)
+app.register_blueprint(docs_bp)
 
 # --- AI AGENT PLUGIN (DISABLED PENDING UPDATE) ---
 # import sys
@@ -207,7 +209,7 @@ def dynamic_route(path):
         return redirect(url_for('dynamic_route', path='home'))
         
     perms = session.get('permissions', [])
-    if path != 'home' and not session.get('admin', False) and not session.get('is_employer', False):
+    if path not in ['home', 'docs'] and not session.get('admin', False) and not session.get('is_employer', False):
         if f'view:tab:{path}' not in perms:
             flash("ACCESS DENIED: You lack permissions to view this section.", "error")
             return redirect(url_for('login'))
