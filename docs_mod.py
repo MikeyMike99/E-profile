@@ -4,6 +4,7 @@ from pathlib import Path
 from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session
 import markdown
 from config import Config
+from sensitivity_engine import filter_document_by_sensitivity, compute_document_sensitivity
 
 config = Config()
 docs_bp = Blueprint('docs', __name__, url_prefix='/docs')
@@ -186,15 +187,20 @@ def docs_reader(category, doc_slug):
     catalog = load_catalog()
     doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
     
-    # Check permissions & authorization
-    is_authorized = session.get('admin', False) or session.get('is_employer', False) or ('view:proprietary_docs' in session.get('permissions', []))
-    is_proprietary = doc_meta.get('is_proprietary', False) if doc_meta else False
+    # Determine viewer clearance tier
+    if session.get('admin', False):
+        viewer_tier = 5
+    elif session.get('is_employer', False) or ('view:proprietary_docs' in session.get('permissions', [])):
+        viewer_tier = 4
+    else:
+        viewer_tier = 1
     
     prev_doc, next_doc = get_prev_next(catalog, category, doc_slug)
     category_meta = COLLECTIONS.get(category, {"title": category.title(), "icon": "📄"})
     
-    # CRITICAL SECURITY GATE: Block unauthenticated access to proprietary documents
-    if is_proprietary and not is_authorized:
+    # Check if document is purely classified (base_sensitivity == 5)
+    base_sens = doc_meta.get('base_sensitivity', 1) if doc_meta else 1
+    if base_sens >= 5 and viewer_tier < 5:
         return render_template(
             'docs.html',
             active_tab='docs',
@@ -222,7 +228,10 @@ def docs_reader(category, doc_slug):
             
     try:
         raw_text = file_path.read_text(encoding='utf-8', errors='replace')
-        html_body = markdown.markdown(raw_text, extensions=['fenced_code', 'tables', 'nl2br'])
+        # SILENT SECTION SENSITIVITY FILTERING:
+        # Smoothly abstracts or omits blocks where section_score > viewer_tier
+        sanitized_text = filter_document_by_sensitivity(raw_text, viewer_tier=viewer_tier)
+        html_body = markdown.markdown(sanitized_text, extensions=['fenced_code', 'tables', 'nl2br'])
     except Exception as e:
         html_body = f"<p>Error rendering document: {e}</p>"
         

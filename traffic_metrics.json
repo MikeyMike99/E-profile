@@ -1,5 +1,5 @@
 {
-    "total_views": 449,
+    "total_views": 452,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -58,7 +58,8 @@
         "ca6ebb0bb4828e7dd2ecd4819e0af73e",
         "8b0be98d9c358f5a811495850fad144c",
         "6fc2f79e2d7ecd09685c94e3dd3b93c8",
-        "1b0ce5f093a561d27bb8919f9cdc2bae"
+        "1b0ce5f093a561d27bb8919f9cdc2bae",
+        "3e6282a42f0d9ec38fc80d72217f63aa"
     ],
     "paths": {
         "/": 132,
@@ -71,6 +72,8 @@
         "/ai_agent/api/chat": 2,
         "/ai_agent/api/stream": 1,
         "/robots.txt": 45,
-        "/sitemap.xml": 1
+        "/sitemap.xml": 1,
+        "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
+        "/docs": 1
     }
 }

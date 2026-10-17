@@ -18,6 +18,8 @@
     "is_latest": true,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE.md"
   },
   {
@@ -37,6 +39,8 @@
     "is_latest": true,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "story/DEVLOG.md"
   },
   {
@@ -54,8 +58,10 @@
     ],
     "order_score": 8200,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md"
   },
   {
@@ -73,8 +79,10 @@
     ],
     "order_score": 8150,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "audio_suite/03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md"
   },
   {
@@ -94,6 +102,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "audio_suite/02_SOURCE_CODE_EVIDENCE.md"
   },
   {
@@ -115,6 +125,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "audio_suite/01_PROBLEMS_WE_ENCOUNTERED.md"
   },
   {
@@ -133,6 +145,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY.md"
   },
   {
@@ -154,6 +168,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "audio_suite/00_README_INDEX.md"
   },
   {
@@ -176,6 +192,8 @@
     "is_latest": true,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md"
   },
   {
@@ -194,6 +212,8 @@
     "is_latest": true,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH.md"
   },
   {
@@ -213,6 +233,8 @@
     "is_latest": true,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md"
   },
   {
@@ -233,6 +255,8 @@
     "is_latest": true,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md"
   },
   {
@@ -253,6 +277,8 @@
     "is_latest": true,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md"
   },
   {
@@ -274,6 +300,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md"
   },
   {
@@ -292,6 +320,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS.md"
   },
   {
@@ -312,6 +342,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "devlog/05_41_THOUGHT_VECTOR_OBFUSCATOR_FROM_SCRATCH.md"
   },
   {
@@ -333,6 +365,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md"
   },
   {
@@ -353,6 +387,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH.md"
   },
   {
@@ -371,8 +407,10 @@
     ],
     "order_score": 390,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md"
   },
   {
@@ -391,6 +429,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_39_RAIA_SWARM_SUPERVISOR_FROM_SCRATCH.md"
   },
   {
@@ -410,6 +450,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS.md"
   },
   {
@@ -428,6 +470,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md"
   },
   {
@@ -447,6 +491,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md"
   },
   {
@@ -467,6 +513,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_38_INNO_SETUP_INSTALLER_SCRIPT_FROM_SCRATCH.md"
   },
   {
@@ -487,6 +535,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md"
   },
   {
@@ -505,6 +555,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE.md"
   },
   {
@@ -524,6 +576,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE.md"
   },
   {
@@ -542,6 +596,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_37_HEADLESS_SPOTIFY_CONTROLLER_FROM_SCRATCH.md"
   },
   {
@@ -562,6 +618,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_36_VENV_CONTAMINATION_AND_ALP_SCRATCH_TRAPS.md"
   },
   {
@@ -581,6 +639,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE.md"
   },
   {
@@ -602,6 +662,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE.md"
   },
   {
@@ -619,6 +681,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_36_LOCAL_OPENHANDS_RUNNER_AND_TOKEN_CALCULATOR_FROM_SCRATCH.md"
   },
   {
@@ -639,6 +703,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_35_OWASP_DAST_VULNERABILITIES_AND_CSP_REPORT_TRAPS.md"
   },
   {
@@ -659,6 +725,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE.md"
   },
   {
@@ -678,6 +746,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md"
   },
   {
@@ -695,8 +765,10 @@
     ],
     "order_score": 350,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "devlog/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE.md"
   },
   {
@@ -715,6 +787,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_35_BASHRC_AUTO_VENV_HOOK_FROM_SCRATCH.md"
   },
   {
@@ -735,6 +809,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_34_PRETOOLUSE_HOOK_INTERCEPTION_AND_WRITE_LOCK_TRAPS.md"
   },
   {
@@ -753,6 +829,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_34_SPOTIFY_HEADLESS_AND_HOTKEY_HOOK_EVIDENCE.md"
   },
   {
@@ -771,6 +849,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md"
   },
   {
@@ -790,6 +870,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_34_HEADLESS_AUDIO_STREAMING_AND_HOTKEY_ARCHITECTURE.md"
   },
   {
@@ -811,6 +893,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_34_SCRATCH_DEVCORE_PURGE_TOOL_FROM_SCRATCH.md"
   },
   {
@@ -829,6 +913,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_33_INODE_TAMPERING_AND_AST_KEY_DRIFT_TRAPS.md"
   },
   {
@@ -848,6 +934,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE.md"
   },
   {
@@ -869,6 +957,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS.md"
   },
   {
@@ -887,6 +977,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE.md"
   },
   {
@@ -906,6 +998,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_33_OWASP_SECURITY_HEADERS_AND_CSP_FROM_SCRATCH.md"
   },
   {
@@ -925,6 +1019,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_32_KMS_KEY_HIERARCHY_AND_COLD_STORAGE_LOCKOUTS.md"
   },
   {
@@ -945,6 +1041,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_32_SCRATCH_DEVCORE_AND_BASHRC_HOOK_EVIDENCE.md"
   },
   {
@@ -962,8 +1060,10 @@
     ],
     "order_score": 320,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS.md"
   },
   {
@@ -984,6 +1084,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_32_ENVIRONMENT_ISOLATION_AND_SHELL_HOOK_ARCHITECTURE.md"
   },
   {
@@ -1004,6 +1106,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_32_PRETOOLUSE_HOOK_INTERCEPTOR_FROM_SCRATCH.md"
   },
   {
@@ -1024,6 +1128,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_31_POPIA_DATA_PRIVACY_AND_CLOUD_LEAK_TRAPS.md"
   },
   {
@@ -1043,6 +1149,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_31_SECURITY_HEADERS_AND_CSP_DAST_EVIDENCE.md"
   },
   {
@@ -1062,6 +1170,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_31_SPOTIFY_GLOBAL_HOTKEY_AND_VOLUME_AUDIT_LOGS.md"
   },
   {
@@ -1081,6 +1191,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_31_OWASP_DAST_HARDENING_AND_SMART_CSP_ARCHITECTURE.md"
   },
   {
@@ -1102,6 +1214,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_31_RAUGUS_MAP_AST_INODE_INDEXER_FROM_SCRATCH.md"
   },
   {
@@ -1121,6 +1235,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_30_ACTIVE_THREAT_SIMULATION_ZIPCRYPTO_VS_AES_TRAPS.md"
   },
   {
@@ -1139,6 +1255,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_30_PRETOOLUSE_RAUGUS_HOOK_EVIDENCE.md"
   },
   {
@@ -1157,6 +1275,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS.md"
   },
   {
@@ -1176,6 +1296,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_30_PRETOOLUSE_HOOK_AND_FUNCTION_LOCK_ARCHITECTURE.md"
   },
   {
@@ -1194,6 +1316,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_30_KMS_KEYCHAIN_AND_COLD_STORAGE_FROM_SCRATCH.md"
   },
   {
@@ -1215,6 +1339,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_29_SIEM_LOG_EXHAUSTION_AND_ALERT_QUEUE_FLOODING.md"
   },
   {
@@ -1234,6 +1360,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_29_RAUGUS_MAP_AST_AND_INODE_GENERATOR_EVIDENCE.md"
   },
   {
@@ -1253,6 +1381,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_29_VENV_SWITCHING_AND_PURGE_BENCHMARK_LOGS.md"
   },
   {
@@ -1273,6 +1403,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_29_HARDWARE_INODE_AND_AST_KEY_MAP_ARCHITECTURE.md"
   },
   {
@@ -1292,6 +1424,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_29_POPIA_OFFLINE_PII_SCRUBBER_FROM_SCRATCH.md"
   },
   {
@@ -1312,6 +1446,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_28_HEADLESS_DEPLOYMENT_TOKEN_AUTH_TRAPS.md"
   },
   {
@@ -1330,6 +1466,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_28_KMS_KEYCHAIN_AND_COLD_STORAGE_EVIDENCE.md"
   },
   {
@@ -1350,6 +1488,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_28_OWASP_ZAP_DAST_SCAN_AND_CSP_VIOLATION_LOGS.md"
   },
   {
@@ -1369,6 +1509,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_28_ENTERPRISE_KMS_AND_COLD_STORAGE_ARCHITECTURE.md"
   },
   {
@@ -1387,6 +1529,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH.md"
   },
   {
@@ -1406,6 +1550,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_27_ACCESSIBLE_MEDIA_PLAYER_AND_IFRAME_FOCUS_TRAPS.md"
   },
   {
@@ -1425,6 +1571,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_27_POPIA_LOCAL_BRAIN_BROKER_EVIDENCE.md"
   },
   {
@@ -1446,6 +1594,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_27_PRETOOLUSE_HOOK_SIMULATION_30_CHECK_LOGS.md"
   },
   {
@@ -1466,6 +1616,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_27_POPIA_COMPLIANT_OFFLINE_BROKER_ARCHITECTURE.md"
   },
   {
@@ -1484,6 +1636,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_27_OFFLINE_PASSWORD_DICTIONARY_AUDITOR_FROM_SCRATCH.md"
   },
   {
@@ -1504,6 +1658,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_26_TERMINAL_BLANK_BLANK_AUDIO_GAME_ORIGINS.md"
   },
   {
@@ -1523,6 +1679,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE.md"
   },
   {
@@ -1542,6 +1700,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_26_INODE_TAMPERING_AND_AST_KEY_VERIFICATION_LOGS.md"
   },
   {
@@ -1562,6 +1722,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD.md"
   },
   {
@@ -1582,6 +1744,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_26_CENTRAL_SIEM_TELEMETRY_LOGGER_FROM_SCRATCH.md"
   },
   {
@@ -1603,6 +1767,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_25_THE_317000_LINE_MANIFESTO_AND_LSP_COLLAPSE.md"
   },
   {
@@ -1622,6 +1788,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_25_OFFLINE_AND_ONLINE_THREAT_LAB_EVIDENCE.md"
   },
   {
@@ -1641,6 +1809,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_25_COLD_STORAGE_ENCRYPTION_AND_DEK_ROTATION_LOGS.md"
   },
   {
@@ -1660,6 +1830,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_25_OFFLINE_AND_ONLINE_THREAT_MODELING_ARCHITECTURE.md"
   },
   {
@@ -1679,6 +1851,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_25_DEPLOYMENT_TOKEN_AUTH_GATEWAY_FROM_SCRATCH.md"
   },
   {
@@ -1701,6 +1875,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md"
   },
   {
@@ -1719,6 +1895,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_24_SIEM_CENTRAL_LOGGER_SOURCE_EVIDENCE.md"
   },
   {
@@ -1738,6 +1916,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_24_POPIA_PII_SCRUBBING_AND_NLP_BENCHMARK_LOGS.md"
   },
   {
@@ -1758,6 +1938,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_24_CENTRAL_SIEM_AND_MASTER_ALERT_QUEUE_ARCHITECTURE.md"
   },
   {
@@ -1776,6 +1958,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/05_24_ACCESSIBLE_VIDEO_PLAYER_APPLICATION_FROM_SCRATCH.md"
   },
   {
@@ -1794,6 +1978,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_23_SLASH_MENU_ENTER_KEY_CONFLICT_AND_ACCESSIBILITY_TRAPS.md"
   },
   {
@@ -1813,6 +1999,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_23_HEADLESS_LOGIN_AUTHENTICATION_EVIDENCE.md"
   },
   {
@@ -1832,6 +2020,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_23_ZIPCRYPTO_VS_AES256_OFFLINE_CRACK_BENCHMARK_LOGS.md"
   },
   {
@@ -1851,6 +2041,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_23_HEADLESS_DEPLOYMENT_TOKEN_SECURITY_ARCHITECTURE.md"
   },
   {
@@ -1870,6 +2062,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_23_CUSTOM_PYGAME_SCREEN_READER_CHUNK_READER_FROM_SCRATCH.md"
   },
   {
@@ -1888,6 +2082,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md"
   },
   {
@@ -1907,6 +2103,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/02_22_ACCESSIBLE_VIDEO_PLAYER_SOURCE_EVIDENCE.md"
   },
   {
@@ -1926,6 +2124,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_22_SIEM_TELEMETRY_AND_MAQ_ROTATION_LOGS.md"
   },
   {
@@ -1945,6 +2145,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_22_ACCESSIBLE_MEDIA_APPLICATION_ARCHITECTURE.md"
   },
   {
@@ -1964,6 +2166,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_22_MODEL_QUOTA_FALLBACK_AND_BANNER_FROM_SCRATCH.md"
   },
   {
@@ -1984,6 +2188,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_21_SECRET_TOKEN_EXHAUSTION_AND_REASONING_ALIAS_TRAPS.md"
   },
   {
@@ -2003,6 +2209,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_21_MANIFESTO_PYGAME_READER_SOURCE_EVIDENCE.md"
   },
   {
@@ -2023,6 +2231,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_21_DEPLOY_TOKEN_BRUTE_FORCE_AND_AUTH_LOGS.md"
   },
   {
@@ -2042,6 +2252,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_21_THE_AUTONOMOUS_SCRIBE_SWARM_ARCHITECTURE.md"
   },
   {
@@ -2060,6 +2272,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_21_PYWEBVIEW_DESKTOP_WRAPPER_FROM_SCRATCH.md"
   },
   {
@@ -2079,6 +2293,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md"
   },
   {
@@ -2098,6 +2314,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/02_20_WCAG_SLASH_COMBOBOX_AND_ENTER_KEY_EVIDENCE.md"
   },
   {
@@ -2118,6 +2336,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_20_MEDIA_PLAYER_ACCESSIBLE_OVERLAY_TEST_LOGS.md"
   },
   {
@@ -2138,6 +2358,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_20_QUOTA_BREACH_DETECTION_AND_FALLBACK_ARCHITECTURE.md"
   },
   {
@@ -2156,6 +2378,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/05_20_WCAG_ACCESSIBLE_COMBOBOX_FROM_SCRATCH.md"
   },
   {
@@ -2176,6 +2400,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md"
   },
   {
@@ -2194,6 +2420,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_19_PYWEBVIEW_DESKTOP_WRAPPER_EVIDENCE.md"
   },
   {
@@ -2213,6 +2441,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_19_MANIFESTO_READER_CHUNK_LOAD_BENCHMARK_LOGS.md"
   },
   {
@@ -2233,6 +2463,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_19_PYWEBVIEW_NATIVE_DESKTOP_APP_ARCHITECTURE.md"
   },
   {
@@ -2253,6 +2485,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_19_GAME_ENGINE_WEBSOCKET_BRIDGE_FROM_SCRATCH.md"
   },
   {
@@ -2273,6 +2507,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md"
   },
   {
@@ -2292,6 +2528,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_18_GAME_ENGINE_HEADLESS_DAEMON_EVIDENCE.md"
   },
   {
@@ -2312,6 +2550,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_18_WCAG_COMBOBOX_KEYBOARD_ACCESSIBILITY_LOGS.md"
   },
   {
@@ -2331,6 +2571,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_18_WCAG_ACCESSIBLE_SLASH_COMBOBOX_ARCHITECTURE.md"
   },
   {
@@ -2349,6 +2591,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_18_PREFLIGHT_AUTONOMOUS_SELF_HEALER_FROM_SCRATCH.md"
   },
   {
@@ -2366,8 +2610,10 @@
     ],
     "order_score": 170,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md"
   },
   {
@@ -2387,6 +2633,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE.md"
   },
   {
@@ -2406,6 +2654,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_17_PYWEBVIEW_IPC_AND_WINDOW_LIFECYCLE_LOGS.md"
   },
   {
@@ -2425,6 +2675,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_17_GAME_ENGINE_PLUGIN_INTEGRATION_ARCHITECTURE.md"
   },
   {
@@ -2444,6 +2696,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_17_PE_BINARY_STAMPER_AND_VERIFIER_FROM_SCRATCH.md"
   },
   {
@@ -2464,6 +2718,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS.md"
   },
   {
@@ -2482,6 +2738,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_16_SELF_HEALING_BOOTSTRAP_AND_TRACEBACK_REPAIR_EVIDENCE.md"
   },
   {
@@ -2502,6 +2760,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_16_DIRECTORY_TIERING_AND_SANDBOX_JAIL_AUDIT_LOGS.md"
   },
   {
@@ -2518,8 +2778,10 @@
     ],
     "order_score": 160,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_16_AUTONOMOUS_SELF_HEALING_BOOT_ARCHITECTURE.md"
   },
   {
@@ -2538,6 +2800,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "devlog/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH.md"
   },
   {
@@ -2557,6 +2821,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_15_THE_QUOTA_WALL_AMNESIA_AND_CONTEXT_EXHAUSTION_TRAPS.md"
   },
   {
@@ -2576,6 +2842,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE.md"
   },
   {
@@ -2593,8 +2861,10 @@
     ],
     "order_score": 150,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_15_AUTONOMOUS_SELF_HEALING_REPAIR_LOOP_LOGS.md"
   },
   {
@@ -2614,6 +2884,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_15_PORTABLE_EXECUTABLE_AND_BINARY_STAMPING_ARCHITECTURE.md"
   },
   {
@@ -2632,6 +2904,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/05_15_GIT_AUTOMATION_AND_SESSION_RECORDER_FROM_SCRATCH.md"
   },
   {
@@ -2652,6 +2926,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md"
   },
   {
@@ -2673,6 +2949,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE.md"
   },
   {
@@ -2692,6 +2970,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_14_BINARY_STAMP_EXTRACTION_AND_EXPIRATION_LOGS.md"
   },
   {
@@ -2709,8 +2989,10 @@
     ],
     "order_score": 140,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE.md"
   },
   {
@@ -2729,6 +3011,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_14_ACCESSIBLE_SCREEN_READER_SPEECH_MODULE_FROM_SCRATCH.md"
   },
   {
@@ -2747,6 +3031,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md"
   },
   {
@@ -2765,6 +3051,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE.md"
   },
   {
@@ -2783,6 +3071,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS.md"
   },
   {
@@ -2803,6 +3093,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_13_THE_31_STAGE_TOOL_SECURITY_AUDIT_ARCHITECTURE.md"
   },
   {
@@ -2820,6 +3112,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH.md"
   },
   {
@@ -2839,6 +3133,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_12_PASSWORD_CRACKING_AND_ACTIVE_THREAT_SIMULATION_TRAPS.md"
   },
   {
@@ -2858,6 +3154,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "devlog/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE.md"
   },
   {
@@ -2878,6 +3176,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS.md"
   },
   {
@@ -2896,8 +3196,10 @@
     ],
     "order_score": 120,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_12_ACCESSIBLE_AUDIO_OVERLAY_AND_SPEECH_ARCHITECTURE.md"
   },
   {
@@ -2916,6 +3218,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_12_NATIVE_TRANSCRIPT_TAILER_AUDIO_ROUTER_FROM_SCRATCH.md"
   },
   {
@@ -2939,6 +3243,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_11_AI_INTERNAL_MONOLOGUE_AND_ROBOTIC_BOT_SPEAK.md"
   },
   {
@@ -2957,6 +3263,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 2,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE.md"
   },
   {
@@ -2974,8 +3282,10 @@
     ],
     "order_score": 110,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 5,
     "rel_path": "devlog/03_11_SCREEN_READER_DLL_AND_DRIVER_AUDIT_LOGS.md"
   },
   {
@@ -2993,8 +3303,10 @@
     ],
     "order_score": 110,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_11_ZERO_MODIFICATION_EPHEMERAL_PLUGIN_ARCHITECTURE.md"
   },
   {
@@ -3014,6 +3326,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH.md"
   },
   {
@@ -3033,6 +3347,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_10_INGESTION_SWARM_PRIVILEGE_ESCALATION_TRAPS.md"
   },
   {
@@ -3051,6 +3367,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE.md"
   },
   {
@@ -3067,8 +3385,10 @@
     ],
     "order_score": 100,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_10_NATIVE_TAIL_VS_PYTHON_BUFFER_BENCHMARK_LOGS.md"
   },
   {
@@ -3087,8 +3407,10 @@
     ],
     "order_score": 100,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_10_ZERO_TRUST_SUBAGENT_AUDIO_EVENT_ARCHITECTURE.md"
   },
   {
@@ -3109,6 +3431,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_10_WSL_WINDOWS_IO_BRIDGE_FROM_SCRATCH.md"
   },
   {
@@ -3129,6 +3453,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_09_WSL_BROKEN_PIPES_AND_CROSS_OS_IO_TRAPS.md"
   },
   {
@@ -3147,6 +3473,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE.md"
   },
   {
@@ -3163,8 +3491,10 @@
     ],
     "order_score": 90,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS.md"
   },
   {
@@ -3182,8 +3512,10 @@
     ],
     "order_score": 90,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 2,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE.md"
   },
   {
@@ -3204,6 +3536,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_09_OFFLINE_PASSWORD_CRACK_LAB_FROM_SCRATCH.md"
   },
   {
@@ -3222,6 +3556,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_08_THE_ENTERPRISE_PRE_AUTHORIZATION_WALL.md"
   },
   {
@@ -3241,6 +3577,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE.md"
   },
   {
@@ -3261,6 +3599,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_08_OFFLINE_PASSWORD_AUDIT_AND_CRACK_LOGS.md"
   },
   {
@@ -3282,6 +3622,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL.md"
   },
   {
@@ -3302,6 +3644,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_08_CINEMATIC_TTS_PROXY_FROM_SCRATCH.md"
   },
   {
@@ -3320,8 +3664,10 @@
     ],
     "order_score": 70,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/01_07_NUITKA_COMPILATION_AND_BINARY_PACKAGING_TRAPS.md"
   },
   {
@@ -3344,6 +3690,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/02_07_CINEMATIC_TTS_AND_STEALTH_FEED_EVIDENCE.md"
   },
   {
@@ -3364,6 +3712,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_07_TTS_AUDIO_LATENCY_AND_MONOLOGUE_SCRUBBING_LOGS.md"
   },
   {
@@ -3383,6 +3733,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_07_THE_VOICE_OF_SIRAUGGA_CINEMATIC_TTS_ARCHITECTURE.md"
   },
   {
@@ -3403,6 +3755,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_07_BOOTSTRAP_SUPERVISOR_GATEWAY_FROM_SCRATCH.md"
   },
   {
@@ -3425,6 +3779,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_06_THE_FRIENDLY_LEAK_AND_EGRESS_FIREWALL_TRAPS.md"
   },
   {
@@ -3445,6 +3801,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_06_BOOTSTRAP_GATEWAY_AND_SUPERVISOR_EVIDENCE.md"
   },
   {
@@ -3466,6 +3824,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_06_WSL_PIPE_CORRUPTION_AND_IO_BENCHMARKS.md"
   },
   {
@@ -3486,6 +3846,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_06_PRE_FLIGHT_SELF_HEALING_SUPERVISOR_ARCHITECTURE.md"
   },
   {
@@ -3506,6 +3868,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_06_FORENSIC_SESSION_VAULT_FROM_SCRATCH.md"
   },
   {
@@ -3526,6 +3890,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES.md"
   },
   {
@@ -3545,6 +3911,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE.md"
   },
   {
@@ -3565,6 +3933,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_05_COMPILATION_AND_BINARY_INTEGRITY_LOGS.md"
   },
   {
@@ -3583,6 +3953,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_05_SOVEREIGN_AI_AND_OFFLINE_BROKER_RECIPES.md"
   },
   {
@@ -3603,6 +3975,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_05_ZERO_DOWNTIME_HOT_PATCH_RUNNER_FROM_SCRATCH.md"
   },
   {
@@ -3620,6 +3994,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_50_Semantic_Firewall_Hooks.md"
   },
   {
@@ -3637,6 +4013,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_49_Triaging_Swarm_Intrusions.md"
   },
   {
@@ -3655,6 +4033,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_48_Evaluating_Alerts.md"
   },
   {
@@ -3673,6 +4053,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_47_Centralized_Swarm_Auditing.md"
   },
   {
@@ -3690,6 +4072,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_46_Types_of_Security_Data.md"
   },
   {
@@ -3708,6 +4092,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_45_The_Black_Box_Effect.md"
   },
   {
@@ -3726,6 +4112,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_44_Auditing_Swarm_Telemetry.md"
   },
   {
@@ -3743,6 +4131,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 1,
     "rel_path": "textbook/Chapter_43_Swarm_Telemetry.md"
   },
   {
@@ -3761,6 +4151,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_42_Impacts_of_Cryptography.md"
   },
   {
@@ -3780,6 +4172,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_41_PKI_Trust_System.md"
   },
   {
@@ -3797,8 +4191,10 @@
     ],
     "order_score": 40,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/01_04_ZOMBIE_SUBAGENTS_AND_PROCESS_EXHAUSTION.md"
   },
   {
@@ -3818,6 +4214,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_04_FORENSIC_VAULT_AND_PII_SCRUBBING_EVIDENCE.md"
   },
   {
@@ -3839,6 +4237,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/03_04_SEMANTIC_FIREWALL_AND_DLP_AUDIT_LOGS.md"
   },
   {
@@ -3856,8 +4256,10 @@
     ],
     "order_score": 40,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/04_04_EXTENDING_SIRAUGGA_PLUGINS_AND_SERVICES.md"
   },
   {
@@ -3876,6 +4278,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_04_RAUGUS_OPAQUE_VFS_FROM_SCRATCH.md"
   },
   {
@@ -3894,6 +4298,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_40_Public_Key_Cryptography.md"
   },
   {
@@ -3913,6 +4319,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_39_Hashing_and_Salting.md"
   },
   {
@@ -3932,6 +4340,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_38_Integrity_Authenticity.md"
   },
   {
@@ -3949,6 +4359,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_37_Obscuring_Data.md"
   },
   {
@@ -3967,6 +4379,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 1,
     "rel_path": "textbook/Chapter_36_Context_Confidentiality.md"
   },
   {
@@ -3986,6 +4400,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_35_Agentic_Cryptography.md"
   },
   {
@@ -4004,6 +4420,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_34_Protecting_SVs.md"
   },
   {
@@ -4023,6 +4441,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_33_Data_Security.md"
   },
   {
@@ -4041,6 +4461,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_32_Application_Security.md"
   },
   {
@@ -4059,6 +4481,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_31_Infrastructure_Security.md"
   },
   {
@@ -4076,8 +4500,10 @@
     ],
     "order_score": 30,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/01_03_PATH_TRAVERSAL_AND_PRIVILEGE_ESCALATION.md"
   },
   {
@@ -4098,6 +4524,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_03_HOT_PATCH_AND_SELF_HEALING_EVIDENCE.md"
   },
   {
@@ -4115,8 +4543,10 @@
     ],
     "order_score": 30,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_03_ZOMBIE_REAPING_AND_PROCESS_AUDIT_LOGS.md"
   },
   {
@@ -4136,6 +4566,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_03_OPAQUE_VFS_AND_AST_DIFFING_ARCHITECTURE.md"
   },
   {
@@ -4156,6 +4588,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH.md"
   },
   {
@@ -4174,6 +4608,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_30_Domains_of_Security.md"
   },
   {
@@ -4193,6 +4629,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_29_Virtualization.md"
   },
   {
@@ -4211,6 +4649,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_28_Swarm_Hosting.md"
   },
   {
@@ -4228,6 +4668,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_27_Configure_ZSP.md"
   },
   {
@@ -4245,6 +4687,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_26_ZSP_Operation.md"
   },
   {
@@ -4262,6 +4706,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_25_ZSP_Overview.md"
   },
   {
@@ -4279,6 +4725,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_24_Zone_Based_Policies.md"
   },
   {
@@ -4298,6 +4746,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_23_Sandbox_Topologies.md"
   },
   {
@@ -4316,6 +4766,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_22_Agentic_Bulkheads.md"
   },
   {
@@ -4335,6 +4787,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_21_Agentic_Firewalls.md"
   },
   {
@@ -4356,6 +4810,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES.md"
   },
   {
@@ -4375,6 +4831,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE.md"
   },
   {
@@ -4395,6 +4853,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS.md"
   },
   {
@@ -4415,6 +4875,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_02_THE_5_TIER_ZERO_TRUST_HIERARCHY.md"
   },
   {
@@ -4434,6 +4896,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH.md"
   },
   {
@@ -4452,6 +4916,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_20_Swarm_ACLs.md"
   },
   {
@@ -4471,6 +4937,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_19_Mitigating_Attacks.md"
   },
   {
@@ -4489,6 +4957,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_18_Implementing_ACLs.md"
   },
   {
@@ -4508,6 +4978,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_17_Modifying_ACLs.md"
   },
   {
@@ -4526,6 +4998,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_16_Configuring_ACLs.md"
   },
   {
@@ -4545,6 +5019,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_15_Wildcard_Masking.md"
   },
   {
@@ -4564,6 +5040,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_14_Agentic_Control_Lists.md"
   },
   {
@@ -4581,6 +5059,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_13_AAA_Operation.md"
   },
   {
@@ -4598,6 +5078,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_12_Account_Management.md"
   },
   {
@@ -4615,6 +5097,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_11_Access_Control_Concepts.md"
   },
   {
@@ -4636,6 +5120,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS.md"
   },
   {
@@ -4658,6 +5144,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE.md"
   },
   {
@@ -4676,8 +5164,10 @@
     ],
     "order_score": 10,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS.md"
   },
   {
@@ -4699,6 +5189,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE.md"
   },
   {
@@ -4718,6 +5210,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "devlog/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH.md"
   },
   {
@@ -4735,6 +5229,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_10_Access_Control.md"
   },
   {
@@ -4753,6 +5249,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_09_Agentic_Deception.md"
   },
   {
@@ -4772,6 +5270,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_08_Cybersecurity_Resilience.md"
   },
   {
@@ -4790,6 +5290,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_07_Securing_Wireless_Devices.md"
   },
   {
@@ -4809,6 +5311,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_06_Securing_Network_Devices.md"
   },
   {
@@ -4829,6 +5333,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_05_Network_Hardening_and_Protocols.md"
   },
   {
@@ -4846,6 +5352,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_04_System_and_Network_Defense.md"
   },
   {
@@ -4864,6 +5372,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_03_Governance_and_Policies.md"
   },
   {
@@ -4883,6 +5393,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_02_Operational_Management.md"
   },
   {
@@ -4903,6 +5415,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_01_Asset_Management.md"
   },
   {
@@ -4926,6 +5440,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00_README_INDEX.md"
   },
   {
@@ -4946,6 +5462,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00A_BEGINNER_GUIDE_TO_SIRAUGGA_AND_ZERO_TRUST.md"
   },
   {
@@ -4965,6 +5483,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00B_BEGINNER_GUIDE_TO_ACCESSIBLE_WEBSOCKET_STREAMING.md"
   },
   {
@@ -4985,6 +5505,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00C_BEGINNER_GUIDE_TO_OPAQUE_VFS_AND_RAUGUS_MAP.md"
   },
   {
@@ -5006,6 +5528,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS.md"
   },
   {
@@ -5026,6 +5550,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS.md"
   },
   {
@@ -5046,6 +5572,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "devlog/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY.md"
   },
   {
@@ -5066,6 +5594,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Checkpoint_01_to_03.md"
   },
   {
@@ -5085,6 +5615,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Checkpoint_04_to_09.md"
   },
   {
@@ -5103,6 +5635,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_10_Checkpoint.md"
   },
   {
@@ -5121,6 +5655,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_11_Checkpoint.md"
   },
   {
@@ -5139,6 +5675,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_3_Checkpoint.md"
   },
   {
@@ -5157,6 +5695,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_3_Summary.md"
   },
   {
@@ -5178,6 +5718,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_4_Checkpoint.md"
   },
   {
@@ -5196,6 +5738,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_5_Checkpoint.md"
   },
   {
@@ -5213,6 +5757,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_6_Checkpoint.md"
   },
   {
@@ -5231,6 +5777,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_7_Checkpoint.md"
   },
   {
@@ -5250,6 +5798,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_8_Checkpoint.md"
   },
   {
@@ -5269,6 +5819,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "textbook/Module_9_Checkpoint.md"
   },
   {
@@ -5289,6 +5841,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 2,
     "rel_path": "manual/Module_01_Sandbox_and_Tiers.md"
   },
   {
@@ -5306,6 +5860,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "manual/Module_02_Access_Control.md"
   },
   {
@@ -5323,6 +5879,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "manual/Module_03_Swarm_Telemetry.md"
   },
   {
@@ -5340,6 +5898,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "manual/Module_04_Orchestrator_SIEM.md"
   },
   {
@@ -5359,6 +5919,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "manual/Module_05_Cryptography.md"
   },
   {
@@ -5380,6 +5942,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 1,
     "rel_path": "manual/Module_06_Swarm_Obfuscation.md"
   },
   {
@@ -5397,6 +5961,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "manual/Module_07_Threat_Intelligence.md"
   },
   {
@@ -5414,6 +5980,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 2,
     "rel_path": "manifesto/00_Foreword.md"
   },
   {
@@ -5429,8 +5997,10 @@
     ],
     "order_score": 0,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "manifesto/00_The_Forensic_Timeline.md"
   },
   {
@@ -5453,6 +6023,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "manifesto/01_Echoes_in_the_Void.md"
   },
   {
@@ -5473,6 +6045,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "manifesto/02_The_Echoes_Architecture.md"
   },
   {
@@ -5492,6 +6066,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 2,
     "rel_path": "manifesto/03_The_Quantitative_Era.md"
   },
   {
@@ -5513,6 +6089,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "manifesto/04_The_Forge_of_Sovereignty.md"
   },
   {
@@ -5534,6 +6112,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 3,
+    "max_sensitivity": 3,
     "rel_path": "manifesto/05_The_24_Hour_Crucible.md"
   },
   {
@@ -5553,6 +6133,8 @@
     "is_latest": false,
     "is_proprietary": false,
     "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 2,
     "rel_path": "manifesto/README.md"
   },
   {
@@ -5572,8 +6154,10 @@
     ],
     "order_score": 0,
     "is_latest": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "guides/USER_MANUAL.md"
   },
   {
@@ -5594,6 +6178,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
     "rel_path": "guides/SECURITY.md"
   },
   {
@@ -5613,6 +6199,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "guides/HOT_PATCH_ARCHITECTURE.md"
   },
   {
@@ -5632,6 +6220,8 @@
     "is_latest": false,
     "is_proprietary": true,
     "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
     "rel_path": "guides/RAUGUS_RESOLVER_MCP_ARCHITECTURE.md"
   }
 ]
