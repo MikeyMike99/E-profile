@@ -49,18 +49,18 @@ app.register_blueprint(sync_bp, url_prefix='/api')
 
 app.register_blueprint(echos_bp)
 
-# --- AI AGENT PLUGIN ---
-import sys
-import os
-ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
-if ai_path not in sys.path:
-    sys.path.append(ai_path)
-    
-try:
-    from ai_plugin import ai_bp
-    app.register_blueprint(ai_bp, url_prefix='/ai_agent')
-except Exception as e:
-    app.logger.error(f"Failed to load AI Blueprint: {e}")
+# --- AI AGENT PLUGIN (DISABLED PENDING UPDATE) ---
+# import sys
+# import os
+# ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
+# if ai_path not in sys.path:
+#     sys.path.append(ai_path)
+#     
+# try:
+#     from ai_plugin import ai_bp
+#     app.register_blueprint(ai_bp, url_prefix='/ai_agent')
+# except Exception as e:
+#     app.logger.error(f"Failed to load AI Blueprint: {e}")
 
 class SystemLogger:
     def __init__(self):
