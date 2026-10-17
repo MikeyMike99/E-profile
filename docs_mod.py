@@ -351,20 +351,34 @@ def docs_api_chapter(category, doc_slug):
 def docs_index():
     catalog = load_catalog()
     if not catalog:
-        return render_template('docs.html', active_tab='docs', all_docs=[], grouped_tree=[], total_docs=0)
+        return render_template('docs.html', active_tab='docs', all_docs=[], grouped_tree=[], total_docs=0, is_landing=True, latest_updates=[], origin_doc=None)
         
     active_slug = request.args.get('slug')
     active_cat = request.args.get('category')
     
+    is_landing = False
     active_doc = None
     if active_slug and active_cat:
         active_doc = next((d for d in catalog if d.get('slug') == active_slug and d.get('category') == active_cat), None)
+    
     if not active_doc:
-        active_doc = next((d for d in catalog if d.get('is_latest')), catalog[0])
+        is_landing = True
+        active_doc = catalog[0]
         
     viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
     doc_meta, html_body, prev_doc, next_doc = render_doc_content(active_doc.get('category'), active_doc.get('slug'), viewer_tier)
     grouped_tree = build_grouped_tree(catalog)
+
+    origin_doc = next((d for d in catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), catalog[0])
+    
+    latest_updates = []
+    for d in catalog:
+        if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD':
+            continue
+        if d.get('is_latest') or d.get('order_score', 0) >= 13000:
+            latest_updates.append(d)
+            if len(latest_updates) >= 8:
+                break
 
     return render_template(
         'docs.html',
@@ -378,7 +392,10 @@ def docs_index():
         categories=COLLECTIONS,
         projects=PROJECTS,
         topics=TOPICS,
-        total_docs=len(catalog)
+        total_docs=len(catalog),
+        is_landing=is_landing,
+        latest_updates=latest_updates,
+        origin_doc=origin_doc
     )
 
 @docs_bp.route('/<category>')
@@ -402,6 +419,9 @@ def docs_reader(category, doc_slug):
     viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
     doc_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
     grouped_tree = build_grouped_tree(catalog)
+
+    origin_doc = next((d for d in catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), catalog[0] if catalog else None)
+    latest_updates = [d for d in catalog if d.get('slug') != '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and (d.get('is_latest') or d.get('order_score', 0) >= 13000)][:8]
     
     return render_template(
         'docs.html',
@@ -415,7 +435,10 @@ def docs_reader(category, doc_slug):
         categories=COLLECTIONS,
         projects=PROJECTS,
         topics=TOPICS,
-        total_docs=len(catalog)
+        total_docs=len(catalog),
+        is_landing=False,
+        latest_updates=latest_updates,
+        origin_doc=origin_doc
     )
 
 
