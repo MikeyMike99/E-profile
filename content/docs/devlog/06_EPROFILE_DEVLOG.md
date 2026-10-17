@@ -412,7 +412,29 @@ Rather than maintaining separate, bifurcated documentation trees (which inevitab
 **Key Security Advantage**:
 By employing *silent adaptive redaction*, public viewers see an articulate, complete engineering guide without disruptive `[CLASSIFIED]` tags. This prevents attackers from knowing where sensitive infrastructure points exist.
 
-### 6.3 The Master-Detail SPA Docs Explorer (`docs.html` & `docs_mod.py`)
+### 6.3 Defeating the DevTools & Page Inspection Threat Model (Server-Side Redaction vs. CSS Hiding)
+
+A common security vulnerability on amateur web applications is attempting to hide sensitive information on the client side using CSS or JavaScript:
+```html
+<!-- THE AMATEUR / INSECURE APPROACH: Visible in DevTools! -->
+<div style="display: none;" class="proprietary-code">
+    SECRET_KMS_SEED = "0x98f2a..."
+</div>
+```
+When a developer relies on `display: none;`, `visibility: hidden;`, or collapsed `<details>` tags, the sensitive data is still transmitted in the HTTP response. Any visitor can press `F12`, open the **Elements** DOM inspector, view the raw page source (`Ctrl+U`), or inspect the Network tab, immediately extracting the proprietary payload.
+
+In E-Profile, this attack vector is structurally neutralized through **Strict Server-Side Redaction**:
+1. **Zero-Byte Transmission Across the Wire**:
+   Inside [`sensitivity_engine.py`](file:///mnt/c/Users/michael/Documents/e_profile/sensitivity_engine.py), the `filter_document_by_sensitivity()` function executes in server memory *before* Markdown is parsed into HTML and *before* any byte is transmitted across the network. If an anonymous or low-tier visitor requests a document, Tier 4–5 code fences and cryptographic secrets are physically stripped or replaced with high-level architectural synopses.
+2. **Impenetrable to DOM & DevTools Inspection**:
+   Because the sensitive source text never leaves the server host, inspecting the DOM via Chrome DevTools or Firefox Developer Tools reveals only the sanitized markup. There are no hidden CSS classes, no obscured `<span>` tags, and no script variables holding the hidden text.
+3. **Protected API & Direct File Vectors**:
+   - The asynchronous chapter API (`GET /docs/api/chapter/<category>/<slug>`) returns JSON containing only the server-sanitized HTML (`data.html`). Intercepting the network packets with Wireshark or inspecting them in the DevTools Network tab yields zero proprietary code.
+   - Raw markdown documents in [`content/docs/`](file:///mnt/c/Users/michael/Documents/e_profile/content/docs) are isolated from public static file routes. Direct URL requests (such as `GET /content/docs/devlog/...`) return HTTP `302 Redirect` or `404 Not Found`, permanently preventing raw file exfiltration.
+
+In zero-trust architecture: **What is never transmitted cannot be inspected.**
+
+### 6.4 The Master-Detail SPA Docs Explorer (`docs.html` & `docs_mod.py`)
 In commit `78d837b`, the documentation UI was completely rebuilt into a Master-Detail Single Page Application.
 
 **The Accessibility Problem Solved**:
