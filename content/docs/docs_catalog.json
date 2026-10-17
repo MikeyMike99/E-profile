@@ -1,5 +1,52 @@
 [
   {
+    "slug": "DEVLOG",
+    "category": "eprofile",
+    "title": "E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal",
+    "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
+    "word_count": 3483,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "topics": [
+      "security",
+      "infrastructure",
+      "accessibility_ui",
+      "workflow",
+      "origin_story"
+    ],
+    "order_score": 15000,
+    "is_latest": true,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "eprofile/DEVLOG.md"
+  },
+  {
+    "slug": "06_EPROFILE_DEVLOG",
+    "category": "devlog",
+    "title": "E-Profile Architecture & Cybersecurity Devlog",
+    "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
+    "word_count": 3483,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "topics": [
+      "security",
+      "infrastructure",
+      "accessibility_ui",
+      "workflow",
+      "origin_story",
+      "changelog"
+    ],
+    "order_score": 14990,
+    "is_latest": true,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/06_EPROFILE_DEVLOG.md"
+  },
+  {
     "slug": "05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE",
     "category": "audio_suite",
     "title": "Chapter 5: Beginner's Step-by-Step Guide to Creating `compile_joshy.bat` From Scratch",
