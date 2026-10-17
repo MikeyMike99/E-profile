@@ -1,5 +1,24 @@
 [
   {
+    "slug": "05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE",
+    "category": "audio_suite",
+    "title": "Chapter 5: Beginner's Step-by-Step Guide to Creating `compile_joshy.bat` From Scratch",
+    "summary": "- **Previous**: [`04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md`](/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE)",
+    "word_count": 2088,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "infrastructure",
+      "accessibility_ui",
+      "workflow",
+      "limitations",
+      "changelog"
+    ],
+    "order_score": 13250,
+    "is_latest": true,
+    "rel_path": "audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE.md"
+  },
+  {
     "slug": "DEVLOG",
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
@@ -17,11 +36,116 @@
     "rel_path": "story/DEVLOG.md"
   },
   {
+    "slug": "04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE",
+    "category": "audio_suite",
+    "title": "Chapter 4: How We Made It Work & Step-by-Step Future Compilation Guide",
+    "summary": "- **Previous**: [`03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md`](/docs/audio_suite/03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS)",
+    "word_count": 1551,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "infrastructure",
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 8200,
+    "is_latest": false,
+    "rel_path": "audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md"
+  },
+  {
+    "slug": "03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS",
+    "category": "audio_suite",
+    "title": "Chapter 3: Diagnostic Tests Executed & How We Reached Our Conclusions",
+    "summary": "- **Previous**: [`02_SOURCE_CODE_EVIDENCE.md`](/docs/audio_suite/02_SOURCE_CODE_EVIDENCE)",
+    "word_count": 1611,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "infrastructure",
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 8150,
+    "is_latest": false,
+    "rel_path": "audio_suite/03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md"
+  },
+  {
+    "slug": "02_SOURCE_CODE_EVIDENCE",
+    "category": "audio_suite",
+    "title": "Chapter 2: Where the Information Was Found (Primary Source Documents)",
+    "summary": "- **Previous**: [`01_PROBLEMS_WE_ENCOUNTERED.md`](/docs/audio_suite/01_PROBLEMS_WE_ENCOUNTERED)",
+    "word_count": 1347,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "accessibility_ui",
+      "workflow",
+      "changelog"
+    ],
+    "order_score": 8100,
+    "is_latest": false,
+    "rel_path": "audio_suite/02_SOURCE_CODE_EVIDENCE.md"
+  },
+  {
+    "slug": "01_PROBLEMS_WE_ENCOUNTERED",
+    "category": "audio_suite",
+    "title": "Chapter 1: The Three Problems We Encountered",
+    "summary": "- **Previous**: [`00_README_INDEX.md`](/docs/audio_suite/00_README_INDEX)",
+    "word_count": 1624,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "security",
+      "infrastructure",
+      "accessibility_ui",
+      "origin_story",
+      "changelog"
+    ],
+    "order_score": 8050,
+    "is_latest": false,
+    "rel_path": "audio_suite/01_PROBLEMS_WE_ENCOUNTERED.md"
+  },
+  {
+    "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+    "category": "audio_suite",
+    "title": "Beginner Developer Guide: What Are Screen Readers & How Does This Help Me Build Accessible Apps?",
+    "summary": "- **Back to Index**: [`00_README_INDEX.md`](/docs/audio_suite/00_README_INDEX)",
+    "word_count": 1628,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 8000,
+    "is_latest": false,
+    "rel_path": "audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY.md"
+  },
+  {
+    "slug": "00_README_INDEX",
+    "category": "audio_suite",
+    "title": "JOSHY Screen Reader & Nuitka Packaging Documentation Index",
+    "summary": "Welcome to the technical documentation and future compilation guide for the **JOSHY Audio Playback Suite**.",
+    "word_count": 642,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
+    "topics": [
+      "security",
+      "infrastructure",
+      "accessibility_ui",
+      "limitations",
+      "changelog"
+    ],
+    "order_score": 8000,
+    "is_latest": false,
+    "rel_path": "audio_suite/00_README_INDEX.md"
+  },
+  {
     "slug": "01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.43: Problems Encountered: Token Burst, Premature Rollover & Mid-Task Reset Traps",
     "summary": "Long-running agentic conversations naturally accumulate dozens or hundreds of conversational turns. In large enterprise workflows, sessions reaching 200+ turns can consume hundreds of thousands of input tokens per turn,...",
-    "word_count": 714,
+    "word_count": 718,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -41,7 +165,7 @@
     "category": "devlog",
     "title": "Pillar 05.42: \"From Scratch\" Step-by-Step Creation Guide: Session Rollover & In-Flight Protection",
     "summary": "This guide provides a complete, step-by-step engineering tutorial for building an autonomous, background session rollover and context transfer system from scratch. By following this guide, you will construct a distillati...",
-    "word_count": 658,
+    "word_count": 662,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -57,7 +181,7 @@
     "category": "devlog",
     "title": "Pillar 02.39: Source Code Evidence: Session Rollover Distillation, In-Flight Guards & SIEM Telemetry",
     "summary": "This document catalogs the exact production code implementations across the Siraugga backend and frontend architecture that govern session lifecycle management, transcript distillation, mid-conversation rollover suppress...",
-    "word_count": 700,
+    "word_count": 704,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -74,7 +198,7 @@
     "category": "devlog",
     "title": "Pillar 04.39: Solutions & Architecture: Automated Silent Session Rollover & In-Flight Protection",
     "summary": "The Automated Silent Session Rollover and Context Transfer architecture prevents token runaway and context saturation in long-running agentic conversations. When conversations accumulate tens of thousands of tokens over...",
-    "word_count": 568,
+    "word_count": 572,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -92,7 +216,7 @@
     "category": "devlog",
     "title": "Pillar 03.36: Diagnostic Test Logs: Session Rollover Guard & SIEM Audit Logs",
     "summary": "This document records the exact diagnostic benchmarks, edge-case assertions, and live SIEM log outputs validating the session stability rules, mid-conversation rollover suppression, and automated security audit invariant...",
-    "word_count": 471,
+    "word_count": 475,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -110,7 +234,7 @@
     "category": "devlog",
     "title": "Pillar 01.42: Problems Encountered: Thought Vector Exposure & Reasoning Leak Traps",
     "summary": "Modern frontier AI models emit detailed internal chains-of-thought (\"thinking\" tokens or thought vectors) alongside their public responses. While invaluable for debugging complex multi-step reasoning, these intermediate...",
-    "word_count": 530,
+    "word_count": 534,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -129,7 +253,7 @@
     "category": "devlog",
     "title": "Pillar 01.41: Problems Encountered: Zone-Based Policies & Wildcard Masking Traps",
     "summary": "In early versions of the security manager, permissions were evaluated on a brittle file-by-file basis. As DevCore grew to include hundreds of templates, static assets, dynamic plugins, and sensitive content vaults, maint...",
-    "word_count": 562,
+    "word_count": 566,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -145,7 +269,7 @@
     "category": "devlog",
     "title": "Pillar 05.41: From-Scratch Creation Guide: Thought Vector Obfuscator & Masking Pipeline",
     "summary": "This guide teaches you how to write an in-memory Thought Vector Obfuscation and Prompt Masking pipeline in Python from scratch. It scrubs API keys and developer secrets using regular expressions and verifies frame integr...",
-    "word_count": 326,
+    "word_count": 330,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -163,7 +287,7 @@
     "category": "devlog",
     "title": "Pillar 01.40: Problems Encountered: Swarm Collapse & Conversational Loop Traps",
     "summary": "In multi-agent architectures where an orchestrator coordinates specialized subagents (such as researchers, coders, and security auditors), systems are vulnerable to two catastrophic failure modes: orchestrator process fa...",
-    "word_count": 511,
+    "word_count": 515,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -182,7 +306,7 @@
     "category": "devlog",
     "title": "Pillar 05.40: From-Scratch Creation Guide: Zone-Based Sandbox & Wildcard Path Filter",
     "summary": "This guide teaches you how to write a Zone-Based Sandbox Path Filter in Python from scratch. It categorizes files into security tiers and stops directory traversal attacks (`../../`) using canonical path resolution.",
-    "word_count": 397,
+    "word_count": 401,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -200,9 +324,9 @@
     "category": "devlog",
     "title": "Pillar 01.39: Problems Encountered: Inno Setup Compilation & Speech DLL Traps",
     "summary": "Distributing accessible Python desktop applications to non-technical users requires packaging code, dependencies, and native C-libraries into a standalone installer (`JOSHY-Setup.exe`). During the compilation and packagi...",
-    "word_count": 543,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 547,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -218,7 +342,7 @@
     "category": "devlog",
     "title": "Pillar 05.39: From-Scratch Creation Guide: RAIA Swarm Supervisor & Loop Suppressor",
     "summary": "This guide teaches you how to write an autonomous multi-agent supervisor in Python from scratch. It implements the **Semantic Tree Protocol (STP)** to prevent conversational loops and manages an N+1 standby array of work...",
-    "word_count": 344,
+    "word_count": 348,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -234,9 +358,9 @@
     "category": "devlog",
     "title": "Pillar 01.38: Problems Encountered: Spotify Headless Playback & Global Hotkey Traps",
     "summary": "For blind developers who operate entirely through keyboard navigation and screen readers (such as NVDA or JAWS), standard desktop media players present severe accessibility barriers. Interacting with graphical music play...",
-    "word_count": 534,
-    "project": "accessible_apps",
-    "project_label": "Accessible Applications",
+    "word_count": 538,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "accessibility_ui",
       "workflow",
@@ -251,7 +375,7 @@
     "category": "devlog",
     "title": "Pillar 02.38: Source Code Evidence: Thought Vector Obfuscation & Prompt Masking",
     "summary": "This document cites primary architectural and security specifications from `docs/Siraugga_Textbook/Chapter_37_Obscuring_Data.md` and `Chapter_38_Integrity_Authenticity.md`, defining how DevCore performs **Prompt Masking*...",
-    "word_count": 502,
+    "word_count": 506,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -267,7 +391,7 @@
     "category": "devlog",
     "title": "Pillar 04.38: Architectural Blueprint: Agentic Cryptography & Thought Vector Obfuscation",
     "summary": "This blueprint details the architectural solution for securing model thought vectors and conversational context in DevCore, utilizing **Prompt Masking**, **CSPRNG Salting**, and **HMAC-SHA256 Context Verification** to pr...",
-    "word_count": 443,
+    "word_count": 447,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -284,9 +408,9 @@
     "category": "devlog",
     "title": "Pillar 05.38: From-Scratch Creation Guide: Inno Setup Windows Installer Script",
     "summary": "This guide teaches you how to write an Inno Setup script (`JOSHY Setup.iss`) and its companion build batch file (`compile_joshy.bat`) line by line from scratch. It compiles your Python executable into a professional Wind...",
-    "word_count": 310,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 314,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "workflow",
@@ -302,7 +426,7 @@
     "category": "devlog",
     "title": "Pillar 01.37: Problems Encountered: OpenHands Integration & Token Economics Traps",
     "summary": "As autonomous agentic workflows scale, developers experiment with external orchestration runtimes like OpenHands to delegate multi-step code modification and terminal execution. However, blindly connecting external agent...",
-    "word_count": 505,
+    "word_count": 509,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -320,7 +444,7 @@
     "category": "devlog",
     "title": "Pillar 02.37: Source Code Evidence: Zone-Based Sandbox Policies & Wildcard Masking",
     "summary": "This document cites primary source code evidence from `security/security_manager.py` demonstrating how DevCore classifies filesystem resources into hierarchical security zones using directory-level tiering and strict wil...",
-    "word_count": 465,
+    "word_count": 469,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -336,7 +460,7 @@
     "category": "devlog",
     "title": "Pillar 04.37: Architectural Blueprint: Zone-Based Sandbox Policies & Wildcard Masking",
     "summary": "This blueprint details the architectural solution for filesystem access control in DevCore, transitioning from fragile file-level rules to robust **Zone-Based Sandbox Policies (ZSP)** and **Semantic Wildcard Masking**, a...",
-    "word_count": 416,
+    "word_count": 420,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -353,9 +477,9 @@
     "category": "devlog",
     "title": "Pillar 05.37: From-Scratch Creation Guide: Headless Spotify Controller with Global Hotkeys",
     "summary": "This guide teaches you how to write an accessible headless Spotify controller script (`t.py`) from scratch. It registers global keyboard shortcuts that work when Spotify is minimized and modulates Spotify's internal volu...",
-    "word_count": 359,
-    "project": "accessible_apps",
-    "project_label": "Accessible Applications",
+    "word_count": 363,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "accessibility_ui",
       "changelog"
@@ -369,7 +493,7 @@
     "category": "devlog",
     "title": "Pillar 01.36: Problems Encountered: Virtual Environment Contamination & ALP Migration Traps",
     "summary": "During rapid agentic development across Windows and WSL Linux, multiple independent Python applications often begin life sharing an initial virtual environment (such as an academic sandbox like `alp-env`). When DevCore e...",
-    "word_count": 533,
+    "word_count": 537,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -387,7 +511,7 @@
     "category": "devlog",
     "title": "Pillar 02.36: Source Code Evidence: RAIA & The Semantic Tree Protocol (STP)",
     "summary": "This document cites primary architectural and textbook specifications from `docs/Siraugga_Textbook/Chapter_08_Cybersecurity_Resilience.md` defining how Siraugga orchestrates multi-agent swarms using **RAIA (Redundant Arr...",
-    "word_count": 593,
+    "word_count": 597,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -404,7 +528,7 @@
     "category": "devlog",
     "title": "Pillar 04.36: Architectural Blueprint: High Availability Swarm Resiliency (RAIA & STP)",
     "summary": "This blueprint details the architectural solution for coordinating high-availability multi-agent swarms, eliminating single points of failure through **RAIA (Redundant Array of Independent Agents)** and preventing conver...",
-    "word_count": 476,
+    "word_count": 480,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -423,7 +547,7 @@
     "category": "devlog",
     "title": "Pillar 05.36: From-Scratch Creation Guide: Local GGUF Runner & Token Cost Calculator",
     "summary": "This guide teaches you how to write a Python script from scratch that connects to a local GGUF model via `llama-cli` and calculates the financial cost of AI tokens in South African Rands (ZAR).",
-    "word_count": 370,
+    "word_count": 374,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -456,9 +580,9 @@
     "category": "devlog",
     "title": "Pillar 02.35: Source Code Evidence: Inno Setup & Screen Reader DLL Extraction",
     "summary": "This document cites primary source code evidence from `screenreader_speak.py` demonstrating how accessible applications bundle native C-libraries as base64 byte arrays to guarantee screen reader connectivity even on clea...",
-    "word_count": 476,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 480,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "security",
       "infrastructure",
@@ -474,7 +598,7 @@
     "category": "devlog",
     "title": "Pillar 03.35: Diagnostic Tests & Logs: Thought Vector Hashing & Prompt Masking",
     "summary": "This document records diagnostic test runs verifying the **Prompt Masking** sanitization pipeline, evaluating the speed of HMAC-SHA256 vector authentication, and auditing the system's ability to detect and defuse **Seman...",
-    "word_count": 560,
+    "word_count": 564,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -491,9 +615,9 @@
     "category": "devlog",
     "title": "Pillar 04.35: Architectural Blueprint: Standalone Installer & Screen Reader DLL Architecture",
     "summary": "This blueprint details the architectural solution for compiling accessible Python applications into self-contained, enterprise-grade Windows installers (`JOSHY-Setup.exe`) using PyInstaller and Inno Setup, featuring auto...",
-    "word_count": 471,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 475,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -508,7 +632,7 @@
     "category": "devlog",
     "title": "Pillar 05.35: From-Scratch Creation Guide: Directory-Aware Bash Shell Auto-Venv Hook",
     "summary": "This guide teaches you how to write the `_auto_venv_hook` and directory-aware shell functions line by line into your Linux user profile (`~/.bashrc`). This hook automatically switches virtual environments when you change...",
-    "word_count": 378,
+    "word_count": 382,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -542,9 +666,9 @@
     "category": "devlog",
     "title": "Pillar 02.34: Source Code Evidence: Spotify Headless Controller & Hotkey Hooks",
     "summary": "This document cites primary source evidence from the accessible audio playback suite (`Audio_pllayback_suite/t.py`), illustrating how global keyboard hooks capture media keypresses when the application is minimized, and...",
-    "word_count": 469,
-    "project": "accessible_apps",
-    "project_label": "Accessible Applications",
+    "word_count": 473,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "accessibility_ui",
       "changelog"
@@ -558,7 +682,7 @@
     "category": "devlog",
     "title": "Pillar 03.34: Diagnostic Tests & Logs: Zone Sandbox & Wildcard Masking Evaluation",
     "summary": "This document records diagnostic test runs auditing DevCore's **Zone-Based Sandbox Policies (ZSP)** and **Semantic Wildcard Masking** engine against malicious path manipulation, parent folder traversal, and unauthorized...",
-    "word_count": 545,
+    "word_count": 549,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -574,9 +698,9 @@
     "category": "devlog",
     "title": "Pillar 04.34: Architectural Blueprint: Headless Audio Streaming & Hotkey Architecture",
     "summary": "This blueprint details the architectural design of the accessible audio playback suite (`Audio_pllayback_suite/t.py`), illustrating how low-level Windows keyboard hooks and Spotify Web API integration provide blind devel...",
-    "word_count": 506,
-    "project": "accessible_apps",
-    "project_label": "Accessible Applications",
+    "word_count": 510,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -591,7 +715,7 @@
     "category": "devlog",
     "title": "Pillar 05.34: From-Scratch Creation Guide: Environment Scratch & Dependency Purge Tool",
     "summary": "This guide teaches you how to write the `scratch_devcore_from_alp.sh` script line by line from a completely blank editor window. This script safely verifies that a new virtual environment is fully functional and running...",
-    "word_count": 603,
+    "word_count": 607,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -626,7 +750,7 @@
     "category": "devlog",
     "title": "Pillar 02.33: Source Code Evidence: OpenHands Local Broker & Token Economics",
     "summary": "This document cites primary source evidence demonstrating how DevCore integrates external agent runtimes with local quantized GGUF models and tracks token consumption metrics to convert API usage into localized financial...",
-    "word_count": 438,
+    "word_count": 442,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -643,7 +767,7 @@
     "category": "devlog",
     "title": "Pillar 03.33: Diagnostic Tests & Logs: Swarm Failover & Conversational Loop Suppression",
     "summary": "This document records diagnostic test runs verifying the **Semantic Tree Protocol (STP)** loop suppression engine and measuring the failover recovery speed of the **RAIA (Redundant Array of Independent Agents)** supervis...",
-    "word_count": 586,
+    "word_count": 590,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -662,7 +786,7 @@
     "category": "devlog",
     "title": "Pillar 04.33: Architectural Blueprint: Local Agentic Runner & Token Economics",
     "summary": "This blueprint establishes the architectural model for integrating local, sovereign agentic runtimes (such as OpenHands or specialized subagents) with compact, quantized language models (`llama-cli` with Qwen 2.5 GGUF) a...",
-    "word_count": 474,
+    "word_count": 478,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -712,7 +836,7 @@
     "category": "devlog",
     "title": "Pillar 02.32: Source Code Evidence: DevCore Environment Scratch & Shell Hooks",
     "summary": "This document cites primary source evidence from `scripts/scratch_devcore_from_alp.sh` and shell profile hooks (`~/.bashrc`) demonstrating how DevCore enforces strict virtual environment isolation, preflight service vali...",
-    "word_count": 496,
+    "word_count": 500,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -730,9 +854,9 @@
     "category": "devlog",
     "title": "Pillar 03.32: Diagnostic Tests & Logs: Inno Setup Packaging & Screen Reader DLL Extraction",
     "summary": "This document records diagnostic tests verifying the automated packaging of accessible desktop software via PyInstaller and Inno Setup, evaluating the pre-installer process termination script, and auditing the runtime se...",
-    "word_count": 506,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 510,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -747,7 +871,7 @@
     "category": "devlog",
     "title": "Pillar 04.32: Architectural Blueprint: Environment Isolation & Automated Shell Hooks",
     "summary": "This blueprint details the architectural solution for decoupling DevCore from legacy or academic environments (`alp-env`) into a sovereign, dedicated virtual environment (`$HOME/.venvs/devcore`), coordinated by directory...",
-    "word_count": 452,
+    "word_count": 456,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -818,9 +942,9 @@
     "category": "devlog",
     "title": "Pillar 03.31: Diagnostic Tests & Logs: Spotify Global Hotkey & Volume Isolation Audits",
     "summary": "This document records diagnostic tests evaluating global keyboard hook responsiveness across different Windows applications, verifying Spotify Web API playback commands, and proving that track volume changes remain compl...",
-    "word_count": 524,
-    "project": "accessible_apps",
-    "project_label": "Accessible Applications",
+    "word_count": 528,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -904,7 +1028,7 @@
     "category": "devlog",
     "title": "Pillar 03.30: Diagnostic Tests & Logs: OpenHands Local Inference & Token Cost Benchmarks",
     "summary": "This document records diagnostic benchmarks evaluating local GGUF model execution speed via `llama-cli`, comparing memory consumption and response latency against cloud LLM APIs, and auditing the token cost calculation t...",
-    "word_count": 463,
+    "word_count": 467,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -989,7 +1113,7 @@
     "category": "devlog",
     "title": "Pillar 03.29: Diagnostic Tests & Logs: Virtual Environment Switching & Purge Benchmarks",
     "summary": "This document records diagnostic test runs verifying virtual environment isolation, measuring the execution speed of directory-based shell auto-activation (`_auto_venv_hook`), and evaluating the pre-flight dependency pur...",
-    "word_count": 473,
+    "word_count": 477,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1388,7 +1512,7 @@
     "category": "devlog",
     "title": "Chapter 01_24: Desktop Window Wrapping & PyWebView Traps",
     "summary": "Running developer portals inside standard web browsers introduces tab clutter, accidental disconnections, and browser security restrictions. This chapter details how running inside external browsers degraded developer fo...",
-    "word_count": 530,
+    "word_count": 533,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "topics": [
@@ -1475,7 +1599,7 @@
     "category": "devlog",
     "title": "Chapter 01_23: Slash Menu Enter Key Conflict & Accessibility Traps",
     "summary": "Interactive autocomplete menus enhance user efficiency, but without strict event precedence and accessible ARIA attributes, they create severe UX barriers. This chapter documents how pressing Enter inside the slash comma...",
-    "word_count": 590,
+    "word_count": 593,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1559,7 +1683,7 @@
     "category": "devlog",
     "title": "Chapter 01_22: File-Level Classification Flaw & Directory Tiering",
     "summary": "In zero-trust role-based security, classifying files purely by filename or extension creates dangerous loopholes. This chapter reveals how flat file-matching allowed sandboxed agents to tamper with nested core configurat...",
-    "word_count": 530,
+    "word_count": 533,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1643,7 +1767,7 @@
     "category": "devlog",
     "title": "Chapter 01_21: Secret Token Exhaustion & Reasoning Alias Traps",
     "summary": "Autonomous coding agents can rapidly consume developer billing quotas when underlying model aliases hide expensive reasoning loops. This chapter documents how selecting \"Fast & Responsive\" models secretly triggered high-...",
-    "word_count": 579,
+    "word_count": 582,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1729,7 +1853,7 @@
     "category": "devlog",
     "title": "Chapter 01_20: KMS Lockouts & Disaster Recovery Traps",
     "summary": "In zero-trust architectures, sensitive configurations and forensic audit vaults are protected by cryptographic encryption. This chapter details the catastrophic risk of **Key Management System (KMS) Lockouts** caused by...",
-    "word_count": 635,
+    "word_count": 638,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1815,7 +1939,7 @@
     "category": "devlog",
     "title": "Chapter 01_19: Continuous Adversarial Validation & Agentic Refusal Traps",
     "summary": "Security systems cannot be validated through passive assumptions; they require continuous stress-testing against real attack vectors. This chapter examines how **Continuous Adversarial Red-Teaming (CART)** triggered inhe...",
-    "word_count": 590,
+    "word_count": 593,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1902,7 +2026,7 @@
     "category": "devlog",
     "title": "Chapter 01_18: Git Sync, Merge Conflicts & Terminal Session Traps",
     "summary": "Collaborative development across Windows and WSL Linux environments frequently involves multi-branch workflows, automated synchronization, and terminal recording. This chapter documents how automated Git helper scripts b...",
-    "word_count": 639,
+    "word_count": 642,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1920,7 +2044,7 @@
     "category": "devlog",
     "title": "Chapter 02_18: Game Engine Headless Daemon Evidence",
     "summary": "Primary source evidence from the Siraugga Game Engine Integration specification demonstrating how the autonomous agent operates as a headless background daemon, exchanges JSON RPC events with game loops, and enforces zer...",
-    "word_count": 775,
+    "word_count": 778,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -1988,9 +2112,9 @@
     "category": "devlog",
     "title": "Chapter 01_17: Screen Reader DLL Bindings & Import Order Traps",
     "summary": "Developing accessible software requires integrating with active assistive technology like NVDA, JAWS, or Windows SAPI. This chapter documents how compiled Python binaries silently lost their screen-reader voice on target...",
-    "word_count": 638,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 641,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -2005,7 +2129,7 @@
     "category": "devlog",
     "title": "Chapter 02_17: Directory Tiering & API Contract Evidence",
     "summary": "Primary source evidence from the Siraugga security manager (`security/security_manager.py`) demonstrating how recursive directory namespace scanning and cryptographic master key verification enforce zero-trust isolation.",
-    "word_count": 592,
+    "word_count": 595,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2039,7 +2163,7 @@
     "category": "devlog",
     "title": "Chapter 04_17: Game Engine Plugin Integration Architecture",
     "summary": "An architectural guide to integrating Siraugga into third-party game engines (Godot, Unreal Engine, Unity) as an out-of-process, zero-trust **Headless AI Daemon**.",
-    "word_count": 570,
+    "word_count": 573,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2073,7 +2197,7 @@
     "category": "devlog",
     "title": "Chapter 01_16: Ephemeral Plugin Mutation & Blueprint Tampering Traps",
     "summary": "Interactive tools such as the Exam Application and Accessible Media Player provide rich web experiences within the portal. This chapter documents the critical vulnerability of **Blueprint Tampering**\u2014where autonomous age...",
-    "word_count": 589,
+    "word_count": 592,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "topics": [
@@ -2091,7 +2215,7 @@
     "category": "devlog",
     "title": "Chapter 02_16: Self-Healing Bootstrap & Traceback Repair Evidence",
     "summary": "Primary source evidence from the Siraugga supervisor gateway (`core/bootstrap_gateway.py`) demonstrating how the 3-Tier Self-Healing Supervisor validates syntax, auto-restores from backups, and spawns headless repair age...",
-    "word_count": 703,
+    "word_count": 706,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2107,7 +2231,7 @@
     "category": "devlog",
     "title": "Chapter 03_16: Directory Tiering & Sandbox Jail Audit Logs",
     "summary": "Diagnostic test execution logs and validation traces evaluating **Directory-Level Tiering** and workspace path confinement across RBAC roles in `security/security_manager.py`.",
-    "word_count": 597,
+    "word_count": 600,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2125,7 +2249,7 @@
     "category": "devlog",
     "title": "Chapter 04_16: Autonomous Self-Healing Boot Architecture",
     "summary": "An architectural guide to Siraugga's **Pre-Flight Supervisor & 3-Tier Self-Healing Loop**\u2014ensuring continuous server availability by detecting syntax errors, performing instant rollbacks, and spawning headless auto-repai...",
-    "word_count": 615,
+    "word_count": 618,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2141,7 +2265,7 @@
     "category": "devlog",
     "title": "Chapter 05_16: KMS Mnemonic Seed Phrase Recovery From Scratch",
     "summary": "A step-by-step guide to writing the offline **KMS Mnemonic Seed Phrase Generator & Disaster Recovery Engine** (`kms_recovery.py`) line by line from a completely blank text editor window.",
-    "word_count": 881,
+    "word_count": 884,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2157,7 +2281,7 @@
     "category": "devlog",
     "title": "Chapter 01_15: The Quota Wall, Amnesia & Context Exhaustion Traps",
     "summary": "As development sessions grow in complexity, autonomous coding agents accumulate vast histories of tool calls, terminal traces, and subagent transcripts. This chapter examines the twin crises of the **Quota Wall** and **A...",
-    "word_count": 612,
+    "word_count": 615,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2174,7 +2298,7 @@
     "category": "devlog",
     "title": "Chapter 02_15: Binary Stamper & PE Trailer Evidence",
     "summary": "Primary source evidence from the Siraugga portable executable suite demonstrating how AES-encrypted metadata is stamped directly into Windows PE executable binary trailers without corrupting binary execution.",
-    "word_count": 730,
+    "word_count": 733,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2191,7 +2315,7 @@
     "category": "devlog",
     "title": "Chapter 03_15: Autonomous Self-Healing Repair Loop Logs",
     "summary": "Diagnostic test execution logs and operational traces evaluating the Siraugga **3-Tier Self-Healing Supervisor** repairing syntax errors and rolling back corrupted modules during the bootstrap boot sequence.",
-    "word_count": 582,
+    "word_count": 585,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2208,7 +2332,7 @@
     "category": "devlog",
     "title": "Chapter 04_15: Portable Executable & Binary Stamping Architecture",
     "summary": "An architectural guide to Siraugga's **Portable Executable & Dynamic Binary Stamping Pipeline**\u2014delivering zero-install, standalone Windows executables with client time-locks and developer auto-bypass.",
-    "word_count": 580,
+    "word_count": 583,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2225,7 +2349,7 @@
     "category": "devlog",
     "title": "Chapter 05_15: Git Automation & Session Recorder From Scratch",
     "summary": "A step-by-step guide to writing the developer workflow automation and session recording script (`helpers.sh`) line by line from a completely blank text editor window.",
-    "word_count": 1087,
+    "word_count": 1090,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2241,7 +2365,7 @@
     "category": "devlog",
     "title": "Chapter 01_14: Subagent Audio Routing & EOF Cache Buffer Traps",
     "summary": "Audio cues provide essential non-visual feedback to screen reader developers when autonomous background subagents start, finish, or exchange messages. This chapter reveals how standard Python file I/O failed due to EOF c...",
-    "word_count": 651,
+    "word_count": 654,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2259,7 +2383,7 @@
     "category": "devlog",
     "title": "Chapter 02_14: Tool Security Audit & 31-Check Evidence",
     "summary": "Primary source evidence from the Siraugga security core demonstrating how the automated **31-Check Tool Security Audit** verifies RBAC tier boundaries, PreToolUse hook interceptions, AST code hygiene, and DLP canary sani...",
-    "word_count": 636,
+    "word_count": 639,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2278,7 +2402,7 @@
     "category": "devlog",
     "title": "Chapter 03_14: Binary Stamp Extraction & Expiration Logs",
     "summary": "Diagnostic test execution logs and benchmark results verifying rapid binary trailer stamping, tail seek decryption, and master developer cryptographic auto-bypass.",
-    "word_count": 609,
+    "word_count": 612,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2295,7 +2419,7 @@
     "category": "devlog",
     "title": "Chapter 04_14: KMS Seed Phrase Disaster Recovery Architecture",
     "summary": "A cryptographic architecture guide to Siraugga's **Key Management System (KMS) Disaster Recovery Engine**\u2014providing deterministic 256-bit AES master key reconstruction from offline BIP-39 mnemonic seed phrases.",
-    "word_count": 669,
+    "word_count": 672,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2312,9 +2436,9 @@
     "category": "devlog",
     "title": "Chapter 05_14: Accessible Screen Reader Speech Module From Scratch",
     "summary": "A step-by-step guide to writing the standalone assistive speech module (`screenreader_speak.py`) line by line from a completely blank text editor window.",
-    "word_count": 777,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 780,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "accessibility_ui",
       "changelog"
@@ -2328,7 +2452,7 @@
     "category": "devlog",
     "title": "Chapter 01_13: Semantic Mantrap & Concurrent Thread Lock Traps",
     "summary": "When multiple autonomous subagents operate in parallel within the Siraugga ecosystem, they frequently compete for the same system resources, files, and state logs. This chapter explores how uncoordinated concurrent execu...",
-    "word_count": 706,
+    "word_count": 709,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2344,7 +2468,7 @@
     "category": "devlog",
     "title": "Chapter 02_13: Git Recording & Merge Automation Evidence",
     "summary": "Primary source evidence from the repository developer tools demonstrating how automated SSH credential verification, asciinema watermark recording, and branch synchronization prevent dirty worktree merge failures.",
-    "word_count": 653,
+    "word_count": 656,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2360,7 +2484,7 @@
     "category": "devlog",
     "title": "Chapter 03_13: Tool Security Audit & 31-Stage Scan Logs",
     "summary": "Diagnostic test execution logs and validation results from the automated 31-stage **Tool Security Audit** inspecting RBAC tiers, hook interceptions, AST hygiene, and DLP canary sanitization.",
-    "word_count": 814,
+    "word_count": 817,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2376,7 +2500,7 @@
     "category": "devlog",
     "title": "Chapter 04_13: The 31-Stage Tool Security Audit Architecture",
     "summary": "An architectural blueprint of Siraugga's **Continuous Tool Security Audit Engine**\u2014the automated 5-stage, 31-check verification pipeline that validates RBAC boundaries, PreToolUse hooks, AST code hygiene, and DLP canary...",
-    "word_count": 726,
+    "word_count": 729,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2394,7 +2518,7 @@
     "category": "devlog",
     "title": "Chapter 05_13: Zero-Modification Exam Engine From Scratch",
     "summary": "A step-by-step guide to writing the schema normalization engine (`format_exam.py`) line by line from a completely blank text editor window.",
-    "word_count": 881,
+    "word_count": 884,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "topics": [
@@ -2408,8 +2532,8 @@
     "slug": "01_12_PASSWORD_CRACKING_AND_ACTIVE_THREAT_SIMULATION_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.12: Problems Encountered: Active Threat Simulation & Password Auditing",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 633,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 635,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2426,9 +2550,9 @@
     "category": "devlog",
     "title": "Chapter 02_12: Accessible Speech & Driver Initialization Evidence",
     "summary": "Primary source evidence from the Siraugga accessible speech engine demonstrating how runtime dynamic DLL extraction, directory registration, and COM apartment management guarantee screen reader speech across diverse clie...",
-    "word_count": 632,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 635,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -2443,7 +2567,7 @@
     "category": "devlog",
     "title": "Chapter 03_12: Git Automation & Merge Test Logs",
     "summary": "Diagnostic test execution logs and operational traces evaluating developer terminal session recording, automatic `.cast` file organization, and clean branch merge synchronization.",
-    "word_count": 674,
+    "word_count": 677,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2461,9 +2585,9 @@
     "category": "devlog",
     "title": "Chapter 04_12: Accessible Audio Overlay & Speech Architecture",
     "summary": "An architectural guide to Siraugga's **Accessible Audio Overlay & Speech Engine**\u2014combining headless audio streaming, background global keyboard listeners, and dynamic multi-driver screen reader integration.",
-    "word_count": 602,
-    "project": "accessible_apps",
-    "project_label": "Accessible Applications",
+    "word_count": 605,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -2479,7 +2603,7 @@
     "category": "devlog",
     "title": "Chapter 05_12: Native Transcript Tailer & Audio Router From Scratch",
     "summary": "A step-by-step guide to writing the cross-platform **Native Transcript Tailer & Audio Event Router** (`transcript_tailer.py`) line by line from a completely blank text editor window.",
-    "word_count": 819,
+    "word_count": 822,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2494,8 +2618,8 @@
     "slug": "01_11_AI_INTERNAL_MONOLOGUE_AND_ROBOTIC_BOT_SPEAK",
     "category": "devlog",
     "title": "Pillar 01.11: Problems Encountered: Internal Monologue & Robotic Bot-Speak",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 623,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 624,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2516,7 +2640,7 @@
     "category": "devlog",
     "title": "Chapter 02_11: Ephemeral Blueprint & JSON Schema Evidence",
     "summary": "Primary source evidence from the Siraugga ephemeral plugin suite illustrating how the **Zero-Modification Architecture** uses Python format normalizers to adapt dynamic JSON data into immutable frontend templates.",
-    "word_count": 582,
+    "word_count": 585,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2532,9 +2656,9 @@
     "category": "devlog",
     "title": "Chapter 03_11: Screen Reader DLL & Driver Audit Logs",
     "summary": "Diagnostic test execution logs and audit traces evaluating dynamic screen reader DLL extraction, ctypes module loading, and COM thread initialization across Windows environments.",
-    "word_count": 699,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
+    "word_count": 702,
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",
@@ -2549,7 +2673,7 @@
     "category": "devlog",
     "title": "Chapter 04_11: Zero-Modification Ephemeral Plugin Architecture",
     "summary": "An architectural guide to Siraugga's **Zero-Modification Blueprint Pattern**\u2014enabling rich, interactive frontend applications whose behavior is controlled 100% via validated JSON schemas while core templates remain stric...",
-    "word_count": 617,
+    "word_count": 620,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2566,7 +2690,7 @@
     "category": "devlog",
     "title": "Chapter 05_11: Cross-Platform Semantic Mantrap From Scratch",
     "summary": "A step-by-step guide to writing the cross-platform **Semantic Mantrap** (`mantrap.py`) line by line from a completely blank text editor window.",
-    "word_count": 819,
+    "word_count": 822,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2582,8 +2706,8 @@
     "slug": "01_10_INGESTION_SWARM_PRIVILEGE_ESCALATION_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.10: Problems Encountered: Ingestion Swarms & Privilege Escalation",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 577,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 578,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2600,7 +2724,7 @@
     "category": "devlog",
     "title": "Chapter 02_10: Transcript Tailer & Native Subprocess Evidence",
     "summary": "Primary source evidence from the Siraugga task orchestrator demonstrating how the engine replaced cached Python file reads with native OS tail subprocesses to achieve real-time subagent audio dispatch.",
-    "word_count": 627,
+    "word_count": 630,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2616,7 +2740,7 @@
     "category": "devlog",
     "title": "Chapter 03_10: Native Tail vs. Python Buffer Benchmark Logs",
     "summary": "Diagnostic test execution logs and benchmark results comparing Python standard file I/O against native OS streaming processes for subagent transcript monitoring and audio dispatch.",
-    "word_count": 625,
+    "word_count": 628,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2632,7 +2756,7 @@
     "category": "devlog",
     "title": "Chapter 04_10: Zero-Trust Subagent Audio Event Architecture",
     "summary": "An architectural guide to Siraugga's **Dual-Channel Event Pipeline**\u2014separating conversational AI token streams from real-time auditory notifications using out-of-band OS kernel tail processes.",
-    "word_count": 664,
+    "word_count": 667,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2649,8 +2773,8 @@
     "slug": "05_10_WSL_WINDOWS_IO_BRIDGE_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.10: From-Scratch Creation Guide: WSL/Windows File Bridge",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 494,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 495,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2667,8 +2791,8 @@
     "slug": "01_09_WSL_BROKEN_PIPES_AND_CROSS_OS_IO_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.9: Problems Encountered: WSL Broken Pipes & Cross-OS I/O Traps",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 616,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 617,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2686,7 +2810,7 @@
     "category": "devlog",
     "title": "Chapter 02_09: Semantic Mantrap & File Locking Evidence",
     "summary": "Primary source evidence from the Siraugga security core demonstrating how cross-platform thread synchronization, atomic file locking, and deadlock prevention are implemented across Linux and Windows.",
-    "word_count": 667,
+    "word_count": 670,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2702,7 +2826,7 @@
     "category": "devlog",
     "title": "Chapter 03_09: Semantic Mantrap & Concurrency Benchmark Logs",
     "summary": "Diagnostic test execution logs and benchmark results evaluating the Siraugga **Semantic Mantrap** under high-concurrency multi-agent race conditions.",
-    "word_count": 601,
+    "word_count": 604,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2718,7 +2842,7 @@
     "category": "devlog",
     "title": "Chapter 04_09: Cross-Platform Mantrap & Concurrency Architecture",
     "summary": "A comprehensive architectural walkthrough of the Siraugga **Semantic Mantrap**\u2014the dual-kernel synchronization layer ensuring atomic resource access, thread safety, and deadlock prevention across heterogeneous operating...",
-    "word_count": 619,
+    "word_count": 622,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2734,8 +2858,8 @@
     "slug": "05_09_OFFLINE_PASSWORD_CRACK_LAB_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.9: From-Scratch Creation Guide: Offline Password Audit Lab",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 446,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 447,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2752,8 +2876,8 @@
     "slug": "01_08_THE_ENTERPRISE_PRE_AUTHORIZATION_WALL",
     "category": "devlog",
     "title": "Pillar 01.8: Problems Encountered: The Enterprise Pre-Authorization Wall (AADSTS65002)",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 691,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 693,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2768,8 +2892,8 @@
     "slug": "02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.8: Source Evidence: Offline Crack Lab & Threat Simulation",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 370,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 372,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2785,8 +2909,8 @@
     "slug": "03_08_OFFLINE_PASSWORD_AUDIT_AND_CRACK_LOGS",
     "category": "devlog",
     "title": "Pillar 03.8: Diagnostic Tests: Offline Password Auditing & Crack Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 500,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 502,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2803,8 +2927,8 @@
     "slug": "04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL",
     "category": "devlog",
     "title": "Pillar 04.8: Architecture Solutions: In-Memory Execution & Clean Workspace Protocol",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 519,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 521,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2822,8 +2946,8 @@
     "slug": "05_08_CINEMATIC_TTS_PROXY_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.8: From-Scratch Creation Guide: Cinematic TTS Proxy & Sanitizer",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 535,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 536,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2840,8 +2964,8 @@
     "slug": "01_07_NUITKA_COMPILATION_AND_BINARY_PACKAGING_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.7: Problems Encountered: Nuitka Compilation & Binary Packaging",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 617,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 618,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2858,8 +2982,8 @@
     "slug": "02_07_CINEMATIC_TTS_AND_STEALTH_FEED_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.7: Source Evidence: Cinematic TTS & Stealth Audio Feed",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 510,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 511,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2878,8 +3002,8 @@
     "slug": "03_07_TTS_AUDIO_LATENCY_AND_MONOLOGUE_SCRUBBING_LOGS",
     "category": "devlog",
     "title": "Pillar 03.7: Diagnostic Tests: TTS Latency & Monologue Scrubbing Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 532,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 533,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2896,8 +3020,8 @@
     "slug": "04_07_THE_VOICE_OF_SIRAUGGA_CINEMATIC_TTS_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.7: Architecture Solutions: The Voice of Siraugga Cinematic TTS",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 429,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 430,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2913,8 +3037,8 @@
     "slug": "05_07_BOOTSTRAP_SUPERVISOR_GATEWAY_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.7: From-Scratch Creation Guide: Bootstrap Supervisor Gateway",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 488,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 489,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2931,8 +3055,8 @@
     "slug": "01_06_THE_FRIENDLY_LEAK_AND_EGRESS_FIREWALL_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.6: Problems Encountered: The \"Friendly Leak\" & Egress Firewalls",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 659,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 660,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2951,8 +3075,8 @@
     "slug": "02_06_BOOTSTRAP_GATEWAY_AND_SUPERVISOR_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.6: Source Evidence: Bootstrap Gateway & Supervisor Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 541,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 542,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2969,8 +3093,8 @@
     "slug": "03_06_WSL_PIPE_CORRUPTION_AND_IO_BENCHMARKS",
     "category": "devlog",
     "title": "Pillar 03.6: Diagnostic Tests: WSL Pipe Corruption & I/O Benchmarks",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 554,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 555,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -2988,8 +3112,8 @@
     "slug": "04_06_PRE_FLIGHT_SELF_HEALING_SUPERVISOR_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.6: Architecture Solutions: Pre-Flight Self-Healing Supervisor",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 507,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 508,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3006,8 +3130,8 @@
     "slug": "05_06_FORENSIC_SESSION_VAULT_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.6: From-Scratch Creation Guide: Forensic Session Vault",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 501,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 502,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3024,8 +3148,8 @@
     "slug": "01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES",
     "category": "devlog",
     "title": "Pillar 01.5: Problems Encountered: Screen Reader Spam & Phantom Keystrokes",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 677,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 678,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3042,8 +3166,8 @@
     "slug": "02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.5: Source Evidence: Ephemeral Plugins & MCP Protocols",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 525,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 527,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "topics": [
@@ -3059,8 +3183,8 @@
     "slug": "03_05_COMPILATION_AND_BINARY_INTEGRITY_LOGS",
     "category": "devlog",
     "title": "Pillar 03.5: Diagnostic Tests: Compilation & Binary Integrity Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 485,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 487,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3077,8 +3201,8 @@
     "slug": "04_05_SOVEREIGN_AI_AND_OFFLINE_BROKER_RECIPES",
     "category": "devlog",
     "title": "Pillar 04.5: Architecture Solutions: Sovereign AI & Offline Broker Recipes",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 574,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 576,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3093,8 +3217,8 @@
     "slug": "05_05_ZERO_DOWNTIME_HOT_PATCH_RUNNER_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.5: From-Scratch Creation Guide: Zero-Downtime Hot-Patch Runner",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 564,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 565,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3268,8 +3392,8 @@
     "slug": "01_04_ZOMBIE_SUBAGENTS_AND_PROCESS_EXHAUSTION",
     "category": "devlog",
     "title": "Pillar 01.4: Problems Encountered: Zombie Subagents & Process Exhaustion",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 613,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 614,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3285,8 +3409,8 @@
     "slug": "02_04_FORENSIC_VAULT_AND_PII_SCRUBBING_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.4: Source Evidence: Forensic Vault & PII Scrubbing Engine",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 501,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 502,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3302,8 +3426,8 @@
     "slug": "03_04_SEMANTIC_FIREWALL_AND_DLP_AUDIT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.4: Diagnostic Tests: Semantic Egress Firewall & DLP Audits",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 527,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 528,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3321,8 +3445,8 @@
     "slug": "04_04_EXTENDING_SIRAUGGA_PLUGINS_AND_SERVICES",
     "category": "devlog",
     "title": "Pillar 04.4: Architecture Solutions: Extending Plugins & Protected Services",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 525,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 526,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3338,8 +3462,8 @@
     "slug": "05_04_RAUGUS_OPAQUE_VFS_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.4: From-Scratch Creation Guide: Raugus Opaque VFS Resolver",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 575,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 576,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3517,8 +3641,8 @@
     "slug": "01_03_PATH_TRAVERSAL_AND_PRIVILEGE_ESCALATION",
     "category": "devlog",
     "title": "Pillar 01.3: Problems Encountered: Path Traversal & Privilege Escalation",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 641,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 643,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3534,8 +3658,8 @@
     "slug": "02_03_HOT_PATCH_AND_SELF_HEALING_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.3: Source Evidence: Safe Hot-Patching & Self-Healing Engine",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 527,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 528,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3552,8 +3676,8 @@
     "slug": "03_03_ZOMBIE_REAPING_AND_PROCESS_AUDIT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.3: Diagnostic Tests: Zombie Reaping & Process Audits",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 518,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 519,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3569,8 +3693,8 @@
     "slug": "04_03_OPAQUE_VFS_AND_AST_DIFFING_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.3: Architecture Solutions: Opaque VFS & AST Diffing Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 513,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 514,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3586,8 +3710,8 @@
     "slug": "05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.3: From-Scratch Creation Guide: Zero-Trust RBAC & Path Defense",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 601,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 602,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3763,8 +3887,8 @@
     "slug": "01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES",
     "category": "devlog",
     "title": "Pillar 01.2: Problems Encountered: WebSocket Dropouts & Refresh Crashes",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 672,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 673,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3782,8 +3906,8 @@
     "slug": "02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.2: Source Evidence: Security RBAC & Raugus VFS Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 567,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 569,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3799,8 +3923,8 @@
     "slug": "03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS",
     "category": "devlog",
     "title": "Pillar 03.2: Diagnostic Tests: RBAC Sandbox & Hot-Patch Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 483,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 485,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3817,8 +3941,8 @@
     "slug": "04_02_THE_5_TIER_ZERO_TRUST_HIERARCHY",
     "category": "devlog",
     "title": "Pillar 04.2: Architecture Solutions: The 5-Tier Zero-Trust Hierarchy",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 582,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 583,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -3835,8 +3959,8 @@
     "slug": "05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.2: From-Scratch Creation Guide: Accessible Web Portal & Flip Card",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 608,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 609,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4013,8 +4137,8 @@
     "slug": "01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.1: Problems Encountered: Terminal Tearing & Headless Traps",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 685,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 687,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4032,8 +4156,8 @@
     "slug": "02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.1: Source Evidence: Server & Agent Streaming Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 615,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 617,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4052,8 +4176,8 @@
     "slug": "03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.1: Diagnostic Tests: Streaming Resilience & Reconnection Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 606,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 608,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4070,8 +4194,8 @@
     "slug": "04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.1: Architecture Blueprint: Siraugga Core System Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 638,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 640,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4089,8 +4213,8 @@
     "slug": "05_01_QUART_STREAMING_SERVER_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.1: From-Scratch Creation Guide: Asynchronous Quart Streaming Server",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 564,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 565,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4292,8 +4416,8 @@
     "slug": "00A_BEGINNER_GUIDE_TO_SIRAUGGA_AND_ZERO_TRUST",
     "category": "devlog",
     "title": "Pillar 00A: Beginner Guide to Siraugga & Zero-Trust Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 738,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 739,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4310,8 +4434,8 @@
     "slug": "00B_BEGINNER_GUIDE_TO_ACCESSIBLE_WEBSOCKET_STREAMING",
     "category": "devlog",
     "title": "Pillar 00B: Beginner Guide to Accessible WebSocket Streaming",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 742,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 744,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4327,8 +4451,8 @@
     "slug": "00C_BEGINNER_GUIDE_TO_OPAQUE_VFS_AND_RAUGUS_MAP",
     "category": "devlog",
     "title": "Pillar 00C: Beginner Guide to Opaque Virtual File Systems & Raugus Map",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 635,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 636,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4345,8 +4469,8 @@
     "slug": "00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS",
     "category": "devlog",
     "title": "Pillar 00D: Beginner Guide to Ephemeral Plugins & Zero-Modification Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 563,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 565,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "topics": [
@@ -4364,8 +4488,8 @@
     "slug": "00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS",
     "category": "devlog",
     "title": "Pillar 00E: Beginner Guide to Cinematic TTS & Intent-Driven Audio Feeds",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 560,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 561,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4382,8 +4506,8 @@
     "slug": "00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY",
     "category": "devlog",
     "title": "Pillar 00F: Beginner Guide to Clean-Room Development & Sovereignty",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 588,
+    "summary": "- **Back to Master Index**: `../00_README_INDEX.md` (00_README_INDEX.md)",
+    "word_count": 590,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "topics": [
@@ -4819,8 +4943,8 @@
     "title": "Chapter 5: The 24-Hour Crucible (The Birth of the Autonomous Scribes)",
     "summary": "The history of this ecosystem is not just in the code that was written months ago, but in the chaotic, grueling 24-hour sprint required to document it all. The goal was simple: catalog every project across the C, D, and...",
     "word_count": 500,
-    "project": "eprofile",
-    "project_label": "E-Profile Portal",
+    "project": "audio_suite",
+    "project_label": "JOSHY Audio Suite",
     "topics": [
       "infrastructure",
       "accessibility_ui",

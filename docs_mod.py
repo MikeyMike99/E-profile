@@ -42,6 +42,12 @@ COLLECTIONS = {
         "icon": "📜",
         "desc": "Personal engineering narrative documenting the journey from terminal tearing and dropouts to clean-room enterprise sovereignty."
     },
+    "audio_suite": {
+        "title": "JOSHY Audio Suite Guides",
+        "badge": "7 Chapters",
+        "icon": "🎵",
+        "desc": "Technical documentation for the standalone JOSHY Audio Playback Suite, Nuitka packaging, Inno Setup, and accessible_output2 speech drivers."
+    },
     "guides": {
         "title": "Architecture & System Guides",
         "badge": "Specifications",
@@ -52,6 +58,7 @@ COLLECTIONS = {
 
 PROJECTS = {
     "all": {"title": "All Projects", "icon": "🌐"},
+    "audio_suite": {"title": "JOSHY Audio Suite", "icon": "🎵"},
     "siraugga": {"title": "Siraugga / DevCore Core", "icon": "⚡"},
     "echoes": {"title": "Echoes of the World", "icon": "🎮"},
     "accessible_apps": {"title": "Accessible Tools Suite", "icon": "♿"},
