@@ -1,5 +1,5 @@
 {
-    "total_views": 456,
+    "total_views": 462,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -74,9 +74,13 @@
         "/robots.txt": 45,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
-        "/docs": 2,
-        "/docs/devlog/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS": 1,
+        "/docs": 3,
+        "/docs/devlog/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS": 2,
         "/docs/audio_suite/00_STANDALONE_OVERVIEW": 1,
-        "/docs/audio_suite/01_PROBLEMS_WE_ENCOUNTERED": 1
+        "/docs/audio_suite/01_PROBLEMS_WE_ENCOUNTERED": 1,
+        "/docs/api/chapter/devlog/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS": 1,
+        "/docs/api/chapter/audio_suite/01_PROBLEMS_WE_ENCOUNTERED": 1,
+        "/docs/api/chapter/encrypt_me/README": 1,
+        "/docs/devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES": 1
     }
 }

@@ -142,129 +142,62 @@ def get_prev_next(catalog, category, slug):
     next_doc = cat_items[idx + 1] if idx != -1 and idx < len(cat_items) - 1 else None
     return prev_doc, next_doc
 
-@docs_bp.route('/', strict_slashes=False)
-@docs_bp.route('', strict_slashes=False)
-def docs_index():
-    catalog = load_catalog()
-    
-    # Selected filters from query string
-    selected_project = request.args.get('project', 'all').lower()
-    selected_topic = request.args.get('topic', 'all').lower()
-    selected_collection = request.args.get('category', 'all').lower()
-    selected_clearance = request.args.get('clearance', 'all').lower()
-    sort_mode = request.args.get('sort', 'newest').lower()
-    
-    # Compute counts dynamically across all dimensions
-    project_counts = {"all": len(catalog)}
-    topic_counts = {"all": len(catalog)}
-    collection_counts = {"all": len(catalog)}
-    clearance_counts = {
-        "all": len(catalog),
-        "public": len([d for d in catalog if not d.get('is_proprietary', False)]),
-        "proprietary": len([d for d in catalog if d.get('is_proprietary', False)])
-    }
-    
-    for item in catalog:
-        # Project counts
-        p = item.get('project', 'siraugga')
-        project_counts[p] = project_counts.get(p, 0) + 1
-        
-        # Collection counts
-        c = item.get('category', 'devlog')
-        collection_counts[c] = collection_counts.get(c, 0) + 1
-        
-        # Topic counts
-        for t in item.get('topics', []):
-            topic_counts[t] = topic_counts.get(t, 0) + 1
+def clean_markdown_text(raw_text: str) -> str:
+    """
+    Cleans up raw path link text, normalizes markdown headers,
+    and formats ugly relative paths into readable document labels.
+    """
+    text = raw_text
+    import re
+    def fix_link_label(match):
+        label = match.group(1).strip()
+        url = match.group(2)
+        if '.md' in label or '../' in label or './' in label:
+            cleaned = label.replace('../', '').replace('./', '')
+            if '/' in cleaned:
+                cleaned = cleaned.split('/')[-1]
+            if cleaned.endswith('.md'):
+                cleaned = cleaned[:-3]
+            cleaned = cleaned.replace('_', ' ')
+            if '00 README INDEX' in cleaned.upper():
+                cleaned = '📖 Master Index'
+            elif '00A' in cleaned.upper() or '00B' in cleaned.upper():
+                cleaned = f'🚀 Primer: {cleaned}'
+            elif re.match(r'0\d \d\d', cleaned):
+                cleaned = f'⚡ Chapter: {cleaned}'
+            return f'[{cleaned}]({url})'
+        return match.group(0)
 
-    # Filter items based on user selection
-    filtered_docs = list(catalog)
-    if selected_project != 'all':
-        filtered_docs = [d for d in filtered_docs if d.get('project') == selected_project]
-    if selected_topic != 'all':
-        filtered_docs = [d for d in filtered_docs if selected_topic in d.get('topics', [])]
-    if selected_collection != 'all':
-        filtered_docs = [d for d in filtered_docs if d.get('category') == selected_collection]
-    if selected_clearance == 'public':
-        filtered_docs = [d for d in filtered_docs if not d.get('is_proprietary', False)]
-    elif selected_clearance == 'proprietary':
-        filtered_docs = [d for d in filtered_docs if d.get('is_proprietary', False)]
-        
-    # Sort mode: newest first (order_score desc) vs alphabetical
-    if sort_mode == 'alpha':
-        filtered_docs.sort(key=lambda x: x.get('title', '').lower())
-    else:
-        filtered_docs.sort(key=lambda x: x.get('order_score', 0), reverse=True)
+    text = re.sub(r'\[([^\]]+)\]\((/docs/[^)]+)\)', fix_link_label, text)
+    return text
 
-    # Latest flagship update for the interactive top bar
-    latest_doc = next((d for d in catalog if d.get('is_latest')), catalog[0] if catalog else None)
-
-    return render_template(
-        'docs.html',
-        active_tab='docs',
-        view_mode='index',
-        categories=COLLECTIONS,
-        projects=PROJECTS,
-        topics=TOPICS,
-        project_counts=project_counts,
-        topic_counts=topic_counts,
-        collection_counts=collection_counts,
-        clearance_counts=clearance_counts,
-        selected_project=selected_project,
-        selected_topic=selected_topic,
-        selected_collection=selected_collection,
-        selected_clearance=selected_clearance,
-        sort_mode=sort_mode,
-        latest_doc=latest_doc,
-        docs=filtered_docs,
-        total_docs=len(catalog),
-        filtered_count=len(filtered_docs)
-    )
-
-@docs_bp.route('/<category>')
-def docs_category(category):
-    if category not in COLLECTIONS:
-        return redirect(url_for('docs.docs_index'))
-    return redirect(url_for('docs.docs_index', category=category))
-
-@docs_bp.route('/<category>/<doc_slug>')
-def docs_reader(category, doc_slug):
+def render_doc_content(category, doc_slug, viewer_tier=1):
     catalog = load_catalog()
     doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
-    
-    # Determine viewer clearance tier
-    if session.get('admin', False):
-        viewer_tier = 5
-    elif session.get('is_employer', False) or ('view:proprietary_docs' in session.get('permissions', [])):
-        viewer_tier = 4
-    else:
-        viewer_tier = 1
-    
+    if not doc_meta:
+        doc_meta = {
+            "title": doc_slug.replace('_', ' '),
+            "slug": doc_slug,
+            "category": category,
+            "project": "siraugga",
+            "project_label": "Siraugga Framework",
+            "word_count": 0,
+            "max_sensitivity": 1,
+            "base_sensitivity": 1,
+            "summary": "Technical documentation."
+        }
+
     prev_doc, next_doc = get_prev_next(catalog, category, doc_slug)
-    category_meta = COLLECTIONS.get(category, {"title": category.title(), "icon": "📄"})
-    
+
     # Check if document is purely classified (base_sensitivity == 5)
     base_sens = doc_meta.get('base_sensitivity', 1) if doc_meta else 1
     if base_sens >= 5 and viewer_tier < 5:
-        return render_template(
-            'docs.html',
-            active_tab='docs',
-            view_mode='locked',
-            doc=doc_meta or {"title": doc_slug.replace('_', ' '), "slug": doc_slug, "category": category, "is_proprietary": True},
-            category_key=category,
-            category_meta=category_meta,
-            prev_doc=prev_doc,
-            next_doc=next_doc,
-            categories=COLLECTIONS,
-            projects=PROJECTS,
-            topics=TOPICS
-        )
+        return doc_meta, "__LOCKED__", prev_doc, next_doc
 
-    # Locate file: Check live Central_Docs repository first, fallback to local DOCS_DIR
     file_path = None
     if CENTRAL_DOCS_DIR.exists():
         candidates = []
-        if doc_meta and doc_meta.get('rel_path'):
+        if doc_meta.get('rel_path'):
             rel = doc_meta.get('rel_path')
             candidates.append(CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / rel)
             candidates.append(CENTRAL_DOCS_DIR / "projects" / "audio_suite" / rel)
@@ -282,38 +215,118 @@ def docs_reader(category, doc_slug):
                 break
 
     if not file_path or not file_path.exists():
-        if doc_meta:
+        if doc_meta.get('rel_path'):
             file_path = DOCS_DIR / doc_meta.get('rel_path', '')
         if not file_path or not file_path.exists():
             candidate = DOCS_DIR / category / f"{doc_slug}.md"
             if candidate.exists():
                 file_path = candidate
             else:
-                abort(404)
-            
+                return None, None, None, None
+
     try:
         raw_text = file_path.read_text(encoding='utf-8', errors='replace')
-        # SILENT SECTION SENSITIVITY FILTERING:
-        # Smoothly abstracts or omits blocks where section_score > viewer_tier
-        sanitized_text = filter_document_by_sensitivity(raw_text, viewer_tier=viewer_tier)
+        cleaned_text = clean_markdown_text(raw_text)
+        sanitized_text = filter_document_by_sensitivity(cleaned_text, viewer_tier=viewer_tier)
         html_body = markdown.markdown(sanitized_text, extensions=['fenced_code', 'tables', 'nl2br'])
     except Exception as e:
         html_body = f"<p>Error rendering document: {e}</p>"
+
+    return doc_meta, html_body, prev_doc, next_doc
+
+@docs_bp.route('/api/chapter/<category>/<doc_slug>')
+def docs_api_chapter(category, doc_slug):
+    viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
+    doc_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
+    if not doc_meta or html_body is None:
+        return jsonify({"status": "error", "message": "Chapter not found"}), 404
         
+    return jsonify({
+        "status": "success",
+        "slug": doc_meta.get('slug'),
+        "category": doc_meta.get('category'),
+        "title": doc_meta.get('title'),
+        "project": doc_meta.get('project', 'siraugga'),
+        "project_label": doc_meta.get('project_label', 'Siraugga Framework'),
+        "summary": doc_meta.get('summary', ''),
+        "word_count": doc_meta.get('word_count', 0),
+        "read_time": max(1, round(doc_meta.get('word_count', 0) / 180)),
+        "base_sensitivity": doc_meta.get('base_sensitivity', 1),
+        "max_sensitivity": doc_meta.get('max_sensitivity', 1),
+        "is_proprietary": doc_meta.get('is_proprietary', False),
+        "html": html_body,
+        "prev_doc": prev_doc,
+        "next_doc": next_doc
+    })
+
+@docs_bp.route('/', strict_slashes=False)
+@docs_bp.route('', strict_slashes=False)
+def docs_index():
+    catalog = load_catalog()
+    if not catalog:
+        return render_template('docs.html', active_tab='docs', all_docs=[], total_docs=0)
+        
+    active_slug = request.args.get('slug')
+    active_cat = request.args.get('category')
+    
+    active_doc = None
+    if active_slug and active_cat:
+        active_doc = next((d for d in catalog if d.get('slug') == active_slug and d.get('category') == active_cat), None)
+    if not active_doc:
+        active_doc = next((d for d in catalog if d.get('is_latest')), catalog[0])
+        
+    viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
+    doc_meta, html_body, prev_doc, next_doc = render_doc_content(active_doc.get('category'), active_doc.get('slug'), viewer_tier)
+
     return render_template(
         'docs.html',
         active_tab='docs',
-        view_mode='reader',
-        doc=doc_meta or {"title": doc_slug.replace('_', ' '), "slug": doc_slug, "category": category},
+        all_docs=catalog,
+        active_doc=doc_meta or active_doc,
         doc_html=html_body,
-        category_key=category,
-        category_meta=category_meta,
         prev_doc=prev_doc,
         next_doc=next_doc,
         categories=COLLECTIONS,
         projects=PROJECTS,
-        topics=TOPICS
+        topics=TOPICS,
+        total_docs=len(catalog)
     )
+
+@docs_bp.route('/<category>')
+def docs_category(category):
+    if category not in COLLECTIONS:
+        return redirect(url_for('docs.docs_index'))
+    catalog = load_catalog()
+    cat_docs = [d for d in catalog if d.get('category') == category]
+    active_doc = cat_docs[0] if cat_docs else (catalog[0] if catalog else None)
+    if not active_doc:
+        return redirect(url_for('docs.docs_index'))
+    return redirect(url_for('docs.docs_reader', category=active_doc.get('category'), doc_slug=active_doc.get('slug')))
+
+@docs_bp.route('/<category>/<doc_slug>')
+def docs_reader(category, doc_slug):
+    catalog = load_catalog()
+    doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
+    if not doc_meta:
+        return redirect(url_for('docs.docs_index'))
+        
+    viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
+    doc_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
+    
+    return render_template(
+        'docs.html',
+        active_tab='docs',
+        all_docs=catalog,
+        active_doc=doc_meta or {"title": doc_slug.replace('_', ' '), "slug": doc_slug, "category": category},
+        doc_html=html_body,
+        prev_doc=prev_doc,
+        next_doc=next_doc,
+        categories=COLLECTIONS,
+        projects=PROJECTS,
+        topics=TOPICS,
+        total_docs=len(catalog)
+    )
+
 
 @docs_bp.route('/api/search')
 def docs_search():

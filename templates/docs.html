@@ -2,342 +2,364 @@
 
 {% block content %}
 <style>
-    /* --- DOCS PORTAL CORE STYLES --- */
-    .docs-container {
-        max-width: 1000px;
+    /* =========================================================================
+       DOCUMENTATION VAULT - MASTER-DETAIL ACCESSIBLE WORKSPACE
+       ========================================================================= */
+
+    :root {
+        --doc-sidebar-w: 340px;
+        --doc-font-scale: 1;
+        --code-bg: #070a0f;
+    }
+
+    .docs-root {
+        max-width: 1500px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 10px 20px 40px;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: var(--text-bright);
     }
 
-    .docs-header {
-        margin-bottom: 25px;
-        text-align: center;
+    /* Screen Reader Announcer */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
     }
 
-    .docs-title {
-        font-size: 2.2rem;
+    /* --- TOP HEADER --- */
+    .vault-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding-bottom: 16px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .vault-title-wrap h1 {
+        font-family: monospace;
+        font-size: 1.8rem;
         font-weight: 800;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: var(--text-bright);
-        font-family: monospace;
-        margin-bottom: 8px;
-    }
-
-    .docs-subtitle {
         color: var(--accent);
-        font-size: 0.9rem;
+        margin: 0 0 4px 0;
+    }
+
+    .vault-title-wrap p {
         font-family: monospace;
-        letter-spacing: 1px;
+        font-size: 0.82rem;
+        color: var(--text-dim);
+        margin: 0;
+        letter-spacing: 0.5px;
     }
 
-    /* --- LATEST STATUS BAR (Interactive Shortcut like Blog Tab) --- */
-    .latest-status-bar {
-        background: rgba(0, 243, 255, 0.05);
-        border: 1px solid var(--accent);
-        border-left: 5px solid var(--accent);
-        padding: 16px 20px;
-        margin-bottom: 30px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
-    }
-
-    .latest-label {
-        font-family: monospace;
-        font-weight: 800;
-        color: var(--accent);
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-    }
-
-    .latest-link {
-        color: var(--text-bright);
-        font-family: monospace;
-        font-size: 1.05rem;
-        font-weight: bold;
-        text-decoration: underline;
-        transition: color 0.2s;
-    }
-
-    .latest-link:hover {
-        color: var(--accent);
-        text-shadow: 0 0 8px var(--accent-glow);
-    }
-
-    .latest-jump-btn {
-        padding: 6px 14px;
-        background: var(--accent);
-        color: #000;
-        border-radius: 4px;
-        font-family: monospace;
-        font-weight: bold;
-        font-size: 0.8rem;
-        text-decoration: none;
-        letter-spacing: 1px;
-        transition: all 0.2s ease;
-    }
-
-    .latest-jump-btn:hover {
-        box-shadow: 0 0 12px var(--accent-glow);
-        transform: scale(1.03);
-    }
-
-    /* --- SEARCH BAR --- */
-    .docs-search-bar {
-        margin: 20px 0 25px;
-        position: relative;
-    }
-
-    .docs-search-input {
-        width: 100%;
-        padding: 14px 20px;
-        background: rgba(0, 0, 0, 0.6);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--text-bright);
-        font-family: monospace;
-        font-size: 0.95rem;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
-    }
-
-    .docs-search-input:focus {
-        outline: none;
-        border-color: var(--accent);
-        box-shadow: 0 0 15px var(--accent-glow);
-    }
-
-    .search-results-panel {
+    .mobile-toc-toggle {
         display: none;
-        margin-top: 15px;
-        background: rgba(10, 15, 25, 0.95);
+        padding: 8px 16px;
+        background: rgba(0, 243, 255, 0.12);
         border: 1px solid var(--accent);
-        border-radius: 8px;
-        padding: 20px;
-        max-height: 400px;
-        overflow-y: auto;
-    }
-
-    .search-result-item {
-        padding: 12px 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        transition: background 0.15s;
-    }
-
-    .search-result-item:hover, .search-result-item:focus-within {
-        background: rgba(0, 243, 255, 0.08);
-    }
-
-    .search-result-item a {
+        border-radius: 6px;
         color: var(--accent);
         font-family: monospace;
         font-weight: bold;
-        text-decoration: none;
-        font-size: 1rem;
+        font-size: 0.85rem;
+        cursor: pointer;
     }
 
-    /* --- MULTI-DIMENSIONAL FILTER SECTION --- */
-    .filter-section {
-        background: rgba(15, 20, 30, 0.7);
+    /* --- MASTER-DETAIL WORKSPACE GRID --- */
+    .docs-workspace {
+        display: grid;
+        grid-template-columns: var(--doc-sidebar-w) 1fr;
+        gap: 25px;
+        align-items: start;
+    }
+
+    /* --- LEFT SIDEBAR: NAVIGATOR & TREE --- */
+    .docs-sidebar {
+        background: rgba(12, 16, 24, 0.95);
         border: 1px solid var(--border);
         border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 30px;
+        padding: 16px;
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .filter-group {
-        margin-bottom: 16px;
-    }
-
-    .filter-group:last-child {
-        margin-bottom: 0;
-    }
-
-    .filter-heading {
-        font-size: 0.8rem;
+    /* Project Switcher Select / Pills */
+    .sidebar-section-title {
         font-family: monospace;
-        font-weight: bold;
+        font-size: 0.72rem;
+        font-weight: 800;
         text-transform: uppercase;
         color: var(--accent);
         letter-spacing: 1px;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 6px;
     }
 
-    .filter-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .filter-pill {
-        padding: 6px 12px;
-        background: rgba(255, 255, 255, 0.04);
+    .project-selector {
+        width: 100%;
+        background: #000;
         border: 1px solid var(--border);
-        border-radius: 6px;
-        color: var(--text-dim);
-        font-family: monospace;
-        font-size: 0.78rem;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .filter-pill:hover {
-        border-color: var(--accent);
         color: var(--text-bright);
-        background: rgba(0, 243, 255, 0.06);
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 12px;
+        transition: border-color 0.2s;
     }
 
-    .filter-pill.active {
-        background: rgba(0, 243, 255, 0.15);
+    .project-selector:focus, .project-selector:hover {
+        outline: none;
         border-color: var(--accent);
-        color: var(--accent);
-        font-weight: bold;
         box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
     }
 
-    .count-badge {
-        font-size: 0.7rem;
-        opacity: 0.75;
-        background: rgba(0, 0, 0, 0.4);
-        padding: 1px 5px;
-        border-radius: 10px;
+    /* Search & Filter Bar */
+    .sidebar-search-box {
+        position: relative;
+        margin-bottom: 12px;
     }
 
-    /* --- CONTROLS TRAY --- */
-    .controls-tray {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+    .sidebar-search-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 12px;
+        color: var(--text-bright);
         font-family: monospace;
-        font-size: 0.85rem;
-        color: var(--text-dim);
+        font-size: 0.82rem;
+        box-sizing: border-box;
+    }
+
+    .sidebar-search-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* Category Quick Pills */
+    .category-pills-row {
+        display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 5px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .sort-toggle {
-        display: inline-flex;
-        gap: 6px;
-        align-items: center;
-    }
-
-    .sort-toggle a {
+    .cat-pill-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
         color: var(--text-dim);
-        text-decoration: none;
+        font-family: monospace;
+        font-size: 0.72rem;
         padding: 4px 8px;
         border-radius: 4px;
-        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.15s ease;
     }
 
-    .sort-toggle a.active {
+    .cat-pill-btn:hover {
+        color: var(--text-bright);
+        border-color: var(--accent);
+    }
+
+    .cat-pill-btn.active {
+        background: rgba(0, 243, 255, 0.18);
+        border-color: var(--accent);
         color: var(--accent);
-        border-color: var(--border);
-        background: rgba(0, 243, 255, 0.08);
         font-weight: bold;
     }
 
-    /* --- CHAPTER LISTING --- */
-    .chapter-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    /* Chapter Tree List */
+    .chapter-tree-container {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 4px;
     }
 
-    .chapter-item {
-        background: rgba(15, 20, 30, 0.5);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 18px 22px;
-        transition: all 0.2s ease;
+    /* Custom Scrollbar */
+    .chapter-tree-container::-webkit-scrollbar {
+        width: 5px;
+    }
+    .chapter-tree-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 243, 255, 0.2);
+        border-radius: 4px;
     }
 
-    .chapter-item:hover {
+    .chapter-nav-item {
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        display: block;
+        transition: all 0.15s ease;
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+
+    .chapter-nav-item:hover, .chapter-nav-item:focus {
+        background: rgba(0, 243, 255, 0.06);
+        border-color: rgba(0, 243, 255, 0.3);
+        outline: none;
+    }
+
+    .chapter-nav-item.active {
+        background: rgba(0, 243, 255, 0.14);
         border-color: var(--accent);
-        background: rgba(0, 243, 255, 0.04);
-        transform: translateX(4px);
-    }
-
-    .chapter-item.highlight-latest {
         border-left: 4px solid var(--accent);
+        box-shadow: 0 0 12px rgba(0, 243, 255, 0.15);
     }
 
-    .chapter-title-row {
+    .nav-item-title {
+        color: var(--text-bright);
+        font-family: monospace;
+        font-size: 0.85rem;
+        font-weight: bold;
+        line-height: 1.35;
+        margin-bottom: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .chapter-nav-item.active .nav-item-title {
+        color: var(--accent);
+    }
+
+    .nav-item-meta {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 0.7rem;
+        font-family: monospace;
+        color: var(--text-dim);
+    }
+
+    .nav-badge-public {
+        color: #00ff88;
+        background: rgba(0, 255, 136, 0.1);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 0.65rem;
+    }
+
+    .nav-badge-adaptive {
+        color: #00f3ff;
+        background: rgba(0, 243, 255, 0.12);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 0.65rem;
+    }
+
+    /* --- RIGHT MAIN PANE: MODERN READER --- */
+    .docs-reader-panel {
+        background: rgba(10, 14, 22, 0.95);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 35px 45px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        min-height: 700px;
+    }
+
+    /* Reader Header Toolbar */
+    .reader-toolbar {
         display: flex;
         justify-content: space-between;
-        align-items: baseline;
-        gap: 10px;
-        margin-bottom: 6px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding-bottom: 18px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .reader-breadcrumbs {
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        display: flex;
+        align-items: center;
+        gap: 6px;
         flex-wrap: wrap;
     }
 
-    .chapter-link {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-bright);
-        text-decoration: none;
-        font-family: monospace;
+    .reader-breadcrumbs .crumb-project {
+        color: var(--accent);
+        font-weight: bold;
     }
 
-    .chapter-link:hover {
+    .reader-breadcrumbs .crumb-cat {
+        color: #00ff88;
+    }
+
+    .reader-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .ctrl-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        color: var(--text-bright);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .ctrl-btn:hover {
+        border-color: var(--accent);
         color: var(--accent);
     }
 
-    .chapter-tag {
+    /* Sensitivity Badges */
+    .clearance-badge-public {
         font-size: 0.7rem;
         font-family: monospace;
-        padding: 2px 7px;
-        border-radius: 4px;
-        background: rgba(0, 243, 255, 0.1);
-        color: var(--accent);
-        text-transform: uppercase;
-    }
-
-    .clearance-badge-locked {
-        font-size: 0.65rem;
-        font-family: monospace;
-        padding: 2px 7px;
-        border-radius: 4px;
-        background: rgba(255, 170, 0, 0.12);
-        color: #ffaa00;
-        border: 1px solid rgba(255, 170, 0, 0.35);
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .clearance-badge-public {
-        font-size: 0.65rem;
-        font-family: monospace;
-        padding: 2px 7px;
+        padding: 3px 8px;
         border-radius: 4px;
         background: rgba(0, 255, 136, 0.08);
         color: #00ff88;
-        border: 1px solid rgba(0, 255, 136, 0.25);
+        border: 1px solid rgba(0, 255, 136, 0.3);
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        font-weight: bold;
     }
 
     .clearance-badge-adaptive {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
         font-family: monospace;
-        padding: 2px 7px;
+        padding: 3px 8px;
         border-radius: 4px;
         background: rgba(0, 243, 255, 0.12);
         color: var(--accent);
@@ -345,510 +367,597 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        font-weight: bold;
     }
 
-    .chapter-summary {
-        font-size: 0.85rem;
-        color: var(--text-dim);
-        line-height: 1.5;
-        margin: 0 0 10px 0;
+    /* Article Content Typography */
+    .doc-article-wrapper {
+        color: var(--text-bright);
+        line-height: 1.75;
+        font-size: calc(1rem * var(--doc-font-scale));
     }
 
-    .chapter-footer-meta {
-        display: flex;
-        gap: 12px;
-        font-size: 0.75rem;
+    .doc-article-wrapper:focus {
+        outline: none;
+    }
+
+    .doc-article-title {
+        font-size: 1.95rem;
         font-family: monospace;
-        color: var(--text-dim);
-        flex-wrap: wrap;
-    }
-
-    .chapter-footer-meta span {
+        font-weight: 800;
         color: var(--accent);
+        margin: 0 0 15px 0;
+        line-height: 1.3;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 12px;
     }
 
-    /* --- BREADCRUMBS & NAVIGATION --- */
-    .docs-nav-bar {
+    .doc-article-wrapper h2 {
+        font-size: 1.45rem;
+        font-family: monospace;
+        color: var(--text-bright);
+        margin-top: 35px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 6px;
+    }
+
+    .doc-article-wrapper h3 {
+        font-size: 1.2rem;
+        font-family: monospace;
+        color: #00ff88;
+        margin-top: 25px;
+        margin-bottom: 10px;
+    }
+
+    .doc-article-wrapper p {
+        margin-bottom: 18px;
+        font-size: 0.98rem;
+    }
+
+    .doc-article-wrapper ul, .doc-article-wrapper ol {
+        margin-bottom: 20px;
+        padding-left: 25px;
+    }
+
+    .doc-article-wrapper li {
+        margin-bottom: 8px;
+    }
+
+    .doc-article-wrapper a {
+        color: var(--accent);
+        text-decoration: underline;
+        transition: color 0.15s;
+    }
+
+    .doc-article-wrapper a:hover {
+        color: #fff;
+        text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    /* Code Blocks with Header & Copy Button */
+    .doc-article-wrapper pre {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0;
+        margin: 22px 0;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .code-header-bar {
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid var(--border);
+        padding: 6px 14px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid var(--border);
         font-family: monospace;
-        font-size: 0.85rem;
-    }
-
-    .docs-breadcrumbs a {
-        color: var(--accent);
-        text-decoration: none;
-    }
-
-    .docs-breadcrumbs a:hover {
-        text-decoration: underline;
-    }
-
-    .docs-breadcrumbs span {
+        font-size: 0.75rem;
         color: var(--text-dim);
-        margin: 0 6px;
     }
 
-    /* --- READER VIEW --- */
-    .reader-article {
-        background: rgba(12, 16, 24, 0.85);
+    .code-copy-btn {
+        background: transparent;
         border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 40px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         color: var(--text-bright);
-        line-height: 1.7;
-    }
-
-    .reader-article h1, .reader-article h2, .reader-article h3, .reader-article h4 {
-        color: var(--text-bright);
+        padding: 3px 8px;
+        border-radius: 4px;
         font-family: monospace;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 8px;
-        margin-top: 35px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        transition: all 0.15s;
     }
 
-    .reader-article h1 { font-size: 1.8rem; margin-top: 10px; color: var(--accent); }
-    .reader-article h2 { font-size: 1.4rem; }
-    .reader-article h3 { font-size: 1.15rem; }
-
-    .reader-article p {
-        margin-bottom: 16px;
-        font-size: 0.95rem;
+    .code-copy-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
     }
 
-    .reader-article pre {
-        background: #000;
-        border: 1px solid var(--border);
-        border-radius: 6px;
+    .doc-article-wrapper pre code {
+        display: block;
         padding: 16px;
         overflow-x: auto;
         font-family: "Courier New", Courier, monospace;
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         line-height: 1.45;
-        margin: 20px 0;
+        color: #00ff88;
+        background: transparent;
     }
 
-    .reader-article code {
-        background: rgba(0, 243, 255, 0.1);
+    .doc-article-wrapper :not(pre) > code {
+        background: rgba(0, 243, 255, 0.08);
         color: var(--accent);
         padding: 2px 6px;
         border-radius: 4px;
         font-family: monospace;
-        font-size: 0.9em;
+        font-size: 0.88em;
     }
 
-    .reader-article pre code {
-        background: none;
-        color: #00ff88;
-        padding: 0;
+    /* Blockquotes & Architectural Synopses */
+    .doc-article-wrapper blockquote {
+        background: rgba(0, 243, 255, 0.04);
+        border-left: 4px solid var(--accent);
+        margin: 22px 0;
+        padding: 14px 20px;
+        border-radius: 0 6px 6px 0;
+        color: var(--text-bright);
+        font-style: italic;
     }
 
-    .reader-article table {
+    .doc-article-wrapper blockquote p {
+        margin: 0;
+    }
+
+    /* Tables */
+    .doc-article-wrapper table {
         width: 100%;
         border-collapse: collapse;
         margin: 25px 0;
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         font-family: monospace;
     }
 
-    .reader-article th, .reader-article td {
+    .doc-article-wrapper th, .doc-article-wrapper td {
         border: 1px solid var(--border);
         padding: 10px 14px;
         text-align: left;
     }
 
-    .reader-article th {
-        background: rgba(0, 243, 255, 0.1);
+    .doc-article-wrapper th {
+        background: rgba(0, 243, 255, 0.08);
         color: var(--accent);
+        font-weight: bold;
     }
 
-    .reader-article blockquote {
-        border-left: 3px solid var(--accent);
-        margin: 20px 0;
-        padding: 10px 20px;
-        background: rgba(0, 243, 255, 0.03);
-        color: var(--text-dim);
-        font-style: italic;
+    .doc-article-wrapper tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.02);
     }
 
-    /* --- PAGER LINKS --- */
-    .docs-pager {
+    /* Bottom Pager Controls */
+    .reader-pager-bar {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
         gap: 15px;
         margin-top: 40px;
-        padding-top: 20px;
+        padding-top: 25px;
         border-top: 1px solid var(--border);
-        flex-wrap: wrap;
-    }
-
-    .pager-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 20px;
-        background: rgba(0, 243, 255, 0.05);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--text-bright);
-        text-decoration: none;
         font-family: monospace;
-        font-size: 0.85rem;
-        transition: all 0.2s ease;
     }
 
-    .pager-btn:hover {
-        border-color: var(--accent);
+    .pager-action-btn {
+        padding: 10px 18px;
+        background: rgba(0, 243, 255, 0.08);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
         color: var(--accent);
-        background: rgba(0, 243, 255, 0.1);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .pager-action-btn:hover {
+        background: var(--accent);
+        color: #000;
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* --- RESPONSIVE MEDIA QUERIES --- */
+    @media (max-width: 992px) {
+        .docs-workspace {
+            grid-template-columns: 1fr;
+        }
+
+        .mobile-toc-toggle {
+            display: inline-block;
+        }
+
+        .docs-sidebar {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            max-height: none;
+            z-index: 1000;
+        }
+
+        .docs-sidebar.mobile-open {
+            display: flex;
+        }
+
+        .docs-reader-panel {
+            padding: 25px 20px;
+        }
     }
 </style>
 
-<div class="docs-container" id="main-content">
+<div class="docs-root" id="docs-root">
+    <!-- Accessibility Live Region for Screen Readers -->
     <div id="docs-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-    <!-- ==================== VIEW 1: INTERACTIVE EXPLORER ==================== -->
-    {% if view_mode == 'index' %}
-    <header class="docs-header">
-        <h1 class="docs-title">Siraugga Framework Docs</h1>
-        <p class="docs-subtitle">PUBLIC MULTI-DIMENSIONAL DOCUMENTATION PORTAL &bull; {{ total_docs }} CHAPTERS</p>
+    <!-- Header Section -->
+    <header class="vault-header">
+        <div class="vault-title-wrap">
+            <h1>Documentation Vault</h1>
+            <p>CENTRAL MULTI-PROJECT KNOWLEDGE BASE &bull; {{ total_docs }} CHAPTERS</p>
+        </div>
+        <button type="button" class="mobile-toc-toggle" onclick="toggleMobileToc()" aria-expanded="false" aria-controls="docs-sidebar">
+            📑 Chapter Navigator (<span id="mobile-count">{{ total_docs }}</span>)
+        </button>
     </header>
 
-    <!-- Latest Status Bar (Like Blog Tab) -->
-    {% if latest_doc %}
-    <div class="latest-status-bar" role="region" aria-label="Latest Documentation Update">
-        <div>
-            <div class="latest-label">⚡ LATEST FRAMEWORK UPDATE</div>
-            <a href="/docs/{{ latest_doc.category }}/{{ latest_doc.slug }}" class="latest-link">
-                {{ latest_doc.title }}
-            </a>
-            <div style="font-size: 0.75rem; font-family: monospace; color: var(--text-dim); margin-top: 4px;">
-                Collection: <span style="color: var(--accent);">{{ latest_doc.category | upper }}</span> &bull; Project: <span style="color: var(--accent);">{{ latest_doc.project_label }}</span> &bull; {{ latest_doc.word_count }} words
-            </div>
-        </div>
-        <a href="/docs/{{ latest_doc.category }}/{{ latest_doc.slug }}" class="latest-jump-btn" aria-label="Read latest update: {{ latest_doc.title }}">
-            READ NOW &rarr;
-        </a>
-    </div>
-    {% endif %}
-
-    <!-- Live Search Input -->
-    <div class="docs-search-bar" role="search">
-        <label for="docs-search-input" class="sr-only">Search all framework documentation</label>
-        <input 
-            type="search" 
-            id="docs-search-input" 
-            class="docs-search-input" 
-            placeholder="SEARCH_FRAMEWORK_DOCS... (e.g. Mantrap, In-Flight Guard, RBAC, CTypes, Quota, AST)"
-            oninput="handleDocsSearch(this.value)"
-            autocomplete="off"
-        >
-        <div id="search-results-panel" class="search-results-panel" aria-label="Search results" role="region"></div>
-    </div>
-
-    <!-- Multi-Dimensional Category & Project Filtering Section -->
-    <nav class="filter-section" aria-label="Documentation Filters">
-        <!-- 1. Project Filter -->
-        <div class="filter-group">
-            <div class="filter-heading">📁 Filter by Project:</div>
-            <div class="filter-pills" role="tablist" aria-label="Filter by project">
-                {% for p_key, p_meta in projects.items() %}
-                <a href="{{ url_for('docs.docs_index', project=p_key, topic=selected_topic, category=selected_collection, clearance=selected_clearance, sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_project == p_key }}"
-                   role="tab"
-                   aria-selected="{{ 'true' if selected_project == p_key else 'false' }}">
-                    <span aria-hidden="true">{{ p_meta.icon }}</span>
-                    {{ p_meta.title }}
-                    <span class="count-badge">{{ project_counts.get(p_key, 0) }}</span>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- 2. Topic / Focus Filter -->
-        <div class="filter-group">
-            <div class="filter-heading">🔍 Filter by Focus Area:</div>
-            <div class="filter-pills" role="tablist" aria-label="Filter by topic">
-                {% for t_key, t_meta in topics.items() %}
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=t_key, category=selected_collection, clearance=selected_clearance, sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_topic == t_key }}"
-                   role="tab"
-                   aria-selected="{{ 'true' if selected_topic == t_key else 'false' }}">
-                    <span aria-hidden="true">{{ t_meta.icon }}</span>
-                    {{ t_meta.title }}
-                    <span class="count-badge">{{ topic_counts.get(t_key, 0) }}</span>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- 3. Primary Collection Filter -->
-        <div class="filter-group">
-            <div class="filter-heading">📚 Filter by Primary Collection:</div>
-            <div class="filter-pills" role="tablist" aria-label="Filter by collection">
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category='all', clearance=selected_clearance, sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_collection == 'all' }}"
-                   role="tab">
-                    All Collections <span class="count-badge">{{ total_docs }}</span>
-                </a>
-                {% for c_key, c_meta in categories.items() %}
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=c_key, clearance=selected_clearance, sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_collection == c_key }}"
-                   role="tab">
-                    <span aria-hidden="true">{{ c_meta.icon }}</span>
-                    {{ c_meta.title }}
-                    <span class="count-badge">{{ collection_counts.get(c_key, 0) }}</span>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- 4. Access Clearance Filter -->
-        <div class="filter-group">
-            <div class="filter-heading">🛡️ Filter by Access Clearance:</div>
-            <div class="filter-pills" role="tablist" aria-label="Filter by access clearance">
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance='all', sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_clearance == 'all' }}"
-                   role="tab">
-                    All Access Levels <span class="count-badge">{{ total_docs }}</span>
-                </a>
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance='public', sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_clearance == 'public' }}"
-                   role="tab">
-                    <span aria-hidden="true">🌐</span>
-                    Public (Tiers 1–3)
-                    <span class="count-badge">{{ clearance_counts.get('public', 0) }}</span>
-                </a>
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance='proprietary', sort=sort_mode) }}" 
-                   class="filter-pill {{ 'active' if selected_clearance == 'proprietary' }}"
-                   role="tab">
-                    <span aria-hidden="true">🛡️</span>
-                    Adaptive Gated (Tiers 4–5)
-                    <span class="count-badge">{{ clearance_counts.get('proprietary', 0) }}</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Controls Tray: Result count & Sort controls -->
-    <div class="controls-tray">
-        <div>
-            SHOWING <strong>{{ filtered_count }}</strong> OF <strong>{{ total_docs }}</strong> CHAPTERS
-            {% if selected_project != 'all' or selected_topic != 'all' or selected_collection != 'all' or selected_clearance != 'all' %}
-            &bull; <a href="/docs" style="color: var(--accent); text-decoration: underline;">RESET FILTERS</a>
-            {% endif %}
-        </div>
-        <div class="sort-toggle">
-            SORT:
-            <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance=selected_clearance, sort='newest') }}" class="{{ 'active' if sort_mode == 'newest' }}">NEWEST FIRST</a>
-            |
-            <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance=selected_clearance, sort='alpha') }}" class="{{ 'active' if sort_mode == 'alpha' }}">A–Z</a>
-        </div>
-    </div>
-
-    <!-- Filtered Chapter Listing -->
-    <ul class="chapter-list" id="chapter-list" role="feed" aria-label="Documentation chapters">
-        {% for d in docs %}
-        <li class="chapter-item {{ 'highlight-latest' if d.is_latest }}">
-            <div class="chapter-title-row">
-                <a href="/docs/{{ d.category }}/{{ d.slug }}" class="chapter-link">
-                    {{ d.title }}
-                </a>
-                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                    {% if d.max_sensitivity and d.max_sensitivity >= 4 %}
-                    <span class="clearance-badge-adaptive" title="Adaptive View: Public architectural preview; full code available with Employer clearance">🛡️ ADAPTIVE (TIER {{ d.max_sensitivity }})</span>
-                    {% else %}
-                    <span class="clearance-badge-public" title="Public Document - Full Access">🌐 PUBLIC (TIER {{ d.max_sensitivity if d.max_sensitivity else '1' }})</span>
-                    {% endif %}
-                    <span class="chapter-tag">{{ d.category }}</span>
-                </div>
-            </div>
-            <p class="chapter-summary">{{ d.summary }}</p>
-            <div class="chapter-footer-meta">
-                <div>Project: <span>{{ d.project_label }}</span></div>
-                <div>Focus: <span>{{ d.topics | join(', ') }}</span></div>
-                <div>Words: <span>{{ d.word_count }}</span></div>
-                <div>Est. Read: <span>~{{ (d.word_count / 180)|round|int + 1 }}m</span></div>
-                {% if d.is_latest %}
-                <div style="color: #00ff88; font-weight: bold;">[NEWEST UPDATE]</div>
-                {% endif %}
-            </div>
-        </li>
-        {% else %}
-        <li class="chapter-item" style="text-align: center; padding: 40px;">
-            <p style="color: var(--text-dim); font-family: monospace;">NO DOCUMENTATION CHAPTERS MATCH YOUR ACTIVE COMBINATION OF FILTERS.</p>
-            <a href="/docs" class="latest-jump-btn" style="display: inline-block; margin-top: 10px;">RESET ALL FILTERS</a>
-        </li>
-        {% endfor %}
-    </ul>
-
-    <!-- ==================== VIEW 2: DOCUMENT READER ==================== -->
-    {% elif view_mode == 'reader' %}
-    <nav class="docs-nav-bar" aria-label="Breadcrumbs">
-        <div class="docs-breadcrumbs">
-            <a href="/docs">DOCS</a>
-            <span>/</span>
-            <a href="/docs?category={{ category_key }}">{{ category_meta.title | upper }}</a>
-            <span>/</span>
-            <strong>{{ doc.title | upper }}</strong>
-        </div>
-        <div>
-            <a href="/docs?category={{ category_key }}" class="latest-jump-btn" style="background: rgba(0,243,255,0.1); color: var(--accent); border: 1px solid var(--accent);">&larr; BACK TO COLLECTION</a>
-            <a href="/docs" class="latest-jump-btn" style="margin-left: 6px;">PORTAL HOME</a>
-        </div>
-    </nav>
-
-    <article class="reader-article">
-        <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); font-family: monospace; font-size: 0.8rem; color: var(--accent); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <div>{{ category_meta.icon }} {{ category_meta.title | upper }} &bull; {{ doc.project_label if doc.project_label else 'Siraugga Core' }}</div>
-            <div>
-                {% if doc.max_sensitivity and doc.max_sensitivity >= 4 %}
-                <span style="color: var(--accent); margin-right: 12px;">🛡️ SENSITIVITY: TIER {{ doc.max_sensitivity }} (ADAPTIVE FILTER ACTIVE)</span>
-                {% elif doc.max_sensitivity %}
-                <span style="color: #00ff88; margin-right: 12px;">🌐 SENSITIVITY: TIER {{ doc.max_sensitivity }} (PUBLIC SPEC)</span>
-                {% endif %}
-                {{ doc.word_count }} WORDS &bull; ~{{ (doc.word_count / 180)|round|int + 1 }} MIN READ
-            </div>
-        </div>
+    <!-- Master-Detail Workspace -->
+    <div class="docs-workspace">
         
-        <div class="doc-body">
-            {{ doc_html | safe }}
-        </div>
+        <!-- ==================== LEFT SIDEBAR NAVIGATOR ==================== -->
+        <aside class="docs-sidebar" id="docs-sidebar" aria-label="Documentation Navigation Tree">
+            <!-- 1. Project Selector -->
+            <div class="sidebar-section-title">
+                <span>📁 Active Project</span>
+                <span id="filtered-count-badge" style="color: var(--accent);">{{ total_docs }} Chapters</span>
+            </div>
+            <select id="project-selector" class="project-selector" onchange="handleProjectChange(this.value)" aria-label="Filter documentation by project">
+                <option value="all">🌐 All Projects ({{ total_docs }})</option>
+                <option value="siraugga">⚡ Siraugga / DevCore Core</option>
+                <option value="audio_suite">🎵 JOSHY Audio Suite</option>
+                <option value="encrypt_me">🔒 encrypt_me Crypto Tool</option>
+                <option value="echoes">🎮 Echoes of the World</option>
+                <option value="accessible_apps">♿ Accessible Applications</option>
+            </select>
 
-        <nav class="docs-pager" aria-label="Previous and Next Chapters">
-            {% if prev_doc %}
-            <a href="/docs/{{ category_key }}/{{ prev_doc.slug }}" class="pager-btn" rel="prev">
-                &larr; PREVIOUS: {{ prev_doc.title[:45] }}...
-            </a>
-            {% else %}
-            <div></div>
-            {% endif %}
+            <!-- 2. Search Box -->
+            <div class="sidebar-search-box">
+                <label for="sidebar-search-input" class="sr-only">Filter chapters by keyword</label>
+                <input 
+                    type="search" 
+                    id="sidebar-search-input" 
+                    class="sidebar-search-input" 
+                    placeholder="Filter chapters (e.g. Inno, RBAC, Mantrap)..." 
+                    oninput="handleSearchFilter(this.value)"
+                    autocomplete="off"
+                >
+            </div>
 
-            {% if next_doc %}
-            <a href="/docs/{{ category_key }}/{{ next_doc.slug }}" class="pager-btn" rel="next">
-                NEXT: {{ next_doc.title[:45] }}... &rarr;
-            </a>
-            {% endif %}
-        </nav>
-    </article>
+            <!-- 3. Category Quick Filter Pills -->
+            <div class="category-pills-row" role="tablist" aria-label="Filter by collection">
+                <button type="button" class="cat-pill-btn active" data-cat="all" onclick="handleCategoryFilter('all')">All</button>
+                <button type="button" class="cat-pill-btn" data-cat="devlog" onclick="handleCategoryFilter('devlog')">Devlogs</button>
+                <button type="button" class="cat-pill-btn" data-cat="textbook" onclick="handleCategoryFilter('textbook')">Textbook</button>
+                <button type="button" class="cat-pill-btn" data-cat="manual" onclick="handleCategoryFilter('manual')">Manual</button>
+                <button type="button" class="cat-pill-btn" data-cat="story" onclick="handleCategoryFilter('story')">Story</button>
+                <button type="button" class="cat-pill-btn" data-cat="audio_suite" onclick="handleCategoryFilter('audio_suite')">Audio</button>
+            </div>
 
-    <!-- ==================== VIEW 3: PROPRIETARY GATED LOCK SCREEN ==================== -->
-    {% elif view_mode == 'locked' %}
-    <nav class="docs-nav-bar" aria-label="Breadcrumbs">
-        <div class="docs-breadcrumbs">
-            <a href="/docs">DOCS</a>
-            <span>/</span>
-            <a href="/docs?category={{ category_key }}">{{ category_meta.title | upper }}</a>
-            <span>/</span>
-            <strong>{{ doc.title | upper }}</strong>
-        </div>
-        <div>
-            <a href="/docs?category={{ category_key }}" class="latest-jump-btn" style="background: rgba(0,243,255,0.1); color: var(--accent); border: 1px solid var(--accent);">&larr; BACK TO COLLECTION</a>
-            <a href="/docs" class="latest-jump-btn" style="margin-left: 6px;">PORTAL HOME</a>
-        </div>
-    </nav>
+            <!-- 4. Scrollable Chapter Tree -->
+            <div class="chapter-tree-container" id="chapter-tree" role="feed" aria-label="Chapter list">
+                {% for d in all_docs %}
+                <button 
+                    type="button" 
+                    class="chapter-nav-item {{ 'active' if active_doc and d.slug == active_doc.slug }}" 
+                    data-project="{{ d.project }}" 
+                    data-category="{{ d.category }}" 
+                    data-slug="{{ d.slug }}" 
+                    data-title="{{ d.title }}" 
+                    onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
+                    aria-label="{{ d.title }}"
+                >
+                    <div class="nav-item-title">{{ d.title }}</div>
+                    <div class="nav-item-meta">
+                        {% if d.max_sensitivity and d.max_sensitivity >= 4 %}
+                        <span class="nav-badge-adaptive">🛡️ T{{ d.max_sensitivity }}</span>
+                        {% else %}
+                        <span class="nav-badge-public">🌐 T{{ d.max_sensitivity if d.max_sensitivity else '1' }}</span>
+                        {% endif %}
+                        <span>{{ d.category }}</span>
+                        <span>~{{ (d.word_count / 180)|round|int + 1 }}m</span>
+                    </div>
+                </button>
+                {% endfor %}
+            </div>
+        </aside>
 
-    <article class="reader-article" style="border-color: #ffaa00; box-shadow: 0 0 35px rgba(255, 170, 0, 0.15);">
-        <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); font-family: monospace; font-size: 0.8rem; color: #ffaa00; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <div>🔒 RESTRICTED IP &bull; {{ category_meta.title | upper }} &bull; {{ doc.project_label if doc.project_label else 'Siraugga Core' }}</div>
-            <div>{{ doc.word_count }} WORDS &bull; ACCESS CLEARANCE: LEVEL 5 / EMPLOYER ONLY</div>
-        </div>
+        <!-- ==================== RIGHT MAIN READER PANE ==================== -->
+        <main class="docs-reader-panel" id="docs-reader-panel">
+            <!-- Reader Toolbar -->
+            <div class="reader-toolbar">
+                <nav class="reader-breadcrumbs" aria-label="Breadcrumb Navigation">
+                    <span id="crumb-project" class="crumb-project">{{ active_doc.project_label if active_doc else 'Siraugga Core' }}</span>
+                    <span>/</span>
+                    <span id="crumb-cat" class="crumb-cat">{{ active_doc.category | upper if active_doc else 'DEVLOG' }}</span>
+                </nav>
 
-        <div style="background: rgba(255, 170, 0, 0.05); border: 1px solid #ffaa00; border-radius: 8px; padding: 28px; margin-bottom: 30px;">
-            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
-                <span style="font-size: 2.2rem;" aria-hidden="true">🛡️</span>
-                <div>
-                    <h2 style="margin: 0; color: #ffaa00; font-family: monospace; font-size: 1.35rem; border: none; padding: 0;">PROPRIETARY INTELLECTUAL PROPERTY NOTICE</h2>
-                    <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-dim); font-family: monospace;">SECURITY CLEARANCE REQUIRED &bull; ZERO-TRUST PROTECTED ASSET</p>
+                <div class="reader-controls">
+                    <span id="reader-badge" class="{{ 'clearance-badge-adaptive' if active_doc and active_doc.max_sensitivity >= 4 else 'clearance-badge-public' }}">
+                        {% if active_doc and active_doc.max_sensitivity >= 4 %}
+                        🛡️ SENSITIVITY: TIER {{ active_doc.max_sensitivity }} (ADAPTIVE FILTER ACTIVE)
+                        {% else %}
+                        🌐 SENSITIVITY: TIER {{ active_doc.max_sensitivity if active_doc else '1' }} (PUBLIC SPEC)
+                        {% endif %}
+                    </span>
+                    <span id="reader-words" style="font-family: monospace; font-size: 0.75rem; color: var(--text-dim);">
+                        {{ active_doc.word_count if active_doc else 0 }} WORDS &bull; ~{{ ((active_doc.word_count if active_doc else 0) / 180)|round|int + 1 }} MIN READ
+                    </span>
+                    <button type="button" class="ctrl-btn" onclick="adjustFontSize(-0.1)" aria-label="Decrease text size">A-</button>
+                    <button type="button" class="ctrl-btn" onclick="adjustFontSize(0.1)" aria-label="Increase text size">A+</button>
+                    <button type="button" class="ctrl-btn" onclick="copyCurrentLink()" aria-label="Copy direct chapter link">📋 Link</button>
                 </div>
             </div>
-            <p style="color: var(--text-bright); line-height: 1.6; margin-bottom: 18px;">
-                This technical chapter contains proprietary production source code, zero-downtime hot-patching algorithms, internal security hooks, or from-scratch implementation recipes. To protect the framework's intellectual property, full verbatim source code and operational guides are restricted from anonymous public browsing.
-            </p>
-            <div style="background: rgba(0, 0, 0, 0.5); border-left: 4px solid var(--accent); padding: 18px; margin: 20px 0; border-radius: 4px;">
-                <div style="font-family: monospace; font-size: 0.8rem; color: var(--accent); font-weight: bold; margin-bottom: 6px;">EXECUTIVE ABSTRACT & ARCHITECTURAL ROLE:</div>
-                <p style="margin: 0; font-size: 0.92rem; color: var(--text-dim); line-height: 1.6;">{{ doc.summary }}</p>
-            </div>
-            <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 24px;">
-                <a href="/login" class="latest-jump-btn" style="background: #ffaa00; color: #000; font-weight: bold; padding: 12px 22px;">
-                    🔑 UNLOCK WITH EMPLOYER / AUDITOR KEY &rarr;
-                </a>
-                <a href="/docs" class="latest-jump-btn" style="background: transparent; color: var(--text-dim); border: 1px solid var(--border); padding: 12px 22px;">
-                    EXPLORE PUBLIC CHAPTERS
-                </a>
-            </div>
-        </div>
 
-        <nav class="docs-pager" aria-label="Previous and Next Chapters">
-            {% if prev_doc %}
-            <a href="/docs/{{ category_key }}/{{ prev_doc.slug }}" class="pager-btn" rel="prev">
-                &larr; PREVIOUS: {{ prev_doc.title[:45] }}...
-            </a>
-            {% else %}
-            <div></div>
-            {% endif %}
+            <!-- Main Rendered Article -->
+            <article class="doc-article-wrapper" id="doc-article" tabindex="-1">
+                <h1 class="doc-article-title" id="reader-heading">{{ active_doc.title if active_doc else 'Documentation Chapter' }}</h1>
+                <div id="doc-body">
+                    {{ doc_html | safe }}
+                </div>
+            </article>
 
-            {% if next_doc %}
-            <a href="/docs/{{ category_key }}/{{ next_doc.slug }}" class="pager-btn" rel="next">
-                NEXT: {{ next_doc.title[:45] }}... &rarr;
-            </a>
-            {% endif %}
-        </nav>
-    </article>
-    {% endif %}
+            <!-- Bottom Pager -->
+            <nav class="reader-pager-bar" aria-label="Previous and Next Chapters">
+                <div id="pager-prev-wrap">
+                    {% if prev_doc %}
+                    <button type="button" class="pager-action-btn" onclick="selectChapter('{{ prev_doc.category }}', '{{ prev_doc.slug }}')" aria-label="Previous chapter: {{ prev_doc.title }}">
+                        &larr; PREV: {{ prev_doc.title[:35] }}...
+                    </button>
+                    {% endif %}
+                </div>
+                <div>
+                    <button type="button" class="ctrl-btn" onclick="scrollToTop()">Top &uarr;</button>
+                </div>
+                <div id="pager-next-wrap">
+                    {% if next_doc %}
+                    <button type="button" class="pager-action-btn" onclick="selectChapter('{{ next_doc.category }}', '{{ next_doc.slug }}')" aria-label="Next chapter: {{ next_doc.title }}">
+                        NEXT: {{ next_doc.title[:35] }}... &rarr;
+                    </button>
+                    {% endif %}
+                </div>
+            </nav>
+        </main>
+    </div>
 </div>
 
+<!-- =========================================================================
+     CLIENT-SIDE SPA INTERACTION SCRIPT (ZERO PAGE RELOAD)
+     ========================================================================= -->
 <script>
-    var searchTimeout = null;
-    function handleDocsSearch(query) {
-        clearTimeout(searchTimeout);
-        var panel = document.getElementById('search-results-panel');
+    var currentFontScale = 1.0;
+    var activeCategoryFilter = 'all';
+
+    // Enhance code blocks on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        enhanceCodeBlocks();
+    });
+
+    // 1. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
+    function selectChapter(category, slug) {
         var announcer = document.getElementById('docs-announcer');
-        
-        if (!query || query.trim().length < 2) {
-            panel.style.display = 'none';
-            panel.innerHTML = '';
-            return;
+        if (announcer) announcer.textContent = 'Loading chapter...';
+
+        // Highlight active item in tree
+        var items = document.querySelectorAll('.chapter-nav-item');
+        items.forEach(function(el) {
+            if (el.dataset.category === category && el.dataset.slug === slug) {
+                el.classList.add('active');
+                el.setAttribute('aria-current', 'page');
+                el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } else {
+                el.classList.remove('active');
+                el.removeAttribute('aria-current');
+            }
+        });
+
+        // Close mobile drawer if open
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar) sidebar.classList.remove('mobile-open');
+
+        // Fetch via JSON API
+        fetch('/docs/api/chapter/' + encodeURIComponent(category) + '/' + encodeURIComponent(slug))
+            .then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function(data) {
+                // Update breadcrumbs
+                document.getElementById('crumb-project').textContent = data.project_label;
+                document.getElementById('crumb-cat').textContent = data.category.toUpperCase();
+
+                // Update heading and body
+                var heading = document.getElementById('reader-heading');
+                heading.textContent = data.title;
+                document.getElementById('doc-body').innerHTML = data.html;
+
+                // Update sensitivity badge
+                var badge = document.getElementById('reader-badge');
+                if (data.max_sensitivity >= 4) {
+                    badge.className = 'clearance-badge-adaptive';
+                    badge.innerHTML = '🛡️ SENSITIVITY: TIER ' + data.max_sensitivity + ' (ADAPTIVE FILTER ACTIVE)';
+                } else {
+                    badge.className = 'clearance-badge-public';
+                    badge.innerHTML = '🌐 SENSITIVITY: TIER ' + data.max_sensitivity + ' (PUBLIC SPEC)';
+                }
+
+                // Update reading meta
+                document.getElementById('reader-words').textContent = 
+                    data.word_count + ' WORDS • ~' + data.read_time + ' MIN READ';
+
+                // Update pager
+                updatePagerButtons(data.prev_doc, data.next_doc);
+
+                // Re-apply code block copy buttons
+                enhanceCodeBlocks();
+
+                // Update browser history & document title (ZERO PAGE RELOAD)
+                var newUrl = '/docs/' + encodeURIComponent(category) + '/' + encodeURIComponent(slug);
+                window.history.pushState({ category: category, slug: slug }, data.title, newUrl);
+                document.title = data.title + ' - Siraugga Docs';
+
+                // Accessibility focus management: Focus heading without jumping
+                heading.focus();
+                if (announcer) {
+                    announcer.textContent = 'Loaded chapter: ' + data.title;
+                }
+            })
+            .catch(function(err) {
+                console.error('Failed to load chapter in-place:', err);
+                if (announcer) announcer.textContent = 'Error loading chapter.';
+            });
+    }
+
+    // 2. BROWSER BACK / FORWARD BUTTON HANDLER (POPSTATE)
+    window.addEventListener('popstate', function(event) {
+        if (event.state && event.state.category && event.state.slug) {
+            selectChapter(event.state.category, event.state.slug);
+        }
+    });
+
+    // 3. CODE BLOCK ENHANCEMENT (HEADERS & 1-CLICK COPY)
+    function enhanceCodeBlocks() {
+        var blocks = document.querySelectorAll('#doc-body pre');
+        blocks.forEach(function(pre) {
+            if (pre.querySelector('.code-header-bar')) return;
+            var code = pre.querySelector('code');
+            var header = document.createElement('div');
+            header.className = 'code-header-bar';
+            
+            var langLabel = document.createElement('span');
+            langLabel.textContent = 'CODE SPECIFICATION';
+            
+            var copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'code-copy-btn';
+            copyBtn.textContent = 'Copy Code';
+            copyBtn.onclick = function() {
+                var textToCopy = code ? code.innerText : pre.innerText;
+                navigator.clipboard.writeText(textToCopy).then(function() {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(function() { copyBtn.textContent = 'Copy Code'; }, 2000);
+                });
+            };
+            
+            header.appendChild(langLabel);
+            header.appendChild(copyBtn);
+            pre.insertBefore(header, pre.firstChild);
+        });
+    }
+
+    // 4. UPDATE PAGER BUTTONS
+    function updatePagerButtons(prev, next) {
+        var prevWrap = document.getElementById('pager-prev-wrap');
+        var nextWrap = document.getElementById('pager-next-wrap');
+
+        if (prev) {
+            prevWrap.innerHTML = '<button type="button" class="pager-action-btn" onclick="selectChapter(\'' + prev.category + '\', \'' + prev.slug + '\')">&larr; PREV: ' + prev.title.substring(0, 32) + '...</button>';
+        } else {
+            prevWrap.innerHTML = '';
         }
 
-        searchTimeout = setTimeout(function() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var projectParam = urlParams.get('project') || 'all';
-            var topicParam = urlParams.get('topic') || 'all';
+        if (next) {
+            nextWrap.innerHTML = '<button type="button" class="pager-action-btn" onclick="selectChapter(\'' + next.category + '\', \'' + next.slug + '\')">NEXT: ' + next.title.substring(0, 32) + '... &rarr;</button>';
+        } else {
+            nextWrap.innerHTML = '';
+        }
+    }
 
-            fetch('/docs/api/search?q=' + encodeURIComponent(query) + '&project=' + encodeURIComponent(projectParam) + '&topic=' + encodeURIComponent(topicParam))
-                .then(function(res) { return res.json(); })
-                .then(function(data) {
-                    if (!data || data.length === 0) {
-                        panel.style.display = 'block';
-                        panel.innerHTML = '<div style="color: var(--text-dim); font-family: monospace; font-size: 0.9rem;">NO MATCHING DOCUMENTATION FOUND.</div>';
-                        if (announcer) announcer.textContent = 'No matching documentation found.';
-                        return;
-                    }
-                    
-                    var html = '<div style="color: var(--accent); font-family: monospace; font-size: 0.85rem; margin-bottom: 10px;">FOUND ' + data.length + ' MATCHES:</div>';
-                    data.forEach(function(item) {
-                        html += '<div class="search-result-item">' +
-                            '<a href="' + item.url + '">' + item.title + '</a>' +
-                            '<div style="font-size: 0.75rem; font-family: monospace; color: var(--accent); margin: 3px 0;">' + item.project.toUpperCase() + ' &bull; ' + item.category.toUpperCase() + ' &bull; ' + item.words + ' WORDS</div>' +
-                            '<div style="font-size: 0.8rem; color: var(--text-dim);">' + item.summary + '</div>' +
-                        '</div>';
-                    });
-                    panel.innerHTML = html;
-                    panel.style.display = 'block';
-                    if (announcer) announcer.textContent = data.length + ' matching documents found.';
-                })
-                .catch(function(err) {
-                    console.error('Search error:', err);
-                });
-        }, 200);
+    // 5. SIDEBAR FILTER LOGIC (IN-MEMORY - ZERO RELOAD)
+    function filterChapterTree() {
+        var searchVal = (document.getElementById('sidebar-search-input').value || '').toLowerCase().trim();
+        var selectedProject = document.getElementById('project-selector').value;
+        var items = document.querySelectorAll('.chapter-nav-item');
+        var visibleCount = 0;
+
+        items.forEach(function(item) {
+            var itemProject = item.dataset.project || '';
+            var itemCategory = item.dataset.category || '';
+            var itemTitle = (item.dataset.title || '').toLowerCase();
+
+            var matchProject = (selectedProject === 'all' || itemProject === selectedProject);
+            var matchCategory = (activeCategoryFilter === 'all' || itemCategory === activeCategoryFilter);
+            var matchSearch = (!searchVal || itemTitle.indexOf(searchVal) !== -1);
+
+            if (matchProject && matchCategory && matchSearch) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        document.getElementById('filtered-count-badge').textContent = visibleCount + ' Chapters';
+        var mobileCount = document.getElementById('mobile-count');
+        if (mobileCount) mobileCount.textContent = visibleCount;
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Showing ' + visibleCount + ' chapters.';
+    }
+
+    function handleProjectChange(val) {
+        filterChapterTree();
+    }
+
+    function handleSearchFilter(val) {
+        filterChapterTree();
+    }
+
+    function handleCategoryFilter(cat) {
+        activeCategoryFilter = cat;
+        var pills = document.querySelectorAll('.cat-pill-btn');
+        pills.forEach(function(p) {
+            if (p.dataset.cat === cat) {
+                p.classList.add('active');
+            } else {
+                p.classList.remove('active');
+            }
+        });
+        filterChapterTree();
+    }
+
+    // 6. ACCESSIBILITY CONTROLS: FONT RESIZING
+    function adjustFontSize(delta) {
+        currentFontScale = Math.min(1.5, Math.max(0.8, currentFontScale + delta));
+        document.documentElement.style.setProperty('--doc-font-scale', currentFontScale);
+    }
+
+    function copyCurrentLink() {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            var announcer = document.getElementById('docs-announcer');
+            if (announcer) announcer.textContent = 'Direct chapter link copied to clipboard.';
+            alert('Chapter link copied to clipboard!');
+        });
+    }
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileToc() {
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar) sidebar.classList.toggle('mobile-open');
     }
 </script>
 {% endblock %}
