@@ -793,10 +793,439 @@
         .docs-reader-panel {
             padding: 25px 20px;
         }
+    /* Skip Links for Keyboard & Screen Reader Accessibility */
+    .skip-link {
+        position: absolute;
+        top: -70px;
+        left: 20px;
+        background: var(--accent);
+        color: #000;
+        padding: 10px 18px;
+        font-family: monospace;
+        font-weight: 800;
+        font-size: 0.88rem;
+        z-index: 99999;
+        text-decoration: none;
+        border-radius: 4px;
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.7);
+        transition: top 0.2s ease;
+    }
+    .skip-link:focus {
+        top: 15px;
+        outline: 3px solid #fff;
+    }
+
+    /* Clean Landing Workspace Modes */
+    .docs-workspace.is-landing-mode {
+        grid-template-columns: 1fr;
+    }
+
+    .docs-workspace.is-landing-mode .docs-sidebar {
+        display: none;
+    }
+
+    .docs-landing-view {
+        padding: 5px 0 35px 0;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    /* 1. Welcome & Purpose Header */
+    .landing-welcome-header {
+        background: linear-gradient(135deg, rgba(12, 18, 28, 0.98), rgba(6, 9, 14, 0.95));
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        border-radius: 12px;
+        padding: 28px 32px;
+        margin-bottom: 28px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .welcome-pill {
+        display: inline-block;
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: var(--accent);
+        text-transform: uppercase;
+        background: rgba(0, 243, 255, 0.1);
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        padding: 3px 10px;
+        border-radius: 4px;
+        margin-bottom: 12px;
+    }
+
+    .welcome-heading {
+        font-family: monospace;
+        font-size: 2.1rem;
+        font-weight: 900;
+        color: #fff;
+        margin: 0 0 16px 0;
+        letter-spacing: 0.5px;
+    }
+
+    .purpose-statement-box {
+        background: rgba(0, 243, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 16px 20px;
+        border-radius: 0 8px 8px 0;
+        margin-top: 10px;
+    }
+
+    .purpose-title {
+        font-family: monospace;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 8px 0;
+    }
+
+    .purpose-text {
+        font-size: 1.02rem;
+        line-height: 1.65;
+        color: var(--text-bright);
+        margin: 0;
+    }
+
+    /* 2. Guided Pathways (How to Use / Where to Start) */
+    .how-to-use-section {
+        margin-bottom: 35px;
+    }
+
+    .section-guide-heading {
+        font-family: monospace;
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #00ff88;
+        margin: 0 0 6px 0;
+        letter-spacing: 0.5px;
+    }
+
+    .section-guide-sub {
+        font-family: monospace;
+        font-size: 0.88rem;
+        color: var(--text-dim);
+        margin: 0 0 20px 0;
+    }
+
+    .guided-paths-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .guided-path-card {
+        background: rgba(12, 16, 24, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 22px 26px;
+        transition: all 0.2s ease;
+    }
+
+    .guided-path-card:hover {
+        border-color: rgba(0, 243, 255, 0.35);
+    }
+
+    .guided-path-card.path-recommended {
+        border: 2px solid var(--accent);
+        background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(12, 16, 24, 0.95));
+        box-shadow: 0 0 25px rgba(0, 243, 255, 0.15);
+    }
+
+    .path-badge-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .path-num-badge {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: 900;
+        background: var(--accent);
+        color: #000;
+        padding: 2px 8px;
+        border-radius: 3px;
+    }
+
+    .path-rec-tag {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: 900;
+        background: rgba(0, 255, 136, 0.15);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.4);
+        padding: 2px 8px;
+        border-radius: 3px;
+    }
+
+    .path-tag {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: bold;
+        color: var(--text-dim);
+    }
+
+    .path-heading {
+        font-family: monospace;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 0 0 10px 0;
+    }
+
+    .path-summary {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--text-bright);
+        margin: 0 0 16px 0;
+    }
+
+    .path-action-wrap {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary-start {
+        background: var(--accent);
+        color: #000;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-family: monospace;
+        font-weight: 900;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        transition: all 0.2s;
+    }
+
+    .btn-primary-start:hover, .btn-primary-start:focus {
+        background: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(0, 243, 255, 0.8);
+        outline: none;
+    }
+
+    .btn-secondary-start {
+        background: rgba(0, 243, 255, 0.1);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        border-radius: 6px;
+        padding: 11px 22px;
+        font-family: monospace;
+        font-weight: 800;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-secondary-start:hover, .btn-secondary-start:focus {
+        background: var(--accent);
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+        outline: none;
+    }
+
+    .path-meta-note {
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+    }
+
+    /* Project Quick Jump Grid (Path 2) */
+    .project-jump-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .project-jump-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        transition: all 0.2s ease;
+    }
+
+    .project-jump-btn:hover, .project-jump-btn:focus {
+        border-color: var(--accent);
+        background: rgba(0, 243, 255, 0.08);
+        transform: translateY(-2px);
+        outline: none;
+    }
+
+    .pj-icon {
+        font-size: 1.5rem;
+    }
+
+    .pj-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .pj-text strong {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: #fff;
+    }
+
+    .pj-text small {
+        font-size: 0.74rem;
+        color: var(--text-dim);
+        line-height: 1.3;
+    }
+
+    /* 3. Latest Updates Section */
+    .landing-section-block {
+        margin-bottom: 35px;
+    }
+
+    .landing-section-header {
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 8px;
+    }
+
+    .landing-section-header h2 {
+        font-family: monospace;
+        font-size: 1.35rem;
+        color: var(--accent);
+        margin: 0 0 4px 0;
+    }
+
+    .landing-section-header p {
+        font-family: monospace;
+        font-size: 0.82rem;
+        color: var(--text-dim);
+        margin: 0;
+    }
+
+    .latest-updates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    .update-card {
+        background: rgba(12, 16, 24, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 16px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.2s ease;
+    }
+
+    .update-card:hover, .update-card:focus {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        outline: none;
+    }
+
+    .update-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .update-card-cat {
+        font-family: monospace;
+        font-size: 0.68rem;
+        color: var(--text-dim);
+    }
+
+    .update-card-title {
+        font-family: monospace;
+        font-size: 0.98rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 0 0 8px 0;
+        line-height: 1.35;
+    }
+
+    .update-card-summary {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        color: var(--text-dim);
+        margin-bottom: 12px;
+        flex: 1;
+    }
+
+    .update-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: monospace;
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        padding-top: 8px;
+    }
+
+    .update-jump-link {
+        color: var(--accent);
+        font-weight: bold;
+    }
+
+    /* 4. Accessibility & Guidance Box */
+    .landing-help-box {
+        background: rgba(0, 243, 255, 0.04);
+        border: 1px solid rgba(0, 243, 255, 0.2);
+        border-radius: 8px;
+        padding: 18px 22px;
+        margin-top: 30px;
+    }
+
+    .landing-help-box h3 {
+        font-family: monospace;
+        font-size: 0.95rem;
+        color: var(--accent);
+        margin: 0 0 10px 0;
+    }
+
+    .landing-help-box ul {
+        margin: 0;
+        padding-left: 20px;
+        font-size: 0.88rem;
+        line-height: 1.65;
+        color: var(--text-bright);
+    }
+
+    .landing-help-box li {
+        margin-bottom: 6px;
+    }
+
+    .landing-help-box kbd {
+        background: #000;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
     }
 </style>
 
 <div class="docs-root" id="docs-root">
+    <!-- Screen Reader Skip Navigation Links -->
+    <a href="#main-content" class="skip-link">Skip to Main Documentation Content</a>
+    <a href="#sidebar-search-input" class="skip-link">Skip to Chapter Navigator Search</a>
+
     <!-- Accessibility Live Region for Screen Readers -->
     <div id="docs-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
@@ -806,16 +1235,36 @@
             <h1>Documentation Vault</h1>
             <p>CENTRAL MULTI-PROJECT KNOWLEDGE BASE &bull; {{ total_docs }} CHAPTERS</p>
         </div>
-        <button type="button" class="mobile-toc-toggle" onclick="toggleMobileToc()" aria-expanded="false" aria-controls="docs-sidebar">
-            📑 Chapter Navigator (<span id="mobile-count">{{ total_docs }}</span>)
-        </button>
+        <div class="vault-header-actions" style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" class="ctrl-btn portal-home-btn" onclick="showLandingView()" aria-label="Return to Documentation Vault Overview" style="padding: 8px 14px; font-weight: bold; color: var(--accent); border-color: var(--accent);">
+                🏛️ Vault Overview
+            </button>
+            <button 
+                type="button" 
+                class="mobile-toc-toggle" 
+                id="mobile-toc-toggle" 
+                onclick="toggleMobileToc()" 
+                aria-expanded="false" 
+                aria-controls="docs-sidebar" 
+                aria-haspopup="dialog"
+                aria-label="Chapter Navigator: {{ total_docs }} chapters available across 6 projects. Currently collapsed."
+            >
+                📑 Chapter Navigator (<span id="mobile-count">{{ total_docs }}</span>)
+            </button>
+        </div>
     </header>
 
     <!-- Master-Detail Workspace -->
-    <div class="docs-workspace">
+    <div class="docs-workspace {{ 'is-landing-mode' if is_landing else '' }}" id="docs-workspace">
         
         <!-- ==================== LEFT SIDEBAR NAVIGATOR ==================== -->
-        <aside class="docs-sidebar" id="docs-sidebar" aria-label="Documentation Navigation Tree">
+        <aside class="docs-sidebar" id="docs-sidebar" aria-label="Documentation Navigation Tree" role="region">
+            <!-- Sidebar Header Row with Close Button for Screen Readers -->
+            <div class="sidebar-top-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <span style="font-family: monospace; font-size: 0.78rem; font-weight: 800; color: var(--accent); letter-spacing: 1px;">📑 CHAPTER NAVIGATOR</span>
+                <button type="button" class="ctrl-btn sidebar-close-btn" onclick="toggleMobileToc()" aria-label="Close Chapter Navigator" style="padding: 3px 8px; font-size: 0.72rem;">✕ Close</button>
+            </div>
+
             <!-- 1. Project Selector -->
             <div class="sidebar-section-title">
                 <span>📁 Active Project</span>
@@ -859,6 +1308,31 @@
 
             <!-- 4. Scrollable Hierarchical Chapter Tree -->
             <div class="chapter-tree-container" id="chapter-tree" role="feed" aria-label="Hierarchical Documentation Explorer">
+                
+                <!-- 🌟 FEATURED PINNED GENESIS CARD (ALWAYS FIRST IN TREE) -->
+                <div class="origin-pinned-section" id="origin-pinned-item" style="margin-bottom: 12px;">
+                    <button 
+                        type="button" 
+                        class="chapter-nav-item origin-nav-button {{ 'active' if active_doc and active_doc.slug == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and not is_landing }}" 
+                        data-project="echoes" 
+                        data-category="devlog" 
+                        data-slug="04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD" 
+                        data-title="The Origin Architecture: Echoes of the World" 
+                        onclick="selectChapter('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD')"
+                        aria-label="Genesis Blueprint: The Origin Architecture: Echoes of the World"
+                        style="width: 100%; text-align: left; border: 2px solid var(--accent); background: linear-gradient(135deg, rgba(0, 243, 255, 0.14), rgba(12, 16, 24, 0.95)); padding: 10px 12px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 243, 255, 0.25); cursor: pointer;"
+                    >
+                        <div class="nav-item-topline">
+                            <span class="badge-project-mini" style="background: var(--accent); color: #000; font-weight: 900; font-size: 0.6rem;">🌟 GENESIS ORIGIN</span>
+                            <span class="badge-project-mini badge-echoes">ECHOES / DEVLOG</span>
+                        </div>
+                        <div class="nav-item-title" style="font-size: 0.88rem; font-weight: 800; color: #fff; margin: 4px 0;">The Origin Architecture: Echoes of the World</div>
+                        <div class="nav-item-meta" style="color: var(--text-dim); font-size: 0.68rem;">
+                            <span class="nav-badge-public">🌐 T1 PUBLIC</span>
+                            <span>Historical Blueprint &bull; October 2024</span>
+                        </div>
+                    </button>
+                </div>
                 {% if grouped_tree %}
                 {% for proj in grouped_tree %}
                 <section class="project-group-section" data-project="{{ proj.key }}">
@@ -946,119 +1420,278 @@
         </aside>
 
         <!-- ==================== RIGHT MAIN READER PANE ==================== -->
-        <main class="docs-reader-panel" id="docs-reader-panel">
-            <!-- Reader Toolbar -->
-            <div class="reader-toolbar">
-                <nav class="reader-breadcrumbs" aria-label="Breadcrumb Navigation">
-                    <span id="crumb-project" class="crumb-project">{{ active_doc.project_label if active_doc else 'Siraugga Core' }}</span>
-                    <span>/</span>
-                    <span id="crumb-cat" class="crumb-cat">{{ categories.get(active_doc.category, {}).title if active_doc and active_doc.category in categories else (active_doc.category | upper if active_doc else 'DEVLOG') }}</span>
-                </nav>
-
-                <div class="reader-controls">
-                    <span id="reader-badge" class="{{ 'clearance-badge-adaptive' if active_doc and active_doc.max_sensitivity >= 4 else 'clearance-badge-public' }}">
-                        {% if active_doc and active_doc.max_sensitivity >= 4 %}
-                        🛡️ SENSITIVITY: TIER {{ active_doc.max_sensitivity }} (ADAPTIVE FILTER ACTIVE)
-                        {% else %}
-                        🌐 SENSITIVITY: TIER {{ active_doc.max_sensitivity if active_doc else '1' }} (PUBLIC SPEC)
-                        {% endif %}
-                    </span>
-                    <span id="reader-words" style="font-family: monospace; font-size: 0.75rem; color: var(--text-dim);">
-                        {{ active_doc.word_count if active_doc else 0 }} WORDS &bull; ~{{ ((active_doc.word_count if active_doc else 0) / 180)|round|int + 1 }} MIN READ
-                    </span>
-                    <button type="button" class="ctrl-btn" onclick="adjustFontSize(-0.1)" aria-label="Decrease text size">A-</button>
-                    <button type="button" class="ctrl-btn" onclick="adjustFontSize(0.1)" aria-label="Increase text size">A+</button>
-                    <button type="button" class="ctrl-btn" onclick="copyCurrentLink()" aria-label="Copy direct chapter link">📋 Link</button>
-                </div>
-            </div>
-
-            <!-- System Context & Ownership Banner -->
-            <div class="doc-context-banner" id="doc-context-banner" role="region" aria-label="Document System Context">
-                <div class="context-banner-top">
-                    <div class="context-pill project-pill" id="ctx-project-badge">
-                        <span id="ctx-project-icon">{{ projects.get(active_doc.project, {}).icon if active_doc and active_doc.project in projects else '⚡' }}</span>
-                        <span id="ctx-project-title">{{ active_doc.project_label if active_doc else 'Siraugga / DevCore Framework' }}</span>
-                    </div>
-                    <div class="context-pill collection-pill" id="ctx-cat-badge">
-                        <span id="ctx-cat-icon">{{ categories.get(active_doc.category, {}).icon if active_doc and active_doc.category in categories else '🛡️' }}</span>
-                        <span id="ctx-cat-title">{{ categories.get(active_doc.category, {}).title if active_doc and active_doc.category in categories else (active_doc.category | upper if active_doc else 'Documentation Collection') }}</span>
-                    </div>
-                    <div class="context-pill sensitivity-pill" id="ctx-sens-pill">
-                        <span id="ctx-sens-text">🌐 TIER {{ active_doc.max_sensitivity if active_doc and active_doc.max_sensitivity else '1' }} PUBLIC</span>
+        <!-- ==================== RIGHT MAIN READER PANE / LANDING HUB ==================== -->
+        <main class="docs-reader-panel" id="main-content" tabindex="-1" aria-label="Documentation Hub & Reader">
+            
+            <!-- VIEW 1: DEDICATED PORTAL LANDING PAGE -->
+            <section class="docs-landing-view" id="docs-landing-view" style="{{ 'display: block;' if is_landing else 'display: none;' }}" aria-label="Documentation Vault Overview">
+                
+                <!-- SECTION 1: WHAT IS THIS TAB FOR? -->
+                <div class="landing-welcome-header">
+                    <div class="welcome-pill">SIRAUGGA / DEVCORE KNOWLEDGE ARCHIVE &bull; {{ total_docs }} CHAPTERS</div>
+                    <h1 class="welcome-heading" id="landing-main-heading" tabindex="-1">Documentation Vault & Architecture Guide</h1>
+                    
+                    <div class="purpose-statement-box" role="region" aria-label="Purpose of this Tab">
+                        <h2 class="purpose-title">🎯 What is this tab for?</h2>
+                        <p class="purpose-text">
+                            Welcome! This tab is the <strong>central technical archive and engineering portfolio</strong> for Logan (Michael Robberts). 
+                            Here you will find full architectural blueprints, forensic devlogs, zero-trust cybersecurity textbooks, and step-by-step implementation guides 
+                            for all 6 software systems built across the ecosystem.
+                        </p>
                     </div>
                 </div>
-                <div class="context-banner-desc">
-                    <span class="context-hierarchy-label">SYSTEM CONTEXT:</span>
-                    <span id="ctx-hierarchy-text">
-                        Belongs to <strong>{{ active_doc.project_label if active_doc else 'Siraugga / DevCore Framework' }}</strong> &bull; {{ categories.get(active_doc.category, {}).desc if active_doc and active_doc.category in categories else 'Technical Architecture Specification' }}
-                    </span>
-                </div>
-            </div>
 
-            <!-- Cross-Reference Jump Dropdown (Accessible Dropdown Standard) -->
-            <div id="crossref-dropdown-container" class="crossref-dropdown-box" style="margin: 0 0 22px 0; padding: 12px 16px; background: rgba(0, 243, 255, 0.04); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
-                <label for="crossref-select" id="crossref-label" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; color: var(--accent); margin-bottom: 6px;">
-                    🔽 Jump to Related Multi-Project Architecture (Dropdown):
-                </label>
-                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <select id="crossref-select" class="crossref-select" onchange="handleCrossrefJump(this.value)" aria-labelledby="crossref-label" style="flex: 1; min-width: 280px; background: #080c14; border: 1px solid var(--accent); color: #00ff88; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 0.84rem; cursor: pointer;">
-                        <option value="">-- Select a cross-referenced project to jump ({{ active_doc.cross_references|length if active_doc and active_doc.cross_references else 0 }} available) --</option>
-                        {% if active_doc and active_doc.cross_references %}
-                        {% for ref in active_doc.cross_references %}
-                        <option value="{{ ref.category }}/{{ ref.slug }}">{{ '[' ~ ref.project_label ~ '] ' ~ ref.title ~ ' — ' ~ ref.relation }}</option>
+                <!-- SECTION 2: HOW TO USE THIS TAB (CLEAR STARTING POINTS) -->
+                <div class="how-to-use-section" role="region" aria-label="How to Use This Tab">
+                    <h2 class="section-guide-heading">🧭 How to Use This Tab (Start Here)</h2>
+                    <p class="section-guide-sub">If this is your first time here, you have three clear, simple starting points:</p>
+
+                    <div class="guided-paths-grid">
+                        <!-- PATH 1: THE RECOMMENDED STARTING POINT -->
+                        <div class="guided-path-card path-recommended">
+                            <div class="path-badge-row">
+                                <span class="path-num-badge">PATH 1</span>
+                                <span class="path-rec-tag">⭐ RECOMMENDED FIRST READ</span>
+                            </div>
+                            <h3 class="path-heading">The Origin Architecture: Echoes of the World</h3>
+                            <p class="path-summary">
+                                <strong>Start here to understand the foundation of everything.</strong> In October 2024, a blind gamer with zero coding experience set out to build an audio game from scratch. Discover how direct screen reader C-DLL bindings, pure mathematical coordinate spaces, and decoupled state files formed the architectural DNA for all modern Siraugga systems.
+                            </p>
+                            <div class="path-action-wrap">
+                                <button type="button" class="btn-primary-start" onclick="selectChapter('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD')" aria-label="Start Here: Read The Origin Architecture Blueprint">
+                                    👉 Click Here to Start: Read The Origin Blueprint &rarr;
+                                </button>
+                                <span class="path-meta-note">~3 min read &bull; 🌐 Public Tier 1 Spec</span>
+                            </div>
+                        </div>
+
+                        <!-- PATH 2: CHOOSE A PROJECT BY INTEREST -->
+                        <div class="guided-path-card">
+                            <div class="path-badge-row">
+                                <span class="path-num-badge">PATH 2</span>
+                                <span class="path-tag">EXPLORE BY SYSTEM</span>
+                            </div>
+                            <h3 class="path-heading">Pick a Project That Interests You</h3>
+                            <p class="path-summary">
+                                Looking for a specific domain? Click any project below to filter the documentation directly to that system:
+                            </p>
+                            <div class="project-jump-grid">
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('siraugga')" aria-label="Siraugga Core and Zero Trust">
+                                    <span class="pj-icon">⚡</span>
+                                    <span class="pj-text">
+                                        <strong>Siraugga / DevCore Core</strong>
+                                        <small>Zero-Restart AI, Zero-Trust Textbook, Master Manual</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('eprofile')" aria-label="E-Profile Portfolio Portal">
+                                    <span class="pj-icon">💼</span>
+                                    <span class="pj-text">
+                                        <strong>E-Profile Portfolio Portal</strong>
+                                        <small>LibCST AST Code Surgery, Multi-Tier RBAC</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('encrypt_me')" aria-label="EncryptMe Multi-User Vault">
+                                    <span class="pj-icon">🔐</span>
+                                    <span class="pj-text">
+                                        <strong>EncryptMe Multi-User Vault</strong>
+                                        <small>PBKDF2 Symmetric Crypto, Memory Zeroization</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('echoes')" aria-label="Echoes of the World 3D Audio">
+                                    <span class="pj-icon">🎮</span>
+                                    <span class="pj-text">
+                                        <strong>Echoes of the World</strong>
+                                        <small>Procedural 3D Audio World Engine, 8-Way Compass</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('audio_suite')" aria-label="JOSHY Audio Suite">
+                                    <span class="pj-icon">🎵</span>
+                                    <span class="pj-text">
+                                        <strong>JOSHY Audio Suite</strong>
+                                        <small>Accessible Speech Drivers, Tolk DLL, Inno Setup</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('accessible_apps')" aria-label="Accessible Applications and Exam Generator">
+                                    <span class="pj-icon">♿</span>
+                                    <span class="pj-text">
+                                        <strong>Accessible Applications</strong>
+                                        <small>Dynamic Exam Generator, Accessible Media Player</small>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PATH 3: SEARCH & BROWSE ALL CHAPTERS -->
+                        <div class="guided-path-card">
+                            <div class="path-badge-row">
+                                <span class="path-num-badge">PATH 3</span>
+                                <span class="path-tag">SEARCH & BROWSE ALL</span>
+                            </div>
+                            <h3 class="path-heading">Browse or Search All {{ total_docs }} Chapters</h3>
+                            <p class="path-summary">
+                                Looking for a specific technical topic like <em>Inno Setup</em>, <em>RBAC</em>, <em>Mantrap</em>, <em>LibCST</em>, or <em>Hot-Patch</em>? Open the full chapter navigator to search and filter across all collections.
+                            </p>
+                            <div class="path-action-wrap">
+                                <button type="button" class="btn-secondary-start" onclick="openNavigatorAndSearch()" aria-label="Open Chapter Directory and Focus Search Filter">
+                                    📑 Open Chapter Directory & Search ({{ total_docs }} Chapters) &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: RECENT SPRINTS & UPDATES -->
+                <div class="landing-section-block" role="region" aria-label="Latest Updates">
+                    <div class="landing-section-header">
+                        <h2>⚡ Latest Sprints & Recent Architecture Releases</h2>
+                        <p>Direct from active engineering logs across all projects</p>
+                    </div>
+                    <div class="latest-updates-grid">
+                        {% for update in latest_updates %}
+                        <div class="update-card" onclick="selectChapter('{{ update.category }}', '{{ update.slug }}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')selectChapter('{{ update.category }}', '{{ update.slug }}')" aria-label="{{ update.project_label }}: {{ update.title }}">
+                            <div class="update-card-top">
+                                <span class="badge-project-mini badge-{{ update.project }}">{{ update.project_label }}</span>
+                                <span class="update-card-cat">{{ update.category | upper }}</span>
+                            </div>
+                            <h3 class="update-card-title">{{ update.title }}</h3>
+                            <p class="update-card-summary">{{ update.summary }}</p>
+                            <div class="update-card-meta">
+                                <span>~{{ ((update.word_count or 0) / 180)|round|int + 1 }} min read</span>
+                                <span class="update-jump-link">Read Chapter &rarr;</span>
+                            </div>
+                        </div>
                         {% endfor %}
-                        {% endif %}
-                    </select>
-                </div>
-            </div>
-
-            <!-- Main Rendered Article -->
-            <article class="doc-article-wrapper" id="doc-article" tabindex="-1">
-                <h1 class="doc-article-title" id="reader-heading">{{ active_doc.title if active_doc else 'Documentation Chapter' }}</h1>
-                <div id="doc-body">
-                    {{ doc_html | safe }}
+                    </div>
                 </div>
 
-                <!-- Bottom Collapsible Cross-Reference Details (The Dropdown Standard) -->
-                <details id="crossref-details" class="crossref-accordion" style="margin: 35px 0 15px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 8px; background: rgba(0, 243, 255, 0.03); {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
-                    <summary id="crossref-details-summary" style="font-family: monospace; font-size: 0.88rem; font-weight: bold; cursor: pointer; color: var(--accent);">
-                        🔽 Related Multi-Project Architecture & Security Notes (Click to Expand Dropdown)
-                    </summary>
-                    <div id="crossref-details-list" style="margin-top: 14px; font-family: monospace; font-size: 0.84rem; line-height: 1.7; color: var(--text-bright);">
-                        {% if active_doc and active_doc.cross_references %}
-                        <ul style="margin: 0; padding-left: 20px;">
+                <!-- SECTION 4: READING & ACCESSIBILITY GUIDANCE -->
+                <div class="landing-help-box" role="region" aria-label="Screen Reader Navigation Tips">
+                    <h3>💡 Screen Reader & Keyboard Navigation Tips</h3>
+                    <ul>
+                        <li><strong>Main Landmark:</strong> Press <kbd>M</kbd> at any time in NVDA or JAWS to jump directly into the main reading area.</li>
+                        <li><strong>Chapter Navigator:</strong> Press the <kbd>📑 Chapter Navigator</kbd> button to open the full chapter directory. Press <kbd>Escape</kbd> to close it.</li>
+                        <li><strong>Zero Page Reloads:</strong> Selecting any chapter loads content in-place with zero page reloads so your cursor never jumps.</li>
+                        <li><strong>Return to Overview:</strong> Click <kbd>🏛️ Vault Overview</kbd> in the header or breadcrumbs at any time to return to this guide.</li>
+                    </ul>
+                </div>
+            </section>
+            <!-- VIEW 2: CHAPTER READING VIEW -->
+            <div id="docs-reader-view" style="{{ 'display: none;' if is_landing else 'display: block;' }}">
+                <!-- Reader Toolbar -->
+                <div class="reader-toolbar">
+                    <nav class="reader-breadcrumbs" aria-label="Breadcrumb Navigation">
+                        <button type="button" class="ctrl-btn portal-crumb-btn" onclick="showLandingView()" aria-label="Back to Portal Overview" style="padding: 2px 7px; margin-right: 4px; font-size: 0.75rem;">🏠 Overview</button>
+                        <span>/</span>
+                        <span id="crumb-project" class="crumb-project">{{ active_doc.project_label if active_doc else 'Siraugga Core' }}</span>
+                        <span>/</span>
+                        <span id="crumb-cat" class="crumb-cat">{{ categories.get(active_doc.category, {}).title if active_doc and active_doc.category in categories else (active_doc.category | upper if active_doc else 'DEVLOG') }}</span>
+                    </nav>
+
+                    <div class="reader-controls">
+                        <span id="reader-badge" class="{{ 'clearance-badge-adaptive' if active_doc and active_doc.max_sensitivity >= 4 else 'clearance-badge-public' }}">
+                            {% if active_doc and active_doc.max_sensitivity >= 4 %}
+                            🛡️ SENSITIVITY: TIER {{ active_doc.max_sensitivity }} (ADAPTIVE FILTER ACTIVE)
+                            {% else %}
+                            🌐 SENSITIVITY: TIER {{ active_doc.max_sensitivity if active_doc else '1' }} (PUBLIC SPEC)
+                            {% endif %}
+                        </span>
+                        <span id="reader-words" style="font-family: monospace; font-size: 0.75rem; color: var(--text-dim);">
+                            {{ active_doc.word_count if active_doc else 0 }} WORDS &bull; ~{{ ((active_doc.word_count if active_doc else 0) / 180)|round|int + 1 }} MIN READ
+                        </span>
+                        <button type="button" class="ctrl-btn" onclick="adjustFontSize(-0.1)" aria-label="Decrease text size">A-</button>
+                        <button type="button" class="ctrl-btn" onclick="adjustFontSize(0.1)" aria-label="Increase text size">A+</button>
+                        <button type="button" class="ctrl-btn" onclick="copyCurrentLink()" aria-label="Copy direct chapter link">📋 Link</button>
+                    </div>
+                </div>
+
+                <!-- System Context & Ownership Banner -->
+                <div class="doc-context-banner" id="doc-context-banner" role="region" aria-label="Document System Context">
+                    <div class="context-banner-top">
+                        <div class="context-pill project-pill" id="ctx-project-badge">
+                            <span id="ctx-project-icon">{{ projects.get(active_doc.project, {}).icon if active_doc and active_doc.project in projects else '⚡' }}</span>
+                            <span id="ctx-project-title">{{ active_doc.project_label if active_doc else 'Siraugga / DevCore Framework' }}</span>
+                        </div>
+                        <div class="context-pill collection-pill" id="ctx-cat-badge">
+                            <span id="ctx-cat-icon">{{ categories.get(active_doc.category, {}).icon if active_doc and active_doc.category in categories else '🛡️' }}</span>
+                            <span id="ctx-cat-title">{{ categories.get(active_doc.category, {}).title if active_doc and active_doc.category in categories else (active_doc.category | upper if active_doc else 'Documentation Collection') }}</span>
+                        </div>
+                        <div class="context-pill sensitivity-pill" id="ctx-sens-pill">
+                            <span id="ctx-sens-text">🌐 TIER {{ active_doc.max_sensitivity if active_doc and active_doc.max_sensitivity else '1' }} PUBLIC</span>
+                        </div>
+                    </div>
+                    <div class="context-banner-desc">
+                        <span class="context-hierarchy-label">SYSTEM CONTEXT:</span>
+                        <span id="ctx-hierarchy-text">
+                            Belongs to <strong>{{ active_doc.project_label if active_doc else 'Siraugga / DevCore Framework' }}</strong> &bull; {{ categories.get(active_doc.category, {}).desc if active_doc and active_doc.category in categories else 'Technical Architecture Specification' }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Cross-Reference Jump Dropdown (Accessible Dropdown Standard) -->
+                <div id="crossref-dropdown-container" class="crossref-dropdown-box" style="margin: 0 0 22px 0; padding: 12px 16px; background: rgba(0, 243, 255, 0.04); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
+                    <label for="crossref-select" id="crossref-label" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; color: var(--accent); margin-bottom: 6px;">
+                        🔽 Jump to Related Multi-Project Architecture (Dropdown):
+                    </label>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <select id="crossref-select" class="crossref-select" onchange="handleCrossrefJump(this.value)" aria-labelledby="crossref-label" style="flex: 1; min-width: 280px; background: #080c14; border: 1px solid var(--accent); color: #00ff88; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 0.84rem; cursor: pointer;">
+                            <option value="">-- Select a cross-referenced project to jump ({{ active_doc.cross_references|length if active_doc and active_doc.cross_references else 0 }} available) --</option>
+                            {% if active_doc and active_doc.cross_references %}
                             {% for ref in active_doc.cross_references %}
-                            <li style="margin-bottom: 8px;">
-                                <strong style="color: var(--accent);">[{{ ref.project_label }}] {{ ref.title }}</strong>: {{ ref.relation }}
-                                <button type="button" class="ctrl-btn" style="margin-left: 8px; padding: 2px 6px;" onclick="selectChapter('{{ ref.category }}', '{{ ref.slug }}')">Jump</button>
-                            </li>
+                            <option value="{{ ref.category }}/{{ ref.slug }}">{{ '[' ~ ref.project_label ~ '] ' ~ ref.title ~ ' — ' ~ ref.relation }}</option>
                             {% endfor %}
-                        </ul>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Main Rendered Article -->
+                <article class="doc-article-wrapper" id="doc-article" tabindex="-1">
+                    <h1 class="doc-article-title" id="reader-heading">{{ active_doc.title if active_doc else 'Documentation Chapter' }}</h1>
+                    <div id="doc-body">
+                        {{ doc_html | safe }}
+                    </div>
+
+                    <!-- Bottom Collapsible Cross-Reference Details (The Dropdown Standard) -->
+                    <details id="crossref-details" class="crossref-accordion" style="margin: 35px 0 15px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 8px; background: rgba(0, 243, 255, 0.03); {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
+                        <summary id="crossref-details-summary" style="font-family: monospace; font-size: 0.88rem; font-weight: bold; cursor: pointer; color: var(--accent);">
+                            🔽 Related Multi-Project Architecture & Security Notes (Click to Expand Dropdown)
+                        </summary>
+                        <div id="crossref-details-list" style="margin-top: 14px; font-family: monospace; font-size: 0.84rem; line-height: 1.7; color: var(--text-bright);">
+                            {% if active_doc and active_doc.cross_references %}
+                            <ul style="margin: 0; padding-left: 20px;">
+                                {% for ref in active_doc.cross_references %}
+                                <li style="margin-bottom: 8px;">
+                                    <strong style="color: var(--accent);">[{{ ref.project_label }}] {{ ref.title }}</strong>: {{ ref.relation }}
+                                    <button type="button" class="ctrl-btn" style="margin-left: 8px; padding: 2px 6px;" onclick="selectChapter('{{ ref.category }}', '{{ ref.slug }}')">Jump</button>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </details>
+                </article>
+
+                <!-- Bottom Pager -->
+                <nav class="reader-pager-bar" aria-label="Previous and Next Chapters">
+                    <div id="pager-prev-wrap">
+                        {% if prev_doc %}
+                        <button type="button" class="pager-action-btn" onclick="selectChapter('{{ prev_doc.category }}', '{{ prev_doc.slug }}')" aria-label="Previous chapter: {{ prev_doc.title }}">
+                            &larr; PREV: {{ prev_doc.title[:35] }}...
+                        </button>
                         {% endif %}
                     </div>
-                </details>
-            </article>
-
-            <!-- Bottom Pager -->
-            <nav class="reader-pager-bar" aria-label="Previous and Next Chapters">
-                <div id="pager-prev-wrap">
-                    {% if prev_doc %}
-                    <button type="button" class="pager-action-btn" onclick="selectChapter('{{ prev_doc.category }}', '{{ prev_doc.slug }}')" aria-label="Previous chapter: {{ prev_doc.title }}">
-                        &larr; PREV: {{ prev_doc.title[:35] }}...
-                    </button>
-                    {% endif %}
-                </div>
-                <div>
-                    <button type="button" class="ctrl-btn" onclick="scrollToTop()">Top &uarr;</button>
-                </div>
-                <div id="pager-next-wrap">
-                    {% if next_doc %}
-                    <button type="button" class="pager-action-btn" onclick="selectChapter('{{ next_doc.category }}', '{{ next_doc.slug }}')" aria-label="Next chapter: {{ next_doc.title }}">
-                        NEXT: {{ next_doc.title[:35] }}... &rarr;
-                    </button>
-                    {% endif %}
-                </div>
-            </nav>
+                    <div>
+                        <button type="button" class="ctrl-btn" onclick="scrollToTop()">Top &uarr;</button>
+                    </div>
+                    <div id="pager-next-wrap">
+                        {% if next_doc %}
+                        <button type="button" class="pager-action-btn" onclick="selectChapter('{{ next_doc.category }}', '{{ next_doc.slug }}')" aria-label="Next chapter: {{ next_doc.title }}">
+                            NEXT: {{ next_doc.title[:35] }}... &rarr;
+                        </button>
+                        {% endif %}
+                    </div>
+                </nav>
+            </div>
         </main>
     </div>
 </div>
@@ -1075,11 +1708,105 @@
         enhanceCodeBlocks();
     });
 
-    // 1. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
+    // 1. SHOW LANDING VIEW (PORTAL OVERVIEW HUB)
+    function showLandingView() {
+        var landingView = document.getElementById('docs-landing-view');
+        var readerView = document.getElementById('docs-reader-view');
+        if (landingView) landingView.style.display = 'block';
+        if (readerView) readerView.style.display = 'none';
+
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.add('is-landing-mode');
+
+        // Deselect items in tree
+        var items = document.querySelectorAll('.chapter-nav-item');
+        items.forEach(function(el) {
+            el.classList.remove('active');
+            el.removeAttribute('aria-current');
+        });
+
+        // Close mobile drawer if open
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar && sidebar.classList.contains('mobile-open')) {
+            toggleMobileToc();
+        }
+
+        window.history.pushState({ is_landing: true }, 'Documentation Vault - Overview', '/docs');
+        document.title = 'Documentation Vault & Architecture Guide - Overview';
+
+        var mainHeading = document.getElementById('landing-main-heading');
+        if (mainHeading) mainHeading.focus();
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Navigated to Documentation Vault Overview landing page.';
+    }
+
+    // 2. OPEN NAVIGATOR & FOCUS SEARCH
+    function openNavigatorAndSearch() {
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
+
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar) sidebar.classList.add('mobile-open');
+
+        var toggleBtn = document.getElementById('mobile-toc-toggle');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            var cnt = document.getElementById('mobile-count')?.textContent || '302';
+            toggleBtn.innerHTML = '✕ Close Navigator (<span id="mobile-count">' + cnt + '</span>)';
+            toggleBtn.setAttribute('aria-label', 'Chapter Navigator. Currently expanded. Press Escape or click to close.');
+        }
+
+        var searchInput = document.getElementById('sidebar-search-input');
+        if (searchInput) {
+            setTimeout(function() {
+                searchInput.focus();
+                searchInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }, 120);
+        }
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Chapter Navigator opened. Focus moved to search filter.';
+    }
+
+    // 3. JUMP TO PROJECT (EXPLORER QUICK FILTER)
+    function jumpToProject(projKey) {
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
+
+        var sel = document.getElementById('project-selector');
+        if (sel) {
+            sel.value = projKey;
+            handleProjectChange(projKey);
+        }
+        var body = document.getElementById('proj-body-' + projKey);
+        var chev = document.getElementById('pchev-' + projKey);
+        if (body && body.classList.contains('collapsed')) {
+            body.classList.remove('collapsed');
+            if (chev) chev.textContent = '▾';
+        }
+
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar && !sidebar.classList.contains('mobile-open')) {
+            toggleMobileToc();
+        }
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Filtered chapter navigator to ' + projKey;
+    }
+
+    // 4. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
     function selectChapter(category, slug) {
         var announcer = document.getElementById('docs-announcer');
         if (announcer) announcer.textContent = 'Loading chapter...';
 
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
+
+        // Switch to reader view if on landing view
+        var landingView = document.getElementById('docs-landing-view');
+        var readerView = document.getElementById('docs-reader-view');
+        if (landingView) landingView.style.display = 'none';
+        if (readerView) readerView.style.display = 'block';
         // Highlight active item in tree
         var items = document.querySelectorAll('.chapter-nav-item');
         items.forEach(function(el) {
@@ -1095,7 +1822,9 @@
 
         // Close mobile drawer if open
         var sidebar = document.getElementById('docs-sidebar');
-        if (sidebar) sidebar.classList.remove('mobile-open');
+        if (sidebar && sidebar.classList.contains('mobile-open')) {
+            toggleMobileToc();
+        }
 
         // Fetch via JSON API
         fetch('/docs/api/chapter/' + encodeURIComponent(category) + '/' + encodeURIComponent(slug))
@@ -1106,7 +1835,7 @@
             .then(function(data) {
                 // Update breadcrumbs
                 document.getElementById('crumb-project').textContent = data.project_label;
-                document.getElementById('crumb-cat').textContent = data.category.toUpperCase();
+                document.getElementById('crumb-cat').textContent = data.collection_title || data.category.toUpperCase();
 
                 // Update heading and body
                 var heading = document.getElementById('reader-heading');
@@ -1217,14 +1946,18 @@
             });
     }
 
-    // 2. BROWSER BACK / FORWARD BUTTON HANDLER (POPSTATE)
+    // 4. BROWSER BACK / FORWARD BUTTON HANDLER (POPSTATE)
     window.addEventListener('popstate', function(event) {
-        if (event.state && event.state.category && event.state.slug) {
+        if (event.state && event.state.is_landing) {
+            showLandingView();
+        } else if (event.state && event.state.category && event.state.slug) {
             selectChapter(event.state.category, event.state.slug);
+        } else if (!event.state) {
+            showLandingView();
         }
     });
 
-    // 3. CODE BLOCK ENHANCEMENT (HEADERS & 1-CLICK COPY)
+    // 5. CODE BLOCK ENHANCEMENT (HEADERS & 1-CLICK COPY)
     function enhanceCodeBlocks() {
         var blocks = document.querySelectorAll('#doc-body pre');
         blocks.forEach(function(pre) {
@@ -1254,7 +1987,7 @@
         });
     }
 
-    // 4. UPDATE PAGER BUTTONS
+    // 6. UPDATE PAGER BUTTONS
     function updatePagerButtons(prev, next) {
         var prevWrap = document.getElementById('pager-prev-wrap');
         var nextWrap = document.getElementById('pager-next-wrap');
@@ -1272,7 +2005,7 @@
         }
     }
 
-    // 5. SIDEBAR FILTER LOGIC (IN-MEMORY - ZERO RELOAD)
+    // 7. SIDEBAR FILTER LOGIC (IN-MEMORY - ZERO RELOAD)
     function filterChapterTree() {
         var searchVal = (document.getElementById('sidebar-search-input').value || '').toLowerCase().trim();
         var selectedProject = document.getElementById('project-selector').value;
@@ -1297,6 +2030,19 @@
                 item.style.display = 'none';
             }
         });
+
+        // Filter Pinned Origin Item specifically
+        var originItem = document.getElementById('origin-pinned-item');
+        if (originItem) {
+            var matchProj = (selectedProject === 'all' || selectedProject === 'echoes');
+            var matchCat = (activeCategoryFilter === 'all' || activeCategoryFilter === 'devlog' || activeCategoryFilter === 'echoes');
+            var matchSrch = (!searchVal || 'the origin architecture: echoes of the world'.indexOf(searchVal) !== -1);
+            if (matchProj && matchCat && matchSrch) {
+                originItem.style.display = 'block';
+            } else {
+                originItem.style.display = 'none';
+            }
+        }
 
         // Update project sections and collection subgroups
         var projectSections = document.querySelectorAll('.project-group-section');
@@ -1359,7 +2105,7 @@
         filterChapterTree();
     }
 
-    // 6. ACCESSIBILITY CONTROLS: FONT RESIZING
+    // 8. ACCESSIBILITY CONTROLS: FONT RESIZING
     function adjustFontSize(delta) {
         currentFontScale = Math.min(1.5, Math.max(0.8, currentFontScale + delta));
         document.documentElement.style.setProperty('--doc-font-scale', currentFontScale);
@@ -1377,7 +2123,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 7. CROSS-REFERENCE JUMP HANDLER (DROPDOWN NAVIGATION)
+    // 9. CROSS-REFERENCE JUMP HANDLER (DROPDOWN NAVIGATION)
     function handleCrossrefJump(val) {
         if (!val) return;
         var parts = val.split('/');
@@ -1390,9 +2136,48 @@
         }
     }
 
+    // 10. SCREEN READER ACCESSIBLE DRAWER CONTROLLER
     function toggleMobileToc() {
         var sidebar = document.getElementById('docs-sidebar');
-        if (sidebar) sidebar.classList.toggle('mobile-open');
+        var btn = document.getElementById('mobile-toc-toggle');
+        var announcer = document.getElementById('docs-announcer');
+        if (!sidebar) return;
+
+        var isOpen = sidebar.classList.contains('mobile-open');
+        if (isOpen) {
+            sidebar.classList.remove('mobile-open');
+            if (btn) {
+                btn.setAttribute('aria-expanded', 'false');
+                var cnt = document.getElementById('mobile-count')?.textContent || '302';
+                btn.innerHTML = '📑 Chapter Navigator (<span id="mobile-count">' + cnt + '</span>)';
+                btn.setAttribute('aria-label', 'Chapter Navigator. ' + cnt + ' chapters available. Currently collapsed.');
+                btn.focus();
+            }
+            if (announcer) announcer.textContent = 'Chapter Navigator collapsed.';
+        } else {
+            sidebar.classList.add('mobile-open');
+            if (btn) {
+                btn.setAttribute('aria-expanded', 'true');
+                var cnt = document.getElementById('mobile-count')?.textContent || '302';
+                btn.innerHTML = '✕ Close Navigator (<span id="mobile-count">' + cnt + '</span>)';
+                btn.setAttribute('aria-label', 'Chapter Navigator. Currently expanded. Press Escape or click to close.');
+            }
+            if (announcer) announcer.textContent = 'Chapter Navigator expanded. Focus moved to search filter.';
+            var searchInput = document.getElementById('sidebar-search-input');
+            if (searchInput) {
+                setTimeout(function() { searchInput.focus(); }, 120);
+            }
+        }
     }
+
+    // Global Escape Key Listener for Screen Reader Drawer Dismissal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            var sidebar = document.getElementById('docs-sidebar');
+            if (sidebar && sidebar.classList.contains('mobile-open')) {
+                toggleMobileToc();
+            }
+        }
+    });
 </script>
 {% endblock %}
