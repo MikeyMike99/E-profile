@@ -57,6 +57,12 @@ COLLECTIONS = {
         "badge": "Specifications",
         "icon": "📐",
         "desc": "Core system specifications, security policies, hot-patch architecture, and MCP protocol documentation."
+    },
+    "eprofile": {
+        "title": "E-Profile Architecture & Devlog",
+        "badge": "Portfolio Core",
+        "icon": "💼",
+        "desc": "Forensic devlog, zero-trust RBAC, schema evolution, and accessibility physical access point."
     }
 }
 
@@ -203,6 +209,8 @@ def render_doc_content(category, doc_slug, viewer_tier=1):
             candidates.append(CENTRAL_DOCS_DIR / "projects" / "audio_suite" / rel)
             candidates.append(CENTRAL_DOCS_DIR / "projects" / rel)
         candidates.extend([
+            CENTRAL_DOCS_DIR / "projects" / "eprofile" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "eprofile" / category / f"{doc_slug}.md",
             CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / category / f"{doc_slug}.md",
             CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / f"{doc_slug}.md",
             CENTRAL_DOCS_DIR / "projects" / "audio_suite" / f"{doc_slug}.md",
