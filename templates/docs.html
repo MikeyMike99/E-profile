@@ -308,6 +308,32 @@
         text-transform: uppercase;
     }
 
+    .clearance-badge-locked {
+        font-size: 0.65rem;
+        font-family: monospace;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: rgba(255, 170, 0, 0.12);
+        color: #ffaa00;
+        border: 1px solid rgba(255, 170, 0, 0.35);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .clearance-badge-public {
+        font-size: 0.65rem;
+        font-family: monospace;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: rgba(0, 255, 136, 0.08);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.25);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
     .chapter-summary {
         font-size: 0.85rem;
         color: var(--text-dim);
@@ -521,7 +547,7 @@
             <div class="filter-heading">📁 Filter by Project:</div>
             <div class="filter-pills" role="tablist" aria-label="Filter by project">
                 {% for p_key, p_meta in projects.items() %}
-                <a href="{{ url_for('docs.docs_index', project=p_key, topic=selected_topic, category=selected_collection, sort=sort_mode) }}" 
+                <a href="{{ url_for('docs.docs_index', project=p_key, topic=selected_topic, category=selected_collection, clearance=selected_clearance, sort=sort_mode) }}" 
                    class="filter-pill {{ 'active' if selected_project == p_key }}"
                    role="tab"
                    aria-selected="{{ 'true' if selected_project == p_key else 'false' }}">
@@ -538,7 +564,7 @@
             <div class="filter-heading">🔍 Filter by Focus Area:</div>
             <div class="filter-pills" role="tablist" aria-label="Filter by topic">
                 {% for t_key, t_meta in topics.items() %}
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=t_key, category=selected_collection, sort=sort_mode) }}" 
+                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=t_key, category=selected_collection, clearance=selected_clearance, sort=sort_mode) }}" 
                    class="filter-pill {{ 'active' if selected_topic == t_key }}"
                    role="tab"
                    aria-selected="{{ 'true' if selected_topic == t_key else 'false' }}">
@@ -554,13 +580,13 @@
         <div class="filter-group">
             <div class="filter-heading">📚 Filter by Primary Collection:</div>
             <div class="filter-pills" role="tablist" aria-label="Filter by collection">
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category='all', sort=sort_mode) }}" 
+                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category='all', clearance=selected_clearance, sort=sort_mode) }}" 
                    class="filter-pill {{ 'active' if selected_collection == 'all' }}"
                    role="tab">
                     All Collections <span class="count-badge">{{ total_docs }}</span>
                 </a>
                 {% for c_key, c_meta in categories.items() %}
-                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=c_key, sort=sort_mode) }}" 
+                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=c_key, clearance=selected_clearance, sort=sort_mode) }}" 
                    class="filter-pill {{ 'active' if selected_collection == c_key }}"
                    role="tab">
                     <span aria-hidden="true">{{ c_meta.icon }}</span>
@@ -570,21 +596,47 @@
                 {% endfor %}
             </div>
         </div>
+
+        <!-- 4. Access Clearance Filter -->
+        <div class="filter-group">
+            <div class="filter-heading">🛡️ Filter by Access Clearance:</div>
+            <div class="filter-pills" role="tablist" aria-label="Filter by access clearance">
+                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance='all', sort=sort_mode) }}" 
+                   class="filter-pill {{ 'active' if selected_clearance == 'all' }}"
+                   role="tab">
+                    All Access Levels <span class="count-badge">{{ total_docs }}</span>
+                </a>
+                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance='public', sort=sort_mode) }}" 
+                   class="filter-pill {{ 'active' if selected_clearance == 'public' }}"
+                   role="tab">
+                    <span aria-hidden="true">🌐</span>
+                    Public Documents
+                    <span class="count-badge">{{ clearance_counts.get('public', 0) }}</span>
+                </a>
+                <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance='proprietary', sort=sort_mode) }}" 
+                   class="filter-pill {{ 'active' if selected_clearance == 'proprietary' }}"
+                   role="tab">
+                    <span aria-hidden="true">🔒</span>
+                    Proprietary (Gated)
+                    <span class="count-badge">{{ clearance_counts.get('proprietary', 0) }}</span>
+                </a>
+            </div>
+        </div>
     </nav>
 
     <!-- Controls Tray: Result count & Sort controls -->
     <div class="controls-tray">
         <div>
             SHOWING <strong>{{ filtered_count }}</strong> OF <strong>{{ total_docs }}</strong> CHAPTERS
-            {% if selected_project != 'all' or selected_topic != 'all' or selected_collection != 'all' %}
+            {% if selected_project != 'all' or selected_topic != 'all' or selected_collection != 'all' or selected_clearance != 'all' %}
             &bull; <a href="/docs" style="color: var(--accent); text-decoration: underline;">RESET FILTERS</a>
             {% endif %}
         </div>
         <div class="sort-toggle">
             SORT:
-            <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, sort='newest') }}" class="{{ 'active' if sort_mode == 'newest' }}">NEWEST FIRST</a>
+            <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance=selected_clearance, sort='newest') }}" class="{{ 'active' if sort_mode == 'newest' }}">NEWEST FIRST</a>
             |
-            <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, sort='alpha') }}" class="{{ 'active' if sort_mode == 'alpha' }}">A–Z</a>
+            <a href="{{ url_for('docs.docs_index', project=selected_project, topic=selected_topic, category=selected_collection, clearance=selected_clearance, sort='alpha') }}" class="{{ 'active' if sort_mode == 'alpha' }}">A–Z</a>
         </div>
     </div>
 
@@ -596,7 +648,14 @@
                 <a href="/docs/{{ d.category }}/{{ d.slug }}" class="chapter-link">
                     {{ d.title }}
                 </a>
-                <span class="chapter-tag">{{ d.category }}</span>
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                    {% if d.is_proprietary %}
+                    <span class="clearance-badge-locked" title="Proprietary IP - Requires Employer Clearance">🔒 RESTRICTED</span>
+                    {% else %}
+                    <span class="clearance-badge-public" title="Public Document">🌐 PUBLIC</span>
+                    {% endif %}
+                    <span class="chapter-tag">{{ d.category }}</span>
+                </div>
             </div>
             <p class="chapter-summary">{{ d.summary }}</p>
             <div class="chapter-footer-meta">
@@ -641,6 +700,70 @@
         
         <div class="doc-body">
             {{ doc_html | safe }}
+        </div>
+
+        <nav class="docs-pager" aria-label="Previous and Next Chapters">
+            {% if prev_doc %}
+            <a href="/docs/{{ category_key }}/{{ prev_doc.slug }}" class="pager-btn" rel="prev">
+                &larr; PREVIOUS: {{ prev_doc.title[:45] }}...
+            </a>
+            {% else %}
+            <div></div>
+            {% endif %}
+
+            {% if next_doc %}
+            <a href="/docs/{{ category_key }}/{{ next_doc.slug }}" class="pager-btn" rel="next">
+                NEXT: {{ next_doc.title[:45] }}... &rarr;
+            </a>
+            {% endif %}
+        </nav>
+    </article>
+
+    <!-- ==================== VIEW 3: PROPRIETARY GATED LOCK SCREEN ==================== -->
+    {% elif view_mode == 'locked' %}
+    <nav class="docs-nav-bar" aria-label="Breadcrumbs">
+        <div class="docs-breadcrumbs">
+            <a href="/docs">DOCS</a>
+            <span>/</span>
+            <a href="/docs?category={{ category_key }}">{{ category_meta.title | upper }}</a>
+            <span>/</span>
+            <strong>{{ doc.title | upper }}</strong>
+        </div>
+        <div>
+            <a href="/docs?category={{ category_key }}" class="latest-jump-btn" style="background: rgba(0,243,255,0.1); color: var(--accent); border: 1px solid var(--accent);">&larr; BACK TO COLLECTION</a>
+            <a href="/docs" class="latest-jump-btn" style="margin-left: 6px;">PORTAL HOME</a>
+        </div>
+    </nav>
+
+    <article class="reader-article" style="border-color: #ffaa00; box-shadow: 0 0 35px rgba(255, 170, 0, 0.15);">
+        <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); font-family: monospace; font-size: 0.8rem; color: #ffaa00; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div>🔒 RESTRICTED IP &bull; {{ category_meta.title | upper }} &bull; {{ doc.project_label if doc.project_label else 'Siraugga Core' }}</div>
+            <div>{{ doc.word_count }} WORDS &bull; ACCESS CLEARANCE: LEVEL 5 / EMPLOYER ONLY</div>
+        </div>
+
+        <div style="background: rgba(255, 170, 0, 0.05); border: 1px solid #ffaa00; border-radius: 8px; padding: 28px; margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                <span style="font-size: 2.2rem;" aria-hidden="true">🛡️</span>
+                <div>
+                    <h2 style="margin: 0; color: #ffaa00; font-family: monospace; font-size: 1.35rem; border: none; padding: 0;">PROPRIETARY INTELLECTUAL PROPERTY NOTICE</h2>
+                    <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-dim); font-family: monospace;">SECURITY CLEARANCE REQUIRED &bull; ZERO-TRUST PROTECTED ASSET</p>
+                </div>
+            </div>
+            <p style="color: var(--text-bright); line-height: 1.6; margin-bottom: 18px;">
+                This technical chapter contains proprietary production source code, zero-downtime hot-patching algorithms, internal security hooks, or from-scratch implementation recipes. To protect the framework's intellectual property, full verbatim source code and operational guides are restricted from anonymous public browsing.
+            </p>
+            <div style="background: rgba(0, 0, 0, 0.5); border-left: 4px solid var(--accent); padding: 18px; margin: 20px 0; border-radius: 4px;">
+                <div style="font-family: monospace; font-size: 0.8rem; color: var(--accent); font-weight: bold; margin-bottom: 6px;">EXECUTIVE ABSTRACT & ARCHITECTURAL ROLE:</div>
+                <p style="margin: 0; font-size: 0.92rem; color: var(--text-dim); line-height: 1.6;">{{ doc.summary }}</p>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 24px;">
+                <a href="/login" class="latest-jump-btn" style="background: #ffaa00; color: #000; font-weight: bold; padding: 12px 22px;">
+                    🔑 UNLOCK WITH EMPLOYER / AUDITOR KEY &rarr;
+                </a>
+                <a href="/docs" class="latest-jump-btn" style="background: transparent; color: var(--text-dim); border: 1px solid var(--border); padding: 12px 22px;">
+                    EXPLORE PUBLIC CHAPTERS
+                </a>
+            </div>
         </div>
 
         <nav class="docs-pager" aria-label="Previous and Next Chapters">

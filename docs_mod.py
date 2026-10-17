@@ -1,7 +1,7 @@
 import os
 import json
 from pathlib import Path
-from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session
 import markdown
 from config import Config
 
@@ -105,12 +105,18 @@ def docs_index():
     selected_project = request.args.get('project', 'all').lower()
     selected_topic = request.args.get('topic', 'all').lower()
     selected_collection = request.args.get('category', 'all').lower()
+    selected_clearance = request.args.get('clearance', 'all').lower()
     sort_mode = request.args.get('sort', 'newest').lower()
     
     # Compute counts dynamically across all dimensions
     project_counts = {"all": len(catalog)}
     topic_counts = {"all": len(catalog)}
     collection_counts = {"all": len(catalog)}
+    clearance_counts = {
+        "all": len(catalog),
+        "public": len([d for d in catalog if not d.get('is_proprietary', False)]),
+        "proprietary": len([d for d in catalog if d.get('is_proprietary', False)])
+    }
     
     for item in catalog:
         # Project counts
@@ -133,6 +139,10 @@ def docs_index():
         filtered_docs = [d for d in filtered_docs if selected_topic in d.get('topics', [])]
     if selected_collection != 'all':
         filtered_docs = [d for d in filtered_docs if d.get('category') == selected_collection]
+    if selected_clearance == 'public':
+        filtered_docs = [d for d in filtered_docs if not d.get('is_proprietary', False)]
+    elif selected_clearance == 'proprietary':
+        filtered_docs = [d for d in filtered_docs if d.get('is_proprietary', False)]
         
     # Sort mode: newest first (order_score desc) vs alphabetical
     if sort_mode == 'alpha':
@@ -153,9 +163,11 @@ def docs_index():
         project_counts=project_counts,
         topic_counts=topic_counts,
         collection_counts=collection_counts,
+        clearance_counts=clearance_counts,
         selected_project=selected_project,
         selected_topic=selected_topic,
         selected_collection=selected_collection,
+        selected_clearance=selected_clearance,
         sort_mode=sort_mode,
         latest_doc=latest_doc,
         docs=filtered_docs,
@@ -174,6 +186,29 @@ def docs_reader(category, doc_slug):
     catalog = load_catalog()
     doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
     
+    # Check permissions & authorization
+    is_authorized = session.get('admin', False) or session.get('is_employer', False) or ('view:proprietary_docs' in session.get('permissions', []))
+    is_proprietary = doc_meta.get('is_proprietary', False) if doc_meta else False
+    
+    prev_doc, next_doc = get_prev_next(catalog, category, doc_slug)
+    category_meta = COLLECTIONS.get(category, {"title": category.title(), "icon": "📄"})
+    
+    # CRITICAL SECURITY GATE: Block unauthenticated access to proprietary documents
+    if is_proprietary and not is_authorized:
+        return render_template(
+            'docs.html',
+            active_tab='docs',
+            view_mode='locked',
+            doc=doc_meta or {"title": doc_slug.replace('_', ' '), "slug": doc_slug, "category": category, "is_proprietary": True},
+            category_key=category,
+            category_meta=category_meta,
+            prev_doc=prev_doc,
+            next_doc=next_doc,
+            categories=COLLECTIONS,
+            projects=PROJECTS,
+            topics=TOPICS
+        )
+
     # Locate file
     file_path = None
     if doc_meta:
@@ -191,9 +226,6 @@ def docs_reader(category, doc_slug):
     except Exception as e:
         html_body = f"<p>Error rendering document: {e}</p>"
         
-    prev_doc, next_doc = get_prev_next(catalog, category, doc_slug)
-    category_meta = COLLECTIONS.get(category, {"title": category.title(), "icon": "📄"})
-    
     return render_template(
         'docs.html',
         active_tab='docs',
