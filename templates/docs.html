@@ -793,6 +793,8 @@
         .docs-reader-panel {
             padding: 25px 20px;
         }
+    }
+
     /* Skip Links for Keyboard & Screen Reader Accessibility */
     .skip-link {
         position: absolute;
@@ -822,6 +824,10 @@
 
     .docs-workspace.is-landing-mode .docs-sidebar {
         display: none;
+    }
+
+    .docs-workspace.is-landing-mode .docs-sidebar.mobile-open {
+        display: flex !important;
     }
 
     .docs-landing-view {
@@ -1236,7 +1242,7 @@
             <p>CENTRAL MULTI-PROJECT KNOWLEDGE BASE &bull; {{ total_docs }} CHAPTERS</p>
         </div>
         <div class="vault-header-actions" style="display: flex; gap: 10px; align-items: center;">
-            <button type="button" class="ctrl-btn portal-home-btn" onclick="showLandingView()" aria-label="Return to Documentation Vault Overview" style="padding: 8px 14px; font-weight: bold; color: var(--accent); border-color: var(--accent);">
+            <button type="button" class="ctrl-btn portal-home-btn" id="header-overview-btn" onclick="showLandingView()" aria-label="Return to Documentation Vault Overview" style="padding: 8px 14px; font-weight: bold; color: var(--accent); border-color: var(--accent); {{ 'display: none;' if is_landing else '' }}">
                 🏛️ Vault Overview
             </button>
             <button 
@@ -1246,8 +1252,7 @@
                 onclick="toggleMobileToc()" 
                 aria-expanded="false" 
                 aria-controls="docs-sidebar" 
-                aria-haspopup="dialog"
-                aria-label="Chapter Navigator: {{ total_docs }} chapters available across 6 projects. Currently collapsed."
+                aria-label="Chapter Navigator: {{ total_docs }} chapters across 6 projects. Currently collapsed. Press to expand."
             >
                 📑 Chapter Navigator (<span id="mobile-count">{{ total_docs }}</span>)
             </button>
@@ -1307,7 +1312,7 @@
             </div>
 
             <!-- 4. Scrollable Hierarchical Chapter Tree -->
-            <div class="chapter-tree-container" id="chapter-tree" role="feed" aria-label="Hierarchical Documentation Explorer">
+            <nav class="chapter-tree-container" id="chapter-tree" aria-label="Hierarchical Chapter Explorer">
                 
                 <!-- 🌟 FEATURED PINNED GENESIS CARD (ALWAYS FIRST IN TREE) -->
                 <div class="origin-pinned-section" id="origin-pinned-item" style="margin-bottom: 12px;">
@@ -1416,7 +1421,7 @@
                 </button>
                 {% endfor %}
                 {% endif %}
-            </div>
+            </nav>
         </aside>
 
         <!-- ==================== RIGHT MAIN READER PANE ==================== -->
@@ -1429,10 +1434,10 @@
                 <!-- SECTION 1: WHAT IS THIS TAB FOR? -->
                 <div class="landing-welcome-header">
                     <div class="welcome-pill">SIRAUGGA / DEVCORE KNOWLEDGE ARCHIVE &bull; {{ total_docs }} CHAPTERS</div>
-                    <h1 class="welcome-heading" id="landing-main-heading" tabindex="-1">Documentation Vault & Architecture Guide</h1>
+                    <h2 class="welcome-heading" id="landing-main-heading" tabindex="-1">Documentation Vault & Architecture Guide</h2>
                     
-                    <div class="purpose-statement-box" role="region" aria-label="Purpose of this Tab">
-                        <h2 class="purpose-title">🎯 What is this tab for?</h2>
+                    <div class="purpose-statement-box">
+                        <h3 class="purpose-title">🎯 What is this tab for?</h3>
                         <p class="purpose-text">
                             Welcome! This tab is the <strong>central technical archive and engineering portfolio</strong> for Logan (Michael Robberts). 
                             Here you will find full architectural blueprints, forensic devlogs, zero-trust cybersecurity textbooks, and step-by-step implementation guides 
@@ -1442,7 +1447,7 @@
                 </div>
 
                 <!-- SECTION 2: HOW TO USE THIS TAB (CLEAR STARTING POINTS) -->
-                <div class="how-to-use-section" role="region" aria-label="How to Use This Tab">
+                <div class="how-to-use-section">
                     <h2 class="section-guide-heading">🧭 How to Use This Tab (Start Here)</h2>
                     <p class="section-guide-sub">If this is your first time here, you have three clear, simple starting points:</p>
 
@@ -1541,7 +1546,7 @@
                 </div>
 
                 <!-- SECTION 3: RECENT SPRINTS & UPDATES -->
-                <div class="landing-section-block" role="region" aria-label="Latest Updates">
+                <div class="landing-section-block">
                     <div class="landing-section-header">
                         <h2>⚡ Latest Sprints & Recent Architecture Releases</h2>
                         <p>Direct from active engineering logs across all projects</p>
@@ -1565,8 +1570,7 @@
                 </div>
 
                 <!-- SECTION 4: READING & ACCESSIBILITY GUIDANCE -->
-                <div class="landing-help-box" role="region" aria-label="Screen Reader Navigation Tips">
-                    <h3>💡 Screen Reader & Keyboard Navigation Tips</h3>
+                <div class="landing-help-box">
                     <ul>
                         <li><strong>Main Landmark:</strong> Press <kbd>M</kbd> at any time in NVDA or JAWS to jump directly into the main reading area.</li>
                         <li><strong>Chapter Navigator:</strong> Press the <kbd>📑 Chapter Navigator</kbd> button to open the full chapter directory. Press <kbd>Escape</kbd> to close it.</li>
@@ -1718,7 +1722,8 @@
         var workspace = document.getElementById('docs-workspace');
         if (workspace) workspace.classList.add('is-landing-mode');
 
-        // Deselect items in tree
+        var overviewBtn = document.getElementById('header-overview-btn');
+        if (overviewBtn) overviewBtn.style.display = 'none';
         var items = document.querySelectorAll('.chapter-nav-item');
         items.forEach(function(el) {
             el.classList.remove('active');
@@ -1791,7 +1796,17 @@
         }
 
         var announcer = document.getElementById('docs-announcer');
-        if (announcer) announcer.textContent = 'Filtered chapter navigator to ' + projKey;
+        if (announcer) announcer.textContent = 'Filtered chapter navigator to ' + projKey + '. Focus moved to project folder.';
+
+        setTimeout(function() {
+            var projHeader = document.querySelector('[data-project="' + projKey + '"] .project-header-bar');
+            if (projHeader) {
+                projHeader.focus();
+            } else {
+                var search = document.getElementById('sidebar-search-input');
+                if (search) search.focus();
+            }
+        }, 100);
     }
 
     // 4. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
@@ -1807,7 +1822,9 @@
         var readerView = document.getElementById('docs-reader-view');
         if (landingView) landingView.style.display = 'none';
         if (readerView) readerView.style.display = 'block';
-        // Highlight active item in tree
+
+        var overviewBtn = document.getElementById('header-overview-btn');
+        if (overviewBtn) overviewBtn.style.display = 'inline-block';
         var items = document.querySelectorAll('.chapter-nav-item');
         items.forEach(function(el) {
             if (el.dataset.category === category && el.dataset.slug === slug) {
@@ -2141,35 +2158,45 @@
         var sidebar = document.getElementById('docs-sidebar');
         var btn = document.getElementById('mobile-toc-toggle');
         var announcer = document.getElementById('docs-announcer');
+        var workspace = document.getElementById('docs-workspace');
         if (!sidebar) return;
 
         var isOpen = sidebar.classList.contains('mobile-open');
         if (isOpen) {
             sidebar.classList.remove('mobile-open');
+            var readerView = document.getElementById('docs-reader-view');
+            var isReading = (readerView && readerView.style.display !== 'none');
+            if (!isReading && workspace) {
+                workspace.classList.add('is-landing-mode');
+            }
             if (btn) {
                 btn.setAttribute('aria-expanded', 'false');
                 var cnt = document.getElementById('mobile-count')?.textContent || '302';
                 btn.innerHTML = '📑 Chapter Navigator (<span id="mobile-count">' + cnt + '</span>)';
-                btn.setAttribute('aria-label', 'Chapter Navigator. ' + cnt + ' chapters available. Currently collapsed.');
+                btn.setAttribute('aria-label', 'Chapter Navigator: ' + cnt + ' chapters across 6 projects. Currently collapsed. Press to expand.');
                 btn.focus();
             }
             if (announcer) announcer.textContent = 'Chapter Navigator collapsed.';
         } else {
+            if (workspace) {
+                workspace.classList.remove('is-landing-mode');
+            }
             sidebar.classList.add('mobile-open');
             if (btn) {
                 btn.setAttribute('aria-expanded', 'true');
                 var cnt = document.getElementById('mobile-count')?.textContent || '302';
                 btn.innerHTML = '✕ Close Navigator (<span id="mobile-count">' + cnt + '</span>)';
-                btn.setAttribute('aria-label', 'Chapter Navigator. Currently expanded. Press Escape or click to close.');
+                btn.setAttribute('aria-label', 'Chapter Navigator: Currently expanded. Press Escape or click to close.');
             }
-            if (announcer) announcer.textContent = 'Chapter Navigator expanded. Focus moved to search filter.';
+            if (announcer) announcer.textContent = 'Chapter Navigator expanded with ' + cnt + ' chapters across 6 projects. Focus moved to search filter.';
             var searchInput = document.getElementById('sidebar-search-input');
             if (searchInput) {
-                setTimeout(function() { searchInput.focus(); }, 120);
+                setTimeout(function() { 
+                    searchInput.focus(); 
+                }, 80);
             }
         }
     }
-
     // Global Escape Key Listener for Screen Reader Drawer Dismissal
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
