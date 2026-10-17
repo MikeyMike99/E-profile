@@ -815,135 +815,278 @@
         outline: 3px solid #fff;
     }
 
-    /* Landing Page Hub Styles */
+    /* Clean Landing Workspace Modes */
+    .docs-workspace.is-landing-mode {
+        grid-template-columns: 1fr;
+    }
+
+    .docs-workspace.is-landing-mode .docs-sidebar {
+        display: none;
+    }
+
     .docs-landing-view {
-        padding: 5px 0 25px 0;
+        padding: 5px 0 35px 0;
+        max-width: 1100px;
+        margin: 0 auto;
     }
 
-    .landing-hero-card {
-        background: linear-gradient(145deg, rgba(12, 18, 28, 0.95), rgba(7, 10, 15, 0.98));
-        border: 1px solid rgba(0, 243, 255, 0.25);
+    /* 1. Welcome & Purpose Header */
+    .landing-welcome-header {
+        background: linear-gradient(135deg, rgba(12, 18, 28, 0.98), rgba(6, 9, 14, 0.95));
+        border: 1px solid rgba(0, 243, 255, 0.3);
         border-radius: 12px;
-        padding: 26px 30px;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+        padding: 28px 32px;
+        margin-bottom: 28px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
-    .landing-hero-badge {
+    .welcome-pill {
+        display: inline-block;
         font-family: monospace;
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         font-weight: 800;
         letter-spacing: 1.5px;
         color: var(--accent);
         text-transform: uppercase;
-        margin-bottom: 8px;
+        background: rgba(0, 243, 255, 0.1);
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        padding: 3px 10px;
+        border-radius: 4px;
+        margin-bottom: 12px;
     }
 
-    .landing-main-title {
+    .welcome-heading {
         font-family: monospace;
         font-size: 2.1rem;
         font-weight: 900;
         color: #fff;
-        margin: 0 0 12px 0;
-        letter-spacing: 1px;
+        margin: 0 0 16px 0;
+        letter-spacing: 0.5px;
     }
 
-    .landing-hero-desc {
+    .purpose-statement-box {
+        background: rgba(0, 243, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 16px 20px;
+        border-radius: 0 8px 8px 0;
+        margin-top: 10px;
+    }
+
+    .purpose-title {
+        font-family: monospace;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 8px 0;
+    }
+
+    .purpose-text {
         font-size: 1.02rem;
         line-height: 1.65;
+        color: var(--text-bright);
+        margin: 0;
+    }
+
+    /* 2. Guided Pathways (How to Use / Where to Start) */
+    .how-to-use-section {
+        margin-bottom: 35px;
+    }
+
+    .section-guide-heading {
+        font-family: monospace;
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #00ff88;
+        margin: 0 0 6px 0;
+        letter-spacing: 0.5px;
+    }
+
+    .section-guide-sub {
+        font-family: monospace;
+        font-size: 0.88rem;
         color: var(--text-dim);
-        margin-bottom: 24px;
-        max-width: 900px;
+        margin: 0 0 20px 0;
     }
 
-    /* Origin Hero Spotlight Card */
-    .origin-hero-spotlight {
-        background: linear-gradient(135deg, rgba(0, 243, 255, 0.12), rgba(0, 255, 136, 0.05), rgba(12, 16, 24, 0.9));
-        border: 2px solid var(--accent);
+    .guided-paths-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .guided-path-card {
+        background: rgba(12, 16, 24, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 10px;
-        padding: 20px 24px;
-        box-shadow: 0 0 25px rgba(0, 243, 255, 0.2);
+        padding: 22px 26px;
+        transition: all 0.2s ease;
     }
 
-    .origin-spotlight-top {
+    .guided-path-card:hover {
+        border-color: rgba(0, 243, 255, 0.35);
+    }
+
+    .guided-path-card.path-recommended {
+        border: 2px solid var(--accent);
+        background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(12, 16, 24, 0.95));
+        box-shadow: 0 0 25px rgba(0, 243, 255, 0.15);
+    }
+
+    .path-badge-row {
         display: flex;
         gap: 10px;
         align-items: center;
-        flex-wrap: wrap;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
 
-    .spotlight-tag {
+    .path-num-badge {
         font-family: monospace;
         font-size: 0.72rem;
         font-weight: 900;
         background: var(--accent);
         color: #000;
         padding: 2px 8px;
-        border-radius: 4px;
+        border-radius: 3px;
     }
 
-    .spotlight-badge-project {
+    .path-rec-tag {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: 900;
+        background: rgba(0, 255, 136, 0.15);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.4);
+        padding: 2px 8px;
+        border-radius: 3px;
+    }
+
+    .path-tag {
         font-family: monospace;
         font-size: 0.72rem;
         font-weight: bold;
-        background: rgba(52, 211, 153, 0.2);
-        color: #34d399;
-        border: 1px solid rgba(52, 211, 153, 0.4);
-        padding: 2px 8px;
-        border-radius: 4px;
+        color: var(--text-dim);
     }
 
-    .origin-spotlight-title {
+    .path-heading {
         font-family: monospace;
-        font-size: 1.45rem;
+        font-size: 1.35rem;
         font-weight: 800;
         color: #fff;
-        margin: 6px 0 10px 0;
+        margin: 0 0 10px 0;
     }
 
-    .origin-spotlight-text {
+    .path-summary {
         font-size: 0.95rem;
         line-height: 1.6;
         color: var(--text-bright);
-        margin-bottom: 16px;
+        margin: 0 0 16px 0;
     }
 
-    .origin-spotlight-actions {
+    .path-action-wrap {
         display: flex;
-        align-items: center;
         gap: 15px;
+        align-items: center;
         flex-wrap: wrap;
     }
 
-    .btn-origin-jump {
+    .btn-primary-start {
         background: var(--accent);
         color: #000;
         border: none;
         border-radius: 6px;
-        padding: 10px 20px;
+        padding: 12px 24px;
         font-family: monospace;
         font-weight: 900;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         cursor: pointer;
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
         transition: all 0.2s;
     }
 
-    .btn-origin-jump:hover, .btn-origin-jump:focus {
+    .btn-primary-start:hover, .btn-primary-start:focus {
         background: #fff;
         transform: translateY(-2px);
-        box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+        box-shadow: 0 0 30px rgba(0, 243, 255, 0.8);
         outline: none;
     }
 
-    .origin-read-time {
+    .btn-secondary-start {
+        background: rgba(0, 243, 255, 0.1);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        border-radius: 6px;
+        padding: 11px 22px;
         font-family: monospace;
-        font-size: 0.78rem;
+        font-weight: 800;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-secondary-start:hover, .btn-secondary-start:focus {
+        background: var(--accent);
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+        outline: none;
+    }
+
+    .path-meta-note {
+        font-family: monospace;
+        font-size: 0.8rem;
         color: var(--text-dim);
     }
 
-    /* Landing Section Blocks */
+    /* Project Quick Jump Grid (Path 2) */
+    .project-jump-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .project-jump-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        transition: all 0.2s ease;
+    }
+
+    .project-jump-btn:hover, .project-jump-btn:focus {
+        border-color: var(--accent);
+        background: rgba(0, 243, 255, 0.08);
+        transform: translateY(-2px);
+        outline: none;
+    }
+
+    .pj-icon {
+        font-size: 1.5rem;
+    }
+
+    .pj-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .pj-text strong {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: #fff;
+    }
+
+    .pj-text small {
+        font-size: 0.74rem;
+        color: var(--text-dim);
+        line-height: 1.3;
+    }
+
+    /* 3. Latest Updates Section */
     .landing-section-block {
         margin-bottom: 35px;
     }
@@ -968,7 +1111,6 @@
         margin: 0;
     }
 
-    /* Latest Updates Grid */
     .latest-updates-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1040,65 +1182,7 @@
         font-weight: bold;
     }
 
-    /* Projects Overview Grid */
-    .projects-overview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
-    }
-
-    .project-overview-card {
-        background: rgba(12, 16, 24, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        padding: 18px;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.2s ease;
-    }
-
-    .project-overview-card:hover, .project-overview-card:focus {
-        border-color: #00ff88;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 255, 136, 0.15);
-        outline: none;
-    }
-
-    .proj-card-icon {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
-    }
-
-    .proj-card-title {
-        font-family: monospace;
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: #fff;
-        margin: 0 0 6px 0;
-    }
-
-    .proj-card-desc {
-        font-size: 0.84rem;
-        line-height: 1.5;
-        color: var(--text-dim);
-        margin-bottom: 14px;
-        flex: 1;
-    }
-
-    .proj-card-footer {
-        border-top: 1px dashed rgba(255, 255, 255, 0.08);
-        padding-top: 8px;
-    }
-
-    .proj-explore-btn {
-        font-family: monospace;
-        font-size: 0.76rem;
-        font-weight: bold;
-        color: #00ff88;
-    }
-
-    /* Landing Help Box */
+    /* 4. Accessibility & Guidance Box */
     .landing-help-box {
         background: rgba(0, 243, 255, 0.04);
         border: 1px solid rgba(0, 243, 255, 0.2);
@@ -1171,7 +1255,7 @@
     </header>
 
     <!-- Master-Detail Workspace -->
-    <div class="docs-workspace">
+    <div class="docs-workspace {{ 'is-landing-mode' if is_landing else '' }}" id="docs-workspace">
         
         <!-- ==================== LEFT SIDEBAR NAVIGATOR ==================== -->
         <aside class="docs-sidebar" id="docs-sidebar" aria-label="Documentation Navigation Tree" role="region">
@@ -1341,40 +1425,126 @@
             
             <!-- VIEW 1: DEDICATED PORTAL LANDING PAGE -->
             <section class="docs-landing-view" id="docs-landing-view" style="{{ 'display: block;' if is_landing else 'display: none;' }}" aria-label="Documentation Vault Overview">
-                <div class="landing-hero-card">
-                    <div class="landing-hero-badge">🏛️ ARCHITECTURE PORTFOLIO &bull; {{ total_docs }} CHAPTERS</div>
-                    <h1 class="landing-main-title" id="landing-main-heading" tabindex="-1">Central Documentation Vault</h1>
-                    <p class="landing-hero-desc">
-                        A unified, multi-project engineering knowledge base spanning autonomous zero-restart AI frameworks, 
-                        procedural spatial audio engines, multi-user symmetric cryptography, and assistive developer tooling.
-                    </p>
+                
+                <!-- SECTION 1: WHAT IS THIS TAB FOR? -->
+                <div class="landing-welcome-header">
+                    <div class="welcome-pill">SIRAUGGA / DEVCORE KNOWLEDGE ARCHIVE &bull; {{ total_docs }} CHAPTERS</div>
+                    <h1 class="welcome-heading" id="landing-main-heading" tabindex="-1">Documentation Vault & Architecture Guide</h1>
                     
-                    <!-- 🌟 FEATURED HERO SPOTLIGHT: THE ORIGIN ARCHITECTURE -->
-                    <div class="origin-hero-spotlight">
-                        <div class="origin-spotlight-top">
-                            <span class="spotlight-tag">🌟 GENESIS BLUEPRINT &bull; OCTOBER 2024</span>
-                            <span class="spotlight-badge-project">ECHOES OF THE WORLD</span>
-                        </div>
-                        <h2 class="origin-spotlight-title">The Origin Architecture: Echoes of the World</h2>
-                        <p class="origin-spotlight-text">
-                            Long before Siraugga existed as an enterprise autonomous platform with opaque virtual filesystems and hot-patching compilers, 
-                            it began with a single blind gamer in October 2024 building an audio game from scratch. Discover how direct C-DLL screen reader 
-                            bindings, pure mathematical coordinate spaces, and decoupled state files forged the architectural DNA of the entire ecosystem.
+                    <div class="purpose-statement-box" role="region" aria-label="Purpose of this Tab">
+                        <h2 class="purpose-title">🎯 What is this tab for?</h2>
+                        <p class="purpose-text">
+                            Welcome! This tab is the <strong>central technical archive and engineering portfolio</strong> for Logan (Michael Robberts). 
+                            Here you will find full architectural blueprints, forensic devlogs, zero-trust cybersecurity textbooks, and step-by-step implementation guides 
+                            for all 6 software systems built across the ecosystem.
                         </p>
-                        <div class="origin-spotlight-actions">
-                            <button type="button" class="btn-origin-jump" onclick="selectChapter('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD')" aria-label="Read Genesis Blueprint: The Origin Architecture">
-                                🚀 Read The Origin Architecture &rarr;
-                            </button>
-                            <span class="origin-read-time">~3 MIN READ &bull; 🌐 PUBLIC SPEC</span>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: HOW TO USE THIS TAB (CLEAR STARTING POINTS) -->
+                <div class="how-to-use-section" role="region" aria-label="How to Use This Tab">
+                    <h2 class="section-guide-heading">🧭 How to Use This Tab (Start Here)</h2>
+                    <p class="section-guide-sub">If this is your first time here, you have three clear, simple starting points:</p>
+
+                    <div class="guided-paths-grid">
+                        <!-- PATH 1: THE RECOMMENDED STARTING POINT -->
+                        <div class="guided-path-card path-recommended">
+                            <div class="path-badge-row">
+                                <span class="path-num-badge">PATH 1</span>
+                                <span class="path-rec-tag">⭐ RECOMMENDED FIRST READ</span>
+                            </div>
+                            <h3 class="path-heading">The Origin Architecture: Echoes of the World</h3>
+                            <p class="path-summary">
+                                <strong>Start here to understand the foundation of everything.</strong> In October 2024, a blind gamer with zero coding experience set out to build an audio game from scratch. Discover how direct screen reader C-DLL bindings, pure mathematical coordinate spaces, and decoupled state files formed the architectural DNA for all modern Siraugga systems.
+                            </p>
+                            <div class="path-action-wrap">
+                                <button type="button" class="btn-primary-start" onclick="selectChapter('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD')" aria-label="Start Here: Read The Origin Architecture Blueprint">
+                                    👉 Click Here to Start: Read The Origin Blueprint &rarr;
+                                </button>
+                                <span class="path-meta-note">~3 min read &bull; 🌐 Public Tier 1 Spec</span>
+                            </div>
+                        </div>
+
+                        <!-- PATH 2: CHOOSE A PROJECT BY INTEREST -->
+                        <div class="guided-path-card">
+                            <div class="path-badge-row">
+                                <span class="path-num-badge">PATH 2</span>
+                                <span class="path-tag">EXPLORE BY SYSTEM</span>
+                            </div>
+                            <h3 class="path-heading">Pick a Project That Interests You</h3>
+                            <p class="path-summary">
+                                Looking for a specific domain? Click any project below to filter the documentation directly to that system:
+                            </p>
+                            <div class="project-jump-grid">
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('siraugga')" aria-label="Siraugga Core and Zero Trust">
+                                    <span class="pj-icon">⚡</span>
+                                    <span class="pj-text">
+                                        <strong>Siraugga / DevCore Core</strong>
+                                        <small>Zero-Restart AI, Zero-Trust Textbook, Master Manual</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('eprofile')" aria-label="E-Profile Portfolio Portal">
+                                    <span class="pj-icon">💼</span>
+                                    <span class="pj-text">
+                                        <strong>E-Profile Portfolio Portal</strong>
+                                        <small>LibCST AST Code Surgery, Multi-Tier RBAC</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('encrypt_me')" aria-label="EncryptMe Multi-User Vault">
+                                    <span class="pj-icon">🔐</span>
+                                    <span class="pj-text">
+                                        <strong>EncryptMe Multi-User Vault</strong>
+                                        <small>PBKDF2 Symmetric Crypto, Memory Zeroization</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('echoes')" aria-label="Echoes of the World 3D Audio">
+                                    <span class="pj-icon">🎮</span>
+                                    <span class="pj-text">
+                                        <strong>Echoes of the World</strong>
+                                        <small>Procedural 3D Audio World Engine, 8-Way Compass</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('audio_suite')" aria-label="JOSHY Audio Suite">
+                                    <span class="pj-icon">🎵</span>
+                                    <span class="pj-text">
+                                        <strong>JOSHY Audio Suite</strong>
+                                        <small>Accessible Speech Drivers, Tolk DLL, Inno Setup</small>
+                                    </span>
+                                </button>
+                                <button type="button" class="project-jump-btn" onclick="jumpToProject('accessible_apps')" aria-label="Accessible Applications and Exam Generator">
+                                    <span class="pj-icon">♿</span>
+                                    <span class="pj-text">
+                                        <strong>Accessible Applications</strong>
+                                        <small>Dynamic Exam Generator, Accessible Media Player</small>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PATH 3: SEARCH & BROWSE ALL CHAPTERS -->
+                        <div class="guided-path-card">
+                            <div class="path-badge-row">
+                                <span class="path-num-badge">PATH 3</span>
+                                <span class="path-tag">SEARCH & BROWSE ALL</span>
+                            </div>
+                            <h3 class="path-heading">Browse or Search All {{ total_docs }} Chapters</h3>
+                            <p class="path-summary">
+                                Looking for a specific technical topic like <em>Inno Setup</em>, <em>RBAC</em>, <em>Mantrap</em>, <em>LibCST</em>, or <em>Hot-Patch</em>? Open the full chapter navigator to search and filter across all collections.
+                            </p>
+                            <div class="path-action-wrap">
+                                <button type="button" class="btn-secondary-start" onclick="openNavigatorAndSearch()" aria-label="Open Chapter Directory and Focus Search Filter">
+                                    📑 Open Chapter Directory & Search ({{ total_docs }} Chapters) &rarr;
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- LATEST SPRINTS & UPDATES -->
-                <div class="landing-section-block">
+                <!-- SECTION 3: RECENT SPRINTS & UPDATES -->
+                <div class="landing-section-block" role="region" aria-label="Latest Updates">
                     <div class="landing-section-header">
                         <h2>⚡ Latest Sprints & Recent Architecture Releases</h2>
-                        <p>Direct from active development logs across all projects</p>
+                        <p>Direct from active engineering logs across all projects</p>
                     </div>
                     <div class="latest-updates-grid">
                         {% for update in latest_updates %}
@@ -1394,40 +1564,17 @@
                     </div>
                 </div>
 
-                <!-- MULTI-PROJECT ECOSYSTEM OVERVIEW -->
-                <div class="landing-section-block">
-                    <div class="landing-section-header">
-                        <h2>🌐 Multi-Project Architectural Ecosystem</h2>
-                        <p>Six specialized systems built with clean-room sovereignty and zero-trust security</p>
-                    </div>
-                    <div class="projects-overview-grid">
-                        {% for p_key, p_val in projects.items() %}
-                        {% if p_key != 'all' %}
-                        <div class="project-overview-card" onclick="jumpToProject('{{ p_key }}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')jumpToProject('{{ p_key }}')" aria-label="Explore project: {{ p_val.title }}">
-                            <div class="proj-card-icon">{{ p_val.icon }}</div>
-                            <h3 class="proj-card-title">{{ p_val.title }}</h3>
-                            <p class="proj-card-desc">{{ p_val.desc }}</p>
-                            <div class="proj-card-footer">
-                                <span class="proj-explore-btn">Browse Project in Tree &rarr;</span>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- ACCESSIBILITY & VISITOR NAVIGATION NOTICE -->
-                <div class="landing-help-box" role="region" aria-label="Navigation Guidance">
+                <!-- SECTION 4: READING & ACCESSIBILITY GUIDANCE -->
+                <div class="landing-help-box" role="region" aria-label="Screen Reader Navigation Tips">
                     <h3>💡 Screen Reader & Keyboard Navigation Tips</h3>
                     <ul>
-                        <li><strong>Chapter Navigator</strong>: Press the <kbd>📑 Chapter Navigator</kbd> button (or use the sidebar) to access the complete hierarchical directory of all {{ total_docs }} chapters.</li>
-                        <li><strong>Live Search</strong>: Type in the chapter filter box to instantly find chapters across all projects by keyword (e.g., <em>Inno, RBAC, Mantrap, PBKDF2</em>).</li>
-                        <li><strong>Zero Page Reloads</strong>: Selecting any chapter loads it immediately into the reading view without full page refreshes, maintaining your screen reader focus.</li>
-                        <li><strong>Cross-References</strong>: Each chapter includes accessible jump dropdowns to view related architecture in companion projects.</li>
+                        <li><strong>Main Landmark:</strong> Press <kbd>M</kbd> at any time in NVDA or JAWS to jump directly into the main reading area.</li>
+                        <li><strong>Chapter Navigator:</strong> Press the <kbd>📑 Chapter Navigator</kbd> button to open the full chapter directory. Press <kbd>Escape</kbd> to close it.</li>
+                        <li><strong>Zero Page Reloads:</strong> Selecting any chapter loads content in-place with zero page reloads so your cursor never jumps.</li>
+                        <li><strong>Return to Overview:</strong> Click <kbd>🏛️ Vault Overview</kbd> in the header or breadcrumbs at any time to return to this guide.</li>
                     </ul>
                 </div>
             </section>
-
             <!-- VIEW 2: CHAPTER READING VIEW -->
             <div id="docs-reader-view" style="{{ 'display: none;' if is_landing else 'display: block;' }}">
                 <!-- Reader Toolbar -->
@@ -1561,13 +1708,15 @@
         enhanceCodeBlocks();
     });
 
-    // 1. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
     // 1. SHOW LANDING VIEW (PORTAL OVERVIEW HUB)
     function showLandingView() {
         var landingView = document.getElementById('docs-landing-view');
         var readerView = document.getElementById('docs-reader-view');
         if (landingView) landingView.style.display = 'block';
         if (readerView) readerView.style.display = 'none';
+
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.add('is-landing-mode');
 
         // Deselect items in tree
         var items = document.querySelectorAll('.chapter-nav-item');
@@ -1583,7 +1732,7 @@
         }
 
         window.history.pushState({ is_landing: true }, 'Documentation Vault - Overview', '/docs');
-        document.title = 'Documentation Vault & Architecture Portfolio - Overview';
+        document.title = 'Documentation Vault & Architecture Guide - Overview';
 
         var mainHeading = document.getElementById('landing-main-heading');
         if (mainHeading) mainHeading.focus();
@@ -1591,8 +1740,39 @@
         if (announcer) announcer.textContent = 'Navigated to Documentation Vault Overview landing page.';
     }
 
-    // 2. JUMP TO PROJECT (EXPLORER QUICK FILTER)
+    // 2. OPEN NAVIGATOR & FOCUS SEARCH
+    function openNavigatorAndSearch() {
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
+
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar) sidebar.classList.add('mobile-open');
+
+        var toggleBtn = document.getElementById('mobile-toc-toggle');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            var cnt = document.getElementById('mobile-count')?.textContent || '302';
+            toggleBtn.innerHTML = '✕ Close Navigator (<span id="mobile-count">' + cnt + '</span>)';
+            toggleBtn.setAttribute('aria-label', 'Chapter Navigator. Currently expanded. Press Escape or click to close.');
+        }
+
+        var searchInput = document.getElementById('sidebar-search-input');
+        if (searchInput) {
+            setTimeout(function() {
+                searchInput.focus();
+                searchInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }, 120);
+        }
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Chapter Navigator opened. Focus moved to search filter.';
+    }
+
+    // 3. JUMP TO PROJECT (EXPLORER QUICK FILTER)
     function jumpToProject(projKey) {
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
+
         var sel = document.getElementById('project-selector');
         if (sel) {
             sel.value = projKey;
@@ -1604,27 +1784,29 @@
             body.classList.remove('collapsed');
             if (chev) chev.textContent = '▾';
         }
+
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar && !sidebar.classList.contains('mobile-open')) {
+            toggleMobileToc();
+        }
+
         var announcer = document.getElementById('docs-announcer');
         if (announcer) announcer.textContent = 'Filtered chapter navigator to ' + projKey;
-        if (window.innerWidth <= 992) {
-            var sidebar = document.getElementById('docs-sidebar');
-            if (sidebar && !sidebar.classList.contains('mobile-open')) {
-                toggleMobileToc();
-            }
-        }
     }
 
-    // 3. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
+    // 4. SELECT CHAPTER (SPA IN-PLACE LOADING - ZERO RELOAD)
     function selectChapter(category, slug) {
         var announcer = document.getElementById('docs-announcer');
         if (announcer) announcer.textContent = 'Loading chapter...';
+
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
 
         // Switch to reader view if on landing view
         var landingView = document.getElementById('docs-landing-view');
         var readerView = document.getElementById('docs-reader-view');
         if (landingView) landingView.style.display = 'none';
         if (readerView) readerView.style.display = 'block';
-
         // Highlight active item in tree
         var items = document.querySelectorAll('.chapter-nav-item');
         items.forEach(function(el) {
