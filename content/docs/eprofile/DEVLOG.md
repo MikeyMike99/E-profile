@@ -279,22 +279,35 @@ app.config.update(
 )
 ```
 
-### 4.3 "The Lockout Paradox" (Commit `8b55c2d`)
-One of the most profound cybersecurity insights gained during development was documented in commit `8b55c2d` under the heading **The Lockout Paradox**:
+### 4.3 "The Lockout Paradox" & The Siraugga Cross-Reference (Commit `8b55c2d`)
+
+One of the most profound cybersecurity insights gained across both **E-Profile** and the **Siraugga Framework** was documented in commit `8b55c2d` under the heading **The Lockout Paradox**:
 
 > *"One of the most painful frustrations when building a fortress is accidentally locking yourself out. If a rogue policy bug, database corruption, or aggressive RBAC rule revokes your Super Admin status at the application layer, you will be trapped outside your own creation. When this happens, never try to reason with the broken application."*
+
+#### The Architectural Parallel: Siraugga vs. E-Profile
+This architectural dilemma did not occur in isolation; it represents a fundamental repeating pattern in zero-trust engineering across both systems:
+
+1. **In the Siraugga Framework (`rbac_textbook_tier5.md` & `TEXTBOOK.md`)**:
+   - During the construction of the Siraugga Tier 5 Super Admin engine, the system implemented aggressive autonomous guardrails: semantic mantraps, AST-level write locks, and PreToolUse hook interceptions.
+   - If an AI agent hallucinated, or if database corruption revoked administrative credentials at the application layer, the administrator was completely trapped outside their own engine.
+   - Siraugga resolved this by establishing **Asymmetric Bootstrapping** (Ed25519 asymmetric key pairs generated strictly out-of-band in a terminal) and OS-level recovery scripts that the application-layer daemon is mathematically forbidden from altering.
+   
+2. **In E-Profile (`profiles.json` & ABAC Envelopes)**:
+   - The identical vulnerability manifested during the development of E-Profile's role-management engine. If schema migration bugs, session token mismatches, or strict path traversal guards revoked the `is_admin: True` attribute, the web UI slammed shut.
+   - A novice developer's instinct is to "reason with the broken application"—attempting to debug via web login forms, resetting browser cookies, or modifying front-end code. This is an operational anti-pattern because the application layer itself is the corrupted component.
 
 ```
                 +---------------------------------------------------+
                 |           THE APPLICATION LAYER FORTRESS          |
-                |  (Strict RBAC, Session Validation, Route Guard)   |
+                |  (Siraugga RBAC Hooks / E-Profile Route Guards)   |
                 +-------------------------+-------------------------+
                                           |
-                [App Bug / Database Schema Corruption Drops Admin Flag]
+                [App Bug / Schema Corruption Revokes Super Admin Flag]
                                           |
                                           v
                     +-------------------------------------------+
-                    |           LOCKED OUT OF WEB UI            |
+                    |           LOCKED OUT OF CONTROL PLANE     |
                     |   (Application layer rejects credentials) |
                     +---------------------+---------------------+
                                           |
@@ -304,16 +317,21 @@ One of the most profound cybersecurity insights gained during development was do
          - Brute-force web login            - SSH directly into host OS
          - Reset cookies in browser         - Halt application daemon
          - Fails: logic corrupted           - Run standalone host script
-                                            - Inject Tier 5 at data level
+                                            - Inject Tier 5 at OS/data level
                                             - Restart daemon: RESTORED!
 ```
 
-**The "Ghost Admin" Remedy**:
-To resolve the Lockout Paradox, a standalone, out-of-band administrative script (`ghost_admin.py`) was implemented on the host machine. If an administrative lockout occurs:
-1. The administrator connects via secure OS-level SSH, completely bypassing the HTTP application stack.
-2. The web daemon is halted, freezing database state and eliminating concurrency races.
-3. The out-of-band script opens the underlying datastore, verifies integrity, injects the Tier 5 clearance bit directly, and commits the transaction at the storage layer.
-4. The daemon is restarted. Operational control is restored without ever compromising the integrity of the application's strict boundary rules.
+#### The Universal "Ghost Admin" Remedy
+Porting the solution directly from Siraugga's Tier 5 Recovery Protocol, E-Profile implements the **"Ghost Admin"** architecture:
+1. **Out-of-Band Boundary Bypass**: The administrator accesses the host operating system directly via encrypted SSH, completely bypassing the HTTP application stack and web routing layers.
+2. **State Freeze**: The application daemon is stopped (`systemctl stop ...` or WSGI halt). This halts in-flight requests and eliminates concurrency race conditions.
+3. **OS-Level Credential Injection**: A standalone, air-gapped script (`ghost_admin.py`) opens the raw storage file ([`profiles.json`](file:///mnt/c/Users/michael/Documents/e_profile/profiles.json)), verifies schema integrity via [`data_migrator.py`](file:///mnt/c/Users/michael/Documents/e_profile/data_migrator.py), injects the verified `is_admin: True` clearance flag, and writes the update directly to the storage driver.
+4. **Daemon Resumption**: The daemon is restarted. Sovereign control is restored immediately without ever diluting or weakening the application layer's strict boundary checks.
+
+**Cross-References in the Central Documentation Vault**:
+* Siraugga Framework Textbook: [Chapter 1: Tier 5 - The Architecture of Absolute Power (`rbac_textbook_tier5.md`)](file:///mnt/c/Users/michael/Documents/Central_Docs/projects/siraugga_framework/rbac_textbook_tier5.md#L76-L79)
+* Siraugga Master Textbook: [Section 1: The Genesis of Identity (`TEXTBOOK.md`)](file:///mnt/c/Users/michael/Documents/Central_Docs/projects/siraugga_framework/TEXTBOOK.md#L87-L95)
+* Siraugga Devlog Suite: [Chapter 20: KMS Lockouts and Disaster Recovery Traps (`01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md`)](file:///mnt/c/Users/michael/Documents/Central_Docs/projects/siraugga_framework/devlog/01_01_TO_01_43_THE_PROBLEMS/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md)
 
 ### 4.4 Privacy-First Native Analytics (`traffic_metrics.json`)
 Modern cybersecurity mandates compliance with privacy regulations (South Africa's POPIA and Europe's GDPR). E-Profile rejects intrusive third-party trackers (such as Google Analytics) in favor of a native, privacy-first analytics engine inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py):

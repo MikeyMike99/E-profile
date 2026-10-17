@@ -1,5 +1,5 @@
 {
-    "total_views": 468,
+    "total_views": 469,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -80,6 +80,7 @@
         "/docs/docs_catalog.json": 1,
         "/docs/api/chapter/devlog/05_42_KMS_VAULT_AND_OFFLINE_RECOVERY_TRAPS": 1,
         "/docs/api/chapter/devlog/05_30_KMS_KEYCHAIN_AND_COLD_STORAGE_FROM_SCRATCH": 1,
-        "/docs/api/chapter/devlog/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH": 2
+        "/docs/api/chapter/devlog/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH": 2,
+        "/docs/api/chapter/eprofile/DEVLOG": 1
     }
 }
