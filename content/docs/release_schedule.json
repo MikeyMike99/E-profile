@@ -1237,6 +1237,30 @@
     "devlog/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH": {
       "status": "draft",
       "release_date": null
+    },
+    "devlog/00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH": {
+      "status": "draft",
+      "release_date": null
     }
   }
 }

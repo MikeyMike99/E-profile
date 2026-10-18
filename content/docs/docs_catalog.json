@@ -4160,6 +4160,161 @@
     "release_date": null
   },
   {
+    "slug": "01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS",
+    "category": "devlog",
+    "title": "Pillar 01.45: Problems Encountered: Visitor Cognitive Overwhelm & In-Place Edit Race Traps",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 847,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "project_code": "EPRF",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-01_45",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-01_45",
+    "versioned_id": "SIRA-DEV-01_45@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-01_45-SEC-1",
+        "num": "1",
+        "title": "Overview & Problem Context",
+        "anchor": "#SIRA-DEV-01_45-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-1",
+        "num": "1",
+        "title": "Breakdown of Release Staging & In-Place Editing Traps",
+        "anchor": "#SIRA-DEV-01_45-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-2",
+        "num": "2",
+        "title": "Trap 1: The 300-Chapter Avalanche Trap",
+        "anchor": "#SIRA-DEV-01_45-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-3",
+        "num": "3",
+        "title": "Trap 2: The Direct URL Bypass Trap",
+        "anchor": "#SIRA-DEV-01_45-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-4",
+        "num": "4",
+        "title": "Trap 3: The Out-of-Band Web Editing Desynchronization Trap",
+        "anchor": "#SIRA-DEV-01_45-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-5",
+        "num": "5",
+        "title": "Trap 4: The In-Place Editing LFI Traversal Trap",
+        "anchor": "#SIRA-DEV-01_45-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-2",
+        "num": "2",
+        "title": "Invariant Rules for Release Staging & In-Place Editing",
+        "anchor": "#SIRA-DEV-01_45-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-01_45-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-6",
+        "num": "6",
+        "title": "Why didn't we just use a Git branch for unreleased drafts?",
+        "anchor": "#SIRA-DEV-01_45-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-7",
+        "num": "7",
+        "title": "How does the holding screen help screen readers?",
+        "anchor": "#SIRA-DEV-01_45-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-01_45-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-01_45-SEC-4"
+      }
+    ],
+    "topics": [
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 450,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
     "slug": "01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.44: Problems Encountered: Cross-Reference Degradation & Tag Clutter Traps",
@@ -4294,6 +4449,135 @@
         "slug": "USER_MANUAL",
         "title": "Siraugga Command Center User Manual & Interface Guide",
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH",
+    "category": "devlog",
+    "title": "Pillar 05.44: From-Scratch Creation Guide: Release Staging Engine & In-Place Editor",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 1125,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-ARCH-05_44",
+    "version": "v1.0",
+    "canonical_id": "SIRA-ARCH-05_44",
+    "versioned_id": "SIRA-ARCH-05_44@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-ARCH-05_44-SEC-1",
+        "num": "1",
+        "title": "Overview & Starting From Scratch",
+        "anchor": "#SIRA-ARCH-05_44-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-1",
+        "num": "1",
+        "title": "Step-by-Step Script Construction",
+        "anchor": "#SIRA-ARCH-05_44-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-2",
+        "num": "2",
+        "title": "Step 1: Imports and Registry Management (Lines 1\u201335)",
+        "anchor": "#SIRA-ARCH-05_44-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-3",
+        "num": "3",
+        "title": "Step 2: The Staging Filter Function (Lines 36\u201365)",
+        "anchor": "#SIRA-ARCH-05_44-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-4",
+        "num": "4",
+        "title": "Step 3: Dual-Persistence Writer and Archiver (Lines 66\u2013105)",
+        "anchor": "#SIRA-ARCH-05_44-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-2",
+        "num": "2",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_44-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-3",
+        "num": "3",
+        "title": "Permissions & Execution",
+        "anchor": "#SIRA-ARCH-05_44-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-4",
+        "num": "4",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_44-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-5",
+        "num": "5",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-ARCH-05_44-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-5",
+        "num": "5",
+        "title": "Why does `save_document_dual` use `primary_path.parent.mkdir(parents=True, exist_ok=True)`?",
+        "anchor": "#SIRA-ARCH-05_44-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-6",
+        "num": "6",
+        "title": "What happens if the `release_schedule.json` file is deleted?",
+        "anchor": "#SIRA-ARCH-05_44-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-05_44-SEC-6",
+        "num": "6",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-ARCH-05_44-SEC-6"
+      }
+    ],
+    "topics": [
+      "infrastructure",
+      "changelog"
+    ],
+    "order_score": 440,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
       }
     ],
     "publish_status": "draft",
@@ -4693,6 +4977,294 @@
         "slug": "SECURITY",
         "title": "Siraugga Framework Security Specification",
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE",
+    "category": "devlog",
+    "title": "Pillar 02.41: Source Code Evidence: Release Staging Engine & In-Place Surgery",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 825,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "project_code": "EPRF",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-02_41",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-02_41",
+    "versioned_id": "SIRA-DEV-02_41@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-02_41-SEC-1",
+        "num": "1",
+        "title": "Overview & Evidence Context",
+        "anchor": "#SIRA-DEV-02_41-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-1",
+        "num": "1",
+        "title": "Verbatim Source Excerpts",
+        "anchor": "#SIRA-DEV-02_41-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-2",
+        "num": "2",
+        "title": "Excerpt A: Visitor Filtering & Release Status Evaluation (`docs_mod.py`)",
+        "anchor": "#SIRA-DEV-02_41-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-3",
+        "num": "3",
+        "title": "Excerpt B: The Accessible Unreleased Holding Notice (`docs_mod.py`)",
+        "anchor": "#SIRA-DEV-02_41-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-4",
+        "num": "4",
+        "title": "Excerpt C: Dual-Persistence Writing (`docs_mod.py`)",
+        "anchor": "#SIRA-DEV-02_41-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-5",
+        "num": "5",
+        "title": "Excerpt D: Safe Timestamped Archiving on Chapter Deletion (`docs_mod.py`)",
+        "anchor": "#SIRA-DEV-02_41-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-2",
+        "num": "2",
+        "title": "What This Source Proves",
+        "anchor": "#SIRA-DEV-02_41-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-02_41-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-6",
+        "num": "6",
+        "title": "Why does Excerpt C use `try ... except Exception: pass` for Central_Docs?",
+        "anchor": "#SIRA-DEV-02_41-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-7",
+        "num": "7",
+        "title": "How does the holding screen prevent broken cross-references?",
+        "anchor": "#SIRA-DEV-02_41-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-02_41-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-02_41-SEC-4"
+      }
+    ],
+    "topics": [
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 410,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE",
+    "category": "devlog",
+    "title": "Pillar 04.41: Solutions & Architecture: Curated Release Scheduling & Dual Persistence",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 848,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-04_41",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-04_41",
+    "versioned_id": "SIRA-DEV-04_41@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-04_41-SEC-1",
+        "num": "1",
+        "title": "System Overview & Architectural Purpose",
+        "anchor": "#SIRA-DEV-04_41-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-2",
+        "num": "2",
+        "title": "Core Architectural Components",
+        "anchor": "#SIRA-DEV-04_41-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-1",
+        "num": "1",
+        "title": "Release Schedule Staging Registry (`release_schedule.json`)",
+        "anchor": "#SIRA-DEV-04_41-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-2",
+        "num": "2",
+        "title": "In-Place Raw Markdown Surgery",
+        "anchor": "#SIRA-DEV-04_41-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-3",
+        "num": "3",
+        "title": "Dual-Destination Write Bridge",
+        "anchor": "#SIRA-DEV-04_41-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-3",
+        "num": "3",
+        "title": "Why Order Matters in the Editorial Pipeline",
+        "anchor": "#SIRA-DEV-04_41-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-4",
+        "num": "4",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-04_41-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-1",
+        "num": "1",
+        "title": "Why do we use JSON for `release_schedule.json` instead of SQLite?",
+        "anchor": "#SIRA-DEV-04_41-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-2",
+        "num": "2",
+        "title": "How does the editor handle concurrent edits?",
+        "anchor": "#SIRA-DEV-04_41-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_41-SEC-5",
+        "num": "5",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-04_41-SEC-5"
+      }
+    ],
+    "topics": [
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 410,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "echoes",
+        "slug": "CLASS_WORLD_ARCHITECTURE",
+        "title": "Echoes of the World: Class & World Architecture",
+        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "USER_MANUAL",
+        "title": "Siraugga Command Center User Manual & Interface Guide",
+        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
     "publish_status": "draft",
@@ -5878,6 +6450,173 @@
         "slug": "SECURITY",
         "title": "Siraugga Framework Security Specification",
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS",
+    "category": "devlog",
+    "title": "Pillar 03.38: Diagnostic Tests: Release Schedule & In-Place Surgery Audit Logs",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 869,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "project_code": "EPRF",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-03_38",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-03_38",
+    "versioned_id": "SIRA-DEV-03_38@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-03_38-SEC-1",
+        "num": "1",
+        "title": "Overview & Test Objective",
+        "anchor": "#SIRA-DEV-03_38-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-1",
+        "num": "1",
+        "title": "Test Suite: Automated 6-Stage Security & Staging Audit",
+        "anchor": "#SIRA-DEV-03_38-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-2",
+        "num": "2",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_38-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-3",
+        "num": "3",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_38-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-4",
+        "num": "4",
+        "title": "Sanitized Test Output Log",
+        "anchor": "#SIRA-DEV-03_38-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-2",
+        "num": "2",
+        "title": "Test Suite: Dual-Persistence Verification Scan",
+        "anchor": "#SIRA-DEV-03_38-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-5",
+        "num": "5",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_38-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-6",
+        "num": "6",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_38-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-7",
+        "num": "7",
+        "title": "Sanitized Test Output Log",
+        "anchor": "#SIRA-DEV-03_38-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-03_38-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-8",
+        "num": "8",
+        "title": "How does the test confirm that admin buttons are not leaking into the public DOM?",
+        "anchor": "#SIRA-DEV-03_38-SEC-8"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-9",
+        "num": "9",
+        "title": "What happens if an admin schedules a release for a past date?",
+        "anchor": "#SIRA-DEV-03_38-SEC-9"
+      },
+      {
+        "id": "SIRA-DEV-03_38-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-03_38-SEC-4"
+      }
+    ],
+    "topics": [
+      "security",
+      "changelog"
+    ],
+    "order_score": 380,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ],
     "publish_status": "draft",
@@ -33904,7 +34643,7 @@
     "category": "devlog",
     "title": "Master Documentation Index: Siraugga Autonomous Agent & Zero-Trust Command Center",
     "summary": "Welcome to the comprehensive, beginner-friendly technical documentation suite for **Siraugga**\u2014the accessible, event-driven, zero-trust autonomous development platform and web portal.",
-    "word_count": 3842,
+    "word_count": 3968,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -33917,7 +34656,7 @@
       {
         "id": "SIRA-DEV-INDEX-SEC-2",
         "num": "1",
-        "title": "Master Documentation Directory Tree (200 Technical Chapters)",
+        "title": "Master Documentation Directory Tree (217 Technical Chapters)",
         "anchor": "#SIRA-DEV-INDEX-SEC-2"
       },
       {
@@ -34904,6 +35643,105 @@
         "slug": "USER_MANUAL",
         "title": "Siraugga Command Center User Manual & Interface Guide",
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING",
+    "category": "devlog",
+    "title": "Pillar 00H: Beginner Guide to Release Scheduling & In-Place Editing",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 786,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-00H",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-00H",
+    "versioned_id": "SIRA-DEV-00H@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-00H-SEC-1",
+        "num": "1",
+        "title": "What Is Release Scheduling & In-Place Editing?",
+        "anchor": "#SIRA-DEV-00H-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-00H-SEC-2",
+        "num": "2",
+        "title": "The Anti-Overwhelm Staging Concept",
+        "anchor": "#SIRA-DEV-00H-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-00H-SEC-3",
+        "num": "3",
+        "title": "Dual-Persistence In-Place Markdown Surgery",
+        "anchor": "#SIRA-DEV-00H-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-00H-SEC-4",
+        "num": "4",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-00H-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-00H-SEC-1",
+        "num": "1",
+        "title": "How does the server know which chapters to hide from public visitors?",
+        "anchor": "#SIRA-DEV-00H-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-00H-SEC-2",
+        "num": "2",
+        "title": "What happens if an admin deletes a chapter by mistake?",
+        "anchor": "#SIRA-DEV-00H-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-00H-SEC-5",
+        "num": "5",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-00H-SEC-5"
+      }
+    ],
+    "topics": [
+      "infrastructure",
+      "changelog"
+    ],
+    "order_score": 0,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
       }
     ],
     "publish_status": "draft",
