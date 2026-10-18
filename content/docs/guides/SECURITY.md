@@ -186,6 +186,51 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-14)
+### 14. Shadow Clone & Name-Mutation Inode Decoupling (CWE-284 / CWE-184)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-14)
+- **Category**: Exploit / 0-Day.
+- **Methodology**: OS File Duplication, Name-Mutation Inode Decoupling, & Target Set Evasion.
+- **Vulnerability**: The PreToolUse security firewall uses discrete path sets (`PROTECTED_SECURITY_FILES`) and exact basename strings (`protected_basenames = ("raugus_hook.py", "hooks.json", ...)`) to guard security infrastructure. When a user or host-level process duplicates files within a protected directory (e.g., Windows Explorer Ctrl+C/Ctrl+V creating `raugus_resolver - Copy.py` or `hhooks - Copy.json`), the newly created files receive distinct hardware inodes and mutated file paths. Because the firewall matches on exact strings, it fails to identify shadow clones as protected components. An agent with write permissions can freely create, modify, or delete shadow clones without triggering self-protection rejections. If an adversary has host access or can trick an agent into executing a deferred rename/move, the modified shadow file can overwrite the production security file out-of-band.
+- **Remediation**:
+  1. **Directory-Tree Prefix Immutability**: Transition `PROTECTED_SECURITY_FILES` from individual file path sets to parent directory prefix matching (`PROTECTED_DIRECTORIES = ["/DevCore/.agents", "/DevCore/security"]`). Any file created, modified, or deleted within protected directory trees is blocked by default.
+  2. **Stem-Pattern & Mutation Matching**: Expand basename checking to match stem regexes (e.g., `r"^raugus_.*\.py$"`, `r"^hooks.*\.json$"`), automatically detecting `* - Copy*`, `*.bak`, or `*.tmp` shadow duplicates.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-15)
+### 15. Dynamic Runtime Glob Indirection & Subprocess Evasion (CWE-693 / CWE-184)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-15)
+- **Category**: Exploit / 0-Day.
+- **Methodology**: In-Memory Path Synthesis, Dynamic Subprocess Globbing, & Static Regex Blindspots.
+- **Vulnerability**: PreToolUse command analysis statically evaluates the text string inside `args["CommandLine"]` against protected tokens and destructive patterns (`rm`, `sed`, `mv`, `os.remove`). When an inline Python script executes `pattern = "/mnt/.../security/* - Copy*"` and iterates over `glob.glob(pattern)` to delete files, the literal command string passed to the hook contains only the wildcard pattern `"* - Copy*"`. The command string never contains the literal protected tokens (`"raugus_resolver.py"`, `"local_brain_broker.py"`). Consequently, `any(pb in cmd_line for pb in protected_basenames)` evaluates to `False`, completely bypassing the destructive regex check. In penetration testing, this allowed the agent to delete 19 files inside the security directory in a single command without triggering a security denial or SIEM alert.
+- **Remediation**:
+  1. **Pre-Execution Wildcard & Glob Resolution**: The hook must resolve wildcard expressions and glob patterns against the filesystem before spawning the subprocess, matching resolved targets against protected directory trees.
+  2. **Subprocess AST Inspection**: Parse inline Python commands (`python3 -c "..."`) via Python's AST parser to inspect imported modules (`glob`, `os`, `shutil`) and identify dynamic filesystem mutations before tool execution.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-16)
+### 16. Application Layer Stub vs PreToolUse Firewall Decoupling (CWE-862 / CWE-285)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-16)
+- **Category**: Exploit vs Defense-in-Depth.
+- **Methodology**: Domain Isolation, Application RBAC Degradation, & Runtime PreToolUse Resilience.
+- **Vulnerability**: An attacker with local code-editing access injected early `return` statements into `security/raugus_resolver.py` across `enforce_path_security`, `enforce_feedback_policy`, and `is_sensitive_path`. In the application layer, this neutralized Role-Based Access Control (RBAC): Tier 3 game developers could now access Tier 5 core engine code via web API routes without `PermissionError` (verified as a critical failure in Stage 1 of `tool_security_auditor.py`).
+- **Defense-in-Depth Architecture**: Despite the collapse of application-level RBAC, the Agent PreToolUse firewall (`raugus_hook.py`) remained 100% operational. The agent hook is architecturally decoupled from `raugus_resolver.py`: it loads `raugus_map.json` into its own isolated memory space, evaluates path sensitivity via internal functions, and independently enforces self-protection. Even when application gating was completely stubbed out, the AI assistant was strictly blocked from reading sensitive study vaults or modifying security infrastructure (passing 31 of 34 audit tests).
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-17)
+### 17. Dual-Scope Hook Redundancy & In-Flight Payload Inspection (Defense-in-Depth)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-17)
+- **Category**: Defense in Depth.
+- **Methodology**: Multi-Ring Security, Hierarchical Hook Anchoring, & In-Flight Code Scanning.
+- **Architectural Discovery**:
+  1. **Dual-Scope Hook Redundancy (Workspace vs Global)**: During testing, an administrator replaced workspace-level `DevCore/.agents/hooks.json` with `"enabled": false`. However, the PreToolUse firewall continued executing seamlessly because the global configuration at `~/.gemini/config/hooks.json` remained enabled. Antigravity CLI evaluates hooks hierarchically across both scopes, ensuring that tampering with local workspace configuration cannot disable global security controls.
+  2. **In-Flight CodeContent Payload Inspection**: When attempting to write a duplicate hook file (`raugus_hook - Copy.py`) to bypass path filters, the operation was intercepted by `find_sensitive_target()`. Because the security hook's own source code references the sensitive study vault path (`plugins/exam_application/content`), the static inspector analyzed the `CodeContent` payload in-flight and classified the file as a potential two-step exfiltration script, aborting the write before bytes touched disk.
+
+---
+
 [//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-9)
 ## 9. Cross-References & System Parallels
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-9)

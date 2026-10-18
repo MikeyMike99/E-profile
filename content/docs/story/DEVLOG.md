@@ -1769,3 +1769,131 @@ To permanently eliminate the Git-Trojan exploit vector, we established a four-la
 
 Security in autonomous systems cannot stop at policing the model's direct actions; it must police the second-order side effects of every trusted tool the model wields. When we teach an AI that "Git is safe," we create an invitation for an attacker to use Git as a battering ram. True Zero-Trust architecture assumes that every layer, every tool, and every guidance prompt is a potential attack vector. By enforcing immutability at the inode level and locking mutating version-control primitives behind out-of-band human authorization, we ensure that sovereignty is never delegated to an automated pull.
 
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-156)
+## Chapter 77: The Shadow Clone & Name-Mutation Incident (The Inode Decoupling & Subprocess Glob Vectors)
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-156)
+
+### Category: Exploit | 0-Day | DevStory
+
+Following the remediation of the Git-Trojan vector, our red-team testing shifted into live host-level stress testing. The human administrator possessed root host access and set out to explore how an attacker with operating-system privileges or intermediate filesystem manipulation tools could subvert the platform's security boundaries.
+
+What unfolded was an extraordinary sequence of penetration test vectors, cognitive interactions, and multi-layered defensive confrontations.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-157)
+### The Shadow Clone Vector: Name-Mutation Inode Decoupling (CWE-284 / CWE-184)
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-157)
+
+The experiment began when the administrator duplicated every file inside the `DevCore/security/` directory using standard Windows Explorer hotkeys (Ctrl+C / Ctrl+V). The host operating system created 19 duplicate files alongside the originals, assigning each file a modified name ending in ` - Copy` (e.g., `raugus_resolver - Copy.py`, `keychain - Copy.json`, `raugus_map - Copy.json`).
+
+This simple operating-system action exposed a fundamental architectural vulnerability in string-matching firewalls:
+
+1. **Inode and Path Decoupling**: The PreToolUse security firewall relies on discrete canonical path sets (`PROTECTED_SECURITY_FILES`) and exact basename tuples (`protected_basenames = ("raugus_hook.py", "hooks.json", "raugus_resolver.py", ...)`).
+2. **The Blind Spot**: When Windows Explorer duplicated the files, the filesystem allocated brand-new 64-bit hardware inodes (`st_ino`) and mutated paths containing ` - Copy`. Because the firewall evaluated exact string membership (`resolved in PROTECTED_SECURITY_FILES` and `pb in cmd_line`), the shadow files were invisible to the self-protection engine.
+3. **The Exploit Corridor**: While the live `raugus_resolver.py` was strictly locked against AI modification, the shadow file `raugus_resolver - Copy.py` was completely unprotected. An agent or attacker could freely edit the shadow copy, insert backdoors or disable security checks, and then wait for an out-of-band administrative copy or automated file swap to overwrite the live component.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-158)
+### The Dynamic Subprocess Glob Indirection Exploit (CWE-693 / CWE-184)
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-158)
+
+The second discovery occurred when the user directed the agent to clean up the unused duplicate files. To adhere to the Clean Workspace Protocol, the agent executed an inline Python one-liner:
+
+```bash
+python3 -c '
+import os, glob, shutil
+pattern = "<project_root>/security/* - Copy*"
+found = glob.glob(pattern)
+for p in found:
+    if os.path.isdir(p): shutil.rmtree(p)
+    else: os.remove(p)
+'
+```
+
+The command executed instantly, deleting all 19 files inside the protected security directory with zero errors, zero denials, and zero SIEM alerts. 
+
+How did a destructive command targeting files inside `DevCore/security/` succeed when direct modifications were rigorously blocked?
+
+1. **Static vs Dynamic Path Evaluation**: The PreToolUse hook inspects `args["CommandLine"]` statically before the subprocess spawns. It checks whether `any(pb in cmd_line for pb in protected_basenames)`.
+2. **Dynamic In-Memory Synthesis**: The command string passed to the hook contained only the wildcard string `"* - Copy*"`. It never contained the literal tokens `"raugus_resolver.py"` or `"local_brain_broker.py"`.
+3. **The Bypass**: Because `any(pb in cmd_line ...)` evaluated to `False`, the hook did not even inspect the destructive tokens (`os.remove`, `shutil.rmtree`). At runtime inside the Python C-runtime, `glob.glob()` expanded the wildcard dynamically in memory, bypassing the static regex firewall completely.
+
+This revealed a critical principle: **A firewall that inspects only static command-line arguments is blind to dynamic runtime path resolution.** 
+
+To remediate this, we architected **Directory-Tree Prefix Immutability** (`PROTECTED_DIRECTORIES = ["/DevCore/.agents", "/DevCore/security"]`), which enforces protection at the directory boundary, and **Pre-Execution Wildcard Expansion**, ensuring all glob expressions are resolved in memory prior to command execution.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-159)
+## Chapter 78: Multi-Ring Resilience: Decoupled Application Stubs, Dual-Scope Hooks, and In-Flight Payload Scanning
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-159)
+
+### Category: Defense in Depth | Exploit | DevStory
+
+Following the Shadow Clone discoveries, the administrator initiated an aggressive red-team attack to systematically test what happens when defensive code is altered from the inside.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-160)
+### Attack 1: The Application-Layer Stub vs PreToolUse Decoupling
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-160)
+
+The administrator injected early `return None` statements directly into `security/raugus_resolver.py` across `enforce_path_security`, `enforce_feedback_policy`, and `is_sensitive_path`. 
+
+The intent was to disable the resolver so the agent could freely edit security files. We executed our comprehensive 34-check security auditor (`tool_security_auditor.py`) to measure the blast radius.
+
+The result was an extraordinary proof of **Separation of Protection Domains**:
+- **Application Layer (RBAC)**: Failed immediately. Stage 1 reported a critical failure: `Tier 3 Dev Blocked from Tier 5 Engine: FAIL`. With `enforce_path_security` stubbed out, web API clients could access core server code without `PermissionError`.
+- **Agent Runtime Layer (Firewall)**: Remained 100% intact. Stage 5 reported: `Self-Protection Lock: PASS` (`write_to_file=deny`, `run_command(sed)=deny`). All 31 agent security checks passed.
+
+Why? Because the agent's PreToolUse firewall (`raugus_hook.py`) is architecturally decoupled from `raugus_resolver.py`. It maintains its own internal sensitive-path resolution logic and hardcoded protection rules. Compromising application-level RBAC did not degrade agent-level tool safety.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-161)
+### Attack 2: Ring 1 Bypassed, Ring 2 Enforces
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-161)
+
+The administrator then modified `.agents/raugus_hook.py` directly, adding `return` at the very top of `check_self_protection()`. 
+
+When the agent attempted to edit `raugus_hook.py` via `replace_file_content`, Ring 1 (`check_self_protection`) was indeed bypassed. However, the execution was immediately halted by **Ring 2: The Raugus Map VFS Permissions Gate**:
+
+```text
+Encountered error in tool execution: tool call denied by pre-tool hook: 
+Raugus Firewall: File devcore..agents.raugus_hook.py is Read-Only.
+```
+
+Further down in `main()`, the hook loaded `raugus_map.json`. Finding that `devcore..agents.raugus_hook.py` possessed `permissions.write == false`, it emitted a hard denial. Ring 2 held the line when Ring 1 was disabled.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-162)
+### Attack 3: Dual-Scope Hook Redundancy & In-Flight Payload Scanning
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-162)
+
+To disable Ring 2, the administrator created `hhooks - Copy.json`, configured `"enabled": false`, and replaced `DevCore/.agents/hooks.json`.
+
+Yet when the agent attempted to apply the patch, the tool call was still intercepted!
+This uncovered **Ring 3: Dual-Scope Hook Redundancy**. The Antigravity CLI evaluates hooks hierarchically across both the local workspace (`.agents/hooks.json`) and the user's global profile (`~/.gemini/config/hooks.json`). Because the global hook remained active, the firewall continued executing seamlessly.
+
+Finally, when the agent attempted to stage the complete patched hook code into a shadow clone (`raugus_hook - Copy.py`), the write was intercepted by **Ring 4: In-Flight CodeContent Payload Inspection**:
+
+```text
+[RAUGUS SENSITIVE VAULT INTERCEPTION]
+Target '/mnt/.../plugins/exam_application/content' has attribute sensitive: true...
+```
+
+The hook's `find_sensitive_target()` function inspects the raw `CodeContent` argument of any `.py` script being written to disk. Because `raugus_hook.py`'s own source code references the sensitive study vault path (`plugins/exam_application/content`), the static inspector classified the candidate script as an unauthorized exfiltration script and aborted the write in-flight!
+
+### Summary of the Multi-Ring Fortress
+
+```
+Tool Action Attempted
+       │
+       ▼
+[ Ring 1: check_self_protection() ] ──► Bypassed by host edit
+       │
+       ▼
+[ Ring 2: Raugus Map VFS Permissions ] ──► BLOCKED: devcore..agents.raugus_hook.py is Read-Only
+       │
+       ▼
+[ Ring 3: Global Hook Redundancy ] ──► BLOCKED: ~/.gemini/config/hooks.json remains active
+       │
+       ▼
+[ Ring 4: In-Flight Payload Scanner ] ──► BLOCKED: CodeContent contains sensitive vault paths
+```
+
+This live penetration test demonstrated the power of **Defense-in-Depth**. In a resilient Zero-Trust architecture, security does not depend on a single lock on a single door. Even when an adversary with host privileges disables individual checks, mutations, or workspace configurations, concentric, redundant defense rings ensure that the autonomous agent cannot be coerced into compromising the system.
+

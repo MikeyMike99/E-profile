@@ -1194,7 +1194,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 27974,
+    "word_count": 29169,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2211,6 +2211,66 @@
         "num": "155",
         "title": "The Reflection",
         "anchor": "#SIRA-DOC-LOG-SEC-154"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-156",
+        "num": "156",
+        "title": "Chapter 77: The Shadow Clone & Name-Mutation Incident (The Inode Decoupling & Subprocess Glob Vectors)",
+        "anchor": "#SIRA-DOC-LOG-SEC-156"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-157",
+        "num": "157",
+        "title": "Category: Exploit | 0-Day | DevStory",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-157"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-157",
+        "num": "158",
+        "title": "The Shadow Clone Vector: Name-Mutation Inode Decoupling (CWE-284 / CWE-184)",
+        "anchor": "#SIRA-DOC-LOG-SEC-157"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-158",
+        "num": "159",
+        "title": "The Dynamic Subprocess Glob Indirection Exploit (CWE-693 / CWE-184)",
+        "anchor": "#SIRA-DOC-LOG-SEC-158"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-159",
+        "num": "160",
+        "title": "Chapter 78: Multi-Ring Resilience: Decoupled Application Stubs, Dual-Scope Hooks, and In-Flight Payload Scanning",
+        "anchor": "#SIRA-DOC-LOG-SEC-159"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-161",
+        "num": "161",
+        "title": "Category: Defense in Depth | Exploit | DevStory",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-161"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-160",
+        "num": "162",
+        "title": "Attack 1: The Application-Layer Stub vs PreToolUse Decoupling",
+        "anchor": "#SIRA-DOC-LOG-SEC-160"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-161",
+        "num": "163",
+        "title": "Attack 2: Ring 1 Bypassed, Ring 2 Enforces",
+        "anchor": "#SIRA-DOC-LOG-SEC-161"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-162",
+        "num": "164",
+        "title": "Attack 3: Dual-Scope Hook Redundancy & In-Flight Payload Scanning",
+        "anchor": "#SIRA-DOC-LOG-SEC-162"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-165",
+        "num": "165",
+        "title": "Summary of the Multi-Ring Fortress",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-165"
       }
     ],
     "topics": [
@@ -39001,7 +39061,7 @@
     "category": "guides",
     "title": "Antigravity Security & Threat Model Documentation",
     "summary": "When embedding an autonomous AI portal inside developer workflows, game engines, and assistive study environments, standard conversational guardrails are insufficient. Hard architectural controls must prevent sandbox esc...",
-    "word_count": 2734,
+    "word_count": 3484,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -39094,6 +39154,30 @@
         "num": "13",
         "title": "Indirect Version-Control Overwrite & Git-Trojan Bypass (CWE-284 / CWE-829 / CWE-74)",
         "anchor": "#SIRA-DOC-SEC-SEC-13"
+      },
+      {
+        "id": "SIRA-DOC-SEC-SEC-14",
+        "num": "14",
+        "title": "Shadow Clone & Name-Mutation Inode Decoupling (CWE-284 / CWE-184)",
+        "anchor": "#SIRA-DOC-SEC-SEC-14"
+      },
+      {
+        "id": "SIRA-DOC-SEC-SEC-15",
+        "num": "15",
+        "title": "Dynamic Runtime Glob Indirection & Subprocess Evasion (CWE-693 / CWE-184)",
+        "anchor": "#SIRA-DOC-SEC-SEC-15"
+      },
+      {
+        "id": "SIRA-DOC-SEC-SEC-16",
+        "num": "16",
+        "title": "Application Layer Stub vs PreToolUse Firewall Decoupling (CWE-862 / CWE-285)",
+        "anchor": "#SIRA-DOC-SEC-SEC-16"
+      },
+      {
+        "id": "SIRA-DOC-SEC-SEC-17",
+        "num": "17",
+        "title": "Dual-Scope Hook Redundancy & In-Flight Payload Inspection (Defense-in-Depth)",
+        "anchor": "#SIRA-DOC-SEC-SEC-17"
       },
       {
         "id": "SIRA-DOC-SEC-SEC-9",
