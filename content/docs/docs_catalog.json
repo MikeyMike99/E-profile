@@ -864,35 +864,66 @@
   {
     "slug": "CLASS_WORLD_ARCHITECTURE",
     "category": "echoes",
-    "title": "Echoes of the World: Class & World Architecture",
-    "summary": "The World class is responsible for managing players, objects, surface zones, and chunk coordinates across the audio world grid. It dynamically manages player movement between spatial chunks while pruning stale entities f...",
-    "word_count": 1195,
+    "title": "Echoes of the World: Spatial Grid & World Architecture",
+    "summary": "When I lost my sight, mainstream game development ceased to make sense to me. Traditional game engines dedicate 95% of their compute budget to rendering polygons, shaders, and visual lighting models that I could not see....",
+    "word_count": 952,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "CORE",
-    "doc_id": "ECHO-DEV-CLASS_WORLD_ARCHIT",
-    "version": "v1.3",
-    "canonical_id": "ECHO-DEV-CLASS_WORLD_ARCHIT",
-    "versioned_id": "ECHO-DEV-CLASS_WORLD_ARCHIT@v1.3",
+    "doc_id": "ECHO-CORE-CLASS_WORLD_ARCHIT",
+    "version": "v1.4",
+    "canonical_id": "ECHO-CORE-CLASS_WORLD_ARCHIT",
+    "versioned_id": "ECHO-CORE-CLASS_WORLD_ARCHIT@v1.4",
     "sections": [
       {
-        "id": "ECHO-CORE-WORLD-SEC-1",
+        "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-1",
+        "num": "1",
+        "title": "The Spatial Audio Paradigm (Sound as Geometry)",
+        "anchor": "#ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-1"
+      },
+      {
+        "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-2",
+        "num": "2",
+        "title": "Chunk-Based Spatial Memory Partitioning",
+        "anchor": "#ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-2"
+      },
+      {
+        "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-3",
+        "num": "3",
+        "title": "The 6-Axis Bounding Box Envelope",
+        "anchor": "#ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-3"
+      },
+      {
+        "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-4",
+        "num": "4",
+        "title": "Surface Material Acoustics & Void Mechanics",
+        "anchor": "#ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-4"
+      },
+      {
+        "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-5",
+        "num": "5",
+        "title": "Proprietary Engine Specifications & Clearance",
+        "anchor": "#ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-5"
+      },
+      {
+        "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-1",
         "num": "1",
         "title": "Cross-References & System Parallels",
-        "anchor": "#ECHO-CORE-WORLD-SEC-1"
+        "anchor": "#ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-1"
       }
     ],
     "topics": [
-      "general"
+      "infrastructure",
+      "accessibility_ui"
     ],
     "order_score": 12000,
     "is_latest": true,
     "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
     "base_sensitivity": 2,
-    "max_sensitivity": 3,
+    "max_sensitivity": 4,
     "rel_path": "echoes/CLASS_WORLD_ARCHITECTURE.md",
     "cross_references": [
       {
@@ -948,53 +979,47 @@
   {
     "slug": "MENU_CONFIG",
     "category": "echoes",
-    "title": "\ud83e\udded Menu Configuration Guide",
-    "summary": "This document defines the expected structure and behavior of the `menus` dictionary used to drive the application's dynamic, tab-based interface.",
-    "word_count": 368,
+    "title": "Echoes of the World: Non-Visual Menu State Machine",
+    "summary": "When I built *Echoes of the World*, visual game interfaces were useless to me. A sighted developer designs a menu by dragging buttons, textboxes, and modal panels onto a 2D canvas. When you are blind, a canvas is silent...",
+    "word_count": 576,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "CORE",
-    "doc_id": "ECHO-DEV-MENU_CONFIG",
-    "version": "v1.2",
-    "canonical_id": "ECHO-DEV-MENU_CONFIG",
-    "versioned_id": "ECHO-DEV-MENU_CONFIG@v1.2",
+    "doc_id": "ECHO-CORE-MENU_CONFIG",
+    "version": "v1.3",
+    "canonical_id": "ECHO-CORE-MENU_CONFIG",
+    "versioned_id": "ECHO-CORE-MENU_CONFIG@v1.3",
     "sections": [
       {
-        "id": "ECHO-CORE-MENU-SEC-1",
+        "id": "ECHO-CORE-MENU_CONFIG-SEC-1",
         "num": "1",
-        "title": "\ud83d\udd39 Overview",
-        "anchor": "#ECHO-CORE-MENU-SEC-1"
+        "title": "Architectural Philosophy: The Non-Visual State Machine",
+        "anchor": "#ECHO-CORE-MENU_CONFIG-SEC-1"
       },
       {
-        "id": "ECHO-DEV-MENU_CONFIG-SEC-1",
+        "id": "ECHO-CORE-MENU_CONFIG-SEC-2",
         "num": "2",
-        "title": "\ud83d\udd39 Menu Types",
-        "anchor": "#ECHO-DEV-MENU_CONFIG-SEC-1"
+        "title": "Menu Typology & Interaction Modes",
+        "anchor": "#ECHO-CORE-MENU_CONFIG-SEC-2"
       },
       {
-        "id": "ECHO-CORE-MENU-SEC-1",
-        "num": "1",
-        "title": "Simple Menus",
-        "anchor": "#ECHO-CORE-MENU-SEC-1"
-      },
-      {
-        "id": "ECHO-CORE-MENU-SEC-2",
-        "num": "2",
-        "title": "Tabbed, Menus",
-        "anchor": "#ECHO-CORE-MENU-SEC-2"
-      },
-      {
-        "id": "ECHO-CORE-MENU-SEC-3",
+        "id": "ECHO-CORE-MENU_CONFIG-SEC-3",
         "num": "3",
-        "title": "\ud83d\udd39 Tab Entry Structure",
-        "anchor": "#ECHO-CORE-MENU-SEC-3"
+        "title": "Declarative Schema Blueprint",
+        "anchor": "#ECHO-CORE-MENU_CONFIG-SEC-3"
       },
       {
-        "id": "ECHO-CORE-MENU-SEC-4",
+        "id": "ECHO-CORE-MENU_CONFIG-SEC-4",
         "num": "4",
-        "title": "\ud83d\udd39 Example",
-        "anchor": "#ECHO-CORE-MENU-SEC-4"
+        "title": "Screen Reader Integration & Keystroke Trapping",
+        "anchor": "#ECHO-CORE-MENU_CONFIG-SEC-4"
+      },
+      {
+        "id": "ECHO-CORE-MENU_CONFIG-SEC-1",
+        "num": "1",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#ECHO-CORE-MENU_CONFIG-SEC-1"
       }
     ],
     "topics": [
@@ -1003,9 +1028,9 @@
     "order_score": 12000,
     "is_latest": true,
     "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
-    "base_sensitivity": 3,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "echoes/MENU_CONFIG.md",
     "cross_references": [

@@ -1,82 +1,77 @@
-[//]: # (DOC_ID: ECHO-DEV-MENU_CONFIG | VERSION: v1.2 | SCOPE: DEV)
+[//]: # (DOC_ID: ECHO-CORE-MENU_CONFIG | VERSION: v1.3 | SCOPE: PROPRIETARY)
 
-# 🧭 Menu Configuration Guide
+# Echoes of the World: Non-Visual Menu State Machine
+<!-- sensitivity: 3 -->
 
-This document defines the expected structure and behavior of the `menus` dictionary used to drive the application's dynamic, tab-based interface.
+When I built *Echoes of the World*, visual game interfaces were useless to me. A sighted developer designs a menu by dragging buttons, textboxes, and modal panels onto a 2D canvas. When you are blind, a canvas is silent void. 
 
-[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-1)
-## 🔹 Overview
+I needed a menu engine that worked like a musical instrument—tactile, instantaneous, keyboard-driven, and seamlessly tied to audio speech output. I designed a state machine driven entirely by declarative dictionary configurations, separating what the menu says from how the engine processes user keystrokes.
+
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-1)
+## 1. Architectural Philosophy: The Non-Visual State Machine
+<!-- sensitivity: 2 -->
 
-Each top-level key in the `menus` dictionary is a dynamic menu identifier (e.g. `"MAIN_MENU"`, `"CREATE_CHARACTER"`).
+In my architecture, a menu is never a static screen. It is an active state node:
+1. **Immediate Auditory Feedback**: Every navigation keystroke (Arrow keys, Tab) speaks the current option without latency.
+2. **Tabbed vs. Action Modes**: The engine distinguishes between navigating hierarchical tabs (e.g., character creation steps) and firing immediate game actions (e.g., saving a game, entering the world).
+3. **Decoupled Configuration**: Menu definitions are completely separated from the game loop. Adding new menus requires zero code changes to the audio core—only a new declarative configuration entry.
 
-- Menus may or may not define tabs.
-- If a menu includes `tab_list` and `tabs`, it's considered a **tabbed menu**.
-
-[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-2)
-## 🔹 Menu Types
-[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-1)
-
-### 1. Simple Menus
-[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-1)
-Menus that don't contain tabs. Used for general selection or root navigation.  
-They do not define `tab_list` or `tabs`.
-
-[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-2)
-### 2. Tabbed, Menus
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-2)
-Contain two required entries:
+## 2. Menu Typology & Interaction Modes
+<!-- sensitivity: 2 -->
 
-- `tab_list`: A list of strings, defining the order of tabs (e.g. `["EMAIL", "NAME", "SUBMIT"]`)
-- `tabs`: A dictionary containing one config object per tab.
+The system defines two primary operational menu topologies:
 
-These keys must always appear together. If one is missing, the config is considered invalid.
+1. **Simple Action Menus**: Root-level navigation where each item maps directly to an executable handler (e.g., Start Game, Audio Settings, Quit).
+2. **Tabbed State Menus**: Multi-stage interfaces (e.g., Character Creation) where navigation moves horizontally across tabs (Name, Class, Attributes, Confirm) and vertically through options within each tab.
 
-[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-3)
-## 🔹 Tab Entry Structure
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-3)
+## 3. Declarative Schema Blueprint
+<!-- sensitivity: 3 -->
 
-Each entry inside `tabs` must define:
-
-- `type`: Defines the tab’s behavior. Accepted values:
-  - `"field"` → Sets `self.edit = True`
-  - `"action"` → Sets `self.edit = False`, triggers internal handler
-- `menu_itims`: Required. A list of display/speech items associated with the tab.
-
-No additional flags (like `"edit"`) are required. All behavior is inferred from `type`.
-
-[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-4)
-## 🔹 Example
-[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-4)
+Each menu state defines its behavioral contracts through a declarative configuration blueprint:
 
 ```python
+# Conceptual Menu State Configuration Architecture
 menus = {
     "CREATE_CHARACTER": {
-        "tab_list": ["EMAIL", "NAME", "PASSWORD", "BACK"],
+        "tab_list": ["NAME", "CLASS", "CONFIRM", "BACK"],
         "tabs": {
-            "EMAIL": {
+            "NAME": {
                 "type": "field",
-                "menu_itims": ["Enter your email"]
+                "speech_prompt": ["Enter character moniker:"]
             },
-            "BACK": {
+            "CLASS": {
+                "type": "selection",
+                "speech_prompt": ["Select starting discipline:"]
+            },
+            "CONFIRM": {
                 "type": "action",
-                "menu_itims": ["Return to main menu"]
+                "speech_prompt": ["Commit character to world"]
             }
         }
     }
 }
 ```
 
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-4)
+## 4. Screen Reader Integration & Keystroke Trapping
+<!-- sensitivity: 3 -->
+
+To make this state machine work seamlessly with assistive technology, I intercepted keystrokes at the system level and piped speech strings directly into the screen reader driver. Rather than letting the operating system dictate how focus moves, my engine handles focus transitions internally, ensuring that speech synthesizers never stutter or queue stale announcements.
+
 ---
 
-<details>
-<summary>🔽 Related Engine Architectures & Audio Systems (Click to Expand)</summary>
+[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-5)
+## Cross-References & System Parallels
 
-* **Echoes of the World — Class & World Architecture**:
-  * Complete game loop, spatial audio grid, and player state dispatch.
-* **JOSHY Audio Playback Suite**:
-  * *00A Primer*: Screen reader accessibility, speech synthesizer abstraction, and menu auditory cues.
-* **The Developer Manifesto**:
-  * *Chapter 2 — The Echoes Architecture*: Genesis of the procedural menu state machine and NVDA DLL ctypes integration.
+<details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
+<summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Menus & Audio Drivers (Click to Expand Dropdown)</summary>
+
+| Related Project / Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
+| :--- | :--- | :--- |
+| **Echoes Spatial Grid** | [Echoes of the World: Spatial Grid & World Architecture](/docs/echoes/CLASS_WORLD_ARCHITECTURE) — Complete game loop, spatial audio grid, and player state dispatch. | Echoes Core |
+| **The Developer's Manifesto** | [Chapter 2: The Echoes Architecture](/docs/manifesto/02_The_Echoes_Architecture) — Genesis of procedural menu state machine and AST metaprogramming. | The Manifesto |
+| **JOSHY Audio Suite** | [Guide 00A: Beginner Guide to Screen Readers](/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY) — Tolk DLL speech synthesizer abstraction and menu auditory cues. | JOSHY Audio Suite |
 
 </details>
