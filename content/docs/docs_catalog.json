@@ -36402,5 +36402,195 @@
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ]
+  },
+  {
+    "slug": "DOCUMENTATION_TAGGING_AND_VERSIONING_GUIDE",
+    "category": "guides",
+    "title": "Documentation Tagging, Identification, and Invariant Versioning Protocol",
+    "summary": "In large-scale, multi-repository platforms like the Siraugga Framework, Echoes of the World, and E-Profile, technical documentation quickly scales to hundreds of interconnected chapters. A common failure mode in growing...",
+    "word_count": 1477,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "ARCH",
+    "doc_id": "SIRA-ARCH-TAG_VERSION_GUIDE",
+    "version": "v1.0",
+    "canonical_id": "SIRA-ARCH-TAG_VERSION_GUIDE",
+    "versioned_id": "SIRA-ARCH-TAG_VERSION_GUIDE@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-1",
+        "num": "1",
+        "title": "Architectural Concept & Core Purpose",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-2",
+        "num": "2",
+        "title": "The Invariant Identity vs. Mutable Version Principle",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-3",
+        "num": "3",
+        "title": "Pure CommonMark Reference Tagging (Zero UI & Screen Reader Clutter)",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-1",
+        "num": "1",
+        "title": "Why Not HTML Comments (`<!-- ... -->`)?",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-2",
+        "num": "2",
+        "title": "Why Not Inline HTML Spans (`<span id=\"...\">`)?",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-3",
+        "num": "3",
+        "title": "The Solution: CommonMark Link Reference Definitions",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-1",
+        "num": "1",
+        "title": "Section Title",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-4",
+        "num": "4",
+        "title": "The Standardized Ecosystem Code Registry",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-4",
+        "num": "4",
+        "title": "Project Code Registry",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-5",
+        "num": "5",
+        "title": "Collection Code Registry",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-5",
+        "num": "5",
+        "title": "Heading Anchors and Section Deep-Linking",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-6",
+        "num": "6",
+        "title": "How We Update Versions Effectively & Consistently (The Automated Engine)",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-6",
+        "num": "6",
+        "title": "Automated CLI Tool Commands",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-7",
+        "num": "7",
+        "title": "Semantic Bumping Guidelines",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-7"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-7",
+        "num": "7",
+        "title": "The 4-Step Release & Sync Workflow",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-7"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-8",
+        "num": "8",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-8"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-9",
+        "num": "9",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-9"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-8",
+        "num": "8",
+        "title": "Q1: Why do we use CommonMark reference link definitions instead of regular markdown comments?",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-8"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-9",
+        "num": "9",
+        "title": "Q2: If I move a document to a different folder, should I change its `DOC_ID`?",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-9"
+      },
+      {
+        "id": "SIRA-ARCH-TAG_VERSION_GUIDE-SEC-10",
+        "num": "10",
+        "title": "Q3: What happens if I forget to bump the version manually?",
+        "anchor": "#SIRA-ARCH-TAG_VERSION_GUIDE-SEC-10"
+      }
+    ],
+    "topics": [
+      "accessibility_ui"
+    ],
+    "order_score": 0,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "guides/DOCUMENTATION_TAGGING_AND_VERSIONING_GUIDE.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "echoes",
+        "slug": "CLASS_WORLD_ARCHITECTURE",
+        "title": "Echoes of the World: Class & World Architecture",
+        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "USER_MANUAL",
+        "title": "Siraugga Command Center User Manual & Interface Guide",
+        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ]
   }
 ]
