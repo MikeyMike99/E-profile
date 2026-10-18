@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-MAN-00_FOREWORD | VERSION: v1.0 | SCOPE: MAN)
+[//]: # (DOC_ID: SIRA-MAN-00_FOREWORD | VERSION: v1.1 | SCOPE: MAN)
 
 # Foreword: The Cost of Memory
 

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-MAN-00_THE_FORENSIC_TI | VERSION: v1.0 | SCOPE: MAN)
+[//]: # (DOC_ID: SIRA-MAN-00_THE_FORENSIC_TI | VERSION: v1.3 | SCOPE: MAN)
 
 # Echoes of the World: A Developer's Manifesto
 
@@ -36,9 +36,13 @@ On June 30th, 2025, the first real architecture was laid down. The `App Router M
 This wasn't just a Python script; it was proof of concept. The jumping system, the fundamental coordinates, the math required to manipulate an invisible world—it was all condensed into those first 6,000 bytes. The code was raw, but it was functional. It was the first time the machine spoke back, proving that a blind developer could forge an interactive, real-time environment from absolute scratch. 
 
 [//]: # (SECTION_ID: SIRA-MAN-00_THE_FORENSIC_TI-SEC-2)
-### 2. (Drafting Next...)
+### 2. The Architectural Trajectory
 [//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-2)
-*Pending deep dive into the September 2025 refactors.*
+From that first seed in July 2025, my codebase expanded across four distinct evolutionary phases:
+- **[Chapter 2: The Echoes Architecture](/docs/devlog/02_The_Echoes_Architecture)** — Forging the core state machine, menu systems, and C-level screen reader bindings.
+- **[Chapter 3: The Quantitative Era](/docs/devlog/03_The_Quantitative_Era)** — Deploying autonomous market swarms and mathematical audio graphs.
+- **[Chapter 4: The Forge of Sovereignty](/docs/devlog/04_The_Forge_of_Sovereignty)** — Constructing self-mutating AST engines, local cryptography, and MCP security tooling.
+- **[Chapter 5: The 24-Hour Crucible](/docs/devlog/05_The_24_Hour_Crucible)** — Conquering the 317,000-line crash, building a custom reader, and deploying autonomous scribes.
 
 
 [//]: # (SECTION_ID: SIRA-MAN-00_THE_FORENSIC_TI-SEC-3)
