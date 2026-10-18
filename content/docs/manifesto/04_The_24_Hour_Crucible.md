@@ -1,6 +1,6 @@
-[//]: # (DOC_ID: SIRA-MAN-05_THE_24_HOUR_CRU | VERSION: v1.4 | SCOPE: MAN)
+[//]: # (DOC_ID: SIRA-MAN-04_THE_24_HOUR_CRU | VERSION: v1.4 | SCOPE: MAN)
 
-# Chapter 5: The 24-Hour Crucible (The Birth of the Autonomous Scribes)
+# Chapter 4: The 24-Hour Crucible (The Birth of the Autonomous Scribes)
 
 The history of this ecosystem isn't just written in the code I hammered out months ago—it was forged in a chaotic, exhausting 24-hour sprint where everything broke at once.
 
@@ -10,7 +10,7 @@ Instead of a smooth cataloging run, I triggered a catastrophic technical avalanc
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-05_THE_24_HOUR_CRU-SEC-1)
+[//]: # (SECTION_ID: SIRA-MAN-04_THE_24_HOUR_CRU-SEC-1)
 ## 1. The 317,000-Line Catastrophe
 
 It started with automation. I wrote Python scanner scripts to recursively crawl my drives, extracting Abstract Syntax Trees (AST), classes, functions, and docstrings from projects like `PANIC_BOT`, `trading_bots`, and `e_profile`. The scripts worked with ruthless efficiency.
@@ -23,7 +23,7 @@ My system completely collapsed under the weight. The IDE's Language Server Proto
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-05_THE_24_HOUR_CRU-SEC-2)
+[//]: # (SECTION_ID: SIRA-MAN-04_THE_24_HOUR_CRU-SEC-2)
 ## 2. Building My Own Lifeline: The Custom Pygame Reader
 
 When your tools fail you, you don't surrender. You build new ones.
@@ -36,7 +36,7 @@ It was a surgical utility built in the heat of battle, and it gave me my sight b
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-05_THE_24_HOUR_CRU-SEC-3)
+[//]: # (SECTION_ID: SIRA-MAN-04_THE_24_HOUR_CRU-SEC-3)
 ## 3. Unleashing the Autonomous Scribe Swarm
 
 With the reader running, I faced the 317,000 lines of robotic AST code dumps. Rewriting hundreds of thousands of lines by hand was physically impossible. I needed leverage.
@@ -47,7 +47,7 @@ When the early drafts came back disconnected, I escalated the architecture. I sp
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-05_THE_24_HOUR_CRU-SEC-4)
+[//]: # (SECTION_ID: SIRA-MAN-04_THE_24_HOUR_CRU-SEC-4)
 ## 4. Shattering the Monolith
 
 In the final hours of the sprint, the biggest architectural realization hit me: a monolithic single file, no matter how well-written, is an inherent fragility. 
@@ -58,17 +58,17 @@ Those 24 hours proved the core philosophy of my entire journey: when you hit a w
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-05_THE_24_HOUR_CRU-SEC-5)
+[//]: # (SECTION_ID: SIRA-MAN-04_THE_24_HOUR_CRU-SEC-5)
 ## 5. Technical Cross-References & Realized Projects
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
 <summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Technical Cross-References & Realized Projects (Click to Expand)</summary>
 
-* **Siraugga Multi-Agent Supervisor (`agents/`)**:
-  * *Swarm Telemetry & Orchestration*: The Autonomous Scribe pipeline directly informed Siraugga's subagent task offloading and state monitoring.
-* **JOSHY Audio Playback Suite (`manifesto_reader.py`)**:
-  * *Event-Loop Speech Interception*: Custom hotkey traps and WPM controls became the foundation of the standalone JOSHY media controller.
-* **The Clean Workspace Protocol**:
-  * *Purging Workspace Monoliths*: The 317,000-line catastrophe established the permanent zero-clutter rule across all DevCore environments.
+* **JOSHY Audio Playback Suite**:
+  * *Accessible Scripting Tools*: The evolution of `manifesto_reader.py` key trapping and continuous audio stream readers.
+* **DevCore Autonomous Task Offloader**:
+  * *Agent Orchestration Protocol*: Background subagent task spawning, webhook notifications, and multi-file code surgery.
+* **Siraugga Framework — Central Docs Vault**:
+  * *Monolith Shattering Architecture*: Modularization standards, multi-pillar doc splitting, and screen-reader navigable headings.
 
 </details>

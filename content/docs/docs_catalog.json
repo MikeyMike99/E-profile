@@ -35467,143 +35467,55 @@
     ]
   },
   {
-    "slug": "03_The_Quantitative_Era",
+    "slug": "03_The_Forge_of_Sovereignty",
     "category": "manifesto",
-    "title": "Chapter 3: The Quantitative Era (Algorithmic Survival & Auditory Graphs)",
-    "summary": "When I stepped into financial markets and algorithmic trading, I didn't approach it like a casual retail trader staring at candlestick charts on a screen. Because I couldn't see the charts, visual indicators were complet...",
-    "word_count": 652,
-    "project": "siraugga",
-    "project_label": "Siraugga / DevCore Framework",
-    "project_code": "SIRA",
-    "collection_code": "MAN",
-    "doc_id": "SIRA-MAN-03_THE_QUANTITATIV",
-    "version": "v1.4",
-    "canonical_id": "SIRA-MAN-03_THE_QUANTITATIV",
-    "versioned_id": "SIRA-MAN-03_THE_QUANTITATIV@v1.4",
-    "sections": [
-      {
-        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-1",
-        "num": "1",
-        "title": "The Autonomous Swarm: GoldSurvivalBot and UnshackledApexBot",
-        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-1"
-      },
-      {
-        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-2",
-        "num": "2",
-        "title": "Ingesting the Firehose: PANIC_BOT_V1",
-        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-2"
-      },
-      {
-        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-3",
-        "num": "3",
-        "title": "Machine Learning and Sound: The Final PANIC_BOT",
-        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-3"
-      },
-      {
-        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-4",
-        "num": "4",
-        "title": "Technical Cross-References & Realized Projects",
-        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-4"
-      }
-    ],
-    "topics": [
-      "security",
-      "infrastructure",
-      "origin_story"
-    ],
-    "order_score": 0,
-    "is_latest": false,
-    "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
-    "base_sensitivity": 1,
-    "max_sensitivity": 2,
-    "rel_path": "manifesto/03_The_Quantitative_Era.md",
-    "cross_references": [
-      {
-        "project": "eprofile",
-        "project_label": "E-Profile Portal",
-        "category": "eprofile",
-        "slug": "DEVLOG",
-        "title": "E-Profile Architecture & Forensic Devlog",
-        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
-      },
-      {
-        "project": "encrypt_me",
-        "project_label": "EncryptMe Multi-User Vault",
-        "category": "encrypt_me",
-        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
-        "title": "EncryptMe Cryptographic Architecture",
-        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
-        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
-        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "SECURITY",
-        "title": "Siraugga Framework Security Specification",
-        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
-      }
-    ]
-  },
-  {
-    "slug": "04_The_Forge_of_Sovereignty",
-    "category": "manifesto",
-    "title": "Chapter 4: The Forge of Sovereignty (Building My Own Arsenal)",
+    "title": "Chapter 3: The Forge of Sovereignty (Building My Own Arsenal)",
     "summary": "When you are a blind developer navigating the tech landscape, you quickly discover that mainstream commercial tools are not built with your sovereignty in mind. Proprietary software locks you into inaccessible dashboards...",
-    "word_count": 841,
+    "word_count": 818,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
     "collection_code": "MAN",
-    "doc_id": "SIRA-MAN-04_THE_FORGE_OF_SO",
+    "doc_id": "SIRA-MAN-03_THE_FORGE_OF_SO",
     "version": "v1.5",
-    "canonical_id": "SIRA-MAN-04_THE_FORGE_OF_SO",
-    "versioned_id": "SIRA-MAN-04_THE_FORGE_OF_SO@v1.5",
+    "canonical_id": "SIRA-MAN-03_THE_FORGE_OF_SO",
+    "versioned_id": "SIRA-MAN-03_THE_FORGE_OF_SO@v1.5",
     "sections": [
       {
-        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-1",
+        "id": "SIRA-MAN-03_THE_FORGE_OF_SO-SEC-1",
         "num": "1",
         "title": "The Self-Mutating Engine: e_profile and AST Surgery",
-        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-1"
+        "anchor": "#SIRA-MAN-03_THE_FORGE_OF_SO-SEC-1"
       },
       {
-        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-2",
+        "id": "SIRA-MAN-03_THE_FORGE_OF_SO-SEC-2",
         "num": "2",
         "title": "Automated Intelligence: cyber_news",
-        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-2"
+        "anchor": "#SIRA-MAN-03_THE_FORGE_OF_SO-SEC-2"
       },
       {
-        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-3",
+        "id": "SIRA-MAN-03_THE_FORGE_OF_SO-SEC-3",
         "num": "3",
         "title": "Industrial Cryptography: encryption_toll and EncryptMe",
-        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-3"
+        "anchor": "#SIRA-MAN-03_THE_FORGE_OF_SO-SEC-3"
       },
       {
-        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-4",
+        "id": "SIRA-MAN-03_THE_FORGE_OF_SO-SEC-4",
         "num": "4",
         "title": "Bare-Metal Audio Synthesis: tts+gemeni",
-        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-4"
+        "anchor": "#SIRA-MAN-03_THE_FORGE_OF_SO-SEC-4"
       },
       {
-        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-5",
+        "id": "SIRA-MAN-03_THE_FORGE_OF_SO-SEC-5",
         "num": "5",
         "title": "Automated Security Auditing: scanners and MCP",
-        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-5"
+        "anchor": "#SIRA-MAN-03_THE_FORGE_OF_SO-SEC-5"
       },
       {
-        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-6",
+        "id": "SIRA-MAN-03_THE_FORGE_OF_SO-SEC-6",
         "num": "6",
         "title": "Technical Cross-References & Realized Projects",
-        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-6"
+        "anchor": "#SIRA-MAN-03_THE_FORGE_OF_SO-SEC-6"
       }
     ],
     "topics": [
@@ -35621,7 +35533,7 @@
     "clearance": "public",
     "base_sensitivity": 1,
     "max_sensitivity": 3,
-    "rel_path": "manifesto/04_The_Forge_of_Sovereignty.md",
+    "rel_path": "manifesto/03_The_Forge_of_Sovereignty.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -35670,53 +35582,61 @@
         "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
         "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
         "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "04_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 4 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ]
   },
   {
-    "slug": "05_The_24_Hour_Crucible",
+    "slug": "04_The_24_Hour_Crucible",
     "category": "manifesto",
-    "title": "Chapter 5: The 24-Hour Crucible (The Birth of the Autonomous Scribes)",
+    "title": "Chapter 4: The 24-Hour Crucible (The Birth of the Autonomous Scribes)",
     "summary": "The history of this ecosystem isn't just written in the code I hammered out months ago\u2014it was forged in a chaotic, exhausting 24-hour sprint where everything broke at once.",
-    "word_count": 762,
+    "word_count": 752,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
     "collection_code": "MAN",
-    "doc_id": "SIRA-MAN-05_THE_24_HOUR_CRU",
+    "doc_id": "SIRA-MAN-04_THE_24_HOUR_CRU",
     "version": "v1.4",
-    "canonical_id": "SIRA-MAN-05_THE_24_HOUR_CRU",
-    "versioned_id": "SIRA-MAN-05_THE_24_HOUR_CRU@v1.4",
+    "canonical_id": "SIRA-MAN-04_THE_24_HOUR_CRU",
+    "versioned_id": "SIRA-MAN-04_THE_24_HOUR_CRU@v1.4",
     "sections": [
       {
-        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-1",
+        "id": "SIRA-MAN-04_THE_24_HOUR_CRU-SEC-1",
         "num": "1",
         "title": "The 317,000-Line Catastrophe",
-        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-1"
+        "anchor": "#SIRA-MAN-04_THE_24_HOUR_CRU-SEC-1"
       },
       {
-        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-2",
+        "id": "SIRA-MAN-04_THE_24_HOUR_CRU-SEC-2",
         "num": "2",
         "title": "Building My Own Lifeline: The Custom Pygame Reader",
-        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-2"
+        "anchor": "#SIRA-MAN-04_THE_24_HOUR_CRU-SEC-2"
       },
       {
-        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-3",
+        "id": "SIRA-MAN-04_THE_24_HOUR_CRU-SEC-3",
         "num": "3",
         "title": "Unleashing the Autonomous Scribe Swarm",
-        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-3"
+        "anchor": "#SIRA-MAN-04_THE_24_HOUR_CRU-SEC-3"
       },
       {
-        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-4",
+        "id": "SIRA-MAN-04_THE_24_HOUR_CRU-SEC-4",
         "num": "4",
         "title": "Shattering the Monolith",
-        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-4"
+        "anchor": "#SIRA-MAN-04_THE_24_HOUR_CRU-SEC-4"
       },
       {
-        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-5",
+        "id": "SIRA-MAN-04_THE_24_HOUR_CRU-SEC-5",
         "num": "5",
         "title": "Technical Cross-References & Realized Projects",
-        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-5"
+        "anchor": "#SIRA-MAN-04_THE_24_HOUR_CRU-SEC-5"
       }
     ],
     "topics": [
@@ -35732,7 +35652,7 @@
     "clearance": "public",
     "base_sensitivity": 1,
     "max_sensitivity": 3,
-    "rel_path": "manifesto/05_The_24_Hour_Crucible.md",
+    "rel_path": "manifesto/04_The_24_Hour_Crucible.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -35773,6 +35693,94 @@
         "slug": "USER_MANUAL",
         "title": "Siraugga Command Center User Manual & Interface Guide",
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ]
+  },
+  {
+    "slug": "05_The_Quantitative_Era",
+    "category": "manifesto",
+    "title": "Chapter 5: The Quantitative Era (Algorithmic Survival & Auditory Graphs)",
+    "summary": "When I stepped into financial markets and algorithmic trading, I didn't approach it like a casual retail trader staring at candlestick charts on a screen. Because I couldn't see the charts, visual indicators were complet...",
+    "word_count": 662,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "MAN",
+    "doc_id": "SIRA-MAN-05_THE_QUANTITATIV",
+    "version": "v1.5",
+    "canonical_id": "SIRA-MAN-05_THE_QUANTITATIV",
+    "versioned_id": "SIRA-MAN-05_THE_QUANTITATIV@v1.5",
+    "sections": [
+      {
+        "id": "SIRA-MAN-05_THE_QUANTITATIV-SEC-1",
+        "num": "1",
+        "title": "The Autonomous Swarm: GoldSurvivalBot and UnshackledApexBot",
+        "anchor": "#SIRA-MAN-05_THE_QUANTITATIV-SEC-1"
+      },
+      {
+        "id": "SIRA-MAN-05_THE_QUANTITATIV-SEC-2",
+        "num": "2",
+        "title": "Ingesting the Firehose: PANIC_BOT_V1",
+        "anchor": "#SIRA-MAN-05_THE_QUANTITATIV-SEC-2"
+      },
+      {
+        "id": "SIRA-MAN-05_THE_QUANTITATIV-SEC-3",
+        "num": "3",
+        "title": "Machine Learning and Sound: The Final PANIC_BOT",
+        "anchor": "#SIRA-MAN-05_THE_QUANTITATIV-SEC-3"
+      },
+      {
+        "id": "SIRA-MAN-05_THE_QUANTITATIV-SEC-4",
+        "num": "4",
+        "title": "Technical Cross-References & Realized Projects",
+        "anchor": "#SIRA-MAN-05_THE_QUANTITATIV-SEC-4"
+      }
+    ],
+    "topics": [
+      "security",
+      "infrastructure",
+      "origin_story"
+    ],
+    "order_score": 0,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 2,
+    "rel_path": "manifesto/05_The_Quantitative_Era.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ]
   },
