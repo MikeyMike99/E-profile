@@ -1,5 +1,5 @@
 {
-    "total_views": 681,
+    "total_views": 710,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -65,11 +65,11 @@
         "a03bccc5537aacc7c8f20528ff5f4ce9"
     ],
     "paths": {
-        "/": 229,
-        "/favicon.ico": 127,
+        "/": 241,
+        "/favicon.ico": 136,
         "/projects": 26,
         "/ai_agent": 20,
-        "/login": 49,
+        "/login": 51,
         "/ai_agent/": 12,
         "/ws": 123,
         "/ai_agent/api/chat": 2,
@@ -77,9 +77,9 @@
         "/robots.txt": 47,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
-        "/docs": 14,
+        "/docs": 16,
         "/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": 1,
-        "/logout": 7,
+        "/logout": 8,
         "/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE": 1,
         "/docs/api/chapter/story/DEVLOG": 1,
         "/docs/api/chapter/eprofile/DEVLOG": 4,
@@ -88,7 +88,9 @@
         "/docs/api/chapter/guides/HOT_PATCH_ARCHITECTURE": 4,
         "/docs/api/chapter/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE": 1,
         "/docs/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE": 1,
-        "/docs/api/chapter/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 4,
-        "/docs/api/chapter/devlog/06_EPROFILE_DEVLOG": 2
+        "/docs/api/chapter/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 5,
+        "/docs/api/chapter/devlog/06_EPROFILE_DEVLOG": 2,
+        "/docs/api/chapter/manifesto/01_Echoes_in_the_Void": 1,
+        "/docs/api/chapter/manifesto/02_The_Echoes_Architecture": 1
     }
 }
