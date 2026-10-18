@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: ECHO-MAN-01_ECHOES_IN_THE_V | VERSION: v1.1 | SCOPE: MAN)
+[//]: # (DOC_ID: ECHO-MAN-01_ECHOES_IN_THE_V | VERSION: v1.6 | SCOPE: MAN)
 
 # Chapter 1: ECHOES_OF_THE_WORLD (The True Origin)
 

@@ -3,55 +3,56 @@
     "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
     "category": "devlog",
     "title": "The Origin Architecture: Echoes of the World",
-    "summary": "Long before Siraugga existed as an enterprise autonomous platform with opaque virtual filesystems and hot-patching compilers, it began with a single blind gamer in October 2024 who wanted to play an audio game.",
-    "word_count": 785,
+    "summary": "Long before I built Siraugga as an autonomous cybersecurity platform with opaque virtual filesystems and hot-patching compilers, it all started with a very simple human desire in October 2024: I was blind, and I just wan...",
+    "word_count": 969,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "DEV",
     "doc_id": "ECHO-DEV-04_26",
-    "version": "v1.1",
+    "version": "v1.2",
     "canonical_id": "ECHO-DEV-04_26",
-    "versioned_id": "ECHO-DEV-04_26@v1.1",
+    "versioned_id": "ECHO-DEV-04_26@v1.2",
     "sections": [
       {
-        "id": "ECHO-DOC-04_26-SEC-1",
+        "id": "ECHO-DEV-04_26-SEC-1",
         "num": "1",
         "title": "Architectural Concept & Historical Genesis",
-        "anchor": "#ECHO-DOC-04_26-SEC-1"
+        "anchor": "#ECHO-DEV-04_26-SEC-1"
       },
       {
-        "id": "ECHO-DOC-04_26-SEC-2",
+        "id": "ECHO-DEV-04_26-SEC-2",
         "num": "2",
         "title": "The Four Foundational Breakthroughs",
-        "anchor": "#ECHO-DOC-04_26-SEC-2"
+        "anchor": "#ECHO-DEV-04_26-SEC-2"
       },
       {
-        "id": "ECHO-DOC-04_26-SEC-3",
+        "id": "ECHO-DEV-04_26-SEC-3",
         "num": "3",
         "title": "The DNA of Siraugga",
-        "anchor": "#ECHO-DOC-04_26-SEC-3"
+        "anchor": "#ECHO-DEV-04_26-SEC-3"
       },
       {
-        "id": "ECHO-DOC-04_26-SEC-4",
+        "id": "ECHO-DEV-04_26-SEC-4",
         "num": "4",
         "title": "Why Order Matters in Foundational Engineering",
-        "anchor": "#ECHO-DOC-04_26-SEC-4"
+        "anchor": "#ECHO-DEV-04_26-SEC-4"
       },
       {
-        "id": "ECHO-DOC-04_26-SEC-5",
+        "id": "ECHO-DEV-04_26-SEC-5",
         "num": "5",
         "title": "Beginner Coder Q&A",
-        "anchor": "#ECHO-DOC-04_26-SEC-5"
+        "anchor": "#ECHO-DEV-04_26-SEC-5"
       },
       {
-        "id": "ECHO-DOC-04_26-SEC-6",
+        "id": "ECHO-DEV-04_26-SEC-6",
         "num": "6",
         "title": "Technical & Narrative Cross-References",
-        "anchor": "#ECHO-DOC-04_26-SEC-6"
+        "anchor": "#ECHO-DEV-04_26-SEC-6"
       }
     ],
     "topics": [
+      "security",
       "accessibility_ui",
       "workflow",
       "origin_story",
@@ -35021,9 +35022,9 @@
     "project_code": "SIRA",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-00_FOREWORD",
-    "version": "v1.0",
+    "version": "v1.1",
     "canonical_id": "SIRA-MAN-00_FOREWORD",
-    "versioned_id": "SIRA-MAN-00_FOREWORD@v1.0",
+    "versioned_id": "SIRA-MAN-00_FOREWORD@v1.1",
     "sections": [],
     "topics": [
       "origin_story"
@@ -35092,15 +35093,15 @@
     "category": "manifesto",
     "title": "Echoes of the World: A Developer's Manifesto",
     "summary": "*A forensic timeline and narrative of the code's evolution.*",
-    "word_count": 5502,
+    "word_count": 5581,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-00_THE_FORENSIC_TI",
-    "version": "v1.0",
+    "version": "v1.3",
     "canonical_id": "SIRA-MAN-00_THE_FORENSIC_TI",
-    "versioned_id": "SIRA-MAN-00_THE_FORENSIC_TI@v1.0",
+    "versioned_id": "SIRA-MAN-00_THE_FORENSIC_TI@v1.3",
     "sections": [
       {
         "id": "SIRA-MAN-TIMELINE-SEC-1",
@@ -35123,7 +35124,7 @@
       {
         "id": "SIRA-MAN-TIMELINE-SEC-2",
         "num": "2",
-        "title": "(Drafting Next...)",
+        "title": "The Architectural Trajectory",
         "anchor": "#SIRA-MAN-TIMELINE-SEC-2"
       },
       {
@@ -35266,9 +35267,9 @@
     "project_code": "ECHO",
     "collection_code": "MAN",
     "doc_id": "ECHO-MAN-01_ECHOES_IN_THE_V",
-    "version": "v1.1",
+    "version": "v1.6",
     "canonical_id": "ECHO-MAN-01_ECHOES_IN_THE_V",
-    "versioned_id": "ECHO-MAN-01_ECHOES_IN_THE_V@v1.1",
+    "versioned_id": "ECHO-MAN-01_ECHOES_IN_THE_V@v1.6",
     "sections": [
       {
         "id": "ECHO-MAN-01-SEC-1",
@@ -35339,23 +35340,54 @@
   {
     "slug": "02_The_Echoes_Architecture",
     "category": "manifesto",
-    "title": "Chapter 2: The Echoes Architecture",
-    "summary": "Every grand design begins with a chaotic workbench. For this developer, the genesis of a sprawling, accessible digital universe began not with visual spectacle, but with the quiet, fundamental mechanics of state and soun...",
-    "word_count": 574,
+    "title": "Chapter 2: The Echoes Architecture (Building the Engine From Bare Metal)",
+    "summary": "When I look back at my earliest project folders, it wasn't some grand academic master plan. It was a chaotic workbench where I was literally fighting for every single inch of progress.",
+    "word_count": 912,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "MAN",
     "doc_id": "ECHO-MAN-02_THE_ECHOES_ARCH",
-    "version": "v1.1",
+    "version": "v1.3",
     "canonical_id": "ECHO-MAN-02_THE_ECHOES_ARCH",
-    "versioned_id": "ECHO-MAN-02_THE_ECHOES_ARCH@v1.1",
-    "sections": [],
+    "versioned_id": "ECHO-MAN-02_THE_ECHOES_ARCH@v1.3",
+    "sections": [
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-1",
+        "num": "1",
+        "title": "The Raw Sandbox: PROGRAM and the DLL Breakthrough",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-1"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-2",
+        "num": "2",
+        "title": "Fighting Interfaces: MAIN_MENU and Pygame States",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-2"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-3",
+        "num": "3",
+        "title": "Writing Code That Writes Code: The TEST Experiment",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-3"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-4",
+        "num": "4",
+        "title": "Bringing the Machine to Life: GAME",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-4"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-5",
+        "num": "5",
+        "title": "Technical Cross-References & Realized Projects",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-5"
+      }
+    ],
     "topics": [
       "security",
-      "cryptography",
+      "infrastructure",
       "accessibility_ui",
-      "workflow",
+      "limitations",
       "origin_story"
     ],
     "order_score": 0,
@@ -35363,7 +35395,7 @@
     "is_origin": false,
     "is_proprietary": false,
     "clearance": "public",
-    "base_sensitivity": 3,
+    "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/02_The_Echoes_Architecture.md",
     "cross_references": [
@@ -35412,21 +35444,46 @@
   {
     "slug": "03_The_Quantitative_Era",
     "category": "manifesto",
-    "title": "Chapter 3: The Quantitative Era",
-    "summary": "The developer's foray into the chaotic financial markets did not begin with a single, monolithic engine, but rather a sprawling, multi-faceted algorithmic laboratory known simply as `trading_bots`. It was an attempt to c...",
-    "word_count": 361,
+    "title": "Chapter 3: The Quantitative Era (Algorithmic Survival & Auditory Graphs)",
+    "summary": "When I stepped into financial markets and algorithmic trading, I didn't approach it like a casual retail trader staring at candlestick charts on a screen. Because I couldn't see the charts, visual indicators were complet...",
+    "word_count": 652,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-03_THE_QUANTITATIV",
-    "version": "v1.0",
+    "version": "v1.4",
     "canonical_id": "SIRA-MAN-03_THE_QUANTITATIV",
-    "versioned_id": "SIRA-MAN-03_THE_QUANTITATIV@v1.0",
-    "sections": [],
+    "versioned_id": "SIRA-MAN-03_THE_QUANTITATIV@v1.4",
+    "sections": [
+      {
+        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-1",
+        "num": "1",
+        "title": "The Autonomous Swarm: GoldSurvivalBot and UnshackledApexBot",
+        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-1"
+      },
+      {
+        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-2",
+        "num": "2",
+        "title": "Ingesting the Firehose: PANIC_BOT_V1",
+        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-2"
+      },
+      {
+        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-3",
+        "num": "3",
+        "title": "Machine Learning and Sound: The Final PANIC_BOT",
+        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-3"
+      },
+      {
+        "id": "SIRA-MAN-03_THE_QUANTITATIV-SEC-4",
+        "num": "4",
+        "title": "Technical Cross-References & Realized Projects",
+        "anchor": "#SIRA-MAN-03_THE_QUANTITATIV-SEC-4"
+      }
+    ],
     "topics": [
+      "security",
       "infrastructure",
-      "accessibility_ui",
       "origin_story"
     ],
     "order_score": 0,
@@ -35434,34 +35491,10 @@
     "is_origin": false,
     "is_proprietary": false,
     "clearance": "public",
-    "base_sensitivity": 2,
+    "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "manifesto/03_The_Quantitative_Era.md",
     "cross_references": [
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "devlog",
-        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
-        "title": "The Origin Architecture: Echoes of the World",
-        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
-      },
-      {
-        "project": "audio_suite",
-        "project_label": "JOSHY Audio Suite",
-        "category": "audio_suite",
-        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
-        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
-        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
-      },
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "echoes",
-        "slug": "CLASS_WORLD_ARCHITECTURE",
-        "title": "Echoes of the World: Class & World Architecture",
-        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
-      },
       {
         "project": "eprofile",
         "project_label": "E-Profile Portal",
@@ -35471,36 +35504,89 @@
         "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
       },
       {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
         "project": "siraugga",
         "project_label": "Siraugga / DevCore Core",
         "category": "guides",
-        "slug": "USER_MANUAL",
-        "title": "Siraugga Command Center User Manual & Interface Guide",
-        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ]
   },
   {
     "slug": "04_The_Forge_of_Sovereignty",
     "category": "manifesto",
-    "title": "Chapter 4: The Forge of Sovereignty",
-    "summary": "The developer's path to total technical independence required tools that no vendor could supply. Thus began the construction of a bespoke, autonomous toolkit, forged to ensure self-reliance and data sovereignty.",
-    "word_count": 545,
+    "title": "Chapter 4: The Forge of Sovereignty (Building My Own Arsenal)",
+    "summary": "When you are a blind developer navigating the tech landscape, you quickly discover that mainstream commercial tools are not built with your sovereignty in mind. Proprietary software locks you into inaccessible dashboards...",
+    "word_count": 841,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-04_THE_FORGE_OF_SO",
-    "version": "v1.1",
+    "version": "v1.5",
     "canonical_id": "SIRA-MAN-04_THE_FORGE_OF_SO",
-    "versioned_id": "SIRA-MAN-04_THE_FORGE_OF_SO@v1.1",
-    "sections": [],
+    "versioned_id": "SIRA-MAN-04_THE_FORGE_OF_SO@v1.5",
+    "sections": [
+      {
+        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-1",
+        "num": "1",
+        "title": "The Self-Mutating Engine: e_profile and AST Surgery",
+        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-1"
+      },
+      {
+        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-2",
+        "num": "2",
+        "title": "Automated Intelligence: cyber_news",
+        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-2"
+      },
+      {
+        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-3",
+        "num": "3",
+        "title": "Industrial Cryptography: encryption_toll and EncryptMe",
+        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-3"
+      },
+      {
+        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-4",
+        "num": "4",
+        "title": "Bare-Metal Audio Synthesis: tts+gemeni",
+        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-4"
+      },
+      {
+        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-5",
+        "num": "5",
+        "title": "Automated Security Auditing: scanners and MCP",
+        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-5"
+      },
+      {
+        "id": "SIRA-MAN-04_THE_FORGE_OF_SO-SEC-6",
+        "num": "6",
+        "title": "Technical Cross-References & Realized Projects",
+        "anchor": "#SIRA-MAN-04_THE_FORGE_OF_SO-SEC-6"
+      }
+    ],
     "topics": [
       "security",
       "cryptography",
       "infrastructure",
       "accessibility_ui",
-      "limitations",
+      "workflow",
       "origin_story"
     ],
     "order_score": 0,
@@ -35508,7 +35594,7 @@
     "is_origin": false,
     "is_proprietary": false,
     "clearance": "public",
-    "base_sensitivity": 3,
+    "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/04_The_Forge_of_Sovereignty.md",
     "cross_references": [
@@ -35566,44 +35652,49 @@
     "slug": "05_The_24_Hour_Crucible",
     "category": "manifesto",
     "title": "Chapter 5: The 24-Hour Crucible (The Birth of the Autonomous Scribes)",
-    "summary": "The history of this ecosystem is not just in the code that was written months ago, but in the chaotic, grueling 24-hour sprint required to document it all. The goal was simple: catalog every project across the C, D, and...",
-    "word_count": 542,
+    "summary": "The history of this ecosystem isn't just written in the code I hammered out months ago\u2014it was forged in a chaotic, exhausting 24-hour sprint where everything broke at once.",
+    "word_count": 762,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-05_THE_24_HOUR_CRU",
-    "version": "v1.0",
+    "version": "v1.4",
     "canonical_id": "SIRA-MAN-05_THE_24_HOUR_CRU",
-    "versioned_id": "SIRA-MAN-05_THE_24_HOUR_CRU@v1.0",
+    "versioned_id": "SIRA-MAN-05_THE_24_HOUR_CRU@v1.4",
     "sections": [
       {
-        "id": "SIRA-MAN-05-SEC-1",
+        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-1",
         "num": "1",
         "title": "The 317,000-Line Catastrophe",
-        "anchor": "#SIRA-MAN-05-SEC-1"
+        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-1"
       },
       {
-        "id": "SIRA-MAN-05-SEC-2",
+        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-2",
         "num": "2",
-        "title": "The Custom Pygame Reader",
-        "anchor": "#SIRA-MAN-05-SEC-2"
+        "title": "Building My Own Lifeline: The Custom Pygame Reader",
+        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-2"
       },
       {
-        "id": "SIRA-MAN-05-SEC-3",
+        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-3",
         "num": "3",
-        "title": "Unleashing the Swarm",
-        "anchor": "#SIRA-MAN-05-SEC-3"
+        "title": "Unleashing the Autonomous Scribe Swarm",
+        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-3"
       },
       {
-        "id": "SIRA-MAN-05-SEC-4",
+        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-4",
         "num": "4",
         "title": "Shattering the Monolith",
-        "anchor": "#SIRA-MAN-05-SEC-4"
+        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-4"
+      },
+      {
+        "id": "SIRA-MAN-05_THE_24_HOUR_CRU-SEC-5",
+        "num": "5",
+        "title": "Technical Cross-References & Realized Projects",
+        "anchor": "#SIRA-MAN-05_THE_24_HOUR_CRU-SEC-5"
       }
     ],
     "topics": [
-      "infrastructure",
       "accessibility_ui",
       "workflow",
       "limitations",
@@ -35614,7 +35705,7 @@
     "is_origin": false,
     "is_proprietary": false,
     "clearance": "public",
-    "base_sensitivity": 3,
+    "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/05_The_24_Hour_Crucible.md",
     "cross_references": [
@@ -35663,28 +35754,29 @@
   {
     "slug": "README",
     "category": "manifesto",
-    "title": "The Developer's Manifesto",
+    "title": "The Developer's Manifesto: Chronology of the Forge",
     "summary": "Welcome to the definitive history of this ecosystem.",
-    "word_count": 136,
-    "project": "echoes",
-    "project_label": "Echoes of the World (Audio Game)",
-    "project_code": "ECHO",
+    "word_count": 252,
+    "project": "encrypt_me",
+    "project_label": "EncryptMe Multi-User Vault",
+    "project_code": "ENCR",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-README",
-    "version": "v1.0",
+    "version": "v1.2",
     "canonical_id": "SIRA-MAN-README",
-    "versioned_id": "SIRA-MAN-README@v1.0",
+    "versioned_id": "SIRA-MAN-README@v1.2",
     "sections": [
       {
         "id": "SIRA-MAN-README-SEC-1",
         "num": "1",
-        "title": "The Volumes",
+        "title": "The Chapters",
         "anchor": "#SIRA-MAN-README-SEC-1"
       }
     ],
     "topics": [
       "security",
       "accessibility_ui",
+      "workflow",
       "origin_story"
     ],
     "order_score": 0,
@@ -35692,7 +35784,7 @@
     "is_origin": false,
     "is_proprietary": false,
     "clearance": "public",
-    "base_sensitivity": 2,
+    "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "manifesto/README.md",
     "cross_references": [
@@ -35713,14 +35805,6 @@
         "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
       },
       {
-        "project": "audio_suite",
-        "project_label": "JOSHY Audio Suite",
-        "category": "audio_suite",
-        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
-        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
-        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
-      },
-      {
         "project": "eprofile",
         "project_label": "E-Profile Portal",
         "category": "eprofile",
@@ -35731,18 +35815,26 @@
       {
         "project": "siraugga",
         "project_label": "Siraugga / DevCore Core",
-        "category": "manifesto",
-        "slug": "02_The_Echoes_Architecture",
-        "title": "The Manifesto: Chapter 2 \u2014 The Echoes Architecture",
-        "relation": "Historical Genesis of Audio Feedback & Metaprogramming"
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       },
       {
         "project": "siraugga",
         "project_label": "Siraugga / DevCore Core",
         "category": "guides",
-        "slug": "USER_MANUAL",
-        "title": "Siraugga Command Center User Manual & Interface Guide",
-        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "04_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 4 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ]
   },
