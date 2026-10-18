@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_16 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_16: Ephemeral Plugin Mutation & Blueprint Tampering Traps
 
@@ -6,6 +6,7 @@ Interactive tools such as the Exam Application and Accessible Media Player provi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-1)
 
@@ -16,6 +17,7 @@ When users requested behavioral modifications to interactive mini-apps (for exam
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-2)
 
@@ -34,6 +36,7 @@ User Request ---> Agent Injects exam_temp.json ---> format_exam.py Validates ---
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-3)
 
@@ -44,23 +47,27 @@ In schema-driven application rendering, the sequence of generation and validatio
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-5)
 
 ### What is the "Blueprint Concept"?
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-5)
 The Blueprint Concept treats HTML and JavaScript files as fixed, read-only engines. Just as a web browser engine doesn't change when you visit different websites, the Exam template never changes—it simply displays whatever data the JSON payload provides.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-6)
 ### If I want to change a timer or add questions, what file do I edit?
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-6)
 You never edit the HTML or JS. You only generate or edit `exam_temp.json`. Changing a value in that JSON file instantly changes the timer or question layout on the next page load.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-7)
 ### What is the role of `format_exam.py`?
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-7)
 `format_exam.py` is a Python validation and formatting script. It inspects `exam_temp.json` to ensure required keys exist, timestamps are valid numbers, and question types match allowed identifiers before the web UI attempts to display them.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_16-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_16-SEC-8)
 - To inspect the primary source code of the exam normalizer and schema, view [`02_SOURCE_EVIDENCE/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE.md`](/docs/devlog/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE).

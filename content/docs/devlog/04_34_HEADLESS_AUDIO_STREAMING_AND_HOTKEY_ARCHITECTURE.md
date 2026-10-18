@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: JOSH-DOC-04_34 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: JOSH-DEV-04_34 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 04.34: Architectural Blueprint: Headless Audio Streaming & Hotkey Architecture
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-1)
 ## Executive Summary
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-1)
 This blueprint details the architectural design of the accessible audio playback suite (`Audio_pllayback_suite/t.py`), illustrating how low-level Windows keyboard hooks and Spotify Web API integration provide blind developers with headless music playback control and independent volume modulation without stealing editor window focus or disrupting screen reader speech.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-1)
 ## 1. Architectural Interaction Topology
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-1)
 
@@ -33,8 +35,9 @@ Audio Controller Dispatcher
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-2)
 ## 2. Core Functional Layers
-[//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-2)
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-1)
 
 ### 1. The Global Hook Layer (`keyboard.add_hotkey`)
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-1)
@@ -42,12 +45,14 @@ Audio Controller Dispatcher
 - Captures defined multi-key modifiers (`ctrl+alt+shift+arrows`, `ctrl+alt+brackets`) across all running Windows processes.
 - Never invokes `SetForegroundWindow` or steals focus away from active code editors or command terminals.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-2)
 ### 2. The Headless Spotify API Client (`spotipy.Spotify`)
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-2)
 - Maintains OAuth credentials and user tokens in `.spotify_token_cache`.
 - Controls playback state (play, pause, next, previous) and stream gain via REST endpoints.
 - Isolates music stream volume changes completely from the OS master mixer, ensuring that volume adjustments never silence screen reader speech.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-3)
 ### 3. The Low-Latency Speech Feedback Engine (`screenreader_speak.py`)
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-3)
 - Communicates directly with NVDA using direct DLL memory calls.
@@ -55,6 +60,7 @@ Audio Controller Dispatcher
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-3)
 ## 3. Why Order Matters in Audio Hook Pipelines
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-3)
 1. **Load Speech Driver Before Network Auth**: If network authentication fails, the speech driver must already be operational to announce the failure audibly to the blind developer.
@@ -62,19 +68,22 @@ Audio Controller Dispatcher
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-4)
 ## 4. Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-4)
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-2)
 
 ### Why use Spotify Web API instead of simulating multimedia keys?
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-2)
 Multimedia key simulations (`VK_MEDIA_PLAY_PAUSE`) depend on Windows guessing which media app should receive the event. If a browser tab also has audio, Windows might pause a YouTube video instead of Spotify. The Web API targets your Spotify session directly and reliably.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-3)
 ### Can this controller work while playing an in-game audio crawler?
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-3)
 Yes. Because it uses global hooks and runs headlessly in the background, you can walk through 3D audio game worlds while adjusting your background music with seamless hotkeys.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-5)
 ## 5. Reusable Quick-Start Recipe (2-Minute Deployment)
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-5)
 1. Configure credentials in `credentials.json` with your Spotify Client ID and Client Secret.
@@ -84,6 +93,7 @@ Yes. Because it uses global hooks and runs headlessly in the background, you can
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_34-SEC-6)
 ## 6. Cross-Reference Navigation
 [//]: # (SECTION_ID: JOSH-DOC-04_34-SEC-6)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS.md`](/docs/devlog/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS)

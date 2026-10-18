@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-05_42 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_42 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.42: "From Scratch" Step-by-Step Creation Guide: Session Rollover & In-Flight Protection
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_42-SEC-1)
 ## 1. Overview & Goal
 [//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-1)
 This guide provides a complete, step-by-step engineering tutorial for building an autonomous, background session rollover and context transfer system from scratch. By following this guide, you will construct a distillation engine that extracts state offline, an execution gatekeeper that guards active in-flight tasks from accidental wipes, and an automated regression test suite.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_42-SEC-2)
 ## 2. Step 1: Implement the Context Distillation Engine (`core/session_manager.py`)
 [//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-2)
 
@@ -65,6 +67,7 @@ class SessionManager:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_42-SEC-3)
 ## 3. Step 2: Implement the Execution Gatekeeper (`agents/mixins/execution_mixin.py`)
 [//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-3)
 
@@ -119,6 +122,7 @@ class ExecutionMixin:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_42-SEC-4)
 ## 4. Step 3: Frontend Event Handlers (`sandbox/templates/index.html`)
 [//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-4)
 
@@ -153,6 +157,7 @@ else if (data.type === 'token_telemetry') {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_42-SEC-5)
 ## 5. Step 4: Verification and Hot-Patching
 [//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-5)
 
@@ -172,6 +177,7 @@ else if (data.type === 'token_telemetry') {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_42-SEC-6)
 ## 6. Cross-Reference Navigation
 [//]: # (SECTION_ID: SIRA-DOC-05_42-SEC-6)
 - **Problem Statement**: [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS)

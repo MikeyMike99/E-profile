@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-MANUAL | VERSION: v1.1 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-OPS-USER_MANUAL | VERSION: v1.1 | SCOPE: OPS)
 
 # Siraugga / Antigravity Web Portal — User Manual & Guide
 
@@ -7,11 +7,13 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-1)
 ## 1. Quick Start & Interface Overview
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-1)
 
 The **Siraugga Command Center** is an accessible, zero-restart web portal that connects your browser to the local AI engine and interactive plugins over a resilient, ACK-backed WebSocket stream.
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-1)
 ### Core Regions of the Interface
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-1)
 1. **Top Header Bar**:
@@ -27,6 +29,7 @@ The **Siraugga Command Center** is an accessible, zero-restart web portal that c
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-2)
 ## 2. Keyboard Shortcuts & Screen Reader Navigation
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-2)
 
@@ -48,6 +51,7 @@ The **Siraugga Command Center** is an accessible, zero-restart web portal that c
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-3)
 ## 3. Mid-Task Steering & Live Context Injection
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-3)
 
@@ -61,6 +65,7 @@ flowchart LR
     AltEnter --> QueueBar["Adds to Queued Follow-Up Bar + Runs Automatically When Current Turn Ends"]
 ```
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-2)
 ### Mode A: Steer Now (Immediate Course-Correction)
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-2)
 - **When to use**: You hear or see the agent's live tool calls/reasoning heading down the wrong path, or you need to change constraints right now.
@@ -70,6 +75,7 @@ flowchart LR
   2. The server packages your **original prompt**, **all tool actions completed before the interrupt**, **any partial output**, and **your new course-correction** into a `<MID_TASK_STEERING_UPDATE>` envelope.
   3. The agent immediately resumes on the **same Conversation ID** with full memory of what it already did.
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-3)
 ### Mode B: Queue Next (Non-Destructive Context Injection)
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-3)
 - **When to use**: The agent is running a valid step (e.g., running tests or editing a file) and you remember an extra instruction you want handled next without killing the current tool call.
@@ -79,21 +85,25 @@ flowchart LR
   2. You can queue multiple items; as soon as the current turn completes, all queued items are combined in order and executed automatically.
   3. At any time while waiting, you can click **`🎯 Steer Now`** in the Queue Bar to promote your queued messages into an immediate interrupt, or **`✕ Clear`** to remove them.
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-4)
 ### Hard Stop (`Cancel`)
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-4)
 - Clicking the **Cancel** button on the active task banner immediately terminates the agent process and all child subagents (**Zero-Idle Protocol**) and clears any pending queued messages.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-4)
 ## 4. Slash Commands & Built-in Interactive Plugins
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-4)
 
 Type `/` in the chat input box to open the accessible Slash Command listbox (navigate with **Up/Down Arrow** and press **Enter**), or type any command directly:
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-4_1)
 ### 4.1 `/clear` — Clear Chat Feed
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-4_1)
 - Clears the current visual chat feed while keeping your backend workspaces intact.
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-4_2)
 ### 4.2 `/media` — Accessible Media Player
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-4_2)
 - **Usage**:
@@ -102,6 +112,7 @@ Type `/` in the chat input box to open the accessible Slash Command listbox (nav
   - Ask in natural language: *"Add this video to my playlist"*, *"Remove item 2 from my playlist"*, or *"Resume my last video"*.
 - **Accessibility**: Press **`Alt + N`** at any time to jump focus directly inside the Media Player controls (`Play/Pause`, `Rewind 10s`, `Fast Forward 10s`, `Volume`, and `Autoplay Next`).
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-4_3)
 ### 4.3 `/builder` & Exam Generator — Dynamic Quizzes & Exams
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-4_3)
 - **Usage**:
@@ -111,6 +122,7 @@ Type `/` in the chat input box to open the accessible Slash Command listbox (nav
   - Supports **Anti-Cheat Mode**, custom timers, retakes of past exams, resuming unfinished exams, and mid-exam visual customization (e.g., *"Change the exam timer to 20 minutes"*).
   - Press **`Alt + T`** to focus the active Exam iframe, and **`Alt + N`** inside the exam to submit an answer or advance to the next question.
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-4_4)
 ### 4.4 `/background` — Detached Background Workloads
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-4_4)
 - **Usage**:
@@ -119,6 +131,7 @@ Type `/` in the chat input box to open the accessible Slash Command listbox (nav
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-5)
 ## 5. Interactive Artifact Viewer (Flip-Cards)
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-5)
 
@@ -134,11 +147,13 @@ When the agent generates an `.md` artifact (such as an Implementation Plan or Gu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-6)
 ## 6. Roles, Workspaces, Sessions & System Controls
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-6)
 
 Open the **Settings & Sessions** panel from the top-right header button to manage your environment:
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-6_1)
 ### 6.1 Role-Based Access Control (RBAC) Accounts
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-6_1)
 | Account (`User / Pass`) | Role Tier | Permissions & Boundaries |
@@ -150,11 +165,13 @@ Open the **Settings & Sessions** panel from the top-right header button to manag
 > [!IMPORTANT]
 > **Zero-Trust Privilege Enforcement**: Super Admins automatically receive full machine access by default with the **Raugus Map** (`PreToolUse` AST Firewall) guarding critical read-only functions. Lower-tier roles (`dev`, `mod`, `guest`) are permanently locked into `--sandbox` mode on the backend with no client-side bypass controls.
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-6_2)
 ### 6.2 Project Workspaces & Brain Sessions
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-6_2)
 - **Project Workspace Selector**: Switch the active working directory (`cwd`) for `agy`, create a new project folder (`+ New`), or clear project-specific sessions (`🗑️ Clear`).
 - **Session Selector**: Switch between historical Antigravity Brain conversations, start a fresh session (`✨ New Session`), rename the current session (`✏️ Rename`), delete a single session (`🗑️ Delete`), or sanitize all sessions (`🧹 Clear All`).
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-6_3)
 ### 6.3 Zero-Restart Maintenance Controls
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-6_3)
 - **`↻ Reload Scripts`**: Hot-reloads `agent_manager`, `execution_mixin`, `security_manager`, `project_manager`, and `session_manager` in memory (`POST /api/reload`) without dropping active WebSocket connections or restarting Port 5000.
@@ -163,6 +180,7 @@ Open the **Settings & Sessions** panel from the top-right header button to manag
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-USER_MANUAL-SEC-7)
 ## 7. Cross-Project Technical Reference Dropdown
 [//]: # (SECTION_ID: SIRA-DOC-MANUAL-SEC-7)
 

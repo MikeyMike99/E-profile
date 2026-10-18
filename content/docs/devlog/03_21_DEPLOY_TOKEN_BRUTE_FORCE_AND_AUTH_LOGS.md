@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_21 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_21 | VERSION: v1.0 | SCOPE: DEV)
 
 # Deployment Token Brute-Force & Auth Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_21-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-1)
 This test suite verifies the security, rate-limiting resistance, and credential isolation of the Headless Deployment Token protocol (`login.html` and `/api/auth/login`). It validates that valid tokens grant immediate access while automated brute-force attacks are halted by exponential rate limiting.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_21-SEC-2)
 ## 2. Test Execution Trace
 [//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-2)
 
@@ -45,6 +47,7 @@ This test suite verifies the security, rate-limiting resistance, and credential 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_21-SEC-3)
 ## 3. Security Metrics & Verification Summary
 [//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-3)
 
@@ -57,6 +60,7 @@ This test suite verifies the security, rate-limiting resistance, and credential 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_21-SEC-4)
 ## 4. Why Order Matters in Authentication Defense
 [//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-4)
 1. **Drop Unauthenticated WebSockets Before Accepting Frames**: Inspecting credentials during the HTTP upgrade prevents malicious actors from sending malicious JSON payloads into the server's event loop.
@@ -65,6 +69,7 @@ This test suite verifies the security, rate-limiting resistance, and credential 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_21-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_21-SEC-5)
 **Q: Why was Attempt 6 blocked even though it guessed the correct token?**  

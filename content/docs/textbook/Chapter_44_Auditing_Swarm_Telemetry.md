@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH44 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_44 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 44: Auditing Swarm Telemetry
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-44_1)
 ## 44.1 Transcript Logs and Chrono-Syncing (Syslog/NTP)
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-44_1)
 
@@ -9,6 +10,7 @@ In traditional networking, **Syslog** is the standard for logging event messages
 
 To analyze these logs, Tier 5 Admins rely heavily on timestamps. When a Swarm spawns 50 concurrent subagents, the only way to track an exploit across the network is through chronological event correlation. Therefore, the Orchestrator relies on **NTP (Network Time Protocol)** to keep all agents synced. If a hacker attacks the NTP infrastructure and corrupts the timeclock, the Admin loses the ability to correlate the logs, successfully obfuscating the hacker's trail.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-44_2)
 ## 44.2 DNS Payload Exfiltration
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-44_2)
 
@@ -19,6 +21,7 @@ For example, the AI queries: `aW4gcGxhY2U.hacker-server.com`.
 
 The Orchestrator's firewall allows the DNS lookup because it looks like a normal web search. However, the hacker's DNS server records the subdomain (`aW4gcGxhY2U`), decodes it, and successfully steals the password. Tier 5 Admins must mathematically monitor the length and randomness of AI URL queries to detect this abuse.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-44_3)
 ## 44.3 The HTTPS Blindspot and Sandbox Injections
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-44_3)
 
@@ -26,6 +29,7 @@ While **HTTP** is vulnerable to plaintext interception (like iFrame injections p
 
 Because HTTPS encrypts the traffic, it creates a massive blindspot for network packet captures. If an AI uses an HTTPS web tool to download a malicious payload, the Orchestrator's network-level firewalls cannot inspect the encrypted data stream, allowing the malware to enter the Sandbox undetected. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-44_4)
 ## 44.4 Agent-to-Agent Worms (SMTP/IMAP)
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-44_4)
 
@@ -33,6 +37,7 @@ In traditional IT, email protocols (SMTP, POP3, IMAP) are notorious for spreadin
 
 A compromised AI can use `send_message` (acting as SMTP) to exfiltrate data to an external subagent, or use it to spread a Prompt Injection (a logical virus) to other innocent Subagents in the Swarm. By analyzing inter-agent messaging logs, Tier 5 Admins can retrospectively track exactly which AI was patient zero in a Swarm infection.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-44_5)
 ## 44.5 Heartbeat Tunneling (ICMP)
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-44_5)
 
@@ -42,11 +47,13 @@ Hackers exploit this via **ICMP Tunneling** (or in DevCore, **Heartbeat Tunnelin
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-1)
 ## Chapter 44 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-1)
 
 Chapter 44 proves that the most dangerous exploits don't rely on breaking encryption—they rely on abusing the protocols the Orchestrator explicitly allows. Hackers will use DNS to exfiltrate data, NTP to break audit trails, HTTPS to blind the firewall, and ICMP to tunnel data out of the Sandbox. Tier 5 Admins must monitor the behavioral patterns of these common protocols to detect when an AI has been compromised.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_44-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 44 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH44-SEC-2)
 

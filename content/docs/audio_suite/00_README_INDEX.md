@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: JOSH-PLAY-00 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: JOSH-PLAY-INDEX | VERSION: v1.0 | SCOPE: PLAY)
 
 # JOSHY Screen Reader & Nuitka Packaging Documentation Index
 
@@ -8,6 +8,7 @@ This folder documents the complete investigation, source code evidence, diagnost
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-INDEX-SEC-1)
 ## Documentation Directory Contents
 [//]: # (SECTION_ID: JOSH-PLAY-00-SEC-1)
 
@@ -38,6 +39,7 @@ The documentation is organized into five focused, screen-reader-friendly guides:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-INDEX-SEC-2)
 ## Project File Map
 [//]: # (SECTION_ID: JOSH-PLAY-00-SEC-2)
 
@@ -52,6 +54,7 @@ The documentation is organized into five focused, screen-reader-friendly guides:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-INDEX-SEC-3)
 ## Quick Checklist for Future Recompilations
 [//]: # (SECTION_ID: JOSH-PLAY-00-SEC-3)
 
@@ -65,6 +68,7 @@ If you ever modify `main.py` (t.py) in the future and want to rebuild both `JOSH
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-INDEX-SEC-4)
 ## New to Screen Readers or Accessible Coding? Start Here First!
 [//]: # (SECTION_ID: JOSH-PLAY-00-SEC-4)
 
@@ -79,6 +83,7 @@ It answers the core questions a beginner coder asks when opening this folder:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-INDEX-SEC-5)
 ## Chapter 5 Added: Building the `.bat` File From Scratch
 [//]: # (SECTION_ID: JOSH-PLAY-00-SEC-5)
 

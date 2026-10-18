@@ -1,9 +1,10 @@
-[//]: # (DOC_ID: SIRA-TXT-MOD3_SUM | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-MOD_3_SUM | VERSION: v1.0 | SCOPE: TXT)
 
 # Module 3 Summary: Agentic Access Control
 
 This section serves as the formal recap of the security architecture required to operate the Siraugga Engine. The following concepts form the impenetrable barrier between untrusted AI agents and the core game state.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_SUM-SEC-1)
 ### 1. Access Controls
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_SUM-SEC-1)
 There are three fundamental types of access controls in DevCore:
@@ -11,6 +12,7 @@ There are three fundamental types of access controls in DevCore:
 *   **Logical Controls:** The software solutions used to manage resources, such as the `Task Orchestrator Module` enforcing Agentic Control Lists (ACLs) and cryptographic token validation.
 *   **Administrative Controls:** The overarching security services defined by the Agentic Triad (AAA): Authentication, Authorization, and Accountability (tracing every JSON payload back to a specific AI's UUID).
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_SUM-SEC-2)
 ### 2. Access Control Concepts
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_SUM-SEC-2)
 *   **The CIA Triad:** Confidentiality, Integrity, and Availability. In DevCore, all WebSockets are encrypted to protect the integrity of the live game data.
@@ -18,6 +20,7 @@ There are three fundamental types of access controls in DevCore:
 *   **Privilege Escalation (Agentic Jailbreaking):** The most dangerous exploit, where vulnerabilities in the sandbox are exploited by a malicious prompt to grant an AI unauthorized Tier 5 root access.
 *   **Control Methods:** Siraugga natively blends Mandatory Access Control (MAC) for its 5 File Tiers, and Role-Based Access Control (RBAC) for its specific AI Archetypes (Coding, QA, Research).
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_SUM-SEC-3)
 ### 3. Account Management
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_SUM-SEC-3)
 *   **The Tier System:** Ranging from Tier 5 (Super Admins) down to Tier 1 (End Players) and Tier 3 (AI Subagents). 
@@ -25,6 +28,7 @@ There are three fundamental types of access controls in DevCore:
 *   **Authentication Management (FAIM):** The Federated Agentic Identity Management system ensures secure sign-in, incorporating OAuth delegation and System Prompt KBA (Knowledge-Based Authentication).
 *   **Protocols:** The orchestration layer communicates using a fortified web of protocols including EAP, Semantic CHAP, RADI, TACAS+, and Cerberus (Kerberos).
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_SUM-SEC-4)
 ### 4. AAA Usage and Operation
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_SUM-SEC-4)
 *   **The Siraugga Security Policy:** Dictated by `Access Control Module`, this policy mandates an accounting system (`transcript.jsonl`) that tracks exactly what every AI did while active.

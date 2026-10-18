@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_18 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_18 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_18: Game Engine Headless Daemon Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the Siraugga Game Engine Integration specification 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-1)
 ## Source Citation 1: The Headless Subprocess Daemon (`docs/architecture/game_engine_integration.md`)
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-1)
 
@@ -15,6 +16,7 @@ This excerpt details how parent game engines (Unity, Unreal, Godot) spawn and bi
 # Location: <project_root>/docs/architecture/game_engine_integration.md
 # Section 1 & 2
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-1)
 ## 1. The Headless Daemon (Boot Sequence)
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-1)
 The agent is explicitly designed NOT to function as a traditional desktop application when deployed as a plugin. 
@@ -23,6 +25,7 @@ Instead, the entire Python backend (Quart server, Agent Manager, Security Manage
 * Visibility: The executable is compiled with terminal-suppression flags (--windows-disable-console). It runs completely invisibly.
 * Binding: Upon launch, it instantly binds to http://localhost:5000 (and ws://localhost:5000) on the host machine.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-2)
 ## 2. The WebSocket Bridge (Communication)
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-2)
 The Game Engine and the Agent do not share memory; they communicate exclusively over a local WebSocket.
@@ -30,6 +33,7 @@ The Game Engine and the Agent do not share memory; they communicate exclusively 
 * Event Streaming: The agent streams its thought processes, tool executions, and final text back to the Game Engine chunk-by-chunk via stream-json NDJSON formatting.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-2)
 - **Decoupled Process Isolation**: The game engine does not link Python into its game loop thread; it runs the agent as an out-of-process daemon, preventing AI crashes from crashing the game frame rate.
@@ -37,6 +41,7 @@ The Game Engine and the Agent do not share memory; they communicate exclusively 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-3)
 ## Source Citation 2: Protecting Host Engine Source Code (`docs/architecture/game_engine_integration.md`)
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-3)
 
@@ -46,6 +51,7 @@ This excerpt documents how the Access Control Module prevents the AI from touchi
 # Location: <project_root>/docs/architecture/game_engine_integration.md
 # Section 5
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-5)
 ## 5. Protecting Host Source Code (Zero-Trust Injection)
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-5)
 A critical requirement of plugging this agent into third-party projects is guaranteeing that the AI cannot accidentally (or maliciously) modify the parent application's proprietary source code.
@@ -54,6 +60,7 @@ A critical requirement of plugging this agent into third-party projects is guara
 * The Guarantee: The parent application's source code, host OS files, and intellectual property remain 100% invisible and physically inaccessible to the AI agent.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-4)
 - **Proprietary Code Armor**: Path traversal tricks (`../../src/main_engine.cpp`) are intercepted at the filesystem layer by `resolve_safe_path()`, throwing immediate `PermissionError` (HTTP 403).
@@ -61,6 +68,7 @@ A critical requirement of plugging this agent into third-party projects is guara
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-5)
 
@@ -71,23 +79,27 @@ In game engine subprocess management, boot sequence prevents socket connection f
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-7)
 
 ### What does `--windows-disable-console` do?
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-7)
 When compiling a Python script to an `.exe`, Windows usually opens a black command prompt box. This flag hides the console window entirely, letting the agent run invisibly in the background.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-8)
 ### What is CEF (Chromium Embedded Framework)?
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-8)
 CEF is a lightweight browser engine that game developers embed inside 3D games (like Unity or Unreal) to display HTML5 web interfaces on virtual computer screens or HUDs.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-9)
 ### How does the game engine know when the AI finished talking?
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-9)
 The agent streams JSON chunks over the WebSocket. When the final chunk has `"done": true`, the game engine triggers the character's speaking animation or closes the dialogue box.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_18-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_18-SEC-10)
 - To understand why desktop window wrapping and game plugins required headless compilation, read [`01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md`](/docs/devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS).

@@ -1,9 +1,10 @@
-[//]: # (DOC_ID: SIRA-MAN-README | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-MAN-README | VERSION: v1.0 | SCOPE: MAN)
 
 # The Developer's Manifesto
 
 Welcome to the definitive history of this ecosystem.
 
+[//]: # (SECTION_ID: SIRA-MAN-README-SEC-1)
 ### The Volumes
 [//]: # (SECTION_ID: SIRA-MAN-README-SEC-1)
 0. [Foreword: The Cost of Memory](/docs/manifesto/00_Foreword) - *Why this manifesto exists.*

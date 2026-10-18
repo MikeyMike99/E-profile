@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-00F_BEGINNER_G | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 00F: Beginner Guide to Clean-Room Development & Sovereignty
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-1)
 ## What is Clean-Room Development?
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-1)
 
@@ -17,6 +18,7 @@ When developers build applications while working for a company or studying at a 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-2)
 ## The Legal Foundation: Section 21 of the Copyright Act
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-2)
 
@@ -44,6 +46,7 @@ Under technology intellectual property law (specifically Section 21 of the South
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-3)
 ## The Three Clean-Room Pillars of Siraugga
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-3)
 
@@ -55,6 +58,7 @@ As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-roo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-4)
 ## Plain-English Glossary
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-4)
 
@@ -65,6 +69,7 @@ As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-roo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-5)
 ## Why Order Matters in Clean-Room Forensics
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-5)
 
@@ -75,13 +80,15 @@ As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-roo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-7)
 
 ### Q: Does deleting a file in Git remove it from history?
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-7)
 **A:** No! Standard `git rm` only deletes the file from the current branch head. Anyone can view past commits and recover the entire file. Total compliance requires rewriting the Git commit graph.
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-8)
 ### Q: Why is relying on a company's cloud AI dangerous for personal projects?
 [//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-8)
 **A:** If an employee uses company cloud credits or tenant logins to train an AI, company lawyers can legally argue that the project belongs to the company, not the developer.

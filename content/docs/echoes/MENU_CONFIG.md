@@ -1,9 +1,10 @@
-[//]: # (DOC_ID: ECHO-CORE-MENU | VERSION: v1.2 | SCOPE: Echoes of the World (Audio Game))
+[//]: # (DOC_ID: ECHO-DEV-MENU_CONFIG | VERSION: v1.2 | SCOPE: DEV)
 
 # 🧭 Menu Configuration Guide
 
 This document defines the expected structure and behavior of the `menus` dictionary used to drive the application's dynamic, tab-based interface.
 
+[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-1)
 ## 🔹 Overview
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-1)
 
@@ -12,14 +13,16 @@ Each top-level key in the `menus` dictionary is a dynamic menu identifier (e.g. 
 - Menus may or may not define tabs.
 - If a menu includes `tab_list` and `tabs`, it's considered a **tabbed menu**.
 
+[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-2)
 ## 🔹 Menu Types
-[//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-2)
+[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-1)
 
 ### 1. Simple Menus
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-1)
 Menus that don't contain tabs. Used for general selection or root navigation.  
 They do not define `tab_list` or `tabs`.
 
+[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-2)
 ### 2. Tabbed, Menus
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-2)
 Contain two required entries:
@@ -29,6 +32,7 @@ Contain two required entries:
 
 These keys must always appear together. If one is missing, the config is considered invalid.
 
+[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-3)
 ## 🔹 Tab Entry Structure
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-3)
 
@@ -41,6 +45,7 @@ Each entry inside `tabs` must define:
 
 No additional flags (like `"edit"`) are required. All behavior is inferred from `type`.
 
+[//]: # (SECTION_ID: ECHO-DEV-MENU_CONFIG-SEC-4)
 ## 🔹 Example
 [//]: # (SECTION_ID: ECHO-CORE-MENU-SEC-4)
 

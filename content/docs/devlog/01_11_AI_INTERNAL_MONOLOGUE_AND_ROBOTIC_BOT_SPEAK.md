@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_11 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_11 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.11: Problems Encountered: Internal Monologue & Robotic Bot-Speak
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-1)
 
@@ -19,8 +20,9 @@ This chapter breaks down the speech engineering hurdles and how deterministic in
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-2)
 ## Issue 1: Streaming Raw Thinking Tokens to Speech
-[//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-3)
@@ -33,14 +35,16 @@ to inspect the security manager dot py file open parenthesis line 45 close paren
 
 The blind developer was forced to listen to 45 seconds of rambling internal brainstorming just to find out that the AI had opened a file.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-4)
 The streaming parser did not differentiate between user-facing conversational text, machine-readable tool parameters, and private model reasoning blocks. Everything received on the WebSocket was fed blindly into the speech queue.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-5)
 ## Issue 2: Punctuation Stuttering & Preamble Bloat
-[//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-6)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-6)
@@ -53,6 +57,7 @@ Even when restricting audio to tool calls, speech synthesizers produced irritati
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-7)
 ## The Architectural Solution: Intent-Driven Structural Mapping
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-7)
 
@@ -82,6 +87,7 @@ To achieve instantaneous, professional audio feedback, the team executed a serie
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-8)
 ## Why Order Matters in Audio Pipeline Sanitization
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-8)
 
@@ -92,13 +98,15 @@ To achieve instantaneous, professional audio feedback, the team executed a serie
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-9)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-9)
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-10)
 
 ### Q: Why do speech synthesizers pronounce punctuation marks?
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-10)
 **A:** Standard text-to-speech models are designed for audiobooks and human literature. When fed technical code containing brackets, underscores, and backticks, they attempt to pronounce every character literally so that nothing is missed.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_11-SEC-11)
 ### Q: Why not use a local TTS engine like eSpeak instead of cloud APIs?
 [//]: # (SECTION_ID: SIRA-DOC-01_11-SEC-11)
 **A:** eSpeak is extremely fast, but its mechanical robotic tone causes severe listening fatigue during 8-hour coding sessions. Modern neural voices (like ElevenLabs) sound natural and easy on the ears, provided the text input is sanitized properly.

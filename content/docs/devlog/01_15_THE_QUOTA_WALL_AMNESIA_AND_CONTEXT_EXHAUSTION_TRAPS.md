@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_15 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_15 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_15: The Quota Wall, Amnesia & Context Exhaustion Traps
 
@@ -6,6 +6,7 @@ As development sessions grow in complexity, autonomous coding agents accumulate 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-1)
 
@@ -16,6 +17,7 @@ During prolonged multi-step refactoring sessions spanning hours of continuous wo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-2)
 
@@ -34,6 +36,7 @@ Semantic Compaction:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-3)
 
@@ -44,23 +47,27 @@ Preserving intelligence across long horizons requires a strict order of memory h
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-5)
 
 ### What is "Semantic Compaction"?
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-5)
 Instead of keeping 50 pages of raw terminal outputs, a background routine extracts only the essential conclusions (e.g., "Step 4: Hot-patch compiler verified clean syntax; backup saved to core/backups/server.py") and discards the raw bytes.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-6)
 ### Why not just use a larger context model (e.g., 1M tokens)?
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-6)
 Larger context windows increase latency significantly (longer time to first token) and introduce the "Needle In A Haystack" problem, where the model misses crucial instructions buried in hundreds of thousands of words.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-7)
 ### Where does Siraugga store persistent memory?
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-7)
 Long-term context is stored outside the LLM in structured JSON files (`session_ownership.json`, `project_manager` metadata, and Raugus VFS AST maps). The agent queries these on demand rather than keeping everything in active memory.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_15-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_15-SEC-8)
 - To see how the server buffers and manages event streams without overflowing memory, read [`04_SOLUTIONS_AND_ARCHITECTURE/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL.md`](/docs/devlog/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL).

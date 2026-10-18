@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_16 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_16: Autonomous Self-Healing Boot Architecture
 
@@ -6,6 +6,7 @@ An architectural guide to Siraugga's **Pre-Flight Supervisor & 3-Tier Self-Heali
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-1)
 ## Architectural Overview & Topology
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-1)
 
@@ -52,6 +53,7 @@ Siraugga solves this via a **Dual-Layer Gateway and 3-Tier Self-Healing Pipeline
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-2)
 ## The 3 Tiers of Self-Healing Explained
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-2)
 
@@ -66,6 +68,7 @@ Siraugga solves this via a **Dual-Layer Gateway and 3-Tier Self-Healing Pipeline
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-3)
 
@@ -76,6 +79,7 @@ In autonomous self-healing, recovery sequence protects stability:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-4)
 ## Reusable Integration Recipe
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-4)
 
@@ -100,19 +104,22 @@ def safe_start_application():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-6)
 
 ### What is a "Headless Agent"?
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-6)
 A headless agent is an AI that runs entirely from the command line without opening a browser or chat window. It receives a task, modifies the code, and exits silently.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-7)
 ### Will this loop forever if the AI can't fix the bug?
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-7)
 No. The supervisor enforces a strict retry limit (`max_retries = 2`). If the file fails compilation twice, it halts and requests human assistance.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_16-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_16-SEC-8)
 - To understand why server crashes prompted this self-healing architecture, read [`01_PROBLEMS_ENCOUNTERED/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES.md`](/docs/devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES).

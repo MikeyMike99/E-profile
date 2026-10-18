@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_12 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-DEV-04_12 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_12: Accessible Audio Overlay & Speech Architecture
 
@@ -6,6 +6,7 @@ An architectural guide to Siraugga's **Accessible Audio Overlay & Speech Engine*
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-1)
 ## Architectural Overview & Topology
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-1)
 
@@ -44,6 +45,7 @@ The Accessible Audio Overlay architecture operates on three synchronized planes:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-2)
 ## The Assistive Driver Hierarchy
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-2)
 
@@ -58,6 +60,7 @@ When speech output is requested, the engine cascades through three tiers of assi
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-3)
 
@@ -68,6 +71,7 @@ In multi-driver assistive audio architectures, initialization order guarantees d
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-4)
 ## Reusable Integration Recipe
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-4)
 
@@ -90,23 +94,27 @@ notify_user_accessibly("Build completed successfully. Zero errors.")
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-5)
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-6)
 
 ### Why can't I just use `pyttsx3`?
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-6)
 `pyttsx3` only talks to the computer's generic default robotic voice (SAPI5). It cannot talk to NVDA or JAWS. Visually impaired developers listen to NVDA at 400+ words per minute; generic TTS is painfully slow and jarring.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-7)
 ### How do global keyboard shortcuts work without window focus?
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-7)
 The application registers low-level keyboard hooks with the Windows operating system (`SetWindowsHookEx` or `RegisterHotKey`). The OS intercepts the keys before they reach the active window and routes them to our background handler.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-8)
 ### Does this require administrator privileges to run?
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-8)
 No. The embedded DLL is written to `%LOCALAPPDATA%`, which does not require admin rights, and user-level keyboard hooks run with standard privileges.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_12-SEC-9)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_12-SEC-9)
 - To understand why assistive speech failed on secondary PCs, read [`01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md`](/docs/devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS).

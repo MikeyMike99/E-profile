@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH21 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_21 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 21: Introduction to Agentic Firewalls
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_21-SEC-21_1)
 ## 21.1 The Need for Agentic Bulkheads
 [//]: # (SECTION_ID: SIRA-TXT-CH21-SEC-21_1)
 
@@ -13,6 +14,7 @@ The Sandbox security infrastructure dictates exactly how these digital boundarie
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_21-SEC-21_2)
 ## 21.2 Module Objectives & Master Syllabus
 [//]: # (SECTION_ID: SIRA-TXT-CH21-SEC-21_2)
 

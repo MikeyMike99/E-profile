@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: JOSH-DOC-03_31 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: SIRA-DEV-03_31 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 03.31: Diagnostic Tests & Logs: Spotify Global Hotkey & Volume Isolation Audits
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-1)
 ## Overview & Context
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-1)
 This document records diagnostic tests evaluating global keyboard hook responsiveness across different Windows applications, verifying Spotify Web API playback commands, and proving that track volume changes remain completely decoupled from the system master volume and NVDA screen reader speech.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-1)
 ## 1. Test Execution & Diagnostic Log
-[//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-1)
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-2)
 
 ### What We Tested
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-2)
@@ -17,6 +19,7 @@ This document records diagnostic tests evaluating global keyboard hook responsiv
 2. Windows master audio volume vs Spotify internal player volume isolation.
 3. OAuth token refresh behavior and NVDA speech announcement dispatch.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-3)
 ### Exact Test Execution
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-3)
 ```python
@@ -38,6 +41,7 @@ final_master_vol = endpoint_volume.GetMasterVolumeLevelScalar()
 speak(f"Spotify Volume: {new_spotify_vol}%. Master Volume Unchanged.")
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-4)
 ### Exact Output Returned
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-4)
 ```
@@ -55,6 +59,7 @@ speak(f"Spotify Volume: {new_spotify_vol}%. Master Volume Unchanged.")
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-2)
 ## 2. Window Focus Sensitivity Benchmark
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-2)
 
@@ -71,6 +76,7 @@ Spotify (Active Window)       YES (Global Hook)     YES (104ms)
 Overall Focus Independence:   100% Success across all desktop states.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-5)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-5)
 - The low-level Windows keyboard hook successfully intercepts media hotkeys regardless of which window holds OS focus, achieving total headless control.
@@ -78,6 +84,7 @@ Overall Focus Independence:   100% Success across all desktop states.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-3)
 ## 3. Why Order Matters in Audio Testing
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-3)
 1. **Sample Baseline Volume First**: Read the operating system's master volume scalar before sending any API requests to detect any accidental leakage.
@@ -85,19 +92,22 @@ Overall Focus Independence:   100% Success across all desktop states.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-4)
 ## 4. Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-6)
 
 ### What is `GetMasterVolumeLevelScalar`?
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-6)
 In the Windows Core Audio API (`endpointvolume.h`), master volume is represented as a scalar floating-point number between `0.0` (muted) and `1.0` (100% full volume).
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-7)
 ### Why did the speech announcement take only 14ms?
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-7)
 `screenreader_speak.py` uses direct in-process CTypes calls into `nvdaControllerClient64.dll`. Because it avoids spinning up external processes or network requests, speech execution is virtually instantaneous.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_31-SEC-5)
 ## 5. Cross-Reference Navigation
 [//]: # (SECTION_ID: JOSH-DOC-03_31-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS.md`](/docs/devlog/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS)

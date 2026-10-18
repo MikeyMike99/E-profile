@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH14 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_14 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 14: Introduction to Agentic Control Lists (ACLs)
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-14_1)
 ## 14.1 The Agentic Gateman (Why ACLs are Necessary)
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-14_1)
 
@@ -15,6 +16,7 @@ But how are these rigid lists configured? How does a Tier 5 Admin modify an acti
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-14_2)
 ## 14.2 Module Objectives & Master Syllabus
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-14_2)
 
@@ -34,6 +36,7 @@ The survival of the core game state depends entirely on the mathematical perfect
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-14_3)
 ## 14.3 What is an Agentic Control List?
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-14_3)
 
@@ -45,6 +48,7 @@ An ACL uses a sequential list of `permit` or `deny` statements, formally known a
 
 When an AI subagent generates a thought and attempts to use a tool, the Orchestrator compares the JSON request against each ACE in top-down sequential order. If the request matches an entry, the Orchestrator executes the `permit` or `deny` command immediately. This process is known as **Semantic Filtering**.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-14_4)
 ## 14.4 Semantic Filtering (Layer 3 and Layer 4)
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-14_4)
 
@@ -53,6 +57,7 @@ In the OSI model, packet filtering occurs at Layer 3 (Network) and Layer 4 (Tran
 *   **Standard Agentic ACLs (Layer 3 Filtering):** These ACLs only filter based on the source identity. They look exclusively at the **Agent UUID** or the **Modder's FAIM profile**. It is a simple check: *Is Agent-104 allowed in this folder?*
 *   **Extended Agentic ACLs (Layer 4 Filtering):** These are far more granular. They filter at Layer 3 (Agent UUID) *and* at Layer 4 (Tool Intent). Extended ACLs can filter traffic based on the specific tool being requested (e.g., `write_to_file` vs `run_command`) and the exact filepath the AI is targeting. This provides the Raugus Resolver with surgical control over the swarm.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-14_5)
 ## 14.5 Numbered and Named ACLs
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-14_5)
 
@@ -62,6 +67,7 @@ When building these security lists, Tier 5 Admins have two syntax options:
 *   **Named ACLs (Preferred):** To maintain legibility across massive, multi-agent swarms, Named ACLs are the absolute standard in DevCore. Naming an extended list `QA-READONLY-FILTER` is infinitely better than labeling it `100`. 
     *   *Syntax Rules:* Names must contain alphanumeric characters, cannot contain spaces, and should always be written in CAPITAL LETTERS. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-14_6)
 ## 14.6 Agentic ACL Operation & The Implicit Deny
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-14_6)
 
@@ -70,6 +76,7 @@ ACLs can be applied to traffic moving in two directions:
 *   **Inbound Agentic ACLs:** This filters the AI's JSON request *before* it is routed to the Linux Sandbox. An inbound ACL is highly efficient because if a malicious prompt is detected, the packet is discarded immediately, saving the system the heavy computational overhead of spawning a terminal shell.
 *   **Outbound Agentic ACLs:** This filters the traffic *after* the sandbox has executed the command, but before the terminal output is returned to the AI or Modder. Outbound ACLs are brilliant for catching and censoring sensitive server stack-traces or hidden environment variables before the AI can read them.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-1)
 ### The Operational Sequence
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-1)
 When a JSON tool request hits an Inbound ACL, the Orchestrator follows a violently strict procedure:
@@ -82,6 +89,7 @@ The most critical security feature in the entire DevCore architecture is the **I
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-2)
 ## Chapter 14 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-2)
 
@@ -89,6 +97,7 @@ Chapter 14 introduces the primary structural filter that prevents a sprawling AI
 
 Ultimately, the entire filtering architecture is underpinned by the Implicit Agentic Deny—the unshakeable Zero-Trust guarantee that if an AI's specific tool request is not explicitly permitted by a Tier 5 Admin, it is mathematically eradicated before it can ever execute.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_14-SEC-3)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 14 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH14-SEC-3)
 

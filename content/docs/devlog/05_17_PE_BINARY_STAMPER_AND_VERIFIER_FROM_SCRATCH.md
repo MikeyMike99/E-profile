@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_17 | VERSION: v1.0 | SCOPE: ARCH)
 
 # PE Binary Stamper & Verifier from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_17-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_17-SEC-1)
 Recompiling a large Python engine using Nuitka takes 8 to 15 minutes. If license keys, user tiers, or build metadata are baked directly into source code, creating custom builds for different developers becomes impractically slow.
@@ -21,6 +22,7 @@ The PE Binary Stamper (`stamper.py`) appends encrypted metadata trailers directl
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_17-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_17-SEC-2)
 Save the following script as `stamper.py`:
@@ -100,6 +102,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_17-SEC-3)
 ## 3. Why Order Matters in Binary Stamping
 [//]: # (SECTION_ID: SIRA-DOC-05_17-SEC-3)
 1. **Append in Binary Mode (`ab`)**: Writing in text mode (`a`) can convert carriage return line breaks (`\r\n`), corrupting the cryptographic ciphertext.
@@ -108,6 +111,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_17-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_17-SEC-4)
 **Q: Does appending data break the Windows executable?**  

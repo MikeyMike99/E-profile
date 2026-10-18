@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_30 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_30 | VERSION: v1.0 | SCOPE: DEV)
 
 # PreToolUse Raugus Hook Source Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_30-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_30-SEC-1)
 This document records source code evidence from `.agents/raugus_hook.py`. Registered as a pre-execution hook in `.agents/hooks.json`, it intercepts all AI tool calls (`write_to_file`, `replace_file_content`, `edit_lines`, `run_command`), validates RBAC tiers and function write locks, and logs violations to the SIEM.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_30-SEC-2)
 ## 2. AST Line Span Parser Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_30-SEC-2)
 The hook parses incoming replacement code to determine the exact start and end line ranges of targeted functions:
@@ -33,6 +35,7 @@ def get_ast_symbols(source_code):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_30-SEC-3)
 ## 3. SIEM & Swarm Intrusion Alert Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_30-SEC-3)
 Blocked actions trigger immediate telemetry alerts across both SIEM and Swarm loggers:
@@ -62,6 +65,7 @@ def log_violation(tool_name, target, reason):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_30-SEC-4)
 ## 4. Hook Interception & Decision Output Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_30-SEC-4)
 The hook evaluates incoming stdin JSON and terminates unauthorized operations:
@@ -86,6 +90,7 @@ print(json.dumps({"decision": "approve"}))
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_30-SEC-5)
 ## 5. Why Order Matters in Tool Interception
 [//]: # (SECTION_ID: SIRA-DOC-02_30-SEC-5)
 1. **Read Stdin Completely Before Processing**: The hook must ingest the full tool payload before attempting JSON decoding to avoid partial-frame errors.
@@ -94,6 +99,7 @@ print(json.dumps({"decision": "approve"}))
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_30-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_30-SEC-6)
 **Q: How does the AI system know to run `raugus_hook.py`?**  

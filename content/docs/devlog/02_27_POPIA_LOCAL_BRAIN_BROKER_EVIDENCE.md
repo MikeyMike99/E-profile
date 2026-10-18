@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_27 | VERSION: v1.0 | SCOPE: DEV)
 
 # POPIA Local Brain Broker Source Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_27-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_27-SEC-1)
 This document records source code evidence from `security/local_brain_broker.py`. It details the offline PII scrubber and local LLM execution engine designed to comply with South Africa's Protection of Personal Information Act (POPIA) by preventing sensitive data egress to cloud servers.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_27-SEC-2)
 ## 2. Deterministic & Presidio NLP Scrubbing Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_27-SEC-2)
 `offline_scrub_pii()` combines regex patterns for South African ID numbers, phones, and API secrets with local Microsoft Presidio NLP:
@@ -45,6 +47,7 @@ def offline_scrub_pii(text: str, use_nlp: bool = False, stage: str = "stream") -
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_27-SEC-3)
 ## 3. Local GGUF Model Execution via llama-cli Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_27-SEC-3)
 To process documents with zero network egress, the broker spawns an offline quantized Qwen model:
@@ -74,6 +77,7 @@ def run_local_qwen(prompt: str, max_tokens: int = 1024) -> str:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_27-SEC-4)
 ## 4. Anti-Exfiltration & Verbatim Code Stripping Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_27-SEC-4)
 Heuristics detect prompt injections designed to steal proprietary code:
@@ -94,6 +98,7 @@ def is_exfiltration_query(prompt: str) -> bool:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_27-SEC-5)
 ## 5. Why Order Matters in Privacy Scrubbing
 [//]: # (SECTION_ID: SIRA-DOC-02_27-SEC-5)
 1. **Redact High-Entropy Secrets Before PII**: Scrubbing API keys and JWTs first prevents complex regexes from misclassifying keys as phone numbers or IDs.
@@ -102,6 +107,7 @@ def is_exfiltration_query(prompt: str) -> bool:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_27-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_27-SEC-6)
 **Q: What is a GGUF model?**  

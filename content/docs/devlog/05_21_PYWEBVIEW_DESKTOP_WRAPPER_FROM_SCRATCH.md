@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_21 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_21 | VERSION: v1.0 | SCOPE: ARCH)
 
 # PyWebView Desktop Wrapper from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_21-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_21-SEC-1)
 Developers running AI portals in web browsers face constant interruptions from external browser popups, accidental tab closures, and unmanaged background server processes.
@@ -36,6 +37,7 @@ This guide details how to build `desktop_app.py` from scratch. It packages a Qua
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_21-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_21-SEC-2)
 Save the following script as `desktop_app.py`:
@@ -139,6 +141,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_21-SEC-3)
 ## 3. Why Order Matters in Native Window Initialization
 [//]: # (SECTION_ID: SIRA-DOC-05_21-SEC-3)
 1. **Redirect Stdout Before Imports**: If an imported module attempts to log to a `None` stream, Python crashes with `AttributeError` before the GUI engine can load.
@@ -147,6 +150,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_21-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_21-SEC-4)
 **Q: What is the difference between PyWebView and Electron?**  

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_09 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.9: From-Scratch Creation Guide: Offline Password Audit Lab
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-1)
 
@@ -17,8 +18,9 @@ You will implement dictionary hash cracking tests to demonstrate the vulnerabili
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-2)
 ## Step-by-Step Implementation
-[//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-3)
 
 ### Step 1: Open a Blank Python File
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-3)
@@ -26,6 +28,7 @@ You will implement dictionary hash cracking tests to demonstrate the vulnerabili
 nano threat_audit_lab.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-4)
 ### Step 2: Implement the Dictionary Hash Scanner (Lines 1–35)
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-4)
 ```python
@@ -49,6 +52,7 @@ def audit_hash(target_hash: str, wordlist: list) -> tuple:
     return False, None, attempts, elapsed
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-5)
 ### Step 3: Implement Salted Hardening Verification (Lines 36–55)
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-5)
 ```python
@@ -71,6 +75,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-6)
 ## Why Order Matters in Cryptographic Verification
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-6)
 
@@ -81,6 +86,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-7)
 ## Verification & Testing
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-7)
 
@@ -97,13 +103,15 @@ python3 threat_audit_lab.py
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-8)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-8)
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-9)
 
 ### Q: Why is `time.perf_counter()` preferred over `time.time()`?
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-9)
 **A:** `time.time()` measures wall-clock time and can jump backward if the operating system synchronizes with an NTP internet time server. `time.perf_counter()` is a monotonic clock that only moves forward, making it ideal for performance profiling.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_09-SEC-10)
 ### Q: How does adding a salt stop this script?
 [//]: # (SECTION_ID: SIRA-DOC-05_09-SEC-10)
 **A:** If you add a random salt like `x9F2#kL` to the password before hashing, the attacker must guess the salt *and* the password simultaneously. This increases the possible combinations by billions, making dictionary attacks mathematically impossible.

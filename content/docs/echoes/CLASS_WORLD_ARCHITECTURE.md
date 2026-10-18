@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: ECHO-CORE-WORLD | VERSION: v1.3 | SCOPE: Echoes of the World (Audio Game))
+[//]: # (DOC_ID: ECHO-DEV-CLASS_WORLD_ARCHIT | VERSION: v1.3 | SCOPE: DEV)
 
 # Echoes of the World: Class & World Architecture
 
@@ -155,6 +155,7 @@ Confirms that the system is building chunk entries dynamically.
 Confirms whether the player was successfully added to the world.
 
 
+[//]: # (SECTION_ID: ECHO-DEV-CLASS_WORLD_ARCHIT-SEC-1)
 ## Cross-References & System Parallels
 [//]: # (SECTION_ID: ECHO-CORE-WORLD-SEC-1)
 

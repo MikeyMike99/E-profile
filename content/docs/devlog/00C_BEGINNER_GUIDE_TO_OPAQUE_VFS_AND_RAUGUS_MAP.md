@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-00C_BEGINNER_G | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-00C_BEGINNER_GUIDE | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 00C: Beginner Guide to Opaque Virtual File Systems & Raugus Map
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-1)
 ## What is an Opaque Virtual File System (VFS)?
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-1)
 
@@ -22,6 +23,7 @@ An **Opaque Virtual File System (VFS)** completely hides physical paths behind a
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-2)
 ## The Raugus Map VFS Architecture
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-2)
 
@@ -51,6 +53,7 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 +---------------------------------------+   +-----------------------------------+
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-3)
 ### Key Formats
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-3)
 - **Module Key**: `devcore.core.server.py`
@@ -59,6 +62,7 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-4)
 ## Plain-English Glossary
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-4)
 
@@ -69,6 +73,7 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-5)
 ## Why Order Matters in Opaque VFS Lookups
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-5)
 
@@ -81,17 +86,20 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-7)
 
 ### Q: Does the Raugus Resolver replace Git?
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-7)
 **A:** No. Git tracks version history across time. The Raugus Resolver enforces spatial security in real time, preventing unauthorized agents from reading or modifying locked symbols while the application is running.
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-8)
 ### Q: What happens if an agent tries to pass `../../etc/shadow` to `read_by_key`?
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-8)
 **A:** The Resolver looks for `../../etc/shadow` in `raugus_map.json`, finds no matching key, and throws an immediate `KeyError`. The physical Linux filesystem is never interrogated.
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-9)
 ### Q: Can an agent edit one function in a file while another is locked?
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-9)
 **A:** Yes! Because Raugus maps symbols down to exact line spans via Python's AST parser, function-level write locks permit safe edits to helper functions while protecting core security algorithms in the same file.

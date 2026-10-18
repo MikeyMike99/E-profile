@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_31 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_31 | VERSION: v1.0 | SCOPE: DEV)
 
 # POPIA Data Privacy & Cloud Egress Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_31-SEC-1)
 ## 1. The Problem: The Cloud Scrubbing Paradox
 [//]: # (SECTION_ID: SIRA-DOC-01_31-SEC-1)
 When developers build AI applications handling user data, standard practice often delegates data privacy to cloud-hosted API models. However, under strict data protection laws such as South Africa's **POPIA** (Protection of Personal Information Act, Act 4 of 2013) and Europe's GDPR, transmitting raw personally identifiable information (PII) to foreign cloud servers without explicit user consent constitutes an immediate regulatory violation.
@@ -27,6 +28,7 @@ The trap: sending unscrubbed documents to a cloud LLM with the prompt *"Please r
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_31-SEC-2)
 ## 2. Ineffectiveness of Generic Regex Scrubbing
 [//]: # (SECTION_ID: SIRA-DOC-01_31-SEC-2)
 Initial attempts to solve this locally used basic regex patterns for email addresses and phone numbers. However, real-world data contains complex regional identifiers:
@@ -37,6 +39,7 @@ Generic regexes missed edge cases or aggressively mangled legitimate code variab
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_31-SEC-3)
 ## 3. The Solution: Local Presidio NLP & Offline Qwen Broker
 [//]: # (SECTION_ID: SIRA-DOC-01_31-SEC-3)
 Siraugga instituted the POPIA Offline Brain Broker (`security/local_brain_broker.py`):
@@ -47,6 +50,7 @@ Siraugga instituted the POPIA Offline Brain Broker (`security/local_brain_broker
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_31-SEC-4)
 ## 4. Why Order Matters in Privacy Governance
 [//]: # (SECTION_ID: SIRA-DOC-01_31-SEC-4)
 1. **Scrub PII Before Any Network Transmission**: Redaction must occur in local process memory before any data packet touches an HTTP or WebSocket socket.
@@ -55,6 +59,7 @@ Siraugga instituted the POPIA Offline Brain Broker (`security/local_brain_broker
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_31-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_31-SEC-5)
 **Q: What is POPIA?**  

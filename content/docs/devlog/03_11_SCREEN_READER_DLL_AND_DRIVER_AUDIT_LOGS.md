@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: JOSH-DOC-03_11 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: SIRA-DEV-03_11 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_11: Screen Reader DLL & Driver Audit Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and audit traces evaluating dynamic screen reader
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-1)
 
@@ -19,6 +20,7 @@ We audited the assistive technology initialization pipeline across two distinct 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-2)
 
@@ -50,6 +52,7 @@ os.remove(extracted_path)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-3)
 
@@ -81,6 +84,7 @@ AUDIT_STATUS: PASS (100% Native NVDA Routing Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-4)
 
@@ -90,6 +94,7 @@ AUDIT_STATUS: PASS (100% Native NVDA Routing Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-5)
 
@@ -100,23 +105,27 @@ In Windows assistive driver binding, initialization sequence controls output rou
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-7)
 
 ### What does "WindowsError [Error 126]" mean?
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-7)
 Error 126 is the Windows operating system error code for `ERROR_MOD_NOT_FOUND`. It means the application requested a DLL file by name, but Windows searched all standard system paths and could not find it.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-8)
 ### Why didn't PyInstaller or Nuitka automatically include the DLL?
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-8)
 Nuitka and PyInstaller analyze Python `import` statements. Because `accessible_output2` loads the DLL dynamically using `ctypes.windll.LoadLibrary("string")` instead of an `import` statement, the compiler cannot detect the file dependency automatically.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-9)
 ### What is a COM apartment?
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-9)
 In Windows, Component Object Model (COM) uses "apartments" to manage thread safety and memory sharing for system services like audio and speech. If a thread doesn't initialize its apartment with `CoInitialize()`, COM refuses all calls.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-10)
 - To understand why assistive speech failed on test PCs, read [`01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md`](/docs/devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS).

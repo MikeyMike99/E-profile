@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-00E_BEGINNER_G | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-DEV-00E_BEGINNER_GUIDE | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 00E: Beginner Guide to Cinematic TTS & Intent-Driven Audio Feeds
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-1)
 ## Why Standard Audio Feeds Fail Blind Developers
 [//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-1)
 
@@ -18,6 +19,7 @@ When blind developers code alongside autonomous AI agents, their ears are their 
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-2)
 ## The Solution: "The Death of the Robot" & The Stealth Feed
 [//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-2)
 
@@ -47,6 +49,7 @@ As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM b
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-3)
 ## Plain-English Glossary
 [//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-3)
 
@@ -57,6 +60,7 @@ As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM b
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-4)
 ## Why Order Matters in Audio Processing
 [//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-4)
 
@@ -67,13 +71,15 @@ As documented in DEVLOG Chapter 67, Siraugga permanently abolished dynamic LLM b
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-5)
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-6)
 
 ### Q: Why not just let NVDA or JAWS read the screen normally?
 [//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-6)
 **A:** Standard screen readers only speak when focus moves or when text appears in an ARIA live region. During complex multi-step coding tasks, an AI might modify 10 files without moving the user's cursor. An intent-driven audio feed keeps the blind developer continuously aware of progress.
 
+[//]: # (SECTION_ID: JOSH-DEV-00E_BEGINNER_GUIDE-SEC-7)
 ### Q: Why were first-person pronouns ("I", "Me") removed?
 [//]: # (SECTION_ID: SIRA-DOC-00E_BEGINNER_G-SEC-7)
 **A:** Early iterations used dramatic fantasy personas ("I weave the arcane threads..."). Developers found this irritating during serious debugging sprints. The persona was refactored into a direct, professional, objective system voice ("Rebuilding server index: 14 modules verified").

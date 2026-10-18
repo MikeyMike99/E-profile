@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_24 | VERSION: v1.0 | SCOPE: DEV)
 
 # Central SIEM & Master Alert Queue Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_24-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_24-SEC-1)
 In an autonomous development ecosystem where multiple subagents and background workers execute concurrently, maintaining complete visibility over security boundaries is essential. Without centralized telemetry, privilege escalation attempts, path traversal attacks, and quota breaches occur silently.
@@ -38,6 +39,7 @@ The Central SIEM (Security Information and Event Management) Architecture establ
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_24-SEC-2)
 ## 2. Event Classification & Priority Routing
 [//]: # (SECTION_ID: SIRA-DOC-04_24-SEC-2)
 The SIEM defines four standardized security event tiers:
@@ -48,6 +50,7 @@ The SIEM defines four standardized security event tiers:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_24-SEC-3)
 ## 3. Storage Bounding and Memory Protection
 [//]: # (SECTION_ID: SIRA-DOC-04_24-SEC-3)
 To prevent runaway disk bloat:
@@ -56,6 +59,7 @@ To prevent runaway disk bloat:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_24-SEC-4)
 ## 4. Why Order Matters in SIEM Telemetry
 [//]: # (SECTION_ID: SIRA-DOC-04_24-SEC-4)
 1. **Commit to Disk Before Memory Dispatch**: Writing to the append-only log file before broadcasting to WebSockets ensures that network disconnects never erase forensic incident records.
@@ -64,6 +68,7 @@ To prevent runaway disk bloat:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_24-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_24-SEC-5)
 **Q: What does SIEM stand for?**  

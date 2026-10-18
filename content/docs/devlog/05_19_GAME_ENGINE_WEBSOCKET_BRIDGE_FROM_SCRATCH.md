@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_19 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Game Engine WebSocket Bridge from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_19-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-1)
 Modern video games and virtual simulations require intelligent NPCs, dynamic quest generation, and real-time world narration. However, embedding heavy AI runtimes directly inside game engines introduces memory bloat and frame-rate stuttering.
@@ -30,6 +31,7 @@ The Game Engine WebSocket Bridge decouples the game engine (e.g., Godot, Unity, 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_19-SEC-2)
 ## 2. Complete Python Bridge Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-2)
 Save the following script as `game_bridge.py`:
@@ -122,6 +124,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_19-SEC-3)
 ## 3. Why Order Matters in Game Bridge Communication
 [//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-3)
 1. **Send Monotonic ACK Immediately**: Transmitting `{"type": "ack", "seq": N}` as soon as an event arrives prevents the server buffer from growing endlessly during heavy gameplay.
@@ -130,6 +133,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_19-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_19-SEC-4)
 **Q: Can this slow down game performance?**  

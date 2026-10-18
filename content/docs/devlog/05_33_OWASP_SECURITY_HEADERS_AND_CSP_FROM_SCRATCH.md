@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_33 | VERSION: v1.0 | SCOPE: ARCH)
 
 # OWASP Security Headers & CSP from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_33-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-1)
 Web developer applications often suffer from baseline OWASP vulnerabilities like Clickjacking, MIME-Sniffing, and Cross-Site Scripting because default frameworks do not attach HTTP security headers.
@@ -37,6 +38,7 @@ This guide details how to build `security_headers.py` and its accompanying CSP v
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_33-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-2)
 Save the following script as `secure_headers_app.py`:
@@ -97,6 +99,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_33-SEC-3)
 ## 3. Why Order Matters in Security Middleware
 [//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-3)
 1. **Apply Headers in `@after_request` Hook**: Registering headers on the outbound response hook ensures that even 404 or 500 error pages carry clickjacking protection.
@@ -105,6 +108,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_33-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_33-SEC-4)
 **Q: What is MIME-sniffing?**  

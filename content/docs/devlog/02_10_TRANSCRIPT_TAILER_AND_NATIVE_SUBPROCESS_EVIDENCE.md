@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_10 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_10 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_10: Transcript Tailer & Native Subprocess Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the Siraugga task orchestrator demonstrating how th
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-1)
 ## Source Citation 1: Defeating Python EOF Buffering (`agents/agent_manager.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-1)
 
@@ -48,6 +49,7 @@ async def tail_transcript(self, conv_id):
         )
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-2)
 - **Elimination of EOF Caching**: Standard Python `open(path).readline()` hits EOF and relies on `libc` buffer flushes. Invoking native `tail -n 0 -F` (Linux) or `Get-Content -Wait -Tail 0` (PowerShell) hooks directly into kernel-level file append events.
@@ -55,6 +57,7 @@ async def tail_transcript(self, conv_id):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-3)
 ## Source Citation 2: Audio Event Dispatch Loop (`agents/agent_manager.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-3)
 
@@ -85,6 +88,7 @@ This excerpt demonstrates the zero-trust parsing loop that extracts lifecycle st
             pass
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-4)
 - **Zero Prompt Pollution**: The audio cue is dispatched via `self.broadcast({"type": "audio", "sound": "completed"})` purely from the background watcher thread. The LLM never sees or processes the audio event.
@@ -92,6 +96,7 @@ This excerpt demonstrates the zero-trust parsing loop that extracts lifecycle st
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-5)
 
@@ -102,23 +107,27 @@ In real-time event tailing, process coordination order determines responsiveness
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-7)
 
 ### What does the `-F` flag in `tail` do?
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-7)
 The capital `-F` flag tells `tail` to follow the file by name rather than file descriptor. If the logging system rotates the log or temporarily replaces the file, `tail` automatically reopens the new file without crashing.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-8)
 ### What does `-NoProfile` do in PowerShell?
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-8)
 PowerShell profiles can load third-party scripts, custom prompts, and aliases that take seconds to start. Passing `-NoProfile` launches a lean, clean shell instance in under 50 milliseconds.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-9)
 ### Why do we use `errors='replace'` when decoding bytes?
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-9)
 JSONL logs can occasionally be interrupted mid-write, resulting in half-formed UTF-8 byte sequences. Using `replace` prevents the entire tailing loop from crashing on an incomplete character.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_10-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_10-SEC-10)
 - To understand why standard Python file reads failed, read [`01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md`](/docs/devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS).

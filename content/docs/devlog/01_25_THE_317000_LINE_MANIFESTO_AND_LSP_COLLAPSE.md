@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_25 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-MAN-01_25 | VERSION: v1.0 | SCOPE: MAN)
 
 # The 317,000-Line Manifesto and LSP Collapse Traps
 
+[//]: # (SECTION_ID: SIRA-MAN-01_25-SEC-1)
 ## 1. The Catastrophe: Ingestion Overkill
 [//]: # (SECTION_ID: SIRA-DOC-01_25-SEC-1)
 During the initial creation of the Developer's Manifesto, Python automation scripts were deployed to recursively scan local drives (`C:`, `D:`, and `E:`) to catalog functions, AST nodes, and class definitions across projects like `PANIC_BOT`, `trading_bots`, and `e_profile`.
@@ -29,6 +30,7 @@ However, the automation was too ruthless. In addition to Python code, the scrape
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-01_25-SEC-2)
 ## 2. Why Screen Readers and IDEs Died
 [//]: # (SECTION_ID: SIRA-DOC-01_25-SEC-2)
 1. **LSP Timeout**: Language Server Protocols parse open documents in memory. A 317,000-line markdown document consumed over 2 GB of RAM in the language server process, causing it to crash with `Error: Request textDocument/codeAction failed`.
@@ -37,6 +39,7 @@ However, the automation was too ruthless. In addition to Python code, the scrape
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-01_25-SEC-3)
 ## 3. The Emergency Rescue: Pygame Chunk Reader
 [//]: # (SECTION_ID: SIRA-DOC-01_25-SEC-3)
 Unable to use standard IDEs, the developer engineered an emergency lifeline: `manifesto_reader.py`. 
@@ -45,6 +48,7 @@ Instead of buffering the whole file, it used a custom Pygame event loop that rea
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-01_25-SEC-4)
 ## 4. Why Order Matters in Document Processing
 [//]: # (SECTION_ID: SIRA-DOC-01_25-SEC-4)
 1. **Filter File Extensions Before Parsing**: AST parsers must discard `.json`, `.csv`, and `.log` files before ingestion; otherwise, tabular data pollutes documentation.
@@ -53,6 +57,7 @@ Instead of buffering the whole file, it used a custom Pygame event loop that rea
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-01_25-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_25-SEC-5)
 **Q: Why couldn't VS Code handle 317,000 lines of plain text?**  

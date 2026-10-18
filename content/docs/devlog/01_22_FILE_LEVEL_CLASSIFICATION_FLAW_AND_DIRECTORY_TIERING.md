@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_22 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_22 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_22: File-Level Classification Flaw & Directory Tiering
 
@@ -6,6 +6,7 @@ In zero-trust role-based security, classifying files purely by filename or exten
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-1)
 
@@ -16,6 +17,7 @@ During an audit of the security manager's file classifier (`classify_file()`), a
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-2)
 
@@ -34,6 +36,7 @@ Path: core/ui_config.json ---> Scans parent parts: ['core'] ---> In CORE_DIRECTO
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-3)
 
@@ -44,23 +47,27 @@ In recursive path classification, top-down directory validation guarantees conta
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-5)
 
 ### What is Directory-Level Tiering?
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-5)
 Instead of memorizing hundreds of individual file names, the security engine marks entire directories (like `core/` and `security/`) as forbidden zones. Any file created inside those folders automatically becomes protected.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-6)
 ### How does a sandboxed agent work without seeing server code?
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-6)
 Through **API Decoupling**. We give the agent an Antigravity Skill that explains: *"Send a POST request to `/api/plugin/exam/save` with this specific JSON format."* The agent doesn't need to know how the server works; it just sends the data.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-7)
 ### What is the advantage of relocating workspaces to `playground/`?
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-7)
 Putting user game projects into a dedicated `playground/` folder physically separates user files from the engine codebase, making accidental path overlap impossible.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_22-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_22-SEC-8)
 - To see the primary source code implementation of directory tiering, read [`02_SOURCE_EVIDENCE/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE.md`](/docs/devlog/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE).

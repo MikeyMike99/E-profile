@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_31 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_31 | VERSION: v1.0 | SCOPE: DEV)
 
 # OWASP DAST Hardening & Smart CSP Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_31-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_31-SEC-1)
 Modern web-based developer portals face sophisticated browser-level attacks, including clickjacking, cross-site scripting (XSS), MIME-type confusion, and cross-site request forgery (CSRF). 
@@ -44,6 +45,7 @@ The OWASP DAST Hardening & Smart CSP Architecture (`security/security_headers.py
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_31-SEC-2)
 ## 2. Remediated OWASP Baseline Vulnerabilities
 [//]: # (SECTION_ID: SIRA-DOC-04_31-SEC-2)
 1. **Clickjacking (Alert 10020)**: `X-Frame-Options: SAMEORIGIN` prevents malicious third-party websites from framing Siraugga in transparent iframes to hijack clicks.
@@ -53,12 +55,14 @@ The OWASP DAST Hardening & Smart CSP Architecture (`security/security_headers.py
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_31-SEC-3)
 ## 3. Smart CSP & Violation Reporting
 [//]: # (SECTION_ID: SIRA-DOC-04_31-SEC-3)
 Rather than a rigid policy that breaks stylesheets, the Smart CSP permits necessary CDNs while configuring `report-uri /api/security/csp-report`. If an unauthorized script attempt occurs, the browser submits a violation report, which is logged to `devcore_master.jsonl` as a security event.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_31-SEC-4)
 ## 4. Why Order Matters in Security Headers Architecture
 [//]: # (SECTION_ID: SIRA-DOC-04_31-SEC-4)
 1. **Attach Headers in After-Request Middleware**: Enforcing headers at the after-request hook ensures that dynamic API endpoints, static assets, and 404 error responses all carry protective headers.
@@ -67,6 +71,7 @@ Rather than a rigid policy that breaks stylesheets, the Smart CSP permits necess
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_31-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_31-SEC-5)
 **Q: What is a Content Security Policy (CSP)?**  

@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: ENCR-DOC-03_25 | VERSION: v1.0 | SCOPE: EncryptMe Multi-User Vault)
+[//]: # (DOC_ID: ENCR-DEV-03_25 | VERSION: v1.0 | SCOPE: DEV)
 
 # Cold Storage Encryption & DEK Rotation Diagnostic Logs
 
+[//]: # (SECTION_ID: ENCR-DEV-03_25-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: ENCR-DOC-03_25-SEC-1)
 This test suite verifies the security, atomic file replacement, and backwards-compatible decryption of the Cold Storage and Keychain engines (`security/cold_storage.py` and `security/keychain.py`). It validates that session transcripts are encrypted without double-encryption risks and can be decrypted across multiple key rotation generations.
 
 ---
 
+[//]: # (SECTION_ID: ENCR-DEV-03_25-SEC-2)
 ## 2. Test Execution Trace
 [//]: # (SECTION_ID: ENCR-DOC-03_25-SEC-2)
 
@@ -49,6 +51,7 @@ This test suite verifies the security, atomic file replacement, and backwards-co
 
 ---
 
+[//]: # (SECTION_ID: ENCR-DEV-03_25-SEC-5)
 ## 5. Security & Benchmark Metrics Summary
 [//]: # (SECTION_ID: ENCR-DOC-03_25-SEC-5)
 
@@ -61,6 +64,7 @@ This test suite verifies the security, atomic file replacement, and backwards-co
 
 ---
 
+[//]: # (SECTION_ID: ENCR-DEV-03_25-SEC-4)
 ## 4. Why Order Matters in Cold Storage Testing
 [//]: # (SECTION_ID: ENCR-DOC-03_25-SEC-4)
 1. **Derive KEK Before Reading Keychain**: The master key must be transformed into the KEK before loading wrapped keys from disk.
@@ -69,6 +73,7 @@ This test suite verifies the security, atomic file replacement, and backwards-co
 
 ---
 
+[//]: # (SECTION_ID: ENCR-DEV-03_25-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: ENCR-DOC-03_25-SEC-5)
 **Q: What is a DEK rotation?**  

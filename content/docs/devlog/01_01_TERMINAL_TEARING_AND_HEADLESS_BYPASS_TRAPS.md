@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_01 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.1: Problems Encountered: Terminal Tearing & Headless Traps
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-1)
 
@@ -17,8 +18,9 @@ This chapter details what happened, why it happened, and how the architectural p
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-2)
 ## Issue 1: Console Tearing & Input Corruption
-[//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-3)
@@ -26,6 +28,7 @@ When testing interactive agent loops in the Linux console, the terminal screen b
 
 Screen reader speech synthesizers read both typing echoes and AI responses simultaneously, producing unintelligible audio gibberish.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-4)
 Standard Linux terminal emulators share a single standard output (`stdout`) and standard input (`stdin`) stream per terminal session. 
@@ -40,8 +43,9 @@ When a multi-threaded application prints to `stdout` from a worker thread withou
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-5)
 ## Issue 2: The Interactive Security Prompt Freeze
-[//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-6)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-6)
@@ -52,6 +56,7 @@ Upon inspecting background logs, the CLI was stuck waiting on an interactive que
 ? Do you trust the authors of this workspace? [Y/n]
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-7)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-7)
 Because the developer relies entirely on a screen reader, navigation through terminal interfaces depends on virtual cursor review keys. 
@@ -61,6 +66,7 @@ Because the developer relies entirely on a screen reader, navigation through ter
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-8)
 ## The Architectural Solution
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-8)
 
@@ -77,6 +83,7 @@ To eliminate terminal tearing and interactive deadlocks forever, the team implem
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-9)
 ## Why Order Matters in Headless Execution
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-9)
 
@@ -87,13 +94,15 @@ To eliminate terminal tearing and interactive deadlocks forever, the team implem
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-10)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-10)
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-11)
 
 ### Q: Why didn't a simple `echo "Y" | agy` command work?
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-11)
 **A:** Modern CLI applications inspect their input source using Linux system calls like `isatty()`. If they detect that input is coming from a pipe instead of a real keyboard, many CLIs immediately reject the input or prompt again for security reasons.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_01-SEC-12)
 ### Q: What is an ANSI escape code?
 [//]: # (SECTION_ID: SIRA-DOC-01_01-SEC-12)
 **A:** These are invisible character codes (like `\033[31m`) that tell the terminal to change colors or move the cursor. Screen readers often read these codes literally ("backslash zero three three bracket three one"), creating immense audio clutter.

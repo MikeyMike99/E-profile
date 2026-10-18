@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_24 | VERSION: v1.0 | SCOPE: DEV)
 
 # Central SIEM Logger & Master Alert Queue Source Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_24-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-1)
 This document contains source code evidence from `security/central_logger.py`. It details the central telemetry engine that aggregates security events across multi-agent swarms, rotates disk logs, and manages the in-memory Master Alert Queue (MAQ).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_24-SEC-2)
 ## 2. Event Model & Severity Enumeration Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-2)
 Security events follow a strict, standardized schema with cryptographic timestamps:
@@ -48,6 +50,7 @@ class SecurityEvent:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_24-SEC-3)
 ## 3. Log Rotation & Master Alert Queue (MAQ) Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-3)
 The logger enforces file rotation when `devcore_master.jsonl` hits 10 MB and maintains a bounded memory queue:
@@ -90,6 +93,7 @@ class CentralSIEMLogger:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_24-SEC-4)
 ## 4. Why Order Matters in Telemetry Logging
 [//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-4)
 1. **Check Rotation Before File Open**: Checking file size before opening in append mode ensures bloated files are rotated before new bytes are written.
@@ -98,6 +102,7 @@ class CentralSIEMLogger:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_24-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_24-SEC-5)
 **Q: Why use `deque(maxlen=1000)` instead of a Python `list`?**  

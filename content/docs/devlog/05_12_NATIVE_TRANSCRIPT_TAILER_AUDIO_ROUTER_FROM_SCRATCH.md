@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_12 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-ARCH-05_12 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Chapter 05_12: Native Transcript Tailer & Audio Router From Scratch
 
@@ -6,11 +6,13 @@ A step-by-step guide to writing the cross-platform **Native Transcript Tailer & 
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-1)
 ## What We Are Building & Beginner Safety Rules
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-1)
 
 We are creating an asynchronous daemon that monitors subagent log files and dispatches audio events to web clients in real time using native operating system processes instead of slow, cached Python file loops.
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-2)
 ### Beginner Safety Directives
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-2)
 1. **Never Read Without Offset 0**: Running `tail` without `-n 0` or `-Tail 0` replays all old events from earlier sessions, causing a loud burst of old sounds when starting up.
@@ -19,8 +21,9 @@ We are creating an asynchronous daemon that monitors subagent log files and disp
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-3)
 ## Step-by-Step Line Breakdown
-[//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-3)
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-4)
 
 ### Block 1: Imports & Setup (Lines 1–15)
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-4)
@@ -41,6 +44,7 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-5)
 ### Block 2: Subprocess Spawning (Lines 16–42)
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-5)
 
@@ -81,6 +85,7 @@ async def tail_subagent_transcript(transcript_path: str, broadcast_fn):
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-6)
 ### Block 3: Stream Reading & Cleanup (Lines 43–65)
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-6)
 
@@ -118,6 +123,7 @@ Add the event detection loop and process termination:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-7)
 ## Complete Finished File Listing
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-7)
 
@@ -176,6 +182,7 @@ async def tail_subagent_transcript(transcript_path: str, broadcast_fn):
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-8)
 ## 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-8)
 
@@ -211,19 +218,22 @@ If it prints `MOCK_EVENT_RECEIVED: {'type': 'audio', 'sound': 'completed'}`, you
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-9)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-9)
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-10)
 
 ### Why use `errors="replace"` instead of letting it error?
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-10)
 In real-world applications, logs are written in chunks. If the watcher reads half of a multi-byte emoji character, standard UTF-8 decoding throws a `UnicodeDecodeError` and crashes your app. `errors="replace"` safely substitutes a question mark instead.
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-11)
 ### What is `await proc.wait()`?
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-11)
 `proc.terminate()` sends a signal asking the process to stop. `await proc.wait()` tells Python to wait until the operating system confirms the process has completely closed and cleared its memory.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_12-SEC-12)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-05_12-SEC-12)
 - To understand why standard Python file reading failed, read [`01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md`](/docs/devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS).

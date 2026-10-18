@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH40 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_40 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 40: Public Key Cryptography and Tool Signing
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_40-SEC-40_1)
 ## 40.1 Agentic Digital Signatures
 [//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-40_1)
 
@@ -14,6 +15,7 @@ Digital signatures rely on Asymmetric Cryptography (Public/Private key pairs) to
 
 *(Note: DevCore natively supports the three DSS algorithms for generating signatures: DSA, RSA, and ECDSA).*
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_40-SEC-40_2)
 ## 40.2 Tool Signing
 [//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-40_2)
 
@@ -23,6 +25,7 @@ When a Tier 5 Admin writes a new Python script or bash utility for the AI to use
 
 If a hacker manages to upload a malicious script to the `/playground/` and tricks the AI into executing it, the Orchestrator will intercept the execution. It will check the script for the Admin's digital signature. Because the hacker does not possess the Admin's Private Key, the script will be unsigned, and the Orchestrator will violently drop the execution, saving the Engine from compromise.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_40-SEC-40_3)
 ## 40.3 The Modder Execution Workflow
 [//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-40_3)
 
@@ -42,11 +45,13 @@ When a Modder issues a highly sensitive command to the Swarm, the Orchestrator f
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_40-SEC-1)
 ## Chapter 40 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-1)
 
 Chapter 40 proves that Asymmetric Cryptography is used for far more than just hiding data—it is used to prove identity. By implementing Tool Signing, Admins prevent AIs from executing unverified malware. By requiring Modders to digitally sign their prompts, the Orchestrator establishes absolute Non-Repudiation, ensuring every action in the Swarm is mathematically traceable.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_40-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 40 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH40-SEC-2)
 

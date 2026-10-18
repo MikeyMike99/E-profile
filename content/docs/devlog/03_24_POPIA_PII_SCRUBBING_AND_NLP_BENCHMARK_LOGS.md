@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_24 | VERSION: v1.0 | SCOPE: DEV)
 
 # POPIA PII Scrubbing & NLP Benchmark Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_24-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_24-SEC-1)
 This test suite verifies the performance, accuracy, and network isolation of the POPIA Local Brain Broker (`security/local_brain_broker.py`). It benchmarks deterministic regex and Microsoft Presidio NLP scrubbing against synthetic South African IDs, phone numbers, email addresses, and API credentials, verifying 100% local execution.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_24-SEC-2)
 ## 2. Benchmark Environment
 [//]: # (SECTION_ID: SIRA-DOC-03_24-SEC-2)
 - **Test Dataset**: 50 synthetic documents containing South African National IDs, phone numbers, residential addresses, and API keys.
@@ -16,6 +18,7 @@ This test suite verifies the performance, accuracy, and network isolation of the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_24-SEC-3)
 ## 3. Test Execution & Benchmark Trace
 [//]: # (SECTION_ID: SIRA-DOC-03_24-SEC-3)
 
@@ -49,6 +52,7 @@ This test suite verifies the performance, accuracy, and network isolation of the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_24-SEC-4)
 ## 4. Benchmark Performance Metrics Summary
 [//]: # (SECTION_ID: SIRA-DOC-03_24-SEC-4)
 
@@ -61,6 +65,7 @@ This test suite verifies the performance, accuracy, and network isolation of the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_24-SEC-5)
 ## 5. Why Order Matters in Privacy Benchmarks
 [//]: # (SECTION_ID: SIRA-DOC-03_24-SEC-5)
 1. **Verify Network Isolation Before Feeding Real Data**: Confirming that network monitors see zero outbound packets ensures test credentials never leak during benchmarking.
@@ -69,6 +74,7 @@ This test suite verifies the performance, accuracy, and network isolation of the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_24-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_24-SEC-6)
 **Q: How did you verify zero network calls?**  

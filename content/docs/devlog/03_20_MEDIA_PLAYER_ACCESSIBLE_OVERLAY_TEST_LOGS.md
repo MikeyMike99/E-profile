@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_20 | VERSION: v1.0 | SCOPE: DEV)
 
 # Media Player Accessible Overlay Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_20-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_20-SEC-1)
 This test suite verifies keyboard shortcuts, screen reader live region synchronization, and state resumption for the DevCore Accessible Media Player (`sandbox/templates/video_application.html`). It confirms that keyboard focus never becomes trapped inside video frames and that all playback actions emit auditory confirmations.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_20-SEC-2)
 ## 2. Test Execution Environment
 [//]: # (SECTION_ID: SIRA-DOC-03_20-SEC-2)
 - **Browser Harness**: Google Chrome 128 (headless CDP automation)
@@ -16,6 +18,7 @@ This test suite verifies keyboard shortcuts, screen reader live region synchroni
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_20-SEC-3)
 ## 3. Diagnostic Test Execution Trace
 [//]: # (SECTION_ID: SIRA-DOC-03_20-SEC-3)
 
@@ -55,6 +58,7 @@ This test suite verifies keyboard shortcuts, screen reader live region synchroni
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_20-SEC-4)
 ## 4. Benchmark & Accessibility Compliance Summary
 [//]: # (SECTION_ID: SIRA-DOC-03_20-SEC-4)
 
@@ -67,6 +71,7 @@ This test suite verifies keyboard shortcuts, screen reader live region synchroni
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_20-SEC-5)
 ## 5. Why Order Matters in Media Diagnostics
 [//]: # (SECTION_ID: SIRA-DOC-03_20-SEC-5)
 1. **Restore Timestamp Before Audio Play**: Setting `currentTime` before calling `play()` prevents the audio decoder from playing the first few frames of the file before seeking.
@@ -75,6 +80,7 @@ This test suite verifies keyboard shortcuts, screen reader live region synchroni
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_20-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_20-SEC-6)
 **Q: Why was `video.currentTime` shifted by 10 seconds on 'L'?**  

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-MAN-03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-MAN-03_THE_QUANTITATIV | VERSION: v1.0 | SCOPE: MAN)
 
 # Chapter 3: The Quantitative Era
 

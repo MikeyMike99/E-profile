@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_25 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_25 | VERSION: v1.0 | SCOPE: DEV)
 
 # Active Threat Lab (Offline Crack & Online Brute) Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_25-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-1)
 This document records source code evidence from the active penetration testing laboratories located in `playground/Offline_Crack_Lab/crack_master.py` and `playground/Online_Brute_Lab/brute_api.py`. These scripts validate password hashing resilience, zip archive encryption resistance, and API rate-limiting thresholds.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_25-SEC-2)
 ## 2. Offline Dictionary Cracking Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-2)
 `crack_master.py` tests password cracking velocity against ZipCrypto vs AES-256 encrypted archives:
@@ -48,6 +50,7 @@ def test_aes256_crack(zip_path: str, wordlist: list[str]) -> tuple[bool, str, fl
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_25-SEC-3)
 ## 3. Online API Brute-Force Simulation Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-3)
 `brute_api.py` verifies that the authentication gateway actively blocks rapid dictionary guessing:
@@ -82,6 +85,7 @@ def simulate_brute_force_attack(attempts: int = 10):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_25-SEC-4)
 ## 4. Why Order Matters in Threat Simulation
 [//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-4)
 1. **Test Offline Resilience Before Network Exposure**: Confirming that sensitive backups use AES-256 ensures an attacker who steals an archive cannot read it offline.
@@ -90,6 +94,7 @@ def simulate_brute_force_attack(attempts: int = 10):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_25-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_25-SEC-5)
 **Q: Why does ZipCrypto crack so much faster than AES-256?**  

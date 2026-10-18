@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_04 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_04 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.4: From-Scratch Creation Guide: Raugus Opaque VFS Resolver
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-1)
 
@@ -17,8 +18,9 @@ The Resolver acts as a gatekeeper that allows AI agents to inspect and modify sp
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-2)
 ## Step-by-Step Implementation
-[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-3)
 
 ### Step 1: Open a Blank Python File
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-3)
@@ -26,6 +28,7 @@ The Resolver acts as a gatekeeper that allows AI agents to inspect and modify sp
 nano raugus_resolver.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-4)
 ### Step 2: Implement Key Registry & AST Scanner (Lines 1–35)
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-4)
 ```python
@@ -66,6 +69,7 @@ class RaugusResolver:
                 }
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-5)
 ### Step 3: Implement `read_by_key` with Tier Gating (Lines 36–55)
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-5)
 ```python
@@ -94,6 +98,7 @@ class RaugusResolver:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-6)
 ## Why Order Matters in Opaque VFS Engines
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-6)
 
@@ -104,6 +109,7 @@ class RaugusResolver:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-7)
 ## Verification & Testing
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-7)
 
@@ -145,13 +151,15 @@ print('[PASS] Admin Read Success:\n', code.strip())
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-8)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-8)
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-9)
 
 ### Q: Why is `start_line - 1` used when slicing lines?
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-9)
 **A:** Python's AST line numbers are 1-indexed (the first line is line 1). Python lists are 0-indexed (the first element is index 0). Subtracting 1 aligns the coordinates accurately.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_04-SEC-10)
 ### Q: Does this prevent hackers from seeing where files live on the server?
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-10)
 **A:** Yes! The client only ever sends and receives the string `"app.demo::secret_func"`. The actual Linux directory path remains hidden on the server.

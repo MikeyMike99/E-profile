@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_10 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_10 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_10: Native Tail vs. Python Buffer Benchmark Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and benchmark results comparing Python standard f
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-1)
 
@@ -16,6 +17,7 @@ We measured the end-to-end latency between when a background subagent appends a 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-2)
 
@@ -52,6 +54,7 @@ os.remove(test_log)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-3)
 
@@ -74,6 +77,7 @@ CPU OVERHEAD: < 0.1%
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-4)
 
@@ -83,6 +87,7 @@ CPU OVERHEAD: < 0.1%
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-5)
 
@@ -93,23 +98,27 @@ In process-based event tailing, setup sequence determines stream continuity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-7)
 
 ### Why was Python IO so slow when `tail` was so fast?
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-7)
 Python's standard library wraps file reads in high-level caching layers designed for reading large documents, not real-time event streaming. `tail` is a specialized low-level tool written in C specifically designed to stream append-only logs.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-8)
 ### Does running `tail` in the background waste battery or CPU?
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-8)
 No. Modern operating systems put `tail` into a sleeping state (`interruptible sleep`) when there are no new bytes to read. It consumes 0% CPU until a new line is appended.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-9)
 ### Will this work inside Docker containers?
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-9)
 Yes. Both Debian and Alpine Docker images include native POSIX `tail` in their standard base images.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_10-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_10-SEC-10)
 - To understand why standard Python file reading failed, read [`01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md`](/docs/devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS).

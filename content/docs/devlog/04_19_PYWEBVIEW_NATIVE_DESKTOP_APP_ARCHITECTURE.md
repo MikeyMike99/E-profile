@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_19 | VERSION: v1.0 | SCOPE: DEV)
 
 # PyWebView Native Desktop Application Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_19-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_19-SEC-1)
 The Siraugga Web Portal provides a real-time development interface accessible via standard web browsers. However, running inside browser tabs introduces friction: external address bars, browser extension conflicts, accidental tab closures, and unmanaged background processes.
@@ -25,10 +26,12 @@ The PyWebView architecture wraps the Quart/Hypercorn web server into a standalon
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_19-SEC-2)
 ## 2. Multi-Threaded Process & Window Coordination
 [//]: # (SECTION_ID: SIRA-DOC-04_19-SEC-2)
 Quart requires an asynchronous event loop, while GUI frameworks require exclusive control over the OS main UI thread. Running both in the same thread causes deadlock or freezing.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_19-SEC-1)
 ### Dual-Thread Concurrency Pattern
 [//]: # (SECTION_ID: SIRA-DOC-04_19-SEC-1)
 1. **Background Server Thread**: Hypercorn runs inside a dedicated Python `threading.Thread(daemon=True)`. It initializes an `asyncio` event loop and serves routes on `127.0.0.1:5000`.
@@ -37,6 +40,7 @@ Quart requires an asynchronous event loop, while GUI frameworks require exclusiv
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_19-SEC-3)
 ## 3. Process Lifecycle and Clean Exit Orchestration
 [//]: # (SECTION_ID: SIRA-DOC-04_19-SEC-3)
 In a standalone executable bundle, closing the desktop window must never leave zombie Python or subprocess tasks running in the background.
@@ -59,6 +63,7 @@ In a standalone executable bundle, closing the desktop window must never leave z
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_19-SEC-4)
 ## 4. Why Order Matters in Desktop Wrapping
 [//]: # (SECTION_ID: SIRA-DOC-04_19-SEC-4)
 1. **Start Server Thread Before GUI Window**: The ASGI server must be listening on the target port before `webview.create_window()` navigates to the URL; otherwise, a blank `ERR_CONNECTION_REFUSED` screen is rendered.
@@ -67,6 +72,7 @@ In a standalone executable bundle, closing the desktop window must never leave z
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_19-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_19-SEC-5)
 **Q: Why use PyWebView instead of Electron?**  

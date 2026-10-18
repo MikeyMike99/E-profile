@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: SIRA-DOC-05_36 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_36 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.36: From-Scratch Creation Guide: Local GGUF Runner & Token Cost Calculator
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-1)
 ## Overview & Beginner Context
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-1)
 This guide teaches you how to write a Python script from scratch that connects to a local GGUF model via `llama-cli` and calculates the financial cost of AI tokens in South African Rands (ZAR).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-1)
 ## 1. Line-by-Line Construction
-[//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-1)
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-2)
 
 ### Block 1: Imports and Model Configuration (Lines 1–15)
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-2)
@@ -28,6 +30,7 @@ MODEL_RATES = {
 ```
 - Defines the local file path to the quantized GGUF model and sets pricing tiers per million tokens.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-3)
 ### Block 2: The Local Offline Runner (Lines 16–35)
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-3)
 ```python
@@ -50,6 +53,7 @@ def query_local_model(prompt: str, model_path: str = DEFAULT_MODEL_PATH) -> str:
 ```
 - Spawns `llama-cli` in a local subprocess with temperature set to 0.2 for deterministic extraction.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-4)
 ### Block 3: The Currency Translation Function (Lines 36–50)
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-4)
 ```python
@@ -62,6 +66,7 @@ def calculate_cost_zar(model_key: str, in_tokens: int, out_tokens: int) -> float
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-2)
 ## 2. Complete Finished File
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-2)
 
@@ -87,6 +92,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-3)
 ## 3. 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-3)
 1. Run `python3 script.py` -> Outputs calculated ZAR cost.
@@ -94,6 +100,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_36-SEC-4)
 ## 4. Cross-Reference Navigation
 [//]: # (SECTION_ID: SIRA-DOC-05_36-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md`](/docs/devlog/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS)

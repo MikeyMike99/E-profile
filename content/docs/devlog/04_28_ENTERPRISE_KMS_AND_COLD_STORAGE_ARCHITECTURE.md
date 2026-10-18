@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_28 | VERSION: v1.0 | SCOPE: DEV)
 
 # Enterprise KMS & Cold Storage Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_28-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_28-SEC-1)
 In a long-lived agentic development platform, sessions contain proprietary code, debugging traces, and user interactions. If session logs remain in plaintext, any local compromise exposes system history. However, naive encryption introduces the danger of permanent lockout if keys rotate.
@@ -40,6 +41,7 @@ The Enterprise KMS and Cold Storage Architecture (`security/keychain.py` and `se
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_28-SEC-2)
 ## 2. Two-Tier Key Wrapping Hierarchy
 [//]: # (SECTION_ID: SIRA-DOC-04_28-SEC-2)
 1. **Master Key (`.devcore_master.key`)**: A high-entropy root key stored on the host filesystem.
@@ -48,12 +50,14 @@ The Enterprise KMS and Cold Storage Architecture (`security/keychain.py` and `se
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_28-SEC-3)
 ## 3. Backwards-Compatible Key Ring Decryption
 [//]: # (SECTION_ID: SIRA-DOC-04_28-SEC-3)
 When decrypting historical session archives, the Keychain Manager unpacks all historical DEKs into a sequence of ciphers (`km.get_all_ciphers()`). The Cold Storage Manager iterates through the cipher ring until a key decrypts the file, ensuring zero data loss across key rotations.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_28-SEC-4)
 ## 4. Why Order Matters in KMS Architecture
 [//]: # (SECTION_ID: SIRA-DOC-04_28-SEC-4)
 1. **Derive KEK Before Accessing DEKs**: The master key must be unlocked to derive the KEK before the keychain JSON file can be unwrapped.
@@ -62,6 +66,7 @@ When decrypting historical session archives, the Keychain Manager unpacks all hi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_28-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_28-SEC-5)
 **Q: What is key wrapping?**  

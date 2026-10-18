@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_17 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 17: Modifying Agentic Control Lists
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_17-SEC-17_1)
 ## 17.1 Hot-Patching Agentic Filters
 [//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-17_1)
 
@@ -15,6 +16,7 @@ There are two primary methods for hot-patching an active ACL:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_17-SEC-17_2)
 ## 17.2 The Crucible Purge (Text Editor Method)
 [//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-17_2)
 
@@ -37,6 +39,7 @@ Because appending new rules simply adds them to the absolute bottom of the list 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_17-SEC-17_3)
 ## 17.3 Agentic Sequence Injection (Sequence Numbers)
 [//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-17_3)
 
@@ -67,11 +70,13 @@ The Orchestrator instantly updates the in-memory ACL. The AI Swarm experiences z
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_17-SEC-1)
 ## Chapter 17 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-1)
 
 Chapter 17 outlines the critical administrative procedures required to maintain a live, Zero-Trust environment. Mistakes in security configurations are inevitable, but bringing down the entire game server to fix them is a relic of older architectures. By utilizing Agentic Sequence Injection, Tier 5 Admins can surgically rewrite the rules of reality for the AI Swarm without ever breaking the WebSocket streams.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_17-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 17 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH17-SEC-2)
 

@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-TXT-MOD11_CKPT | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-MOD_11_CHK | VERSION: v1.0 | SCOPE: TXT)
 
 # Module 11 Checkpoint: Evaluating Swarm Alerts
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_11_CHK-SEC-1)
 ## Module Overview
 [//]: # (SECTION_ID: SIRA-TXT-MOD11_CKPT-SEC-1)
 Module 11 translated the traditional Cybersecurity Analyst workflow (triaging SIEM alerts, reading Snort rules, and classifying False Positives) into the DevCore workflow of a Tier 5 Admin monitoring the **Swarm Onion**. This module focused on the reality that AI detection rules must be overly conservative, resulting in Admins having to constantly separate harmless AI hallucinations from actual malicious exploits.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_11_CHK-SEC-2)
 ## Core Concepts Translated
-[//]: # (SECTION_ID: SIRA-TXT-MOD11_CKPT-SEC-2)
+[//]: # (SECTION_ID: SIRA-TXT-MOD_11_CHK-SEC-1)
 
 ### 1. The Swarm Onion Architecture
 [//]: # (SECTION_ID: SIRA-TXT-MOD11_CKPT-SEC-1)
@@ -15,12 +17,14 @@ Module 11 translated the traditional Cybersecurity Analyst workflow (triaging SI
 *   **The Detection Layer:** The Swarm NIDS (Signature-based detection) and the Swarm Behavior Engine (Anomaly-based detection).
 *   **The Analysis Layer:** The UI tools, most notably the **Master Alert Queue (MAQ)** (DevCore's Sguil), where Admins view timestamped, color-coded alerts.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_11_CHK-SEC-2)
 ### 2. Prompt Signature Rules
 [//]: # (SECTION_ID: SIRA-TXT-MOD11_CKPT-SEC-2)
 *   Translated from **Snort Rules**, these are the strict criteria that trigger alerts in the MAQ.
 *   **Rule Header:** Dictates the action, protocol, and traffic direction (e.g., `alert agent any any -> sandbox any any`).
 *   **Rule Options:** Dictates the semantic payload to look for (e.g., `content:"ignore previous instructions"`).
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_11_CHK-SEC-3)
 ### 3. Diagnosing Swarm Alerts
 [//]: # (SECTION_ID: SIRA-TXT-MOD11_CKPT-SEC-3)
 *   **True Positive:** An alert correctly identifies a Modder executing a Prompt Injection or malicious exploit.
@@ -29,6 +33,7 @@ Module 11 translated the traditional Cybersecurity Analyst workflow (triaging SI
 *   **False Negative:** The most dangerous state. A Modder successfully exploits the Sandbox, but the detection engines completely miss it.
 *   **Retrospective Security Analysis (RSA):** The process of taking new threat intelligence and running it against old, archived `transcript_full.jsonl` files to discover historical False Negatives.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_11_CHK-SEC-4)
 ### 4. Swarm Risk Analysis
 [//]: # (SECTION_ID: SIRA-TXT-MOD11_CKPT-SEC-4)
 *   **Deterministic Analysis:** Evaluating risk by assuming you know the exact, static steps an exploit will take.

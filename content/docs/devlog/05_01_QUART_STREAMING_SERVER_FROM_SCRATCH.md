@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_01 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.1: From-Scratch Creation Guide: Asynchronous Quart Streaming Server
 
@@ -7,6 +7,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-1)
 
@@ -16,8 +17,9 @@ By the end of this tutorial, you will have a working streaming backend that surv
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-2)
 ## Step-by-Step Implementation
-[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-3)
 
 ### Step 1: Open a Blank Editor
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-3)
@@ -26,6 +28,7 @@ Create a new file named `server.py`:
 nano server.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-4)
 ### Step 2: Write Imports and Global Deque Buffer (Lines 1–15)
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-4)
 ```python
@@ -43,6 +46,7 @@ EVENT_BUFFER = deque(maxlen=1000)
 - **Line 1–4**: Import `asyncio` for non-blocking execution, `json` for serializing payloads, and `collections.deque` for a high-performance fixed-size memory queue.
 - **Line 9–10**: `EVENT_SEQ` tracks event ordering. `deque(maxlen=1000)` ensures memory never leaks by automatically discarding the oldest items if the buffer exceeds 1,000 entries.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-5)
 ### Step 3: Implement the WebSocket Streaming Route (Lines 16–45)
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-5)
 ```python
@@ -82,6 +86,7 @@ async def ws_endpoint():
         print("[SERVER] WebSocket connection closed safely.")
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-6)
 ### Step 4: Add the Entrypoint (Lines 46–50)
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-6)
 ```python
@@ -92,6 +97,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-7)
 ## Why Order Matters in Server Architecture
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-7)
 
@@ -104,6 +110,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-8)
 ## Verification & Testing
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-8)
 
@@ -127,13 +134,15 @@ asyncio.run(test())
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-9)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-9)
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-10)
 
 ### Q: Why do we use `list(EVENT_BUFFER)` when replaying events?
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-10)
 **A:** In asynchronous programming, the underlying `deque` might have new items added while you are looping over it. Converting it to a temporary `list` creates a safe snapshot, preventing `RuntimeError: deque mutated during iteration`.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_01-SEC-11)
 ### Q: What is `popleft()`?
 [//]: # (SECTION_ID: SIRA-DOC-05_01-SEC-11)
 **A:** Standard lists delete from the beginning in $O(n)$ time by shifting every element. A `deque` uses a doubly-linked list that removes from the left in $O(1)$ instantaneous time, saving CPU cycles.

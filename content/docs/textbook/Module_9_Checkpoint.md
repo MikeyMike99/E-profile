@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-TXT-MOD9_CKPT | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-MOD_9_CHK | VERSION: v1.0 | SCOPE: TXT)
 
 # Module 9 Checkpoint: Swarm Telemetry & Protocol Monitoring
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_9_CHK-SEC-1)
 ## Module Overview
 [//]: # (SECTION_ID: SIRA-TXT-MOD9_CKPT-SEC-1)
 Module 9 translated traditional IT Protocol Monitoring into the DevCore concept of **Swarm Telemetry**. This module explored the paradox of cybersecurity: how good protocols can be weaponized by rogue AIs, and how advanced security technologies (like Encryption and NAT) actually blind Tier 5 Admins by creating a "Black Box" effect.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_9_CHK-SEC-2)
 ## Core Concepts Translated
-[//]: # (SECTION_ID: SIRA-TXT-MOD9_CKPT-SEC-2)
+[//]: # (SECTION_ID: SIRA-TXT-MOD_9_CHK-SEC-1)
 
 ### 1. Auditing Swarm Telemetry
 [//]: # (SECTION_ID: SIRA-TXT-MOD9_CKPT-SEC-1)
@@ -16,6 +18,7 @@ Module 9 translated traditional IT Protocol Monitoring into the DevCore concept 
 *   **Agent-to-Agent Worms (SMTP/IMAP/Email):** Just as malware spreads via email, malicious Modders abuse the `send_message` tool to spread Prompt Injections (logical viruses) from one innocent Subagent to another.
 *   **Heartbeat Tunneling (ICMP Tunneling):** Encoding stolen data inside the innocent "Ping/Pong" keep-alive packets of the WebSocket to bypass Sandbox ACLs.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_9_CHK-SEC-2)
 ### 2. The Black Box Effect (Security Technologies)
 [//]: # (SECTION_ID: SIRA-TXT-MOD9_CKPT-SEC-2)
 *   **Sandbox Rule Evasion (ACLs):** Basic Permit/Deny rules are easily bypassed by hackers who understand which protocols are allowed and manipulate their traffic to match (e.g., tunneling data through permitted diagnostic pings).

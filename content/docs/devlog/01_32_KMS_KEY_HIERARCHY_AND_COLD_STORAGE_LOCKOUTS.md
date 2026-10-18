@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_32 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_32 | VERSION: v1.0 | SCOPE: DEV)
 
 # KMS Key Hierarchy & Cold Storage Lockout Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_32-SEC-1)
 ## 1. The Problem: The Key Rotation Amnesia Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_32-SEC-1)
 In enterprise cryptography, encrypting sensitive data with a single static key creates a catastrophic vulnerability: if the key is compromised, all data past, present, and future is exposed. To mitigate this, security policies mandate frequent key rotation.
@@ -28,6 +29,7 @@ However, naive key rotation introduces the **Historical Lockout Trap**. When the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_32-SEC-2)
 ## 2. Double-Encryption and Non-Atomic Writes
 [//]: # (SECTION_ID: SIRA-DOC-01_32-SEC-2)
 Two additional fatal traps plagued initial cold-storage prototypes:
@@ -36,6 +38,7 @@ Two additional fatal traps plagued initial cold-storage prototypes:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_32-SEC-3)
 ## 3. The Solution: Tiered Keychain & Atomic Swapping
 [//]: # (SECTION_ID: SIRA-DOC-01_32-SEC-3)
 Siraugga resolved this with the Enterprise Keychain (`security/keychain.py`) and Cold Storage Manager (`security/cold_storage.py`):
@@ -46,6 +49,7 @@ Siraugga resolved this with the Enterprise Keychain (`security/keychain.py`) and
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_32-SEC-4)
 ## 4. Why Order Matters in Cryptographic Cold Storage
 [//]: # (SECTION_ID: SIRA-DOC-01_32-SEC-4)
 1. **Verify Token Header Before Encrypting**: Checking for the `b'gAAAAA'` header before cipher execution guarantees archives are never double-encrypted.
@@ -54,6 +58,7 @@ Siraugga resolved this with the Enterprise Keychain (`security/keychain.py`) and
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_32-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_32-SEC-5)
 **Q: What is the difference between a KEK and a DEK?**  

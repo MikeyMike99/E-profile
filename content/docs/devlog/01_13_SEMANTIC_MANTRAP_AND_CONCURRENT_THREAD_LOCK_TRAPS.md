@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_13 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_13 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_13: Semantic Mantrap & Concurrent Thread Lock Traps
 
@@ -6,6 +6,7 @@ When multiple autonomous subagents operate in parallel within the Siraugga ecosy
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-1)
 
@@ -16,6 +17,7 @@ During high-concurrency swarm tasks where three or more subagents attempted simu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-2)
 
@@ -32,6 +34,7 @@ Subagent B (Tool Call) ----/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-3)
 
@@ -42,23 +45,27 @@ In concurrency control and resource acquisition, the order of operations is the 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-5)
 
 ### Why can't I just use a simple flag variable like `is_locked = True`?
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-5)
 In Python, multiple threads can execute statements nearly simultaneously. If Thread A reads `if not is_locked:` and Thread B reads the same line before Thread A sets `is_locked = True`, both threads think they have exclusive access! Hardware-level or OS-level atomic operations are required.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-6)
 ### What is the difference between `fcntl` and `msvcrt`?
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-6)
 `fcntl` is a POSIX library available on Linux, macOS, and WSL. `msvcrt` (Microsoft Visual C Runtime) is a Windows-specific library. Because Siraugga runs across Windows hosts and WSL Linux containers, code must dynamically detect `os.name` and select the appropriate locking API.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-7)
 ### How does the Semantic Mantrap handle crashed subagents?
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-7)
 The mantrap implements a timeout mechanism with stale lock detection. If a lock file is older than a specified threshold (e.g., 10 seconds) and the owning process ID no longer exists, the mantrap automatically breaks the lock and logs a warning.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_13-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_13-SEC-8)
 - To see the verbatim locking implementation in code, read [`02_SOURCE_EVIDENCE/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE.md`](/docs/devlog/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE).

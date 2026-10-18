@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_23 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_23 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_23: Slash Menu Enter Key Conflict & Accessibility Traps
 
@@ -6,6 +6,7 @@ Interactive autocomplete menus enhance user efficiency, but without strict event
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-1)
 
@@ -16,6 +17,7 @@ When developers typed a forward slash (`/`) into the main prompt textarea, an au
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-2)
 
@@ -34,6 +36,7 @@ User hits Enter on "/goal" ---> e.preventDefault() blocks submit ---> Injects "/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-3)
 
@@ -44,17 +47,20 @@ In complex interactive DOM components, event listener ordering guarantees intend
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-5)
 
 ### What is an ARIA Combobox?
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-5)
 An ARIA Combobox is a standardized accessibility pattern for input fields that control an associated popup list (like a search bar with suggestions). It tells screen readers how to announce options as the user navigates.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-6)
 ### What does `aria-activedescendant` do?
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-6)
 Instead of physically moving DOM focus (which would cause the cursor to leave the text input box), `aria-activedescendant="option-2"` tells the screen reader which item in the popup list is currently active while the user keeps typing!
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-7)
 ### How do we prevent Enter from submitting the form?
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-7)
 Inside the `keydown` event listener:
@@ -67,6 +73,7 @@ if (e.key === 'Enter' && isMenuOpen) {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_23-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_23-SEC-8)
 - To inspect primary source code of the accessible web portal, view [`02_SOURCE_EVIDENCE/02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE.md`](/docs/devlog/02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE).

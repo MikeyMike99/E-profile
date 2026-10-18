@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: ECHO-DOC-04_26 | VERSION: v1.1 | SCOPE: Echoes of the World (Audio Game))
+[//]: # (DOC_ID: ECHO-DEV-04_26 | VERSION: v1.1 | SCOPE: DEV)
 
 # The Origin Architecture: Echoes of the World
 
+[//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-1)
 ## 1. Architectural Concept & Historical Genesis
 [//]: # (SECTION_ID: ECHO-DOC-04_26-SEC-1)
 Long before Siraugga existed as an enterprise autonomous platform with opaque virtual filesystems and hot-patching compilers, it began with a single blind gamer in October 2024 who wanted to play an audio game.
@@ -42,6 +43,7 @@ This document details the **Origin Architecture** ("Echoes of the World"), the f
 
 ---
 
+[//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-2)
 ## 2. The Four Foundational Breakthroughs
 [//]: # (SECTION_ID: ECHO-DOC-04_26-SEC-2)
 1. **The Rejection of AI Shortcuts**: AI prompts can generate toy snippets, but they collapse when building deep, persistent worlds. True engineering requires understanding how code talks to OS hardware and memory.
@@ -51,6 +53,7 @@ This document details the **Origin Architecture** ("Echoes of the World"), the f
 
 ---
 
+[//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-3)
 ## 3. The DNA of Siraugga
 [//]: # (SECTION_ID: ECHO-DOC-04_26-SEC-3)
 Every sophisticated feature in modern Siraugga traces directly back to Echoes of the World:
@@ -60,6 +63,7 @@ Every sophisticated feature in modern Siraugga traces directly back to Echoes of
 
 ---
 
+[//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-4)
 ## 4. Why Order Matters in Foundational Engineering
 [//]: # (SECTION_ID: ECHO-DOC-04_26-SEC-4)
 1. **Understand Machine Fundamentals Before Using AI**: Understanding Python types, loops, and memory handles allows a developer to command AI agents with precision rather than being trapped by hallucinations.
@@ -68,6 +72,7 @@ Every sophisticated feature in modern Siraugga traces directly back to Echoes of
 
 ---
 
+[//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: ECHO-DOC-04_26-SEC-5)
 **Q: What is an audio game?**  
@@ -81,6 +86,7 @@ A: Because software architecture is not just code—it is the human history of o
 
 ---
 
+[//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-6)
 ## 6. Technical & Narrative Cross-References
 [//]: # (SECTION_ID: ECHO-DOC-04_26-SEC-6)
 

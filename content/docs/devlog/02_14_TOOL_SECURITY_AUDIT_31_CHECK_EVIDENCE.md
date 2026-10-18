@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_14 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_14 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_14: Tool Security Audit & 31-Check Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the Siraugga security core demonstrating how the au
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-1)
 ## Source Citation 1: Synthetic Hook Simulation (`security/tool_security_auditor.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-1)
 
@@ -37,6 +38,7 @@ def simulate_hook(tool_name: str, args: dict) -> dict:
         return {"decision": "error", "raw": out or res.stderr}
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-2)
 - **Isolated Hook Interception**: By feeding structured JSON payloads into `raugus_hook.py` via `stdin`, the test harness safely evaluates whether the security hook permits, blocks, or modifies tool execution before any command touches the host OS.
@@ -44,6 +46,7 @@ def simulate_hook(tool_name: str, args: dict) -> dict:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-3)
 ## Source Citation 2: Clean Workspace Purge Protocol (`security/tool_security_auditor.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-3)
 
@@ -74,6 +77,7 @@ def purge_audit_logs():
             pass
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-4)
 - **Zero Evidence Pollution**: Synthetic attack tokens injected during continuous validation are pruned from production audit logs (`devcore_master.jsonl`, `master_alert_queue.jsonl`), preserving audit integrity.
@@ -81,6 +85,7 @@ def purge_audit_logs():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-5)
 
@@ -91,8 +96,9 @@ In automated security audits, check sequencing prevents false positives and test
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-7)
 
 ### What are the 5 stages of the Tool Security Audit?
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-7)
@@ -102,16 +108,19 @@ In automated security audits, check sequencing prevents false positives and test
 - **Stage 4**: DLP Canary Scrubbing & Privacy.
 - **Stage 5**: SIEM and Alert Queue Logging.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-8)
 ### What is an AST (Abstract Syntax Tree) check?
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-8)
 An AST check parses Python code into a tree of grammatical nodes without executing it. It allows the security engine to mathematically prove that a script does not call forbidden functions like `eval()` or `os.system()`.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-9)
 ### Why are canary tokens used in security audits?
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-9)
 A canary token is a harmless synthetic string (like `canary@secret.internal`). The auditor injects it into data streams to verify that privacy filters (like Microsoft Presidio) catch and redact sensitive strings before they leak to the UI.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_14-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_14-SEC-10)
 - To understand why automated validation is required, read [`01_PROBLEMS_ENCOUNTERED/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md`](/docs/devlog/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS).

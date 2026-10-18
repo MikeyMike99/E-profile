@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-ARCH-05_28 | VERSION: v1.0 | SCOPE: ARCH)
 
 # NVDA DLL Coordinate Audio Engine from Scratch
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_28-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-1)
 Standard game loops and command-line scripts rely on visual monitors. For blind developers, terminal output often results in the frustrating "blank, blank, blank" screen reader silence.
@@ -35,6 +36,7 @@ This guide details how to build the foundational 3D coordinate movement engine f
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_28-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-2)
 Save the following script as `echoes_engine.py`:
@@ -136,6 +138,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_28-SEC-3)
 ## 3. Why Order Matters in Audio Game Loops
 [//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-3)
 1. **Define `c_wchar_p` Before Calling DLL**: Failing to declare the argument type results in Python passing standard 8-bit strings to a 16-bit wide character function, producing memory corruption.
@@ -144,6 +147,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: JOSH-ARCH-05_28-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_28-SEC-4)
 **Q: What is a wide character pointer (`c_wchar_p`)?**  

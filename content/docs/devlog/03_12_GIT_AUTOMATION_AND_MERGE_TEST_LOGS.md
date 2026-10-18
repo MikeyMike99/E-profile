@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_12 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_12 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_12: Git Automation & Merge Test Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and operational traces evaluating developer termi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-1)
 
@@ -16,6 +17,7 @@ We audited the Git developer automation pipeline implemented in `tools/recording
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-2)
 
@@ -44,6 +46,7 @@ rm -f test_session.cast evidence/dev_user/test_session.cast
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-3)
 
@@ -76,6 +79,7 @@ MERGE_STATUS: PASS (Zero Merge Conflicts, Clean Working Tree)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-4)
 
@@ -85,6 +89,7 @@ MERGE_STATUS: PASS (Zero Merge Conflicts, Clean Working Tree)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-5)
 
@@ -95,23 +100,27 @@ In automated Git synchronization, operation sequencing prevents repository corru
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-7)
 
 ### What does `git status --porcelain` do?
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-7)
 The `--porcelain` flag formats Git's status output in a clean, standardized format designed for scripts to parse easily without wordy decorative text.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-8)
 ### What happens if `git stash pop` has a conflict?
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-8)
 If upstream changes conflict with your local edits, Git pauses and marks the conflict markers (`<<<<<<<` and `>>>>>>>`) directly in your code so you can resolve them manually.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-9)
 ### Why do we save SSH agent variables in `~/.ssh/agent.env`?
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-9)
 When you start an SSH agent, it assigns random socket paths in `/tmp`. Writing those variables to a file lets all other terminal tabs and background scripts connect to the same agent without starting duplicate processes.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_12-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_12-SEC-10)
 - To understand the problems caused by uncoordinated Git branch merging, read [`01_PROBLEMS_ENCOUNTERED/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md`](/docs/devlog/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS).

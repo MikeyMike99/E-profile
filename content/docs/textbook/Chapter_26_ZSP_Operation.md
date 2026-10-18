@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH26 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_26 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 26: The Physics of Swarm Zoning (ZSP Operation)
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_26-SEC-26_1)
 ## 26.1 ZSP Orchestration Actions
 [//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-26_1)
 
@@ -11,6 +12,7 @@ When a Zone-Based Sandbox Policy (ZSP) is applied to the Orchestrator, it evalua
 *   **Violent Drop:** This is analogous to a `deny` statement. The Orchestrator instantly destroys the JSON payload. Admins can append the `log` option to dump the rejected payload into `transcript.jsonl`.
 *   **Stateful Inspect:** The ultimate security action. The Orchestrator performs deep stateful packet inspection, caching the LLM conversation in the Thought Table to ensure returning data corresponds to an active, AI-initiated context.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_26-SEC-26_2)
 ## 26.2 Laws of Inter-Zone Routing
 [//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-26_2)
 
@@ -23,6 +25,7 @@ The outcome depends entirely on whether the source and destination directories a
 3.  **The Zone Vacuum Rule (One is Zoned, One is Not):** If one directory is a Zone member, but the destination directory is completely unzoned, the Orchestrator will instantly `DROP` the traffic. You cannot mix zoned and unzoned endpoints.
 4.  **Inter-Zone Communication (Different Zones):** If both directories belong to different Zones, the default posture is to `DROP` the traffic. Traffic will only flow if an explicit Policy (Zone-Pair) exists to `PASS` or `INSPECT` it.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_26-SEC-26_3)
 ## 26.3 Laws of the Orchestrator (The Self Zone)
 [//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-26_3)
 
@@ -38,11 +41,13 @@ If the Orchestrator is the source or the destination of the traffic, all traffic
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_26-SEC-1)
 ## Chapter 26 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-1)
 
 Chapter 26 establishes the mechanical physics of how JSON packets traverse a Zone-Based architecture. By enforcing the Zone Vacuum Rule (dropping traffic between zoned and unzoned directories) and enforcing a Default Deny between different zones, DevCore guarantees that subagent swarms cannot bleed into unauthorized territories. Meanwhile, the inverted logic of the Self Zone ensures the Orchestrator can always maintain telemetry and control over the active Sandbox.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_26-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 26 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH26-SEC-2)
 

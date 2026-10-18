@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: ECHO-MAN-02 | VERSION: v1.1 | SCOPE: Echoes of the World (Audio Game))
+[//]: # (DOC_ID: ECHO-MAN-02_THE_ECHOES_ARCH | VERSION: v1.1 | SCOPE: MAN)
 
 # Chapter 2: The Echoes Architecture
 

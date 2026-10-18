@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: JOSH-DOC-05_37 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: SIRA-ARCH-05_37 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.37: From-Scratch Creation Guide: Headless Spotify Controller with Global Hotkeys
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-1)
 ## Overview & Beginner Context
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-1)
 This guide teaches you how to write an accessible headless Spotify controller script (`t.py`) from scratch. It registers global keyboard shortcuts that work when Spotify is minimized and modulates Spotify's internal volume without changing Windows master audio or screen reader speech.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-1)
 ## 1. Line-by-Line Construction
-[//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-1)
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-2)
 
 ### Block 1: Imports and Spotify Authentication (Lines 1–25)
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-2)
@@ -34,6 +36,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
 ```
 - Authenticates with Spotify Web API using cached tokens stored locally.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-3)
 ### Block 2: Playback Actions and Independent Volume Modulation (Lines 26–55)
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-3)
 ```python
@@ -62,6 +65,7 @@ def change_volume(delta: int):
 ```
 - Calls `sp.volume()` directly, avoiding the Windows Core Audio API so NVDA speech volume is untouched.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-4)
 ### Block 3: Registering Global Windows Hooks (Lines 56–75)
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-4)
 ```python
@@ -84,6 +88,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-2)
 ## 2. 10-Second Verification Checklist
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-2)
 1. Minimize Spotify to system tray.
@@ -92,8 +97,9 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-3)
 ## 3. Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-3)
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-5)
 
 ### What is `keyboard.wait()`?
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-5)
@@ -101,6 +107,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_37-SEC-4)
 ## 4. Cross-Reference Navigation
 [//]: # (SECTION_ID: JOSH-DOC-05_37-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS.md`](/docs/devlog/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS)

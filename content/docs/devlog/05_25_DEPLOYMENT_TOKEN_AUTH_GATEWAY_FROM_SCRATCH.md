@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_25 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_25 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Deployment Token Auth Gateway from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_25-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_25-SEC-1)
 Deploying an autonomous AI web portal across a local network or remote VM without authentication creates an open door for unauthorized code execution.
@@ -33,6 +34,7 @@ This guide details how to build a complete, self-contained Deployment Token Auth
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_25-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_25-SEC-2)
 Save the following script as `auth_gateway.py`:
@@ -142,6 +144,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_25-SEC-3)
 ## 3. Why Order Matters in Authentication Processing
 [//]: # (SECTION_ID: SIRA-DOC-05_25-SEC-3)
 1. **Check IP Lockout Before Evaluating Token**: Evaluating jail status before string comparison stops attackers from spamming the server CPU.
@@ -150,6 +153,7 @@ if __name__ == '__main__':
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_25-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_25-SEC-4)
 **Q: What does `httponly=True` mean?**  

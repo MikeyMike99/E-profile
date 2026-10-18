@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_18 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_18 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pre-Flight Autonomous Self-Healer from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_18-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-1)
 When backend modules fail due to accidental syntax errors or corrupted patch deployments, standard servers crash abruptly on boot, taking down developer dashboards and terminating active WebSocket streams.
@@ -38,6 +39,7 @@ The Pre-Flight Autonomous Self-Healer (`self_healer.py`) acts as a protective su
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_18-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-2)
 Save the following script as `self_healer.py`:
@@ -133,6 +135,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_18-SEC-3)
 ## 3. Why Order Matters in Self-Healing Execution
 [//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-3)
 1. **Compile Before Import**: Executing `py_compile.compile()` inspects the abstract syntax tree without executing module-level side effects or importing broken dependencies.
@@ -141,6 +144,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_18-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_18-SEC-4)
 **Q: Does `py_compile` execute any code?**  

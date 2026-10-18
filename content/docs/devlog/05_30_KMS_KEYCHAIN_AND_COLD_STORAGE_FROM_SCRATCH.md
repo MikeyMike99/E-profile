@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_30 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_30 | VERSION: v1.0 | SCOPE: ARCH)
 
 # KMS Keychain & Cold Storage from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_30-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-1)
 Relying on a single static encryption key creates total vulnerability if the key is exposed, while rotating keys naively causes historical files to become unreadable.
@@ -39,6 +40,7 @@ This guide details how to build `keychain_storage.py` from scratch. It implement
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_30-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-2)
 Save the following script as `keychain_storage.py`:
@@ -165,6 +167,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_30-SEC-3)
 ## 3. Why Order Matters in Cryptographic Locking
 [//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-3)
 1. **Derive KEK Before Reading Keychain**: The master key must be verified and PBKDF2-derived before the keychain JSON can be loaded into memory.
@@ -173,6 +176,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_30-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_30-SEC-4)
 **Q: What is a KDF?**  

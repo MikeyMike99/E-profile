@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_11 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_11 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Chapter 05_11: Cross-Platform Semantic Mantrap From Scratch
 
@@ -6,11 +6,13 @@ A step-by-step guide to writing the cross-platform **Semantic Mantrap** (`mantra
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-1)
 ## What We Are Building & Beginner Safety Rules
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-1)
 
 We are constructing `mantrap.py`—a lightweight module that provides atomic file-locking and race-condition prevention across both Linux/WSL and native Windows.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-2)
 ### Beginner Safety Directives
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-2)
 1. **Never Lock Empty Files on Windows**: `msvcrt.locking` throws an error if attempting to lock a 0-byte file. We will write 1 dummy byte (`"X"`) upon creation.
@@ -19,8 +21,9 @@ We are constructing `mantrap.py`—a lightweight module that provides atomic fil
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-3)
 ## Step-by-Step Line Breakdown
-[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-3)
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-4)
 
 ### Block 1: Imports & OS Detection (Lines 1–15)
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-4)
@@ -52,6 +55,7 @@ MANTRAP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-5)
 ### Block 2: The Context Manager & Lock Acquisition (Lines 17–45)
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-5)
 
@@ -97,6 +101,7 @@ class SemanticMantrap:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-6)
 ### Block 3: Guaranteed Lock Release (Lines 46–60)
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-6)
 
@@ -122,6 +127,7 @@ Complete the function with the `finally` cleanup block:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-7)
 ## Complete Finished File Listing
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-7)
 
@@ -184,6 +190,7 @@ class SemanticMantrap:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-8)
 ## 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-8)
 
@@ -199,19 +206,22 @@ If it prints `Inside chamber successfully!` without errors, your cross-platform 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-9)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-9)
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-10)
 
 ### What does `r+` mean in `open()`?
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-10)
 `r+` opens the file for both reading and writing without erasing its contents. Standard `w` erases the file immediately, which would delete our Windows 1-byte marker!
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-11)
 ### What happens if I forget to close `lock_fd`?
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-11)
 Python will eventually close it when the garbage collector runs, but leaving open file descriptors can cause Windows to report "File in use by another process". Explicitly closing it in `finally` is a critical best practice.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_11-SEC-12)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-05_11-SEC-12)
 - To understand why uncoordinated concurrency broke the server, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).

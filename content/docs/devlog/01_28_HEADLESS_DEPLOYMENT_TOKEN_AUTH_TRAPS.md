@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_28 | VERSION: v1.0 | SCOPE: DEV)
 
 # Headless Deployment Token Authentication Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_28-SEC-1)
 ## 1. The Problem: Unprotected Headless Endpoints
 [//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-1)
 When developers launch Siraugga on a remote server, secondary workstation, or inside a Docker container, the service must bind to network interfaces so client browsers can connect.
@@ -24,6 +25,7 @@ However, binding an autonomous agent engine to `0.0.0.0` or a local area network
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_28-SEC-2)
 ## 2. The Authentication Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-2)
 Initial attempts to secure the portal relied on basic HTTP passwords saved in static configuration files. This introduced two fatal traps:
@@ -32,6 +34,7 @@ Initial attempts to secure the portal relied on basic HTTP passwords saved in st
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_28-SEC-3)
 ## 3. The Solution: Ephemeral Terminal Deployment Tokens
 [//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-3)
 Siraugga resolved this with the Headless Deployment Token Protocol (`sandbox/templates/login.html`):
@@ -49,6 +52,7 @@ Siraugga resolved this with the Headless Deployment Token Protocol (`sandbox/tem
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_28-SEC-4)
 ## 4. Why Order Matters in Headless Security
 [//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-4)
 1. **Generate Token in Memory Before Binding Socket**: The server must generate the deployment token before accepting network traffic so no unauthenticated window exists.
@@ -57,6 +61,7 @@ Siraugga resolved this with the Headless Deployment Token Protocol (`sandbox/tem
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_28-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_28-SEC-5)
 **Q: Why generate a new token on every server restart?**  

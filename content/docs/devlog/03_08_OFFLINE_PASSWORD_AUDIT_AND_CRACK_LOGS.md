@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_08 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_08 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 03.8: Diagnostic Tests: Offline Password Auditing & Crack Logs
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-1)
 
@@ -15,44 +16,51 @@ This chapter documents the empirical testing logs from Siraugga's internal activ
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-2)
 ## Test 1: Offline Hash Dictionary Collision Test
-[//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-3)
 
 ### What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-3)
 We ran the internal test harness (`crack.py`) against the extracted test hash target to measure how quickly an unsalted SHA-256 digest is cracked using standard wordlists.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-4)
 ### Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-4)
 ```bash
 python3 /mnt/c/Users/<username>/Documents/DevCore/crack.py
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-5)
 ### Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-5)
 ```text
 FOUND: admin
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-6)
 ### Benchmark Metrics
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-6)
 - **Hashes Tested**: 12 candidates
 - **Time to Collision**: 0.0008 seconds (sub-millisecond)
 - **CPU Utilization**: Single thread (<1% load)
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-7)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-7)
 The test confirmed that raw SHA-256 provides zero mathematical resistance against dictionary guessing. This empirical finding triggered the immediate migration to Bcrypt with dynamic salting across all administrative accounts.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-8)
 ## Test 2: Online API Brute-Force Rate-Limiting Test
-[//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-8)
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-9)
 
 ### What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-9)
 We fired 15 rapid simulated login requests against `/api/login` using incorrect passwords to verify that the backend's rate-limiting defense jails attacking IP addresses.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-10)
 ### Exact Diagnostic Test Script
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-10)
 ```bash
@@ -66,6 +74,7 @@ for i in range(1, 10):
 "
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-11)
 ### Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-11)
 ```text
@@ -78,12 +87,14 @@ Attempt 6: HTTP 429 - Rate limit exceeded. IP temporarily jailed for 60s.
 Attempt 7: HTTP 429 - Rate limit exceeded. IP temporarily jailed for 60s.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-12)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-12)
 The security manager allowed exactly 5 failed login attempts before tripping the progressive rate-limiter. The 6th request was throttled with an HTTP 429, effectively defeating automated dictionary attacks against the live server.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-13)
 ## Why Order Matters in Authentication Defenses
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-13)
 
@@ -94,13 +105,15 @@ The security manager allowed exactly 5 failed login attempts before tripping the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-14)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-14)
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-15)
 
 ### Q: What is HTTP Status 429?
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-15)
 **A:** HTTP 429 stands for "Too Many Requests." It is the standard status code indicating that a user or bot has exceeded their rate limit and must wait before making further requests.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_08-SEC-16)
 ### Q: What is an IP Jail?
 [//]: # (SECTION_ID: SIRA-DOC-03_08-SEC-16)
 **A:** An IP jail is a temporary blacklist in server memory that rejects all traffic from a specific IP address for a set duration (e.g., 60 seconds) after repeated failed login attempts.

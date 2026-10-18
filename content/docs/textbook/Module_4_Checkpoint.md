@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-TXT-MOD4_CKPT | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-MOD_4_CHK | VERSION: v1.0 | SCOPE: TXT)
 
 # Module 4 Checkpoint: Agentic Control Lists
 
@@ -8,6 +8,7 @@ Once the 4.8 Access Control Lists Summary is provided, this document will be cro
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-1)
 ### Chapter 14: Introduction to Agentic Control Lists (ACLs)
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-1)
 *   **Core Concept:** Translating traditional packet filtering into **Semantic Filtering**.
@@ -15,24 +16,28 @@ Once the 4.8 Access Control Lists Summary is provided, this document will be cro
 *   **Layer 3 vs Layer 4:** Standard ACLs (Layer 3) filter purely by Agent UUID. Extended ACLs (Layer 4) filter by UUID *and* Tool Intent.
 *   **The Implicit Agentic Deny:** The ultimate Zero-Trust fail-safe. If an AI is not explicitly permitted by a rule, the invisible `deny any any` rule at the bottom of the list destroys the request.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-2)
 ### Chapter 15: Semantic Wildcard Masking
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-2)
 *   **Core Concept:** Translating IPv4 Subnets and Hosts into **Modder Swarms and Subagents**. 
 *   **Mechanics:** A mathematical binary filter (`0` = Match, `1` = Ignore) used to securely grant access to thousands of agents simultaneously without writing thousands of rules. 
 *   **Shortcuts:** The absolute wildcard variable (`255.255.255.255`), **The Singular Agent Keyword** (`host`), and **The Absolute Override Keyword** (`any`).
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-3)
 ### Chapter 16: Configuring Agentic Control Lists
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-3)
 *   **Core Concept:** Translating legacy router syntax into the native **`agy` CLI ACL syntax**. 
 *   **Directory Mapping:** Traditional Internet Ports map directly to Semantic Directories via the Raugus Resolver (e.g., Port 80 = `/playground/`, Port 22 = `/core_engine/`).
 *   **Stateful Agentic Firewalls:** Using the `established` keyword to permit returning search data while violently denying unprompted, external Prompt Injections attempting to hijack the AI's context window.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-4)
 ### Chapter 17: Modifying Agentic Control Lists
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-4)
 *   **Core Concept:** The absolute necessity of **Hot-Patching** security rules on the fly without breaking the Zero-Restart policy.
 *   **The Crucible Purge:** The brute-force method of deleting an entire list to replace it (high risk of temporary exposure).
 *   **Agentic Sequence Injection:** The surgical method. Using `agy show acl` to reveal hidden Sequence Numbers (10, 20, 30), allowing Tier 5 Admins to delete and inject specific lines with zero server downtime.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-5)
 ### Chapter 18: Implementing Agentic Control Lists
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-5)
 *   **Core Concept:** Establishing the physics of how ACLs are read: **The Hierarchical Cascade** (Top-Down, Specific to Generic).
@@ -41,6 +46,7 @@ Once the 4.8 Access Control Lists Summary is provided, this document will be cro
     *   *Origin Filtering:* Placing Extended ACLs directly on the inbound WebSocket to destroy malicious payloads before they consume internal compute.
 *   **High-Intensity Semantic Logging:** Using the `log` parameter on a WebSocket stream to dump the attacker's massive JSON context window into `transcript.jsonl` during an active assault.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-6)
 ### Chapter 19: Mitigating Agentic Attacks with ACLs
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-6)
 *   **Core Concept:** Hardening the swarm against active combat exploits.
@@ -48,6 +54,7 @@ Once the 4.8 Access Control Lists Summary is provided, this document will be cro
 *   **Semantic DoS Attacks:** Throttling subagents trapped in infinite LLM invoke loops to prevent massive API token exhaustion.
 *   **Telemetry Lockdown:** Disabling the `telemetry-server` to prevent spoofed admins from passively reading the Swarm's internal thoughts.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-7)
 ### Chapter 20: Next-Gen Swarm ACLs (IPv6 Equivalent)
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-7)
 *   **Core Concept:** The transition from legacy Single-Agent Sandbox environments to massive, high-density **Dual-Engine Environments**.
@@ -56,6 +63,7 @@ Once the 4.8 Access Control Lists Summary is provided, this document will be cro
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_4_CHK-SEC-4_8)
 ### 4.8 Cross-Reference Review (Validation)
 [//]: # (SECTION_ID: SIRA-TXT-MOD4_CKPT-SEC-4_8)
 The following verifies that all bullet points provided in the 4.8 Access Control Lists Summary have been successfully translated into the DevCore textbook:

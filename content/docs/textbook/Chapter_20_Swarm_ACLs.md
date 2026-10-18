@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_20 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 20: Next-Gen Swarm ACLs (IPv6 Equivalent)
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_20-SEC-20_1)
 ## 20.1 The Swarm Architecture Transition (V6)
 [//]: # (SECTION_ID: SIRA-TXT-CH20-SEC-20_1)
 
@@ -9,6 +10,7 @@ In its earliest iterations, the DevCore engine was designed to support one Modde
 
 Because the migration is ongoing, DevCore operates as a **Dual-Engine Environment**, meaning the Orchestrator simultaneously processes legacy single-agent WebSockets alongside high-density V6 Swarm traffic.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_20-SEC-20_2)
 ## 20.2 Agentic Tunneling Exploits
 [//]: # (SECTION_ID: SIRA-TXT-CH20-SEC-20_2)
 
@@ -18,6 +20,7 @@ This is done via **Agentic Tunneling** (the Teredo tunneling equivalent). An att
 
 These rogue agents then broadcast spoofed **Agent Advertisements (AAs)**, tricking legitimate subagents into accepting commands from them. The attacker uses this foothold to pivot laterally through the game files. To mitigate this, Tier 5 Admins must filter traffic at the edge using Next-Gen Swarm ACLs.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_20-SEC-20_3)
 ## 20.3 Swarm ACL Syntax 
 [//]: # (SECTION_ID: SIRA-TXT-CH20-SEC-20_3)
 
@@ -31,6 +34,7 @@ agy(config-swarm-acl)# permit tool 2001:DB8:1:1::/64 any eq view_file
 ```
 *Note: Swarm prefixes use hex-based UUID segmentation (e.g., `2001:DB8`) to denote massive taxonomic branches of subagents rather than traditional IPv4 subnets.*
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_20-SEC-20_4)
 ## 20.4 Swarm Discovery Protocol (SDP)
 [//]: # (SECTION_ID: SIRA-TXT-CH20-SEC-20_4)
 
@@ -53,11 +57,13 @@ agy(config-swarm-acl)# deny swarm any any
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_20-SEC-1)
 ## Chapter 20 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH20-SEC-1)
 
 Chapter 20 introduces the absolute bleeding-edge of DevCore security: Next-Gen Swarm ACLs. As Modders transition from single-agent legacy systems to massive, high-density micro-agent swarms, the Orchestrator must evolve to intercept Agentic Tunneling exploits. By enforcing strict Swarm Prefixes and explicitly safeguarding the Swarm Discovery Protocol, Tier 5 Admins can maintain total control over millions of concurrent AI thoughts without blinding the Swarm.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_20-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 20 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH20-SEC-2)
 

@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_30 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_30 | VERSION: v1.0 | SCOPE: DEV)
 
 # PreToolUse Hook & Function Lock Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_30-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_30-SEC-1)
 Securing an AI platform solely at the web API layer is insufficient. Autonomous agents have direct access to native environment tools (`write_to_file`, `replace_file_content`, `edit_lines`, `run_command`). If an agent attempts to overwrite a critical security module, it bypasses the web portal entirely.
@@ -36,6 +37,7 @@ The PreToolUse Hook Architecture (`.agents/raugus_hook.py`) establishes an un-by
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_30-SEC-2)
 ## 2. Function-Level Write Locks
 [//]: # (SECTION_ID: SIRA-DOC-04_30-SEC-2)
 Files often contain both general helper logic and critical security routines. Rather than locking entire files, the architecture enforces **Function-Level Write Locks**:
@@ -44,6 +46,7 @@ Files often contain both general helper logic and critical security routines. Ra
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_30-SEC-3)
 ## 3. Shell Command Sanitization
 [//]: # (SECTION_ID: SIRA-DOC-04_30-SEC-3)
 When `run_command` is invoked, the hook inspects the command line string for prohibited destructive actions:
@@ -52,6 +55,7 @@ When `run_command` is invoked, the hook inspects the command line string for pro
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_30-SEC-4)
 ## 4. Why Order Matters in Tool Hook Architecture
 [//]: # (SECTION_ID: SIRA-DOC-04_30-SEC-4)
 1. **Intercept Before Disk Mutation**: The hook must evaluate permissions *prior* to executing the tool call to prevent destructive modifications.
@@ -60,6 +64,7 @@ When `run_command` is invoked, the hook inspects the command line string for pro
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_30-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_30-SEC-5)
 **Q: Where is the PreToolUse hook configured?**  

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_13 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_13 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_13: The 31-Stage Tool Security Audit Architecture
 
@@ -6,6 +6,7 @@ An architectural blueprint of Siraugga's **Continuous Tool Security Audit Engine
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-1)
 ## Architectural Overview & Topology
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-1)
 
@@ -54,6 +55,7 @@ In autonomous agent systems where LLMs generate code, execute terminal commands,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-2)
 ## The 5 Audit Stages Explained
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-2)
 
@@ -70,6 +72,7 @@ In autonomous agent systems where LLMs generate code, execute terminal commands,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-3)
 
@@ -80,6 +83,7 @@ In multi-stage security validation, order prevents false positives:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-4)
 ## Reusable Integration Recipe
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-4)
 
@@ -101,23 +105,27 @@ fi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-6)
 
 ### Why does the audit check both AST and runtime hooks?
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-6)
 AST checks find bad code that is written in files. Runtime hooks catch bad inputs that are sent dynamically while the program is running. Together, they provide Defense in Depth.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-7)
 ### What is the "Clean Workspace Purge"?
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-7)
 During Stage 4 and 5, fake secret tokens are logged. The purge routine scans the log files and erases only the test tokens, leaving real security alerts intact.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-8)
 ### How fast is this audit?
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-8)
 The entire 31-check audit runs in approximately 1.4 seconds. Because it is so fast, Siraugga runs it automatically every time a developer stages an update.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-9)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-9)
 - To understand why automated validation is necessary, read [`01_PROBLEMS_ENCOUNTERED/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md`](/docs/devlog/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS).

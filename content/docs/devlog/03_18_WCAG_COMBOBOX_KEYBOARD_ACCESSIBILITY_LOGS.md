@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_18 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_18 | VERSION: v1.0 | SCOPE: DEV)
 
 # WCAG Combobox Keyboard Accessibility Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-1)
 This test suite verifies keyboard navigation, event listener precedence, and assistive technology speech output for the WCAG 2.1 AA compliant slash command combobox in `sandbox/templates/index.html`. It confirms that the Enter key conflict is resolved, keyboard focus never escapes the textarea, and screen reader announcements remain deterministic.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-2)
 ## 2. Test Execution Environment
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-2)
 - **Screen Readers Tested**: NVDA 2024.3 (Windows), Orca 44.0 (Linux/WSL)
@@ -16,8 +18,9 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-3)
 ## 3. Diagnostic Test Sequences & Results
-[//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-3)
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-1)
 
 ### Sequence 1: Slash Command Activation & Menu Opening
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-1)
@@ -31,6 +34,7 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 [VERDICT] PASS - Menu displayed and screen reader alerted.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-2)
 ### Sequence 2: Arrow Key Navigation & Virtual Focus
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-2)
 ```text
@@ -49,6 +53,7 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 [VERDICT] PASS - Virtual navigation maintains focus in textarea without layout shift.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-3)
 ### Sequence 3: Enter Key Selection vs Prompt Submission
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-3)
 ```text
@@ -67,6 +72,7 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 [VERDICT] PASS - Premature prompt submission completely eliminated.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-4)
 ### Sequence 4: Standard Typing & Submission Verification
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-4)
 ```text
@@ -81,6 +87,7 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-4)
 ## 4. Benchmark & Accessibility Compliance Summary
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-4)
 
@@ -93,6 +100,7 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-5)
 ## 5. Why Order Matters in Keyboard Accessibility
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-5)
 1. **Intercept Enter Before Submission**: Checking for an active menu item before calling `sendPrompt()` prevents partial inputs from reaching the server.
@@ -101,6 +109,7 @@ This test suite verifies keyboard navigation, event listener precedence, and ass
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_18-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_18-SEC-6)
 **Q: Why was Enter submitting the prompt in the first place?**  

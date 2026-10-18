@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH43 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_43 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 43: Introduction to Swarm Telemetry and Protocol Monitoring
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_43-SEC-43_1)
 ## 43.1 The Weaponization of Valid Protocols
 [//]: # (SECTION_ID: SIRA-TXT-CH43-SEC-43_1)
 
@@ -13,6 +14,7 @@ However, a malicious Modder doesn't need to invent a brand new cyberattack to br
 
 To defend the Swarm, Tier 5 Admins must master **Swarm Telemetry**—the art of monitoring normal protocols to detect when they behave abnormally.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_43-SEC-43_2)
 ## 43.2 The Black Box Problem
 [//]: # (SECTION_ID: SIRA-TXT-CH43-SEC-43_2)
 
@@ -22,6 +24,7 @@ When a Subagent is executing tools inside a heavily encrypted, isolated Sandbox,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_43-SEC-43_3)
 ## 43.3 Module Objectives & Master Syllabus
 [//]: # (SECTION_ID: SIRA-TXT-CH43-SEC-43_3)
 

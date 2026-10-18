@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_05 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_05 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.5: Problems Encountered: Screen Reader Spam & Phantom Keystrokes
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-1)
 
@@ -19,8 +20,9 @@ This chapter details why standard web designs fail screen readers and how Siraug
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-2)
 ## Issue 1: Speech Flooding & Raw Output Spam
-[//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-3)
@@ -33,22 +35,25 @@ In early web portal builds, when the AI agent executed a bash command (like `npm
 
 Because the chat region was marked with `aria-live="polite"`, the screen reader attempted to speak every single percentage update and carriage return. The speech synthesizer talked non-stop for 10 minutes, freezing the user's ability to issue commands or hear system alerts.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-4)
 Visual interfaces assume the human brain can visually ignore scrolling text in a log window. But screen readers convert text directly into sound sequentially. If a developer dumps raw terminal telemetry into an active speech buffer, it creates an auditory denial-of-service.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-5)
 ## Issue 2: Heading Bloat & Navigation Chaos
-[//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-6)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-6)
 When the AI generated answers, it loved using deeply nested markdown headings:
 ```text
 # Analysis (H1)
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-7)
 ## Overview (H2)
-[//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-8)
 ### Frontend (H3)
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-8)
   [Nested H4] Component
@@ -63,15 +68,18 @@ The administrator gave direct feedback:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-9)
 ## The Architectural Solution
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-9)
 
 To restore auditory speed and navigation clarity, Siraugga instituted three strict UX rules:
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-1)
 ### 1. The H2/H3 Heading Cap
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-1)
 All AI responses and system templates strictly cap headings at H2 (`##`) and H3 (`###`). Nesting H4–H6 is permanently banned across documentation and UI prompts.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-2)
 ### 2. Result-First Conciseness
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-2)
 Raw terminal output, JSON events, and compiler dumps are moved to background log files (`server_stdout.log`, `upgrade.log`). The web interface displays only concise, human-readable task summaries:
@@ -79,12 +87,14 @@ Raw terminal output, JSON events, and compiler dumps are moved to background log
 [OK] Installed 14 dependencies successfully in 12s.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-3)
 ### 3. Native Form Controls (The Flip Card)
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-3)
 Instead of complex rich-text WYSIWYG editors (which trap screen reader cursors in nested `<div>` tags), interactive plan editing is performed using a native HTML `<textarea class="artifact-raw-editor">`. When flipped, the textarea is auto-focused immediately, allowing standard arrow key editing.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-10)
 ## Why Order Matters in Accessibility Rendering
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-10)
 
@@ -95,13 +105,15 @@ Instead of complex rich-text WYSIWYG editors (which trap screen reader cursors i
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-11)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-11)
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-12)
 
 ### Q: Why do screen readers use heading shortcuts?
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-12)
 **A:** Sighted users scan a webpage by glancing at large text. Blind users scan a webpage by pressing `H` on their keyboard to quickly jump from section to section. If headings are bloated or missing, scanning is impossible.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_05-SEC-13)
 ### Q: What is an ARIA live region?
 [//]: # (SECTION_ID: SIRA-DOC-01_05-SEC-13)
 **A:** `aria-live` is an HTML attribute that tells the browser: "Whenever new text is inserted into this `<div>`, announce it through the user's speech synthesizer automatically without requiring them to move their cursor."

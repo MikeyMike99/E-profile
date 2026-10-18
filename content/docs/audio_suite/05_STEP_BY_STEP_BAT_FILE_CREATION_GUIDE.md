@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: JOSH-PLAY-05 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: JOSH-PLAY-05_STEP_BY_STEP_BA | VERSION: v1.0 | SCOPE: PLAY)
 
 # Chapter 5: Beginner's Step-by-Step Guide to Creating `compile_joshy.bat` From Scratch
 
@@ -7,6 +7,7 @@
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-1)
 ## Introduction (From One Beginner Coder to Another)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-1)
 
@@ -21,11 +22,13 @@ This guide walks you through building `compile_joshy.bat` (compile_joshy.bat) **
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-2)
 ## Step 0: What Is a `.bat` File & How Do I Create One Without the `.txt` Trap?
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-2)
 
 A **`.bat` file (Windows Batch File)** is simply a plain text file containing terminal commands that Windows runs for you automatically when you double-click it. Instead of typing a 28-line Nuitka compilation command into Command Prompt by hand every time you update your code, you save the command inside `compile_joshy.bat` once and run it whenever you need it.
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-3)
 ### How to Create the Blank File Safely in Notepad
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-3)
 1. Open **Notepad** on Windows.
@@ -36,6 +39,7 @@ A **`.bat` file (Windows Batch File)** is simply a plain text file containing te
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-4)
 ## Step 1: Set Up the Window & Lock In the Correct Folder (Lines 1–3)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-4)
 
@@ -47,6 +51,7 @@ title Compile JOSHY - Accessible Audio Playback Suite
 cd /d "%~dp0"
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-5)
 ### Beginner Line-by-Line Explanation
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-5)
 - **Line 1 (`@echo off`)**:
@@ -61,6 +66,7 @@ cd /d "%~dp0"
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-6)
 ## Step 2: Print Clear Progress Announcements for Your Screen Reader (Lines 5–18)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-6)
 
@@ -83,6 +89,7 @@ echo - Bundled Tkinter, pynput, pycaw, and accessible_output2 suite
 echo.
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-7)
 ### Beginner Tips in This Block
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-7)
 - **`echo`** prints the words after it to the screen.
@@ -92,6 +99,7 @@ echo.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-8)
 ## Step 3: Start the Nuitka Command & Set Output Mode (Lines 20–23)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-8)
 
@@ -104,6 +112,7 @@ py -3.13 -m nuitka ^
     --output-filename=JOSHY.exe ^
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-9)
 ### Why We Chose Each Option
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-9)
 1. **`py -3.13 -m nuitka ^`**:
@@ -117,6 +126,7 @@ py -3.13 -m nuitka ^
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-10)
 ## Step 4: Configure the Windows Setup Installer & Shortcuts (Lines 24–28)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-10)
 
@@ -130,6 +140,7 @@ Right below `--output-filename=JOSHY.exe ^`, we add the 5 lines that build `JOSH
     --windows-installer-output=JOSHY-Setup.exe ^
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-11)
 ### Why Every Single One of These 5 Lines Matters
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-11)
 1. **`--windows-create-installer ^`**:
@@ -146,6 +157,7 @@ Right below `--output-filename=JOSHY.exe ^`, we add the 5 lines that build `JOSH
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-12)
 ## Step 5: Stamp the Official Windows File & Product Metadata (Lines 29–33)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-12)
 
@@ -159,6 +171,7 @@ Next, we add the 5 metadata lines:
     --windows-file-version=1.0.0.0 ^
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-13)
 ### Why You Cannot Skip This Step
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-13)
 - **Mandatory Requirement**: When you use `--windows-create-installer` or `--windows-company-name`, Nuitka **requires** a 4-part version number (`1.0.0.0`). If you leave out `--product-version=1.0.0.0`, Nuitka stops with an immediate `FATAL: Version information is required` error.
@@ -166,6 +179,7 @@ Next, we add the 5 metadata lines:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-14)
 ## Step 6: Bundle the GUI, Audio Libraries, and Screen Reader Bridge (Lines 34–44)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-14)
 
@@ -185,6 +199,7 @@ Now we tell Nuitka exactly which plugins, helper `.py` modules, and Python packa
     --include-package=win32com ^
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-15)
 ### Beginner Guide to `--enable-plugins`, `--include-module`, and `--include-package`
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-15)
 - **`--enable-plugins=tk-inter ^`**:
@@ -200,6 +215,7 @@ Now we tell Nuitka exactly which plugins, helper `.py` modules, and Python packa
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-16)
 ## Step 7: Add Auto-Download, Auto-Cleanup, and the Main `.py` File (Lines 45–47)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-16)
 
@@ -211,6 +227,7 @@ These are the final 3 lines of the Nuitka command:
     main.py
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-17)
 ### Beginner Line-by-Line Explanation
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-17)
 1. **`--assume-yes-for-downloads ^`**:
@@ -223,6 +240,7 @@ These are the final 3 lines of the Nuitka command:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-18)
 ## Step 8: Check for Success/Error & Keep the Window Open (Lines 49–63)
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-18)
 
@@ -246,6 +264,7 @@ if %ERRORLEVEL% EQU 0 (
 pause
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-19)
 ### Beginner Line-by-Line Explanation
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-19)
 - **`if %ERRORLEVEL% EQU 0`**:
@@ -259,6 +278,7 @@ pause
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-20)
 ## Step 9: The Complete Finished `compile_joshy.bat` File
 [//]: # (SECTION_ID: JOSH-PLAY-05-SEC-20)
 

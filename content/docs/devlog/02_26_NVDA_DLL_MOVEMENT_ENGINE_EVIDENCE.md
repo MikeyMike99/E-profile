@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_26 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-DEV-02_26 | VERSION: v1.0 | SCOPE: DEV)
 
 # NVDA DLL Movement Engine & 3D Grid Source Evidence
 
+[//]: # (SECTION_ID: JOSH-DEV-02_26-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_26-SEC-1)
 This document records source code evidence from the genesis of the developer's journey in late 2024 (documented in `docs/The_Manifesto/01_Echoes_in_the_Void.md` and `docs/The_Manifesto/02_The_Echoes_Architecture.md`). It documents how `NVDAController.dll` was loaded via Python `ctypes` to build a 3D coordinate movement engine that bypassed terminal screen reader silence.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-02_26-SEC-2)
 ## 2. ctypes DLL Loading Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_26-SEC-2)
 Direct bridge to the NVDA screen reader C-library:
@@ -38,6 +40,7 @@ def load_nvda_driver():
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-02_26-SEC-3)
 ## 3. 3D Coordinate Grid & 8-Way Compass Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_26-SEC-3)
 The mathematical movement engine that eliminated the terminal "blank" problem:
@@ -85,6 +88,7 @@ def move_player(direction: str, nvda_handle):
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-02_26-SEC-4)
 ## 4. State Persistence to JSON Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_26-SEC-4)
 Isolating player state from logic to survive program restarts:
@@ -102,6 +106,7 @@ def save_player_state():
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-02_26-SEC-5)
 ## 5. Why Order Matters in Audio Movement
 [//]: # (SECTION_ID: SIRA-DOC-02_26-SEC-5)
 1. **Define Argument Types Before DLL Function Call**: Setting `argtypes = [ctypes.c_wchar_p]` is mandatory; passing a Python string to a C function without specifying `wchar_p` causes Windows memory access violations.
@@ -110,6 +115,7 @@ def save_player_state():
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-02_26-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_26-SEC-6)
 **Q: What is a `c_wchar_p` in ctypes?**  

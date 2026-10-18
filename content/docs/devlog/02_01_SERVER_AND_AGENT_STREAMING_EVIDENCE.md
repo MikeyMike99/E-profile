@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_01 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 02.1: Source Evidence: Server & Agent Streaming Architecture
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-1)
 
@@ -15,6 +16,7 @@ This chapter presents primary source citations and Git forensic evidence proving
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-2)
 ## Source 1: The ACK Protocol & Keep-Alive Loop
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-2)
 
@@ -41,6 +43,7 @@ This chapter presents primary source citations and Git forensic evidence proving
             continue
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-3)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-3)
 1. **WSL Connection Survival**: Explicitly handles incoming 4-second `ping` frames and replies with `pong`, keeping the virtual network bridge alive.
@@ -49,6 +52,7 @@ This chapter presents primary source citations and Git forensic evidence proving
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-4)
 ## Source 2: Unbuffered Subprocess Execution & Environment Whitelist
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-4)
 
@@ -69,6 +73,7 @@ This chapter presents primary source citations and Git forensic evidence proving
             safe_env["GEMINI_BASE_URL"] = "http://127.0.0.1:5000/api/proxy"
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-5)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-5)
 1. **Zero Buffer Lag**: Git commit `f6e3adf` injected `PYTHONUNBUFFERED = "1"`, eliminating Python's default 4KB stdout buffer and allowing immediate real-time token streaming.
@@ -77,11 +82,13 @@ This chapter presents primary source citations and Git forensic evidence proving
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-6)
 ## Source 3: Git Evolution: From Terminal Deadlock to Headless Flags
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-6)
 
 - **Source**: Historical Git commits vs Modern Subprocess Invocation
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-7)
 ### Early Vulnerable Code (Git history)
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-7)
 ```python
@@ -91,6 +98,7 @@ process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 # Froze on "Do you trust this project? [Y/n]"
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-8)
 ### Hardened Production Code (`agents/agent_manager.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-8)
 ```python
@@ -105,12 +113,14 @@ cmd = [
 ]
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-9)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-9)
 Passing `--trust` and `--headless` at process startup removes the interactive prompt from the CLI, enabling seamless background execution for screen readers.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-10)
 ## Why Order Matters in Streaming Architecture
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-10)
 
@@ -121,13 +131,15 @@ Passing `--trust` and `--headless` at process startup removes the interactive pr
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-11)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-11)
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-12)
 
 ### Q: Why does Python buffer output by default?
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-12)
 **A:** Python buffers output in memory chunks (typically 4,096 bytes) to reduce the number of system calls and speed up batch processing. For interactive AI chat, this is disastrous because you see nothing until 4,000 characters have finished generating.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_01-SEC-13)
 ### Q: Why do we whitelist environment variables instead of passing `os.environ`?
 [//]: # (SECTION_ID: SIRA-DOC-02_01-SEC-13)
 **A:** In shared operating systems, `os.environ` often contains cloud credentials, database connection strings, or private auth tokens. Passing `os.environ` blindly would allow an untrusted agent or prompt injection to leak system secrets.

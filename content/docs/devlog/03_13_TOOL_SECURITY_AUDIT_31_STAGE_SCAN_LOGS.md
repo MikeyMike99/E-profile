@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_13 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_13 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_13: Tool Security Audit & 31-Stage Scan Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and validation results from the automated 31-stag
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-1)
 
@@ -20,6 +21,7 @@ We executed the comprehensive security auditor across all active plugins, tools,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-2)
 
@@ -29,6 +31,7 @@ python3 security/tool_security_auditor.py --filter all
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-3)
 
@@ -86,6 +89,7 @@ CLEANUP ACTION: Synthetic audit records successfully purged from logs.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-4)
 
@@ -95,6 +99,7 @@ CLEANUP ACTION: Synthetic audit records successfully purged from logs.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-5)
 
@@ -105,23 +110,27 @@ In multi-stage security auditing, stage sequence ensures test validity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-7)
 
 ### Why is an automated audit better than manual testing?
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-7)
 Humans make mistakes and easily forget to test edge cases. An automated script tests all 31 critical security vectors in 1.42 seconds every time code changes, ensuring no vulnerabilities are accidentally introduced.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-8)
 ### What happens if even one of the 31 checks fails?
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-8)
 If any check fails, the test runner exits with code 1, immediately halting the deployment pipeline and preventing the hot-patch runner from applying updates to the live server.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-9)
 ### What is the "Clean Workspace Purge"?
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-9)
 During testing, the script injects synthetic test passwords and email addresses. The purge routine automatically deletes those synthetic lines from log files so developers don't mistake test data for real security breaches.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_13-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_13-SEC-10)
 - To inspect the primary source code of the 31-stage audit harness, read [`02_SOURCE_EVIDENCE/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE.md`](/docs/devlog/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE).

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_09 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_09: Semantic Mantrap & File Locking Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the Siraugga security core demonstrating how cross-
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-1)
 ## Source Citation 1: OS-Agnostic Lock Detection (`security/mantrap.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-1)
 
@@ -26,6 +27,7 @@ except ImportError:
         OS_TYPE = "unknown"
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-2)
 - **Zero Host Crashes**: The code wraps OS-specific imports in nested `try...except ImportError` blocks. Importing `fcntl` on Windows or `msvcrt` on Linux fails gracefully without crashing the Python interpreter.
@@ -33,6 +35,7 @@ except ImportError:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-3)
 ## Source Citation 2: The Execution Chamber Context Manager (`security/mantrap.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-3)
 
@@ -89,6 +92,7 @@ def execution_chamber(target_db_path: str, agent_id: str = "System"):
         lock_fd.close()
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-4)
 - **Windows Byte-Range Requirement**: `msvcrt.locking` cannot lock a zero-byte file on Windows. Lines 35–38 ensure the lock file contains at least 1 byte (`"X"`), preventing silent Win32 locking errors.
@@ -96,6 +100,7 @@ def execution_chamber(target_db_path: str, agent_id: str = "System"):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-5)
 
@@ -106,23 +111,27 @@ In multi-process synchronization, order prevents race conditions and data corrup
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-7)
 
 ### What does `@contextmanager` do?
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-7)
 It is a Python decorator from `contextlib` that lets you write a generator using `yield` that works with the `with` statement (`with SemanticMantrap.execution_chamber("db.json"): ...`).
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-8)
 ### Why do we lock a `.lock` file instead of locking the database file itself?
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-8)
 Locking a dedicated `.lock` file prevents interfering with other software (like text editors or backup tools) that might want to inspect the database file. If the database file is locked directly, third-party tools crash.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-9)
 ### What is the difference between `LOCK_EX` and `LOCK_SH`?
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-9)
 `LOCK_EX` (Exclusive Lock) permits only one single process to access the resource; all others must wait. `LOCK_SH` (Shared Lock) allows multiple readers to read simultaneously, but blocks any writers.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_09-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_09-SEC-10)
 - To understand the problems that necessitated this mantrap, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).

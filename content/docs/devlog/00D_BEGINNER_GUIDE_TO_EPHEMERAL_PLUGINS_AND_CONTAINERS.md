@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-00D_BEGINNER_G | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-00D_BEGINNER_GUIDE | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 00D: Beginner Guide to Ephemeral Plugins & Zero-Modification Architecture
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-1)
 ## What is an Ephemeral Plugin?
 [//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-1)
 
@@ -20,6 +21,7 @@ In the Siraugga platform, interactive tools are **Ephemeral Plugins**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-2)
 ## The Zero-Modification Blueprint Architecture
 [//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-2)
 
@@ -55,6 +57,7 @@ Siraugga mandates the **Zero-Modification Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-3)
 ## Plain-English Glossary
 [//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-3)
 
@@ -65,6 +68,7 @@ Siraugga mandates the **Zero-Modification Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-4)
 ## Why Order Matters in Ephemeral Plugins
 [//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-4)
 
@@ -75,13 +79,15 @@ Siraugga mandates the **Zero-Modification Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-6)
 
 ### Q: If the HTML never changes, how do I change the quiz timer or add a question?
 [//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-6)
 **A:** You simply include `"time_limit_minutes": 10` or add a new question dictionary in the JSON payload! The immutable JavaScript reads the JSON values and sets the countdown timer automatically.
 
+[//]: # (SECTION_ID: SIRA-DEV-00D_BEGINNER_GUIDE-SEC-7)
 ### Q: Why is this approach safer for screen reader users?
 [//]: # (SECTION_ID: SIRA-DOC-00D_BEGINNER_G-SEC-7)
 **A:** The base blueprint has been rigorously tested and optimized for NVDA and JAWS screen readers (proper ARIA attributes, semantic headings, logical tab stops). If an AI modified the HTML dynamically, it would accidentally strip those accessibility tags.

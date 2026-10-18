@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_27 | VERSION: v1.0 | SCOPE: DEV)
 
 # Accessible Media Player & Iframe Focus Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_27-SEC-1)
 ## 1. The Problem: The Embedded Video Focus Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_27-SEC-1)
 Modern web developers frequently embed video and audio players using native `<video>` elements or third-party `<iframe>` tags. While sighted users easily click controls with a mouse, embedded players are notorious keyboard and screen reader death traps.
@@ -26,12 +27,14 @@ Once keyboard focus enters a raw video `<iframe>`, the third-party player interc
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_27-SEC-2)
 ## 2. Inaudible Playback Feedback
 [//]: # (SECTION_ID: SIRA-DOC-01_27-SEC-2)
 In standard web players, adjusting volume or seeking forward 10 seconds provides only visual cues (like a moving timeline scrubber). To a blind developer, there is zero auditory feedback indicating whether the track paused, what percentage volume is set to, or how many minutes remain.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_27-SEC-3)
 ## 3. The Solution: Accessible Headless Overlay & State JSON
 [//]: # (SECTION_ID: SIRA-DOC-01_27-SEC-3)
 To solve this, Siraugga engineered the DevCore Media Player (`sandbox/templates/video_application.html`):
@@ -42,6 +45,7 @@ To solve this, Siraugga engineered the DevCore Media Player (`sandbox/templates/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_27-SEC-4)
 ## 4. Why Order Matters in Accessible Media Control
 [//]: # (SECTION_ID: SIRA-DOC-01_27-SEC-4)
 1. **Intercept Global Keys Before Iframe Focus**: Capturing media shortcuts at the document level prevents the nested media frame from swallowing keyboard navigation.
@@ -50,6 +54,7 @@ To solve this, Siraugga engineered the DevCore Media Player (`sandbox/templates/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_27-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_27-SEC-5)
 **Q: What is a keyboard trap?**  

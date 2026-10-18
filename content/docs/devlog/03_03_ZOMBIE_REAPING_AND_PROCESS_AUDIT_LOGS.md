@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_03 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 03.3: Diagnostic Tests: Zombie Reaping & Process Audits
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-1)
 
@@ -15,13 +16,15 @@ This chapter documents empirical process lifecycle and resource management tests
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-2)
 ## Test 1: Subagent Swarm Cancellation & PGID Reaper Audit
-[//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-3)
 
 ### What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-3)
 We spawned three parallel agent worker processes in background subprocess groups, simulated an abrupt user task cancellation from the web UI, and audited the Linux process table to confirm zero orphaned processes remained.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-4)
 ### Exact Diagnostic Test Script
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-4)
 ```bash
@@ -57,6 +60,7 @@ asyncio.run(test_reaper())
 "
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-5)
 ### Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-5)
 ```text
@@ -65,37 +69,43 @@ asyncio.run(test_reaper())
 [PASS] Process group reaped cleanly. 0 zombies detected.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-6)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-6)
 By tying the subprocess to an isolated process group (`os.setpgrp`) and executing a cascading `killpg` signal sequence, all descendant subprocesses were terminated simultaneously, leaving zero orphan processes in the OS table.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-7)
 ## Test 2: File Descriptor Leak Audit
-[//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-8)
 
 ### What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-8)
 We verified that repeatedly opening and cancelling streaming agent sessions does not leak unclosed network sockets or file descriptors.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-9)
 ### Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-9)
 ```bash
 lsof -p $(pgrep -f "python3.*server.py" | head -n 1) | grep -E "FIFO|sock" | wc -l
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-10)
 ### Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-10)
 ```text
 12
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-11)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-11)
 Running the command before, during, and after 50 rapid WebSocket connect/disconnect cycles showed that open file descriptors returned to baseline (12 descriptors). Python's garbage collection and context managers successfully closed all underlying pipes.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-12)
 ## Why Order Matters in Process Reaping
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-12)
 
@@ -106,13 +116,15 @@ Running the command before, during, and after 50 rapid WebSocket connect/disconn
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-13)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-13)
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-14)
 
 ### Q: What is `os.kill(pid, 0)`?
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-14)
 **A:** Signal `0` does not actually kill the process. It simply checks if the process is currently running and if the caller has permission to send signals to it. If the process is dead, it raises `ProcessLookupError`.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_03-SEC-15)
 ### Q: What does `lsof` mean?
 [//]: # (SECTION_ID: SIRA-DOC-03_03-SEC-15)
 **A:** `lsof` stands for "List Open Files." In Linux, everything (including network connections, terminal screens, and disk files) is treated as a file descriptor.

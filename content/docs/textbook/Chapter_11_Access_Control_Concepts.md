@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH11 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_11 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 11: Access Control Concepts and Privilege Escalation
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_11-SEC-1)
 ## 1. Zero Trust Agentic Security
 [//]: # (SECTION_ID: SIRA-TXT-CH11-SEC-1)
 Zero Trust is a comprehensive architectural approach to securing access across networks, AI subagents, and third-party environments. The overarching principle of Zero Trust is: **"Never trust, always verify."**
@@ -16,6 +17,7 @@ DevCore categorizes the Zero Trust framework into three core pillars:
 2.  **Zero Trust for Workloads (The Swarm):** Securing the internal logic. Ensuring that AI subagents (the workload) cannot move laterally or execute tools outside their mathematically assigned boundaries.
 3.  **Zero Trust for the Workplace (The IoP):** Securing the Internet of Plugins. Ensuring that third-party webhooks, offline `.exe` sandboxes, and connected Modder devices are rigorously contained.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_11-SEC-2)
 ## 2. Agentic Access Control Models
 [//]: # (SECTION_ID: SIRA-TXT-CH11-SEC-2)
 To mathematically protect its network resources and the underlying game engine, DevCore utilizes specific access control models. Security Analysts must intimately understand these distinct models to defend against attackers trying to break them.
@@ -25,6 +27,7 @@ To mathematically protect its network resources and the underlying game engine, 
 *   **Role-Based Agentic Control (RBAC):** The primary logic model of the Siraugga framework. Access decisions are based exclusively on an entity's role. If an AI subagent is spawned with the `Research` Archetype, it is bound to the `Research` RBAC profile. It is mathematically impossible for it to inherit the privileges of a `Coding` role.
 *   **Rule-Based Agentic Control:** Network security staff specify rigid conditions associated with tool access. For example, a rule might specify that an AI subagent can only execute a tool if the payload is formatted in strict JSON, outright rejecting any raw plaintext parameters.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_11-SEC-3)
 ## 3. The Principle of Agentic Least Privilege
 [//]: # (SECTION_ID: SIRA-TXT-CH11-SEC-3)
 Another core access control model is the **Principle of Least Privilege**. This dictates that users and processes should be granted the absolute minimum amount of access required to perform their specific work function. 
@@ -38,6 +41,7 @@ In the Siraugga framework, this translates directly to **Agentic Jailbreaking** 
 
  subagent's immutable System Prompt. By overwriting the prompt, they trick the central Orchestrator into escalating the agent's privileges, turning a sandboxed Tier 3 subagent into a Tier 5 master administrator. Once the privilege is granted, the threat actor takes complete control of the logic mainframe.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_11-SEC-4)
 ## 4. Agentic Access Control (AAC) Systems
 [//]: # (SECTION_ID: SIRA-TXT-CH11-SEC-4)
 In a traditional IT environment, Network Access Control (NAC) systems support access management by mechanically enforcing organizational policies across thousands of connected devices. 
@@ -56,6 +60,7 @@ Because the IoP (Internet of Plugins) and the "Bring Your Own Plugin" (BYOP) cul
 
 Without the automated Agent Orchestrator, it would be mathematically impossible for human cybersecurity personnel to manually evaluate the thousands of third-party APIs and offline `.exe` subagents attempting to access the `/playground` simultaneously. Ultimately, the Agentic Access Control System is the central nervous system of the Zero Trust architecture, mechanically enforcing security compliance across the entire swarm.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_11-SEC-5)
 ## 5. Chapter 11 Conclusion: Access Control Concepts
 [//]: # (SECTION_ID: SIRA-TXT-CH11-SEC-5)
 In this chapter, we explored how traditional access control concepts dictate the flow of logic across an entire network infrastructure.
@@ -65,6 +70,7 @@ In this chapter, we explored how traditional access control concepts dictate the
 *   We detailed the catastrophic risks of **Agentic Privilege Escalation (Jailbreaking)**, where an attacker overwrites an agent's System Prompt to steal Tier 5 Admin permissions.
 *   Finally, we formalized the role of the central `Task Orchestrator Module` as the ultimate **Agentic Access Control (AAC) System**, executing pre-flight semantic checks and automatically isolating non-compliant subagents to maintain the integrity of the swarm.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_11-SEC-1)
 ### Agentic Knowledge Check: Identifying the Access Control Model
 [//]: # (SECTION_ID: SIRA-TXT-CH11-SEC-1)
 To properly review this chapter, Security Analysts must be able to instantly identify which access control model is being applied during an active semantic audit. Consider the following three DevCore scenarios:

@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: SIRA-DOC-03_30 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_30 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 03.30: Diagnostic Tests & Logs: OpenHands Local Inference & Token Cost Benchmarks
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-1)
 ## Overview & Context
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-1)
 This document records diagnostic benchmarks evaluating local GGUF model execution speed via `llama-cli`, comparing memory consumption and response latency against cloud LLM APIs, and auditing the token cost calculation telemetry in South African Rands (ZAR).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-1)
 ## 1. Test Execution & Diagnostic Log
-[//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-1)
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-2)
 
 ### What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-2)
@@ -17,6 +19,7 @@ This document records diagnostic benchmarks evaluating local GGUF model executio
 2. RAM utilization during offline PII scrubbing and tool classification.
 3. 24-hour and 7-day token accumulation tracking and currency translation.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-3)
 ### Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-3)
 ```bash
@@ -38,6 +41,7 @@ print(f'Estimated Cloud Equivalent Cost: R{cost_zar:.2f} ZAR')
 "
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-4)
 ### Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-4)
 ```
@@ -51,6 +55,7 @@ Estimated Cloud Equivalent Cost: R54.75 ZAR
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-2)
 ## 2. 7-Day Cumulative Swarm Cost Analysis
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-2)
 
@@ -66,6 +71,7 @@ Converted Cost (ZAR @ 18.25):  R805.00 ZAR                    R48.18 ZAR
 Financial Optimization:        94.01% Cost Reduction with Zero Data Leakage
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-5)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-5)
 - Offloading high-frequency, structured tool queries (PII scrubbing, AST indexing, regex matching) to the local 1.5B GGUF model saves over 94% on weekly API billing.
@@ -73,6 +79,7 @@ Financial Optimization:        94.01% Cost Reduction with Zero Data Leakage
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-3)
 ## 3. Why Order Matters in Telemetry Logging
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-3)
 1. **Timestamp Before Token Aggregation**: Record precise ISO timestamps on every request to enable accurate sliding-window (24h/7d) grouping.
@@ -80,19 +87,22 @@ Financial Optimization:        94.01% Cost Reduction with Zero Data Leakage
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-4)
 ## 4. Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-6)
 
 ### What does "Quantization" mean (e.g. `q4_k_m`)?
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-6)
 Standard AI weights use 16-bit or 32-bit floating point numbers. Quantization compresses these numbers into 4-bit representations with minimal accuracy loss, reducing model size by 75% so it can fit on a normal laptop.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-7)
 ### How does the hybrid architecture protect privacy?
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-7)
 Sensitive student data, personal credentials, and National IDs are processed entirely in local RAM by `llama-cli`. Only sanitized code questions without private data are forwarded to cloud APIs.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_30-SEC-5)
 ## 5. Cross-Reference Navigation
 [//]: # (SECTION_ID: SIRA-DOC-03_30-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md`](/docs/devlog/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS)

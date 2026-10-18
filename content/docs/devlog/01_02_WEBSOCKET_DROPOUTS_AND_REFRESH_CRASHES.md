@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_02 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_02 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.2: Problems Encountered: WebSocket Dropouts & Refresh Crashes
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-1)
 
@@ -19,13 +20,15 @@ This chapter documents the forensic investigation and engineering solutions impl
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-2)
 ## Issue 1: The Page Refresh Trap (Task Termination)
-[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-3)
 In early implementations, when a user pressed `F5` or reloaded the browser page while the AI was generating code, the running AI task vanished. The terminal process was killed, leaving unfinished, half-written files scattered across the workspace.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-4)
 The agent execution was originally bound directly to the lifespan of the WebSocket connection handler:
@@ -46,8 +49,9 @@ When the browser reloaded, the WebSocket closed. The server's connection cleanup
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-5)
 ## Issue 2: The 30-Second WSL Dropout Crisis
-[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-6)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-6)
@@ -57,6 +61,7 @@ WebSocket Connection Closed (Code 1006 / Abnormal Closure)
 ```
 The conversation stalled, and the user had to refresh and restart their query.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-7)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-7)
 Two distinct architectural bottlenecks caused these drops:
@@ -66,17 +71,20 @@ Two distinct architectural bottlenecks caused these drops:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-8)
 ## The Architectural Solution
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-8)
 
 To achieve 100% resilient streaming, the system was refactored with three decoupled layers:
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-1)
 ### 1. Detached Background Task Manager
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-1)
 `AgentManager` was decoupled from the WebSocket lifecycle. When a task starts, it is stored in a server-wide registry:
 - Browser refresh only drops the viewer, not the worker.
 - When the browser reconnects, it queries `agent_manager.get_active_task()`, seamlessly resuming the live stream.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-2)
 ### 2. The 4-Second Client Keep-Alive Heartbeat
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-2)
 The browser's JavaScript engine transmits an explicit heartbeat every 4 seconds:
@@ -89,12 +97,14 @@ setInterval(() => {
 ```
 This guarantees constant packet traffic, preventing WSL 2 from terminating the TCP socket.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-3)
 ### 3. Non-Blocking Asynchronous I/O
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-3)
 All heavy file reading and subprocess streams are read using `asyncio.StreamReader` and dispatched asynchronously. The event loop is never blocked, ensuring WebSocket heartbeats are serviced within milliseconds.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-9)
 ## Why Order Matters in Stream Resilience
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-9)
 
@@ -105,13 +115,15 @@ All heavy file reading and subprocess streams are read using `asyncio.StreamRead
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-10)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-10)
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-11)
 
 ### Q: What is Code 1006 in WebSockets?
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-11)
 **A:** Code 1006 indicates an "Abnormal Closure." It means the connection was severed abruptly at the network or operating system level without sending a proper close handshake.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_02-SEC-12)
 ### Q: Why does WSL 2 have stricter network timeouts than native Linux?
 [//]: # (SECTION_ID: SIRA-DOC-01_02-SEC-12)
 **A:** WSL 2 runs inside a lightweight Hyper-V virtual machine connected to Windows via a virtual Network Address Translation (NAT) bridge. Virtual NAT tables aggressively prune idle connection entries to save host resources.

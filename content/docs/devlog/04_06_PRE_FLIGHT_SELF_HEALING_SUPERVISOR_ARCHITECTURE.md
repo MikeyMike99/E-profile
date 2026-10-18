@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_06 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_06 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 04.6: Architecture Solutions: Pre-Flight Self-Healing Supervisor
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-1)
 
@@ -17,6 +18,7 @@ This chapter presents the architectural blueprint of the **Bootstrap Gateway & P
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-2)
 ## The Dual-Layer Gateway Blueprint
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-2)
 
@@ -46,8 +48,9 @@ This chapter presents the architectural blueprint of the **Bootstrap Gateway & P
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-3)
 ## The 3 Supervisor Pillars
-[//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-3)
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-1)
 
 ### 1. Pre-Flight Syntax Compilation Gating
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-1)
@@ -55,12 +58,14 @@ Before any server process launches, `run_preflight_checks()` compiles all Python
 - If a syntax error is discovered, the boot sequence halts *before* port binding.
 - Logs the exact line number of the syntax error to prevent zombie port locks.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-2)
 ### 2. Dual-Layer Uptime Decoupling
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-2)
 - The **Gateway** owns public **Port 5000**.
 - The **Core Engine** runs on private loopback **Port 5001**.
 - If the Core Engine crashes, the Gateway buffers the user's incoming chat messages in memory while initiating an automated restart.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-3)
 ### 3. Automated Crash Healing (`heal_crash`)
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-3)
 When the supervisor detects a backend crash:
@@ -70,6 +75,7 @@ When the supervisor detects a backend crash:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-4)
 ## Why Order Matters in Gateway Supervision
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-4)
 
@@ -80,13 +86,15 @@ When the supervisor detects a backend crash:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-6)
 
 ### Q: Why run two ports (5000 and 5001) instead of one?
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-6)
 **A:** If a single server on Port 5000 crashes, your browser displays "Connection Refused", and all active state is lost. Running a proxy on Port 5000 and the server on Port 5001 isolates the browser from server crashes.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_06-SEC-7)
 ### Q: How long does self-healing restart take?
 [//]: # (SECTION_ID: SIRA-DOC-04_06-SEC-7)
 **A:** Because Python restarts locally in memory and reads pre-compiled bytecode, the supervisor can revive the backend in under 500 milliseconds.

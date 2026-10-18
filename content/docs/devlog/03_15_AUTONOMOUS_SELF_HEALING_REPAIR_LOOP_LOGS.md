@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_15 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_15 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_15: Autonomous Self-Healing Repair Loop Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and operational traces evaluating the Siraugga **
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-1)
 
@@ -16,6 +17,7 @@ We subjected the bootstrap supervisor (`core/bootstrap_gateway.py`) to an active
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-2)
 
@@ -39,6 +41,7 @@ print(f'STAGED_EXISTS_AFTER_AUDIT: {os.path.exists(test_patch)}')
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-3)
 
@@ -63,6 +66,7 @@ STAGED_EXISTS_AFTER_AUDIT: False
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-4)
 
@@ -72,6 +76,7 @@ STAGED_EXISTS_AFTER_AUDIT: False
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-5)
 
@@ -82,23 +87,27 @@ In automated self-healing loops, evaluation sequence protects running servers:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-7)
 
 ### What does "Quarantining" mean here?
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-7)
 When a staged patch has a syntax error, the supervisor immediately deletes it from the staging directory and logs a warning so the broken code cannot be imported by the web server.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-8)
 ### Why do we test compilation with `py_compile` instead of just running the script?
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-8)
 `py_compile` only checks if the syntax is valid; it does not execute any code. Running a script to test it could trigger unwanted side effects or delete files.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-9)
 ### What happens if a live file is corrupted and no backup exists?
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-9)
 The supervisor triggers Tier-2 Auto-Repair: it spawns a headless AI agent with the crash traceback, the agent fixes the syntax error, and the supervisor re-compiles the file.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_15-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_15-SEC-10)
 - To understand why server crashes prompted this self-healing architecture, read [`01_PROBLEMS_ENCOUNTERED/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES.md`](/docs/devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES).

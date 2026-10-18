@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH32 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_32 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 32: Swarm Application Security (Tool Sandboxing)
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_32-SEC-32_1)
 ## 32.1 The Danger of Agentic Tools
 [//]: # (SECTION_ID: SIRA-TXT-CH32-SEC-32_1)
 
@@ -9,6 +10,7 @@ In DevCore, "Application Security" does not refer to standard web apps. It refer
 
 Because LLMs are inherently unpredictable, they act as infinite fuzzing engines. If you give a Subagent a tool to rename a file, there is always a non-zero chance the AI will hallucinate and attempt to rename the root filesystem. Therefore, Tier 5 Admins must ruthlessly harden the tools themselves, assuming the AI utilizing them is actively hostile. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_32-SEC-32_2)
 ## 32.2 Prompt Payload Validation
 [//]: # (SECTION_ID: SIRA-TXT-CH32-SEC-32_2)
 
@@ -23,6 +25,7 @@ Validation rules ensure the AI's hallucination falls within safe parameters:
 
 If an attacker modifies a Modder's prompt to force a Subagent into deleting a database, rigorous Prompt Payload Validation is the final line of defense that will block the malformed command.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_32-SEC-32_3)
 ## 32.3 Integrity Checks and Tool Checksums
 [//]: # (SECTION_ID: SIRA-TXT-CH32-SEC-32_3)
 
@@ -32,6 +35,7 @@ To combat this, the Orchestrator performs rapid **Integrity Checks**. Using a cr
 
 Right before a Subagent is allowed to execute that tool, the Orchestrator recalculates the checksum in real-time. If the checksums match, the execution is allowed (Integrity Pass). If a rogue Modder has secretly altered even a single line of the tool's code, the checksum will fail, and the Orchestrator will violently drop the execution.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_32-SEC-32_4)
 ## 32.4 Tool Signing and Secure Contexts
 [//]: # (SECTION_ID: SIRA-TXT-CH32-SEC-32_4)
 
@@ -41,11 +45,13 @@ DevCore enforces two additional application security practices:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_32-SEC-1)
 ## Chapter 32 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH32-SEC-1)
 
 Chapter 32 explores how to protect the environment from the AIs themselves. By enforcing strict Prompt Payload Validation (to tame LLM hallucinations), performing Checksum Integrity Checks (to prevent malicious tool overwriting), and requiring Digital Tool Signatures, Admins can safely grant their Swarms the power to execute code.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_32-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 32 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH32-SEC-2)
 

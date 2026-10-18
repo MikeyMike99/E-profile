@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH42 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_42 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 42: The Double-Edged Sword of Swarm Cryptography
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_42-SEC-42_1)
 ## 42.1 The Orchestrator's Cipher Suite
 [//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-42_1)
 
@@ -13,6 +14,7 @@ To secure the WebSockets connecting Modders to the DevCore Engine, the Orchestra
 3.  **Encryption Algorithm:** Hiding the bulk AI token data (e.g., **Industry-Standard Encryption**).
 4.  **Message Authentication Code (MAC):** Ensuring the prompt hasn't been altered (e.g., **HMAC / SHA-256**).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_42-SEC-42_2)
 ## 42.2 The Encryption Paradox (Cryptographic Blindspots)
 [//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-42_2)
 
@@ -20,6 +22,7 @@ Cryptography is dynamic and highly effective at securing data. However, it creat
 
 The fundamental rule of encryption is that it makes data payloads entirely unreadable without the key. While this successfully stops external threat actors from reading Swarm data on the public internet, it also blinds the internal Cybersecurity Analysts. If a Tier 5 Admin is running network monitoring software (like Wireshark or an IDS) to look for malicious traffic, they will only see unintelligible encrypted ciphertext. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_42-SEC-42_3)
 ## 42.3 Encrypted Prompt Exfiltration
 [//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-42_3)
 
@@ -33,11 +36,13 @@ To combat this, Tier 5 Admins cannot rely solely on network firewalls. They must
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_42-SEC-1)
 ## Chapter 42 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-1)
 
 Chapter 42 concludes the Cryptography module by highlighting its greatest weakness: it protects hackers just as well as it protects the system. While the Orchestrator relies on Cipher Suites to lock down the WebSockets, that same encryption creates severe blindspots for network defenders, necessitating deep-packet inspection and transcript auditing.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_42-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 42 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH42-SEC-2)
 

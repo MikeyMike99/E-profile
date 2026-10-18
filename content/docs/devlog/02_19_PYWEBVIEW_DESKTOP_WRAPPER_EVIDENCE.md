@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_19 | VERSION: v1.0 | SCOPE: DEV)
 
 # PyWebView Desktop Wrapper Source Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_19-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-1)
 This document records source code evidence for the standalone native desktop wrapper in `desktop_app.py`. It integrates the Quart/Hypercorn ASGI backend with `pywebview`, providing a zero-dependency desktop UI for Windows and Linux without spawning external browser windows.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_19-SEC-2)
 ## 2. Console Redirection & Background Server Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-2)
 When compiled with `--windows-disable-console`, standard output and error handles are initialized to `None`. Writing to them results in silent crashes. `desktop_app.py` redirects them to local log files:
@@ -31,6 +33,7 @@ except ImportError:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_19-SEC-3)
 ## 3. Hypercorn ASGI Threading Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-3)
 The Quart server is launched in a background daemon thread with its own `asyncio` event loop:
@@ -63,6 +66,7 @@ def start_server():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_19-SEC-4)
 ## 4. Main Thread GUI Event Pump & Lifecycle Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-4)
 The primary thread blocks on `webview.start()`, gracefully signaling the server thread when the user closes the window:
@@ -101,6 +105,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_19-SEC-5)
 ## 5. Why Order Matters in GUI Initialization
 [//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-5)
 1. **Redirect Stdout Before Imports**: If an imported module attempts to print while `sys.stdout` is `None`, Python raises an immediate `AttributeError` before error handlers can initialize.
@@ -109,6 +114,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_19-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_19-SEC-6)
 **Q: What does `sys.stdout = open(..., buffering=1)` mean?**  

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_05 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_05 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 02.5: Source Evidence: Ephemeral Plugins & MCP Protocols
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-1)
 
@@ -15,6 +16,7 @@ This chapter documents verbatim source citations from Siraugga's Model Context P
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-2)
 ## Source 1: The MCP Coordinate Line Editor (`edit_lines`)
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-2)
 
@@ -46,6 +48,7 @@ def edit_lines(target_file: str, start_line: int, end_line: int, new_code: str) 
     return f"Successfully replaced lines {start_line} through {end_line} in {target_file}"
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-3)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-3)
 1. **Zero Character-Matching Failures**: Replaces fragile string-matching tools (`replace_file_content`) with deterministic line coordinate slicing.
@@ -53,6 +56,7 @@ def edit_lines(target_file: str, start_line: int, end_line: int, new_code: str) 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-4)
 ## Source 2: The Zero-Modification Template Mandate
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-4)
 
@@ -74,6 +78,7 @@ The exam_application.html file and its JavaScript are strictly fixed blueprints/
 - You simply inject temporary JSON files to dictate how the front-end renders.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-5)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-5)
 1. **Immutability Defense**: Prevents AI coding swarms from breaking accessible frontend templates.
@@ -81,6 +86,7 @@ The exam_application.html file and its JavaScript are strictly fixed blueprints/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-6)
 ## Why Order Matters in Splicing & Plugins
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-6)
 
@@ -91,13 +97,15 @@ The exam_application.html file and its JavaScript are strictly fixed blueprints/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-7)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-8)
 
 ### Q: Why do AI agents struggle with standard `replace_file_content`?
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-8)
 **A:** `replace_file_content` requires an exact character-by-character string match. If an editor changes a tab to 4 spaces or adds a trailing newline, the search fails with "Target content not found." Coordinate-based line editing completely eliminates this trap.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_05-SEC-9)
 ### Q: What is an MCP Tool?
 [//]: # (SECTION_ID: SIRA-DOC-02_05-SEC-9)
 **A:** Model Context Protocol (MCP) is an open standard that allows AI agents to securely call external tools and scripts via standard input and output (`stdio`).

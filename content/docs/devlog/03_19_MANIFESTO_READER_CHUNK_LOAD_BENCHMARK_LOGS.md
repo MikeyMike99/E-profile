@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-MAN-03_19 | VERSION: v1.0 | SCOPE: MAN)
 
 # Manifesto Reader Chunk Loading Benchmark Logs
 
+[//]: # (SECTION_ID: SIRA-MAN-03_19-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-1)
 This benchmark evaluates memory consumption, startup latency, and screen reader responsiveness when processing a massive 317,706-line document (`DEVELOPERS_MANIFESTO.md`). It compares standard full-buffer editor loading against the 100-line streaming chunk architecture in `manifesto_reader.py`.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-03_19-SEC-2)
 ## 2. Benchmark Environment
 [//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-2)
 - **Hardware**: Intel Core i7-12700H, 32GB DDR5 RAM, NVMe PCIe Gen 4 SSD
@@ -16,6 +18,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-03_19-SEC-3)
 ## 3. Comparative Benchmark Results
 [//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-3)
 
@@ -39,6 +42,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-03_19-SEC-4)
 ## 4. WPM Speech Latency Calibration Metrics
 [//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-4)
 
@@ -51,6 +55,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-03_19-SEC-5)
 ## 5. Why Order Matters in Document Chunking
 [//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-5)
 1. **Load Chunk Before Calculating WPM**: The exact word count must be known before scheduling the auto-scroll delay for that specific line.
@@ -59,6 +64,7 @@ This benchmark evaluates memory consumption, startup latency, and screen reader 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-MAN-03_19-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_19-SEC-6)
 **Q: How did `manifesto_reader.py` use only 18 MB of RAM for a 46 MB file?**  

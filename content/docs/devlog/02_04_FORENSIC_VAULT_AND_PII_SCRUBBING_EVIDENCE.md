@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_04 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_04 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 02.4: Source Evidence: Forensic Vault & PII Scrubbing Engine
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-1)
 
@@ -17,6 +18,7 @@ These citations prove how Microsoft Presidio scrubs PII and secrets in real time
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-2)
 ## Source 1: Real-Time PII & Secret Scrubbing
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-2)
 
@@ -54,6 +56,7 @@ class LocalSecurity:
         return anonymized.text
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-3)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-3)
 1. **Automated Anonymization**: Outbound text is analyzed for sensitive patterns and replaced with sanitized tokens (`<EMAIL_ADDRESS>`, `<IP_ADDRESS>`) before leaving the machine.
@@ -61,6 +64,7 @@ class LocalSecurity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-4)
 ## Source 2: Forensic Vault Archival & Ownership Mapping
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-4)
 
@@ -85,6 +89,7 @@ class LocalSecurity:
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-5)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-5)
 1. **Multi-Tenant Attribution**: Every historical chat transcript is cryptographically tied to its creator and assigned project workspace.
@@ -92,6 +97,7 @@ class LocalSecurity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-6)
 ## Why Order Matters in Data Privacy
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-6)
 
@@ -102,13 +108,15 @@ class LocalSecurity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-7)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-8)
 
 ### Q: What is Presidio?
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-8)
 **A:** Microsoft Presidio is an open-source data protection framework that identifies sensitive entities (names, phone numbers, passwords) in unstructured text using natural language processing (NLP).
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-9)
 ### Q: Why do we keep forensic archives if the user requested deletion?
 [//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-9)
 **A:** In cybersecurity and corporate governance, audit trails must be preserved for compliance. Non-admin users see their active screen cleared, but administrators retain encrypted forensic records to investigate unauthorized privilege attempts.

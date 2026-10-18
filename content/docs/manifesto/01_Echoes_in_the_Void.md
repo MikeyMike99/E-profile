@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: ECHO-MAN-01 | VERSION: v1.1 | SCOPE: Echoes of the World (Audio Game))
+[//]: # (DOC_ID: ECHO-MAN-01_ECHOES_IN_THE_V | VERSION: v1.1 | SCOPE: MAN)
 
 # Chapter 1: ECHOES_OF_THE_WORLD (The True Origin)
 
@@ -90,6 +90,7 @@ Getting that client-server authority model right was tricky. I had to determine 
 
 ---
 
+[//]: # (SECTION_ID: ECHO-MAN-01_ECHOES_IN_THE_V-SEC-1)
 ### 🔗 Technical Cross-References & Architectural DNA
 [//]: # (SECTION_ID: ECHO-MAN-01-SEC-1)
 

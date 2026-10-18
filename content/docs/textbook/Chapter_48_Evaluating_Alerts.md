@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH48 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_48 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 48: Introduction to Evaluating Swarm Alerts
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_48-SEC-48_1)
 ## 48.1 The Deluge of JSON
 [//]: # (SECTION_ID: SIRA-TXT-CH48-SEC-48_1)
 
@@ -9,6 +10,7 @@ As established in Module 10, the Orchestrator SIEM is constantly ingesting a mas
 
 However, generating alerts is only half the battle. A critical skill for any Tier 5 Cybersecurity Analyst operating the Siraugga Engine is the ability to evaluate these alerts and decide what to do with them. If an Admin panics every time the SIEM flags a `read_file` tool execution, they will drown in false positives. They must be able to instantly distinguish between a Tier 2 Modder executing a harmless bash script for their game, and a rogue hacker executing a malicious script to break out of the Sandbox.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_48-SEC-48_2)
 ## 48.2 Sources of Swarm Alerts
 [//]: # (SECTION_ID: SIRA-TXT-CH48-SEC-48_2)
 
@@ -17,6 +19,7 @@ In a decentralized Swarm, alerts do not come from a single source. They are gene
 2.  **Next-Gen Prompt Firewalls (NGPF):** Triggering intrusion alerts when a prompt semantic matches a known jailbreak payload.
 3.  **Sandbox Event Logs:** Triggering failure audits when an AI hits a permission boundary.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_48-SEC-48_3)
 ## 48.3 Master Syllabus for Module 11
 [//]: # (SECTION_ID: SIRA-TXT-CH48-SEC-48_3)
 

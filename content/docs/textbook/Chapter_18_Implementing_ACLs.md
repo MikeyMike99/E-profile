@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH18 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_18 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 18: Implementing Agentic Control Lists
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_1)
 ## 18.1 The Hierarchical Cascade (Guidelines)
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_1)
 
@@ -16,16 +17,19 @@ When configuring and deploying an ACL, Tier 5 Admins must follow these golden ru
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_2)
 ## 18.2 Swarm Placement Strategy
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_2)
 
 Every ACL must be placed where it is mathematically most efficient. In DevCore, you have two primary locations to attach a filter: The Modder's source WebSocket, or the Sandbox's destination directory.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-1)
 ### 1. Extended ACLs: Place at the Source (The WebSocket)
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-1)
 Extended ACLs (which filter by UUID, Tool, and Directory) should be bound as close to the *originating source* as possible—directly on the Modder's inbound WebSocket. 
 *   **Why?** If a rogue AI agent attempts to use an illegal tool (like `run_command`), you want the Orchestrator to deny and destroy that JSON thought instantly at the entrance. Letting the malicious packet traverse the internal engine routing, only to be denied at the final destination, wastes massive amounts of compute and bandwidth.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-2)
 ### 2. Standard ACLs: Place at the Destination (The Sandbox Directory)
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-2)
 Standard ACLs (which *only* filter by Agent UUID) should be bound as close to the *destination* as possible—typically applied outbound on a highly classified directory like `/core_engine/`. 
@@ -33,6 +37,7 @@ Standard ACLs (which *only* filter by Agent UUID) should be bound as close to th
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_3)
 ## 18.3 Applying the Filters (`agy` CLI)
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_3)
 
@@ -52,6 +57,7 @@ agy(config-stream)# acl-class SURFING in
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_4)
 ## 18.4 High-Intensity Semantic Logging
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_4)
 
@@ -67,11 +73,13 @@ When an attacker attempts to breach the system via a Prompt Injection, the Orche
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-1)
 ## Chapter 18 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-1)
 
 Chapter 18 defines the physics of how Agentic Control Lists are deployed onto the live DevCore engine. Adhering to the specific-to-generic Hierarchical Cascade ensures rules do not overwrite each other, while strict Swarm Placement Strategies guarantee that the system does not waste precious compute power routing malicious LLM packets that should have been destroyed at the gate. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 18 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-2)
 

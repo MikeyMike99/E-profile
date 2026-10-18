@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-MAN-04 | VERSION: v1.1 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-MAN-04_THE_FORGE_OF_SO | VERSION: v1.1 | SCOPE: MAN)
 
 # Chapter 4: The Forge of Sovereignty
 

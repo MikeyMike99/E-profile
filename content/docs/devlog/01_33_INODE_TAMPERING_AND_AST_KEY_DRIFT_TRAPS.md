@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_33 | VERSION: v1.0 | SCOPE: DEV)
 
 # Inode Tampering & AST Key Drift Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_33-SEC-1)
 ## 1. The Problem: The Rename Evasion Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_33-SEC-1)
 Traditional access control systems map security policies strictly to physical file paths (e.g., `/core/server.py`). However, autonomous subagents and shell tools can easily evade path-based filters through file renaming, symlinking, or moving files into temporary staging areas.
@@ -26,12 +27,14 @@ If an agent renames `core/server.py` to `core/server_temp.py`, naive path filter
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_33-SEC-2)
 ## 2. The AST Line Drift Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_33-SEC-2)
 When code access systems reference functions by line coordinates (e.g., "Function `handle_login` at lines 40-65"), any preceding edit introduces **Line Drift**. If three lines are added at line 10, modifying lines 40-65 now overwrites unrelated code, corrupting the file's syntax tree.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_33-SEC-3)
 ## 3. The Solution: Hardware Inodes & Dynamic AST Keys
 [//]: # (SECTION_ID: SIRA-DOC-01_33-SEC-3)
 Siraugga resolved this with the Raugus Map Indexer (`generate_raugusmap.py`):
@@ -41,6 +44,7 @@ Siraugga resolved this with the Raugus Map Indexer (`generate_raugusmap.py`):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_33-SEC-4)
 ## 4. Why Order Matters in AST Indexing
 [//]: # (SECTION_ID: SIRA-DOC-01_33-SEC-4)
 1. **Fetch Inode Before Checking Path Rules**: Inspecting the hardware inode first detects if a file has been swapped via symlink before evaluating access tiers.
@@ -49,6 +53,7 @@ Siraugga resolved this with the Raugus Map Indexer (`generate_raugusmap.py`):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_33-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_33-SEC-5)
 **Q: What is an inode (`st_ino`)?**  

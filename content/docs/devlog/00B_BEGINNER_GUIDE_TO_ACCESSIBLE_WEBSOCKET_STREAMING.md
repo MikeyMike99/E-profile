@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-00B | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-00B | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 00B: Beginner Guide to Accessible WebSocket Streaming
 
@@ -8,11 +8,13 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-1)
 ## The Challenge: Streaming AI to Screen Readers
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-1)
 
 When artificial intelligence models write code, they generate continuous streams of tokens, tool calls, and execution logs. In traditional command-line interfaces, this creates an unmanageable experience for developers who use screen readers (such as NVDA or JAWS).
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-2)
 ### Why Terminals Fail for Blind Developers
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-2)
 1. **Console Tearing**: When an AI streams output to the terminal while a developer is typing, the output collides with the cursor, garbling speech output.
@@ -21,6 +23,7 @@ When artificial intelligence models write code, they generate continuous streams
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-3)
 ## The Solution: Decoupled WebSocket Streaming
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-3)
 
@@ -52,8 +55,9 @@ To solve these barriers, Siraugga isolates the AI engine in a detached backgroun
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-4)
 ## Two Critical Streaming Pillars
-[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-1)
 
 ### 1. The 4-Second Keep-Alive Heartbeat
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-1)
@@ -64,6 +68,7 @@ Siraugga solves this with a 4-second client heartbeat:
 - The server responds immediately with `{"type": "pong"}`.
 - TCP connections remain actively registered in the Windows network stack.
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-2)
 ### 2. The Guaranteed Delivery Queue (ACK Protocol)
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-2)
 When developers switch browser tabs or temporarily lose network connectivity, events must not be lost.
@@ -75,6 +80,7 @@ When developers switch browser tabs or temporarily lose network connectivity, ev
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-5)
 ## Why Order Matters in WebSocket Streaming
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-5)
 
@@ -87,17 +93,20 @@ When developers switch browser tabs or temporarily lose network connectivity, ev
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-00B-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-7)
 
 ### Q: What is a WebSocket and why not just use regular HTTP?
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-7)
 **A:** Standard HTTP requires the browser to ask for data every time ("polling"). A WebSocket is an open, two-way pipe that stays connected, allowing the server to push new AI tokens to the screen the exact millisecond they are generated.
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-8)
 ### Q: Why do screen readers need HTML instead of a terminal?
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-8)
 **A:** HTML has semantic tags (`<button>`, `<main>`, `<textarea>`, ARIA live regions) that tell screen readers what an element does. Terminals only have raw pixels and text characters, making it impossible for screen readers to differentiate between a button, an alert, and a code block.
 
+[//]: # (SECTION_ID: SIRA-DEV-00B-SEC-9)
 ### Q: What happens if my browser disconnects for 10 seconds?
 [//]: # (SECTION_ID: SIRA-DOC-00B-SEC-9)
 **A:** Thanks to the ACK protocol, the server holds your unacknowledged messages in memory. When your browser reconnects, it sends its last received sequence number, and the server replays everything you missed seamlessly.

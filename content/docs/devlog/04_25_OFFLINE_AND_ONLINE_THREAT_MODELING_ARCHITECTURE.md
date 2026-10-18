@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_25 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_25 | VERSION: v1.0 | SCOPE: DEV)
 
 # Offline & Online Threat Modeling Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-1)
 Security in modern agentic systems cannot rely on theoretical assumptions or passive defense. Software must be continuously tested against simulated adversarial attacks.
@@ -35,6 +36,7 @@ The Threat Modeling Architecture splits system defense into two distinct, active
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-2)
 ## 2. Offline Defense: Eliminating Weak Ciphers
 [//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-2)
 An attacker who gains access to an encrypted zip archive has unlimited offline compute time. To protect developer assets:
@@ -43,6 +45,7 @@ An attacker who gains access to an encrypted zip archive has unlimited offline c
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-3)
 ## 3. Online Defense: Throttling & Jailing
 [//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-3)
 Against online endpoint attacks:
@@ -52,6 +55,7 @@ Against online endpoint attacks:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-4)
 ## 4. Why Order Matters in Threat Defense
 [//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-4)
 1. **Hard-Code Cipher Validation Before Archiving**: Checking cipher algorithms before writing backup files ensures unencrypted or weakly encrypted files never touch the hard drive.
@@ -60,6 +64,7 @@ Against online endpoint attacks:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-5)
 **Q: What is a dictionary attack?**  

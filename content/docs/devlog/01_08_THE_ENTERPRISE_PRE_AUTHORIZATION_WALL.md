@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_08 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_08 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.8: Problems Encountered: The Enterprise Pre-Authorization Wall (AADSTS65002)
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-1)
 
@@ -19,8 +20,9 @@ This chapter analyzes why headless enterprise authentication failed and why it s
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-2)
 ## The Incident: Hitting Error `AADSTS65002`
-[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-3)
@@ -41,6 +43,7 @@ via preauthorization - applications owned and operated by Microsoft must get app
 from the API owner before requesting tokens for that API.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-4)
 ### Why It Happened: The Enterprise Illusion
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-4)
 Many developers assume that because an employee or student can log into Microsoft Word or Copilot on the web, their scripts can programmatically consume that same intelligence via APIs. 
@@ -52,6 +55,7 @@ This is an illusion:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-5)
 ## The Architectural Pivot: Sovereign Independence
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-5)
 
@@ -72,6 +76,7 @@ Rather than remaining chained to external enterprise bureaucracy, the team made 
 +-------------------------------------------------------------------------------+
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-6)
 ### The Three Sovereignty Pillars
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-6)
 1. **Local-First Model Orchestration**: Siraugga prioritizes offline, self-hosted LLM endpoints running directly on local developer hardware.
@@ -80,6 +85,7 @@ Rather than remaining chained to external enterprise bureaucracy, the team made 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-7)
 ## Why Order Matters in Authentication Architecture
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-7)
 
@@ -90,13 +96,15 @@ Rather than remaining chained to external enterprise bureaucracy, the team made 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-8)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-8)
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-9)
 
 ### Q: What is MSAL?
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-9)
 **A:** MSAL stands for Microsoft Authentication Library. It is an official SDK used by developers to authenticate users against Microsoft Azure Active Directory (now called Microsoft Entra ID).
 
+[//]: # (SECTION_ID: SIRA-DEV-01_08-SEC-10)
 ### Q: What is Device Code Flow?
 [//]: # (SECTION_ID: SIRA-DOC-01_08-SEC-10)
 **A:** It is an OAuth 2.0 flow designed for headless devices (like smart TVs, game consoles, or terminal scripts) that lack a web browser. The device displays a short code and a URL, allowing the user to approve the login from their smartphone or computer.

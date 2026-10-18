@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-02_28 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_28 | VERSION: v1.0 | SCOPE: DEV)
 
 # KMS Keychain & Cold Storage Source Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_28-SEC-1)
 ## 1. Architectural Role & File Location
 [//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-1)
 This document records source code evidence from `security/keychain.py` and `security/cold_storage.py`. It demonstrates how the system protects brain session transcripts using an enterprise Key Management Service (KMS) hierarchy and atomic cold-storage encryption.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_28-SEC-2)
 ## 2. KEK Derivation & Keychain Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-2)
 `security/keychain.py` derives a Key Encryption Key (KEK) using PBKDF2 with 100,000 iterations to protect an array of Data Encryption Keys (DEKs):
@@ -40,6 +42,7 @@ def get_all_ciphers(self) -> list[Fernet]:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_28-SEC-3)
 ## 3. Atomic Cold Storage Locking Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-3)
 `security/cold_storage.py` searches brain transcripts, avoids double encryption, and atomically swaps ciphertext into place:
@@ -77,6 +80,7 @@ def lock_brain():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_28-SEC-4)
 ## 4. Multi-Key Decryption Evidence
 [//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-4)
 When unlocking cold storage, the engine cycles through historical ciphers until a matching key decrypts the token:
@@ -93,6 +97,7 @@ for cipher in ciphers:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_28-SEC-5)
 ## 5. Why Order Matters in Cryptographic Locking
 [//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-5)
 1. **Derive KEK Before Loading Keychain**: The master key must be verified and transformed via PBKDF2 before `keychain.json` can be parsed.
@@ -101,6 +106,7 @@ for cipher in ciphers:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_28-SEC-6)
 ## 6. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-02_28-SEC-6)
 **Q: What is `b'gAAAAA'`?**  

@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-OPS-MOD05 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-OPS-MOD_05 | VERSION: v1.0 | SCOPE: OPS)
 
 # Module 5: Agentic Cryptography & Trust Systems
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_05-SEC-1)
 ## What Will I Learn in this Module?
 [//]: # (SECTION_ID: SIRA-OPS-MOD05-SEC-1)
 This module explains the cryptographic foundations that allow decentralized Modders and AIs to trust each other over the web. You will learn:
@@ -12,6 +13,7 @@ This module explains the cryptographic foundations that allow decentralized Modd
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_05-SEC-5_1)
 ## 5.1 The Orchestrator Cipher Suite
 [//]: # (SECTION_ID: SIRA-OPS-MOD05-SEC-5_1)
 Because the DevCore engine allows third-party Modders to connect to the host server globally via WebSockets, that connection must be mathematically sealed to prevent packet sniffing. This is achieved through the **Orchestrator Cipher Suite**.
@@ -20,10 +22,12 @@ The cipher suite utilizes a hybrid cryptographic approach:
 1.  **Asymmetric Encryption (RSA/Public Key):** Used purely for the initial handshake. The Modder's browser and the Orchestrator exchange public keys to securely establish their identities. This is highly secure but incredibly CPU-intensive.
 2.  **Symmetric Encryption (Standard Encryption):** Once the asymmetric handshake is verified, the two parties agree on a single, shared "session key." All subsequent JSON telemetry and tool calls are encrypted symmetrically using this session key, allowing for blisteringly fast execution without burning CPU cycles.
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_05-SEC-2)
 ### The Encryption Paradox
 [//]: # (SECTION_ID: SIRA-OPS-MOD05-SEC-2)
 While the cipher suite guarantees that outside hackers cannot intercept the WebSockets, it introduces the **Encryption Paradox**. Because the tunnel is perfectly encrypted, standard perimeter firewalls cannot see the JSON payloads inside. The prompt injections are effectively cloaked in encryption. This is why the Next-Gen Prompt Firewall (NGPF) must sit *behind* the decryption layer on the host, where it can inspect the raw text before it hits the Subagent.
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_05-SEC-5_2)
 ## 5.2 The Modder PKI Trust System
 [//]: # (SECTION_ID: SIRA-OPS-MOD05-SEC-5_2)
 How does the Orchestrator know that the person connecting to the WebSocket is actually an authorized Tier 3 Modder and not a random script kiddie? It uses a **Public Key Infrastructure (PKI) Trust System**.
@@ -32,6 +36,7 @@ In this system, the DevCore Orchestrator acts as the **Root Certificate Authorit
 When a Modder is hired, the Orchestrator generates a digital certificate that explicitly lists their assigned Tier (e.g., Tier 3 Developer) and mathematically signs it with the Orchestrator's private key. When the Modder connects, they present this certificate. Because the certificate is mathematically bound to the Orchestrator's root authority, the server implicitly trusts it and assigns them to their Tier 3 Sandbox.
 
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_05-SEC-5_3)
 ## 5.3 Agentic Digital Signatures & Non-Repudiation
 [//]: # (SECTION_ID: SIRA-OPS-MOD05-SEC-5_3)
 When a Modder or a Subagent executes a high-risk tool call (such as `write_to_file` or `run_command`), the Orchestrator must be absolutely certain that the payload was not altered in transit by a Man-in-the-Middle (MitM) attack.
@@ -42,6 +47,7 @@ Before the JSON tool call is sent, the Subagent hashes the payload and encrypts 
 1.  **Integrity:** The tool call was not tampered with. Not a single character was changed.
 2.  **Non-Repudiation:** Because only the specific Subagent (and its parent Modder) possessed the private key used to sign the payload, they cannot deny executing the command. If a malicious script is compiled, the mathematical proof leads directly back to the Modder.
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_05-SEC-5_4)
 ## 5.4 Certificate Revocation (CRL & OCSP)
 [//]: # (SECTION_ID: SIRA-OPS-MOD05-SEC-5_4)
 What happens when a Tier 3 Developer goes rogue and their Agentic Digital Signatures are found all over a malicious breach? Their access must be instantly terminated.

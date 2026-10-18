@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_17 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_17: Game Engine Plugin Integration Architecture
 
@@ -6,6 +6,7 @@ An architectural guide to integrating Siraugga into third-party game engines (Go
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-1)
 ## Architectural Overview & Topology
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-1)
 
@@ -50,6 +51,7 @@ Siraugga enforces an **Out-of-Process Game Plugin Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-2)
 ## The Two UI Rendering Methodologies
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-2)
 
@@ -62,6 +64,7 @@ Siraugga enforces an **Out-of-Process Game Plugin Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-3)
 
@@ -72,6 +75,7 @@ In game engine daemon lifecycle management, sequencing prevents orphaned process
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-4)
 ## Reusable Integration Recipe (GDScript / Godot Example)
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-4)
 
@@ -98,19 +102,22 @@ func send_player_message(player_text):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-6)
 
 ### Why can't the AI modify the game's C++ source code?
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-6)
 The game engine starts the agent with its root directory set strictly to `C:\Game\Player_Mods\`. Any tool call attempting to navigate backwards (`../../`) is intercepted and blocked by the Security Manager.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-7)
 ### Does running the agent slow down my game's FPS?
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-7)
 No. Because the agent runs as a separate operating system process, all AI calculations occur on background CPU cores without interrupting the game's 60 FPS rendering loop.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_17-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_17-SEC-8)
 - To understand why desktop window wrapping and game plugins required headless compilation, read [`01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md`](/docs/devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS).

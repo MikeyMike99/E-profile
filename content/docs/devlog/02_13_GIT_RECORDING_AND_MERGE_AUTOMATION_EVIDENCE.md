@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_13 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_13 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_13: Git Recording & Merge Automation Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the repository developer tools demonstrating how au
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-1)
 ## Source Citation 1: Headless SSH Agent Verification (`tools/recording/helpers.sh`)
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-1)
 
@@ -39,6 +40,7 @@ _ensure_ssh_agent() {
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-2)
 - **Persistence Across Headless Shells**: Caching `SSH_AUTH_SOCK` and `SSH_AGENT_PID` into `~/.ssh/agent.env` allows subshells, cron jobs, and background agent tasks to reuse the unlocked SSH agent without prompting the user repeatedly.
@@ -46,6 +48,7 @@ _ensure_ssh_agent() {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-3)
 ## Source Citation 2: Isolated Terminal Recording (`tools/recording/helpers.sh`)
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-3)
 
@@ -79,6 +82,7 @@ rec() {
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-4)
 - **Strict Directory Sandboxing**: All `.cast` files are automatically forced into `$RECORDINGS_DIR/$dev_user/` rather than the current working directory, preventing repository pollution.
@@ -86,6 +90,7 @@ rec() {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-5)
 
@@ -96,23 +101,27 @@ In shell-based Git automation, ordering prevents destructive desynchronization:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-7)
 
 ### What does `kill -0 "$SSH_AGENT_PID"` do?
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-7)
 Signal 0 does not terminate the process; it merely checks if the process ID is still alive. If the process died or rebooted, the command returns non-zero, signaling that a fresh agent must be spawned.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-8)
 ### What does `unalias` at the top of the script accomplish?
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-8)
 If a developer previously defined an alias with the same name as a function (e.g., `alias sync='...'`), the alias would take precedence and prevent the shell script function from loading correctly.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-9)
 ### What is the `-i 1.5` flag in `asciinema rec`?
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-9)
 The idle time limit flag (`-i 1.5`) caps pauses between keystrokes to a maximum of 1.5 seconds during playback, skipping long pauses when someone pauses to read code.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_13-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_13-SEC-10)
 - To understand why automated Git scripts fail on branch merges, read [`01_PROBLEMS_ENCOUNTERED/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md`](/docs/devlog/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS).

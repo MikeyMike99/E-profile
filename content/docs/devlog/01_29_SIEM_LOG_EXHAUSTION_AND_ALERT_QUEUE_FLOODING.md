@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_29 | VERSION: v1.0 | SCOPE: DEV)
 
 # SIEM Log Exhaustion & Alert Queue Flooding Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_29-SEC-1)
 ## 1. The Problem: The Swarm Telemetry Flood
 [//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-1)
 As Siraugga evolved to orchestrate multi-agent swarms, the volume of security events exploded. Subagents running file inspections, AST static analysis, and prompt validation emitted thousands of audit records per minute into `security/central_logger.py`.
@@ -30,12 +31,14 @@ Without strict volume controls, this firehose of data created two catastrophic f
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_29-SEC-2)
 ## 2. UI Asphyxiation
 [//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-2)
 When the web portal attempted to render the executive dashboard (`sandbox/templates/security_dashboard.html`), it tried to parse the entire unindexed JSONL log file over WebSocket. The browser froze, the DOM crashed, and screen readers became completely unresponsive.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_29-SEC-3)
 ## 3. The Solution: Fixed Deque Ring Buffers & Size Rotation
 [//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-3)
 To restore stability without sacrificing forensic compliance, Siraugga re-engineered the SIEM logging pipeline:
@@ -45,6 +48,7 @@ To restore stability without sacrificing forensic compliance, Siraugga re-engine
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_29-SEC-4)
 ## 4. Why Order Matters in Security Telemetry
 [//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-4)
 1. **Drop Low-Priority Telemetry Before High-Priority**: If the alert queue fills during an active attack, the system must drop `INFO` pings before dropping `CRITICAL` privilege violation alerts.
@@ -53,6 +57,7 @@ To restore stability without sacrificing forensic compliance, Siraugga re-engine
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_29-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_29-SEC-5)
 **Q: What is a JSONL file?**  

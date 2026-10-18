@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: ENCR-VAULT-CRYPTOGRAPHIC_ | VERSION: v1.1 | SCOPE: EncryptMe Multi-User Vault)
+[//]: # (DOC_ID: ENCR-VAULT-CRYPTOGRAPHIC_ARCH | VERSION: v1.1 | SCOPE: VAULT)
 
 # The encrypt_me (v3.0) Cryptographic Architecture
 
+[//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_ARCH-SEC-1)
 ## 1. Overview & Classification
 [//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_-SEC-1)
 * **Developer:** Michael Robberts
@@ -9,6 +10,7 @@
 * **Status:** Proprietary Zero-Knowledge Recovery Tool
 * **Core Function:** High-security, multi-user encryption utility utilizing a split-key architecture to secure files and archives (.vault).
 
+[//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_ARCH-SEC-2)
 ## 2. Core Cryptographic Specifications
 [//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_-SEC-2)
 * **Algorithm:** AES-128/256 (Fernet) for data-at-rest confidentiality.
@@ -16,6 +18,7 @@
 * **Salting:** Every registered user record is protected by a cryptographically secure 16-byte random salt.
 * **Immobilizer:** The tool features a hard-coded time-bomb (`check_immobilizer()`) that instantly kills the process and prevents decryption if the execution date surpasses the evaluation license date.
 
+[//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_ARCH-SEC-3)
 ## 3. The Identity-Gated Administrative Recovery (IGAR)
 [//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_-SEC-3)
 The most critical feature of this tool is its **Zero-Knowledge Shadow Bridge**. It completely eliminates the massive liability of a global "Master Password". 
@@ -27,6 +30,7 @@ If a user loses their password, there is no master key stored on disk to recover
 4. **The Offline Challenge:** The user sends the Cipher and Map to the Developer out-of-band. The Developer calculates the one-time `Recovery Token` and sends it back.
 5. **Metadata Rotation:** To prevent token-replay attacks, the moment the file is unlocked and saved, the entire Cipher, Map, and Token are mathematically rotated and regenerated. The old token becomes permanently useless.
 
+[//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_ARCH-SEC-4)
 ## 4. Integration into the Antigravity Engine
 [//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_-SEC-4)
 This tool is perfect for securing the **Global Forensic Vault** and **Data in Transit**:
@@ -34,6 +38,7 @@ This tool is perfect for securing the **Global Forensic Vault** and **Data in Tr
 * **Decryption (Super Admin Only):** By wrapping this utility into an Agent Tool (e.g., an MCP Server), we enforce strict RBAC. The `vault_decrypt` command will programmatically reject execution unless the Agent's session flag verifies they are running as `super_admin`. 
 
 
+[//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_ARCH-SEC-5)
 ## 5. Cross-References & System Parallels
 [//]: # (SECTION_ID: ENCR-VAULT-CRYPTOGRAPHIC_-SEC-5)
 

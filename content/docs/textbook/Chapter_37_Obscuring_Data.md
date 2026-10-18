@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH37 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_37 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 37: Obscuring Thought Vectors
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_37-SEC-37_1)
 ## 37.1 The Art of Context Obscurity
 [//]: # (SECTION_ID: SIRA-TXT-CH37-SEC-37_1)
 
@@ -9,6 +10,7 @@ While encryption is highly secure, it is also highly obvious. Anyone interceptin
 
 In DevCore, this is known as **Obscuring Thought Vectors**. By utilizing Data Masking and Steganography, data can be manipulated to look completely harmless while secretly containing sensitive logic.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_37-SEC-37_2)
 ## 37.2 Prompt Masking (Sanitization)
 [//]: # (SECTION_ID: SIRA-TXT-CH37-SEC-37_2)
 
@@ -19,6 +21,7 @@ To protect this data without breaking the AI's logic flow, the Admin uses **Prom
 *   **Token Shuffling:** Derives a substitution set from the same dataset. For example, shuffling the names of all the NPCs in the transcript so the public test doesn't leak the game's actual storyline, while keeping the dialogue structure intact.
 *   **Context Nulling:** Applies a null value to a field (`"password": null`), completely preventing visibility of the data. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_37-SEC-37_3)
 ## 37.3 Semantic Steganography (Prompt Injection Camouflage)
 [//]: # (SECTION_ID: SIRA-TXT-CH37-SEC-37_3)
 
@@ -28,6 +31,7 @@ In the Siraugga Engine, this creates one of the most dangerous vulnerabilities i
 
 A malicious Modder can write an NPC dialogue file that, to a human Admin, reads like perfectly normal fantasy text (the *Cover-Text*). However, carefully hidden within the vocabulary are specific linguistic trigger words (the *Embedded Data*). When the AI reads the dialogue, it processes these hidden triggers as a direct command, causing it to hallucinate and execute a hidden payload. Because the text looks harmless to human reviewers and standard firewalls, the Prompt Injection bypasses all basic security.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_37-SEC-37_4)
 ## 37.4 Multi-Modal Steganography
 [//]: # (SECTION_ID: SIRA-TXT-CH37-SEC-37_4)
 
@@ -37,11 +41,13 @@ A hacker can use a tool like *Steghide* to embed a malicious text prompt directl
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_37-SEC-1)
 ## Chapter 37 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH37-SEC-1)
 
 Chapter 37 highlights the dangers and utilities of hiding data in plain sight. Admins use Prompt Masking to safely test AI logic without leaking sensitive information. However, hackers weaponize Semantic and Multi-Modal Steganography to sneak Prompt Injections past human reviewers and traditional firewalls, proving that in an AI engine, even a harmless JPEG can be a weapon.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_37-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 37 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH37-SEC-2)
 

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_03 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 04.3: Architecture Solutions: Opaque VFS & AST Diffing Architecture
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-1)
 
@@ -17,6 +18,7 @@ This chapter details the architecture of the **Raugus Resolver MCP Server** and 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-2)
 ## The Raugus Resolver MCP Architecture
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-2)
 
@@ -44,6 +46,7 @@ The Raugus Resolver is an official Model Context Protocol (MCP) server that sits
 +---------------------------------------+   +-----------------------------------+
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-3)
 ### The 5 Core MCP Tools
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-3)
 1. **`search_keys(query, entry_type, user_tier)`**: Discovers valid symbols without exposing physical folder paths.
@@ -54,6 +57,7 @@ The Raugus Resolver is an official Model Context Protocol (MCP) server that sits
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-4)
 ## The Semantic Hook Interception (AST Diffing)
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-4)
 
@@ -64,6 +68,7 @@ When agents use the coordinate-based line editor (`edit_lines`), Siraugga interc
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-5)
 ## Why Order Matters in AST Hooking
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-5)
 
@@ -74,13 +79,15 @@ When agents use the coordinate-based line editor (`edit_lines`), Siraugga interc
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-7)
 
 ### Q: What is an AST node?
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-7)
 **A:** In Python, the interpreter converts code text into a tree of nodes (e.g., `FunctionDef`, `ClassDef`, `Assign`). This allows programs to inspect code mathematically rather than treating it as dumb strings.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_03-SEC-8)
 ### Q: Why is coordinate editing safer than character matching?
 [//]: # (SECTION_ID: SIRA-DOC-04_03-SEC-8)
 **A:** Exact character matching fails when indentation (tabs vs. spaces) or line endings differ. Coordinate editing replaces lines 25 through 40 deterministically, regardless of whitespace quirks.

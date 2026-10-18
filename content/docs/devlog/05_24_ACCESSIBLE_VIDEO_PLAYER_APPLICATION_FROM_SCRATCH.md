@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_24 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Accessible Video Player Application from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_24-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-1)
 Standard web video players rely on visual timelines and mouse hover effects, and embedding third-party players inside iframes frequently traps keyboard navigation.
@@ -37,6 +38,7 @@ This guide provides a standalone, single-file implementation of an accessible HT
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_24-SEC-2)
 ## 2. Complete HTML & JavaScript Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-2)
 Save the following standalone file as `accessible_player.html`:
@@ -153,6 +155,7 @@ Save the following standalone file as `accessible_player.html`:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_24-SEC-3)
 ## 3. Why Order Matters in Media Player Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-3)
 1. **Check Form Focus Before Handling Spacebar**: If a user is typing in a comment or prompt box, ignoring the event prevents spacebar from interrupting typing.
@@ -161,6 +164,7 @@ Save the following standalone file as `accessible_player.html`:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_24-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_24-SEC-4)
 **Q: Why is `aria-hidden="true"` placed on `timeText`?**  

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_12 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_12 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_12: Accessible Speech & Driver Initialization Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the Siraugga accessible speech engine demonstrating
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-1)
 ## Source Citation 1: Dynamic DLL Extraction & Fallback (`screenreader_speak.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-1)
 
@@ -47,6 +48,7 @@ This excerpt displays how the speech module discovers or automatically writes th
             print(f"[ScreenReader DLL Warning]: {e}")
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-2)
 - **Zero-Dependency Binary Portability**: If a compiled executable is moved to a clean Windows computer without Python or developer tools installed, lines 41–50 extract the necessary 64-bit and 32-bit NVDA controller DLLs on the fly into `%LOCALAPPDATA%` or `%TEMP%`.
@@ -54,6 +56,7 @@ This excerpt displays how the speech module discovers or automatically writes th
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-3)
 ## Source Citation 2: Windows DLL Directory Registration (`screenreader_speak.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-3)
 
@@ -74,6 +77,7 @@ This excerpt shows how the module complies with Windows security restrictions in
             sys.path.insert(0, resolved_lib_dir)
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-4)
 - **Python 3.8+ DLL Preload Defense**: Python 3.8 stopped loading DLLs from `PATH` or the current working directory to prevent DLL hijacking attacks. Invoking `os.add_dll_directory()` explicitly authorizes Windows to load libraries from the resolved folder.
@@ -81,6 +85,7 @@ This excerpt shows how the module complies with Windows security restrictions in
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-5)
 
@@ -91,23 +96,27 @@ In Windows assistive audio synthesis, initialization order controls thread safet
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-7)
 
 ### Why are both 32-bit and 64-bit DLLs extracted?
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-7)
 While most modern operating systems are 64-bit, some screen readers or specialized assistive drivers still run as 32-bit processes. Extracting both guarantees compatibility regardless of architecture.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-8)
 ### What is `base64.b64decode` doing here?
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-8)
 The binary `.dll` file is converted into an ASCII text string stored inside `nvda_client_data.py`. `b64decode` turns that string back into the exact executable machine code bytes required by Windows.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-9)
 ### Why does the code check `%LOCALAPPDATA%` before `%TEMP%`?
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-9)
 `%LOCALAPPDATA%` is persistent across reboots and local to the logged-in user. `%TEMP%` can be purged by automated Windows disk cleaners mid-session, which could delete the DLL while the program is running.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_12-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_12-SEC-10)
 - To understand the symptoms that prompted this embedded DLL architecture, read [`01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md`](/docs/devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS).

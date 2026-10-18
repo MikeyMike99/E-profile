@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_14 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_14 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Chapter 05_14: Accessible Screen Reader Speech Module From Scratch
 
@@ -6,11 +6,13 @@ A step-by-step guide to writing the standalone assistive speech module (`screenr
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-1)
 ## What We Are Building & Beginner Safety Rules
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-1)
 
 We are creating `screenreader_speak.py`—a portable Python module that speaks text natively through active screen readers (like NVDA or JAWS) or falls back to system speech without crashing across target machines.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-2)
 ### Beginner Safety Directives
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-2)
 1. **Import `pythoncom` First on Windows**: Windows COM must be initialized early to prevent multi-threading speech crashes.
@@ -19,8 +21,9 @@ We are creating `screenreader_speak.py`—a portable Python module that speaks t
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-3)
 ## Step-by-Step Line Breakdown
-[//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-3)
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-4)
 
 ### Block 1: COM Initialization & Imports (Lines 1–15)
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-4)
@@ -44,6 +47,7 @@ except Exception:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-5)
 ### Block 2: Dynamic DLL Resolution & Extraction (Lines 16–45)
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-5)
 
@@ -91,6 +95,7 @@ def setup_accessible_dlls():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-6)
 ### Block 3: Speech Dispatch Function (Lines 46–65)
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-6)
 
@@ -128,6 +133,7 @@ def speak_text(text: str, interrupt: bool = False):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-7)
 ## Complete Finished File Listing
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-7)
 
@@ -199,6 +205,7 @@ def speak_text(text: str, interrupt: bool = False):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-8)
 ## 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-8)
 
@@ -213,19 +220,22 @@ If it speaks through your screen reader or prints `[Speech Mock]`, the module is
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-9)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-9)
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-10)
 
 ### What does `interrupt=True` do?
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-10)
 If a screen reader is reading a long paragraph and an urgent notification arrives, `interrupt=True` immediately stops the old speech and speaks the new message instantly.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-11)
 ### Why do we use a global `_speaker` variable?
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-11)
 Initializing the speech system takes 50–100 milliseconds. Storing the speaker in a global variable allows subsequent calls to speak with zero delay.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_14-SEC-12)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-05_14-SEC-12)
 - To understand why assistive speech failed on test PCs, read [`01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md`](/docs/devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS).

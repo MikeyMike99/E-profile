@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_26 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-DEV-01_26 | VERSION: v1.0 | SCOPE: DEV)
 
 # Terminal "Blank, Blank" Audio Game Origins & DLL Traps
 
+[//]: # (SECTION_ID: JOSH-DEV-01_26-SEC-1)
 ## 1. The Problem: The Incessant "Blank, Blank" Nightmare
 [//]: # (SECTION_ID: SIRA-DOC-01_26-SEC-1)
 In October 2024, a blind gamer with zero prior programming experience set out to build an accessible audio game after discovering that favorite titles had ceased active development. Initially turning to ChatGPT for quick assistance, the AI generated a basic command-line prototype for moving a player character across a grid.
@@ -19,6 +20,7 @@ The terminal buffer was not designed to dynamically narrate fast-paced game stat
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-01_26-SEC-2)
 ## 2. The Illusion of AI Shortcuts
 [//]: # (SECTION_ID: SIRA-DOC-01_26-SEC-2)
 The early failure revealed a fundamental software engineering reality: you cannot simply prompt an entire complex, interactive universe into existence without understanding the underlying plumbing. 
@@ -30,6 +32,7 @@ The developer stopped relying on magic AI prompts and began studying core progra
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-01_26-SEC-3)
 ## 3. The Breakthrough: Unearthing NVDAController.dll
 [//]: # (SECTION_ID: SIRA-DOC-01_26-SEC-3)
 On November 12, 2024, the developer dug through legacy audio game directories on their machine and discovered a crucial dynamic link library: `NVDAController.dll`.
@@ -60,6 +63,7 @@ With this bridge operational, the developer forged an 8-way directional compass 
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-01_26-SEC-4)
 ## 4. Why Order Matters in Audio Game Engines
 [//]: # (SECTION_ID: SIRA-DOC-01_26-SEC-4)
 1. **Initialize DLL Before Key Listener**: Loading `NVDAController.dll` before capturing keystrokes prevents unhandled exceptions during the very first player step.
@@ -68,6 +72,7 @@ With this bridge operational, the developer forged an 8-way directional compass 
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-01_26-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_26-SEC-5)
 **Q: Why did the terminal say "blank"?**  

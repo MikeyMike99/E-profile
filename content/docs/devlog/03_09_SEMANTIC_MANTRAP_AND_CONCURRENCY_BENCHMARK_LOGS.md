@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_09 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_09: Semantic Mantrap & Concurrency Benchmark Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and benchmark results evaluating the Siraugga **S
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-1)
 
@@ -17,6 +18,7 @@ We subjected the file-locking core to an aggressive concurrency stress test:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-2)
 
@@ -51,6 +53,7 @@ os.remove(state_file)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-3)
 
@@ -72,6 +75,7 @@ DEADLOCKS_DETECTED: 0
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-4)
 
@@ -81,6 +85,7 @@ DEADLOCKS_DETECTED: 0
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-5)
 
@@ -91,23 +96,27 @@ In high-concurrency benchmarks, measurement order validates correctness:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-7)
 
 ### What is a "Lost Update"?
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-7)
 A lost update happens when Thread A and Thread B both read the number 5 at the same time. Both add 1 to get 6. Thread A writes 6, and Thread B writes 6. Even though two updates occurred, the result is 6 instead of 7!
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-8)
 ### Why does `time.sleep(0.005)` exist in the test worker?
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-8)
 The small 5-millisecond sleep simulates the realistic amount of time an agent spends performing calculations or disk I/O, forcing race conditions to occur if locking is broken.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-9)
 ### What happens if an agent thread crashes while inside the lock?
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-9)
 Because the mantrap uses `try...finally`, Python automatically executes the `finally` block and releases the lock descriptor even if an uncaught exception is raised inside the `with` block.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-10)
 - To review the problems caused by uncoordinated agent concurrency, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_08 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_08 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.8: From-Scratch Creation Guide: Cinematic TTS Proxy & Sanitizer
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-1)
 
@@ -17,8 +18,9 @@ You will implement the phonetic sanitizer that strips speech-breaking punctuatio
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-2)
 ## Step-by-Step Implementation
-[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-3)
 
 ### Step 1: Open a Blank Python File
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-3)
@@ -26,6 +28,7 @@ You will implement the phonetic sanitizer that strips speech-breaking punctuatio
 nano cinematic_tts.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-4)
 ### Step 2: Implement the Phonetic Text Sanitizer (Lines 1–30)
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-4)
 ```python
@@ -56,6 +59,7 @@ class PhoneticSanitizer:
         return cleaned[0].upper() + cleaned[1:] if cleaned else ""
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-5)
 ### Step 3: Implement Tool Metadata Mapper (Lines 31–55)
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-5)
 ```python
@@ -80,6 +84,7 @@ class PhoneticSanitizer:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-6)
 ## Why Order Matters in Speech Sanitization
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-6)
 
@@ -90,6 +95,7 @@ class PhoneticSanitizer:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-7)
 ## Verification & Testing
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-7)
 
@@ -120,13 +126,15 @@ Synthesized Audio String: Patch server.py: websocket keep-alive handler
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-8)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-8)
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-9)
 
 ### Q: Why do neural voices sound better when quotes are removed?
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-9)
 **A:** When neural models see quotation marks, they try to modulate their pitch to imitate someone speaking dialogue. For technical software alerts, this sounds bizarre and unnatural. Stripping quotes produces an objective, narrator tone.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-10)
 ### Q: What is the ideal word count for an audio developer alert?
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-10)
 **A:** Between 4 and 8 words. This allows the phrase to be spoken in under 1.5 seconds, ensuring the blind developer is informed without breaking their mental train of thought.

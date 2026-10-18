@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_03 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.3: Problems Encountered: Path Traversal & Privilege Escalation
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-1)
 
@@ -19,8 +20,9 @@ This chapter breaks down the attack vectors encountered and how Siraugga's zero-
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-2)
 ## Issue 1: Directory Traversal Attacks (`../../`)
-[//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-3)
@@ -33,6 +35,7 @@ POST /api/files/read
 ```
 In early unhardened iterations, the backend fulfilled the request, streaming core engine source code directly to an unprivileged client interface.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-4)
 The server was concatenating user input directly to the workspace root without canonicalizing the resulting path:
@@ -48,8 +51,9 @@ Because the operating system interprets `..` as "go up one directory," an attack
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-5)
 ## Issue 2: Agentic Privilege Escalation & Prompt Injections
-[//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-6)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-6)
@@ -58,17 +62,20 @@ When third-party modders interacted with the agent, they could prompt the AI:
 
 Because the AI was running with the host user's full permissions, it attempted to rewrite core engine files, bypassing web UI restrictions.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-7)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-7)
 Traditional permission models only check the human user's login. But in an agentic system, the AI acts as an autonomous proxy. If the AI is launched without an explicit sandbox container and without workspace confinement, it executes commands with full administrative access.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-8)
 ## The Architectural Solution
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-8)
 
 To achieve uncompromising defense-in-depth, Siraugga instituted four defensive layers:
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-1)
 ### 1. Cryptographic Path Canonicalization (`resolve_safe_path`)
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-1)
 All file requests must pass through `resolve_safe_path()` before touching the disk:
@@ -87,6 +94,7 @@ def resolve_safe_path(base_dir: str, requested_path: str) -> str:
     return target_path
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-2)
 ### 2. Workspace Confinement & CLI Sandboxing
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-2)
 For non-admin roles (`gamedev`, `modder`):
@@ -94,12 +102,14 @@ For non-admin roles (`gamedev`, `modder`):
 - The `--sandbox` flag is enforced, restricting terminal commands to virtual containers.
 - The `--dangerously-skip-permissions` flag is permanently disabled.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-3)
 ### 3. File Classification Tiers
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-3)
 Tier 2 (Core Engine) and Tier 4 (Forbidden) files are filtered out of all directory listings and cannot be opened by non-administrators.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-9)
 ## Why Order Matters in Path Validation
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-9)
 
@@ -110,13 +120,15 @@ Tier 2 (Core Engine) and Tier 4 (Forbidden) files are filtered out of all direct
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-10)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-10)
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-11)
 
 ### Q: What is a symlink and how does it bypass security?
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-11)
 **A:** A symbolic link (symlink) is a shortcut that points to another file. If a user creates a link named `notes.txt` that points to `/etc/shadow`, an unhardened server might read the sensitive file thinking it is just a text note. `os.path.realpath()` resolves links to their true destination.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_03-SEC-12)
 ### Q: Why do we raise `PermissionError` instead of returning an empty file?
 [//]: # (SECTION_ID: SIRA-DOC-01_03-SEC-12)
 **A:** Raising an explicit error signals an active security event, logs an audit alert to Tier 3 logs, and returns an HTTP 403 Forbidden code to the client.

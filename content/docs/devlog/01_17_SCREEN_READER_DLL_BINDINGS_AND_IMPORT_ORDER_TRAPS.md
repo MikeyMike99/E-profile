@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_17 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_17: Screen Reader DLL Bindings & Import Order Traps
 
@@ -6,6 +6,7 @@ Developing accessible software requires integrating with active assistive techno
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-1)
 
@@ -16,6 +17,7 @@ After developing the accessible audio playback suite (`t.py`, `screenreader_spea
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-2)
 
@@ -34,6 +36,7 @@ Extract Bundled DLL to App Directory ---> CoInitialize() in Worker Thread ---> D
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-3)
 
@@ -44,23 +47,27 @@ In Windows assistive technology programming, execution sequence across threads i
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-5)
 
 ### What is `ctypes` and why is it used for screen readers?
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-5)
 `ctypes` is Python's built-in library for calling functions in native compiled C/C++ dynamic libraries (`.dll` files on Windows, `.so` files on Linux). Screen readers like NVDA expose a small DLL that allows external programs to send text directly into the speech synthesizer.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-6)
 ### Why did the speech work on the development PC but fail on the test PC?
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-6)
 On the development PC, the DLL happened to be present in the Python environment path. On the test PC, that path didn't exist. Standalone applications must bundle all required DLLs alongside the executable.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-7)
 ### What is the purpose of `nvda_client_data.py`?
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-7)
 In Siraugga's accessible suite, `nvda_client_data.py` stores the compiled DLL bytes directly as an embedded base64 string. At startup, the script automatically writes the DLL to disk if missing, guaranteeing 100% portability.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_17-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_17-SEC-8)
 - To view the primary source code of the embedded DLL loader and speech module, read [`02_SOURCE_EVIDENCE/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE.md`](/docs/devlog/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE).

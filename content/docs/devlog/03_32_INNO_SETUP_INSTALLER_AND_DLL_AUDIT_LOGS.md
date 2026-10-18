@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: JOSH-DOC-03_32 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: SIRA-DEV-03_32 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 03.32: Diagnostic Tests & Logs: Inno Setup Packaging & Screen Reader DLL Extraction
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-1)
 ## Overview & Context
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-1)
 This document records diagnostic tests verifying the automated packaging of accessible desktop software via PyInstaller and Inno Setup, evaluating the pre-installer process termination script, and auditing the runtime self-extraction of NVDA controller DLLs on clean virtual machines.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-1)
 ## 1. Test Execution & Diagnostic Log
-[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-1)
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-2)
 
 ### What We Tested
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-2)
@@ -17,6 +19,7 @@ This document records diagnostic tests verifying the automated packaging of acce
 2. Clean compilation of `JOSHY-Setup.exe` with Inno Setup Compiler (`ISCC.exe`).
 3. Execution of the installed application on a clean Windows VM with zero preexisting developer libraries.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-3)
 ### Exact Test Execution
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-3)
 ```batch
@@ -24,6 +27,7 @@ This document records diagnostic tests verifying the automated packaging of acce
 call compile_joshy.bat
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-4)
 ### Exact Output Returned
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-4)
 ```
@@ -48,6 +52,7 @@ SUCCESS: The process "JOSHY.exe" with PID 8940 has been terminated.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-2)
 ## 2. Compilation & Extraction Reliability Matrix
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-2)
 
@@ -62,6 +67,7 @@ Clean VM (NVDA Closed)        NO                  NO (Fallback) SAPI5 Robotic
 Reliability Assessment:       Zero installer lockups, 100% self-healing DLL discovery.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-5)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-5)
 - Terminating active processes with `taskkill` prior to running Inno Setup completely eliminated the `Error opening file for writing` lockup.
@@ -69,6 +75,7 @@ Reliability Assessment:       Zero installer lockups, 100% self-healing DLL disc
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-3)
 ## 3. Why Order Matters in Packaging Pipelines
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-3)
 1. **Kill Process Before Compilation**: If an old version of the binary is running, `pyinstaller` and `ISCC` cannot overwrite the output file.
@@ -76,19 +83,22 @@ Reliability Assessment:       Zero installer lockups, 100% self-healing DLL disc
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-4)
 ## 4. Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-6)
 
 ### Why does Inno Setup require the `/SILENT` flag during tests?
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-6)
 The `/SILENT` flag tells the installer to run without displaying graphical wizard dialogs or asking the user to click "Next", allowing automated test scripts to install software non-interactively.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-7)
 ### What happens if the user does not have NVDA running?
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-7)
 The `screenreader_speak` module automatically tests if NVDA is running. If not, it gracefully falls back to Windows SAPI5 so the user still receives audio feedback instead of silence or a crash.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_32-SEC-5)
 ## 5. Cross-Reference Navigation
 [//]: # (SECTION_ID: JOSH-DOC-03_32-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md`](/docs/devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS)

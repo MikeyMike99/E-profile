@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH24 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_24 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 24: Introduction to Zone-Based Sandbox Policies
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_24-SEC-24_1)
 ## 24.1 The Evolution of Sandbox Boundaries
 [//]: # (SECTION_ID: SIRA-TXT-CH24-SEC-24_1)
 
@@ -11,6 +12,7 @@ This architecture functioned perfectly for small, isolated test environments. Ho
 
 To secure massive swarms, DevCore introduced an evolutionary architectural step: **Zone-Based Sandbox Policies (ZSP)**.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_24-SEC-24_2)
 ## 24.2 The Zone-Based Paradigm
 [//]: # (SECTION_ID: SIRA-TXT-CH24-SEC-24_2)
 
@@ -24,6 +26,7 @@ By defining security requirements by the *nature* of the zone rather than the ph
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_24-SEC-24_3)
 ## 24.3 Module Objectives & Master Syllabus
 [//]: # (SECTION_ID: SIRA-TXT-CH24-SEC-24_3)
 

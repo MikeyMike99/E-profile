@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_23 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_23 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Custom Pygame Screen Reader Chunk Reader from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_23-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-1)
 When text documents balloon into hundreds of thousands of lines, standard text editors and IDEs choke, crash Language Server Protocols, and freeze screen reader speech.
@@ -32,6 +33,7 @@ This guide details how to build `manifesto_reader.py` from scratch. Using Python
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_23-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-2)
 Save the following script as `chunk_reader.py`:
@@ -159,6 +161,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_23-SEC-3)
 ## 3. Why Order Matters in Chunk Reader Execution
 [//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-3)
 1. **Withdraw Tkinter Window Before Dialog Display**: Calling `root.withdraw()` hides the empty parent window before `askstring()` appears, keeping the OS desktop clean.
@@ -167,6 +170,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_23-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_23-SEC-4)
 **Q: Why use `errors='ignore'` when opening files?**  

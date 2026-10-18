@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_08 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_08 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 04.8: Architecture Solutions: In-Memory Execution & Clean Workspace Protocol
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-1)
 
@@ -19,11 +20,13 @@ This chapter details Siraugga's **Clean Workspace Protocol** and in-memory execu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-2)
 ## The Clean Workspace Protocol
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-2)
 
 The Siraugga platform enforces four mandatory hygiene directives across all agents and background subagents:
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-1)
 ### 1. Piped Execution Preference
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-1)
 Whenever possible, execute shell scripts or Python logic dynamically via stdin pipes rather than writing physical `.py` or `.sh` files to disk:
@@ -35,20 +38,24 @@ print("Checking active environment:", os.environ.get("VIRTUAL_ENV"))
 EOF
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-2)
 ### 2. Mandatory Immediate Cleanup
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-2)
 If a diagnostic script *must* be written to disk (for example, to test multi-process behavior), the file must be deleted immediately in the very next tool step.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-3)
 ### 3. Ephemeral Secrets (Memory Only)
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-3)
 Passwords, API keys, and sensitive environment variables must never be written to physical `.env`, JSON, or YAML files that linger in the workspace. Secrets are passed purely through process memory and environment variables for the duration of the subprocess.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-4)
 ### 4. Artifact Restraint
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-4)
 Documentation, devlogs, and system configurations are created only when explicitly requested by the user or required by architecture. Single-use test files are strictly forbidden from remaining on disk.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-3)
 ## In-Memory Source Code Execution
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-3)
 
@@ -71,6 +78,7 @@ Documentation, devlogs, and system configurations are created only when explicit
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-4)
 ## Why Order Matters in Workspace Hygiene
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-4)
 
@@ -81,13 +89,15 @@ Documentation, devlogs, and system configurations are created only when explicit
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-6)
 
 ### Q: Why is leaving a scratch script on disk dangerous?
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-6)
 **A:** Scratch scripts often contain hardcoded passwords, personal file paths, or bypass flags used during quick debugging. If committed to Git or exposed via a web server misconfiguration, attackers can read sensitive system internals.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_08-SEC-7)
 ### Q: What is CWE-530?
 [//]: # (SECTION_ID: SIRA-DOC-04_08-SEC-7)
 **A:** Common Weakness Enumeration 530 refers to "Exposure of Structural Information through Temporary Files," where backup or scratch files (like `.bak` or `test.py`) inadvertently reveal system source code to unauthorized users.

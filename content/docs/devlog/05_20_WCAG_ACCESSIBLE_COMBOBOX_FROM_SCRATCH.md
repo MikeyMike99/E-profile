@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_20 | VERSION: v1.0 | SCOPE: ARCH)
 
 # WCAG Accessible Slash Command Combobox from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_20-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-1)
 A common flaw in modern chat web applications is the uncoordinated slash command menu. When a developer types `/` and uses keyboard arrows to select a command, standard event handlers often submit the incomplete prompt on Enter or trap screen reader focus, violating accessibility standards.
@@ -27,6 +28,7 @@ This guide provides a standalone, zero-framework implementation of a WCAG 2.1 AA
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_20-SEC-2)
 ## 2. Complete HTML & JavaScript Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-2)
 Save the following standalone file as `combobox.html`:
@@ -178,6 +180,7 @@ Save the following standalone file as `combobox.html`:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_20-SEC-3)
 ## 3. Why Order Matters in Combobox Event Logic
 [//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-3)
 1. **Intercept Keydown Before Default Form Submission**: Catching `Enter` in the menu check and invoking `e.preventDefault()` halts prompt transmission before the server receives partial commands.
@@ -186,6 +189,7 @@ Save the following standalone file as `combobox.html`:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_20-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_20-SEC-4)
 **Q: Why keep focus on the `<textarea>` instead of focusing the `<button>`?**  

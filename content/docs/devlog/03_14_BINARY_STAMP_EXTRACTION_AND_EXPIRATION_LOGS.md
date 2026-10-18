@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_14 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_14 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_14: Binary Stamp Extraction & Expiration Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and benchmark results verifying rapid binary trai
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-1)
 
@@ -17,6 +18,7 @@ We audited the portable executable distribution system implemented in `security/
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-2)
 
@@ -64,6 +66,7 @@ os.remove(stamped_exe)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-3)
 
@@ -84,6 +87,7 @@ AUDIT_STATUS: PASS (Instant Stamping & Enforced Time-Lock Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-4)
 
@@ -93,6 +97,7 @@ AUDIT_STATUS: PASS (Instant Stamping & Enforced Time-Lock Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-5)
 
@@ -103,19 +108,22 @@ In binary trailer stamping, read sequence validates payload integrity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-7)
 
 ### What happens if a client tampers with the binary stamp using a hex editor?
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-7)
 Because the payload is encrypted with Fernet (AES-128-CBC + HMAC-SHA256), any modification to the bytes causes the HMAC signature check to fail, immediately throwing an `InvalidToken` error and locking the application.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-8)
 ### Can a client bypass the expiration by changing their computer's system clock?
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-8)
 In production deployments, the application compares the local clock against a remote NTP server or cryptographically signed server timestamp during WebSocket sync.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_14-SEC-9)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_14-SEC-9)
 - To understand why portable binaries required dynamic stamping, read [`01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md`](/docs/devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS).

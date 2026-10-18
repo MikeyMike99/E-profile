@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_32 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_32 | VERSION: v1.0 | SCOPE: ARCH)
 
 # PreToolUse Hook Interceptor from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-1)
 Securing web APIs is not enough when autonomous AI agents have native tools to edit files and run terminal commands. Without pre-execution interception, an agent can modify critical system files directly.
@@ -34,6 +35,7 @@ This guide details how to build `.agents/raugus_hook.py` from scratch. It acts a
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-2)
 Save the following script as `tool_hook.py`:
@@ -103,6 +105,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-3)
 ## 3. Why Order Matters in Tool Hook Logic
 [//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-3)
 1. **Check Shell Commands Before Inspecting Paths**: Evaluating `CommandLine` first prevents commands that combine arguments (like `rm -rf core/`) from slipping past path rules.
@@ -111,6 +114,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-4)
 **Q: What does "fail-closed" mean?**  

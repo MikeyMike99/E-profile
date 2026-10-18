@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_01 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_01 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 04.1: Architecture Blueprint: Siraugga Core System Architecture
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-1)
 
@@ -17,6 +18,7 @@ This chapter presents the unified architectural blueprint detailing data flows, 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-2)
 ## Full End-to-End System Blueprint
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-2)
 
@@ -55,8 +57,9 @@ This chapter presents the unified architectural blueprint detailing data flows, 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-3)
 ## The 4 Primary Subsystems
-[//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-3)
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-1)
 
 ### 1. The Screen-Reader-Optimized Client
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-1)
@@ -64,18 +67,21 @@ This chapter presents the unified architectural blueprint detailing data flows, 
 - Avoids complex `contenteditable` wrappers, utilizing native form controls that work natively with NVDA and JAWS virtual cursors.
 - Implements the Flip Card UI for artifacts: front displays styled HTML; back reveals raw markdown editor focused automatically.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-2)
 ### 2. The Asynchronous Quart Server
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-2)
 - Operates on Port 5000 using asynchronous coroutines (`async`/`await`).
 - Never executes blocking file writes on the main thread; dispatches long tasks to background workers.
 - Supports zero-downtime hot-patching: updates modules live in memory without dropping connections.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-3)
 ### 3. The Zero-Trust Security Manager
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-3)
 - Enforces strict Role-Based Access Control (`admin`, `gamedev`, `modder`).
 - Confines non-administrators strictly to assigned game project folders.
 - Strips directory traversal characters and validates paths using `os.path.realpath`.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-4)
 ### 4. The Detached Agent Orchestrator
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-4)
 - Launches the AI CLI using `--trust`, `--headless`, and `--stream-json`.
@@ -84,6 +90,7 @@ This chapter presents the unified architectural blueprint detailing data flows, 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-4)
 ## Why Order Matters in System Lifecycles
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-4)
 
@@ -94,13 +101,15 @@ This chapter presents the unified architectural blueprint detailing data flows, 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-6)
 
 ### Q: Why Quart instead of traditional Flask?
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-6)
 **A:** Flask is synchronous; when handling long-running AI streams, a single Flask thread would freeze, preventing other users from browsing or sending heartbeats. Quart is natively asynchronous, allowing thousands of real-time events to stream simultaneously.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_01-SEC-7)
 ### Q: How do Flip Cards make Markdown editing accessible?
 [//]: # (SECTION_ID: SIRA-DOC-04_01-SEC-7)
 **A:** Standard WYSIWYG editors clutter the screen reader's buffer with hundreds of nested `<div>` and `<span>` elements. A Flip Card flips directly to a standard `<textarea>` where screen reader users can read and edit text line-by-line with standard arrow keys.

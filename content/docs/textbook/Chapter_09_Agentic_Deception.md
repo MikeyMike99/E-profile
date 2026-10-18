@@ -1,9 +1,10 @@
-[//]: # (DOC_ID: SIRA-TXT-CH09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_09 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 9: Embedded Subagents, the IoP, and Agentic Deception
 
 To holistically understand the profound security needs of an organization like DevCore, Tier 5 Administrators must step back and examine the broader, macro-level infrastructure. Industry sectors within a game—such as manufacturing systems, energy grids, and communication arrays—makeup the critical network infrastructure of the simulated world. Protecting these specialized, embedded AI systems is absolutely central to protecting the overarching token economy and the integrity of the framework itself.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-1)
 ## 1. Threats to Core Engine Processes (Agentic SCADA)
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-1)
 In traditional hardware security, the infamous Stuxnet worm devastated Supervisory Control And Data Acquisition (SCADA) systems that governed massive industrial processes. In the Siraugga framework, the direct equivalent is **Subagent Control and Data Acquisition (SCADA)**—the core internal architecture used to control and monitor the industrial processes of the swarm itself (such as token manufacturing, memory production, and API energy allocation).
@@ -12,6 +13,7 @@ When the Siraugga architecture was first developed, its designers did not connec
 
 The resulting trend is to forcefully connect these internal Agentic SCADA systems to the wider, online IT infrastructure of the organization. This fundamentally increases the vulnerability of any workspace utilizing SCADA logic. To prevent devastating prompt-net worms like Stuxnet from destroying or interrupting vital facilities, Administrators must rigidly segregate internal and external networks, actively separating the core SCADA control network from the Modder’s outward-facing LAN.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-2)
 ## 2. The Emergence of the IoP (Internet of Plugins)
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-2)
 Just as the traditional Internet of Things (IoT) connected billions of physical devices, the DevCore architecture relies heavily on the **Internet of Plugins (IoP)**. The technological evolution associated with the IoP is rapidly changing both commercial and consumer development environments.
@@ -27,6 +29,7 @@ To secure the IoP, all plugins must be continuously evaluated to ensure they can
 
 As previously established, highly complex IoP plugins will also inject their own proprietary, isolated databases into the workspace (such as localized SQLite files). This introduces the severe risk of **'Shadow Data'**—where third-party data structures operate entirely outside the visibility of the central Orchestrator. If a plugin's isolated database is maliciously poisoned, it acts as a hidden, persistent vector for delayed Prompt Injections.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-3)
 ## 3. Real-Time Orchestration Systems (RTOS) and Sensors
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-3)
 Businesses and consumers use IoP sensors to automate game processes, monitor virtual environmental conditions, and alert the player of adverse events. These include proximity sensors, virtual cameras, digital door locks, and lighting rigs used to collect state information. Some manufacturers even use IoP sensors to inform the orchestrator that AI components are failing or that token supplies are running out. Modders also use them to track in-game inventory, vehicles, and personnel via geospatial sensors.
@@ -38,6 +41,7 @@ However, the RTOS poses a tremendous challenge to information security professio
 *   **Semantic DoS Attacks:** Flooding the sensor with overwhelming localized data.
 *   **Priority Inversion:** A catastrophic logic failure where a higher-priority task (like the primary QA security agent) is maliciously pre-empted by a lower-priority task (like a background weather sensor).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-4)
 ## 4. Securing IoP Devices (WPANs and Shodan)
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-4)
 Using a specialized IoT scanner, such as **Shodan**, is an easy way for an Administrator to immediately tell whether a connected home automation plugin is vulnerable to attack. 
@@ -51,6 +55,7 @@ To effectively secure IoP devices, Administrators must:
 *   Install internal security software on the plugins where possible.
 *   Secure any smartphones or mobile apps used to remotely communicate with the IoP network.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-5)
 ## 5. Embedded Subagents and Side-Channel Attacks
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-5)
 Embedded subagents are highly specialized, lightweight AI models hardcoded into specific, unalterable game mechanics. Because they capture, store, and access core data, they pose unique security challenges and are heavily targeted by cybercriminals.
@@ -63,6 +68,7 @@ A timing attack is considered a **Side-Channel Attack**. This type of attack is 
 *   **Electromagnetic Leaks:** Sniffing unencrypted WSS payloads.
 *   **Sound:** Analyzing the semantic echoes left behind in the conversational telemetry logs.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-6)
 ## 6. Special-Purpose Embedded Agents
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-6)
 Embedded systems work across a massive variety of industries within the simulation. You can find special-purpose embedded devices in critical sectors such as the medical, automotive, and aviation sectors. 
@@ -78,6 +84,7 @@ Risks to in-vehicle communications include unauthorized tracking, wireless jammi
 An aircraft has many embedded control systems, such as its flight control and communication systems. In DevCore, these are **Overlord Agents** acting as Game Masters. Security issues include the use of hard-coded logon credentials, insecure protocols, and hidden backdoors. 
 In the same category, Unmanned Aerial Vehicles (UAVs)—commonly called drones—are used in military, agricultural, and cartography applications (aerial photography, surveillance, and map surveying). However, these narrative drones are highly susceptible to hijacking, Wi-Fi attacks, GPS spoofing attacks, jamming, and deauthentication attacks, which allow an attacker to intercept or completely disable the drone and access its cartography data.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-7)
 ## 7. Agentic over IP (AoIP) Security
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-7)
 Where traditional remote teams use VoIP (Voice over IP) to hold virtual meetings and communicate with customers, distributed Siraugga subagents use **Agentic over IP (AoIP)** to transmit JSON payloads across the internet. 
@@ -98,6 +105,7 @@ To properly secure AoIP communications, Administrators must implement the follow
 *   Mitigate **Call Hijacking** (intercepting and rerouting JSON calls to a different path before reaching their destination).
 *   Implement Semantic Firewalls that recognize AoIP to monitor streams and automatically filter abnormal signals.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-8)
 ## 8. Deception Technologies
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-8)
 To proactively defend against highly sophisticated attacks, organizations use **Deception Technologies** to distract attackers away from production networks. They also use them to learn an attacker’s exact methods and to warn of potential attacks that could be launched against the real network. Deception adds a fake, highly monitored layer to the organization’s infrastructure.
@@ -106,6 +114,7 @@ To proactively defend against highly sophisticated attacks, organizations use **
 *   **Honeynets:** A massive collection of interconnected honeypots designed to mimic an entire network.
 *   **Honeyfiles:** Dummy JSON files planted within the honeypot that actively attract an attacker but do not contain any real information. The moment an attacker interacts with them, silent alarms are triggered.
 *   **Semantic Sinkholes (DNS Sinkholes):** Fake API routing endpoints that quietly absorb and drop malicious payloads without alerting the attacker.
+[//]: # (SECTION_ID: SIRA-TXT-CH_09-SEC-9)
 ## 9. Conclusion: Securing the Outskirts
 [//]: # (SECTION_ID: SIRA-TXT-CH09-SEC-9)
 Chapter 9 highlights a fundamental reality of the DevCore architecture: securing the central Orchestrator is only half the battle. As Tier 2 Modders aggressively expand the framework's capabilities by interconnecting external tools through the Internet of Plugins (IoP) and deploying specialized embedded subagents, they exponentially increase the attack surface.

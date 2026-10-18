@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_02 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_02 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.2: From-Scratch Creation Guide: Accessible Web Portal & Flip Card
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-1)
 
@@ -20,8 +21,9 @@ You will implement three core features:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-2)
 ## Step-by-Step Implementation
-[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-3)
 
 ### Step 1: Open a Blank HTML File
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-3)
@@ -29,6 +31,7 @@ You will implement three core features:
 nano templates/index.html
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-4)
 ### Step 2: HTML Skeleton & ARIA Live Regions (Lines 1–25)
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-4)
 ```html
@@ -55,6 +58,7 @@ nano templates/index.html
     </div>
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-5)
 ### Step 3: Resilient WebSocket Client & Keep-Alive Loop (Lines 26–65)
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-5)
 ```html
@@ -117,6 +121,7 @@ nano templates/index.html
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-6)
 ## Why Order Matters in Client-Side Architecture
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-6)
 
@@ -127,6 +132,7 @@ nano templates/index.html
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-7)
 ## Verification & Testing
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-7)
 
@@ -139,13 +145,15 @@ nano templates/index.html
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-8)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-8)
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-9)
 
 ### Q: What does `aria-live="polite"` do?
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-9)
 **A:** It tells screen readers to announce new messages as soon as the user finishes speaking or navigating, rather than rudely interrupting them mid-sentence (`aria-live="assertive"`).
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_02-SEC-10)
 ### Q: Why not use a rich visual editor like TinyMCE?
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-10)
 **A:** Visual editors generate deeply nested, irregular HTML that breaks screen reader navigation shortcuts. A plain `<textarea>` guarantees standard arrow navigation and full compatibility.

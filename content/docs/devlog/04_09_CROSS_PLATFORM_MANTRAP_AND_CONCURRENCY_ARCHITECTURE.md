@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_09 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_09: Cross-Platform Mantrap & Concurrency Architecture
 
@@ -6,6 +6,7 @@ A comprehensive architectural walkthrough of the Siraugga **Semantic Mantrap**â€
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-1)
 ## Architectural Overview & Topology
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-1)
 
@@ -38,17 +39,20 @@ The Semantic Mantrap solves this by establishing a physical **Execution Chamber*
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-2)
 ## Cross-Platform Kernel Abstraction
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-2)
 
 The mantrap dynamically interfaces with the native file locking mechanisms of the host OS:
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-1)
 ### 1. Linux & WSL (POSIX Advisory Locking)
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-1)
 - Uses `fcntl.flock(fd, fcntl.LOCK_EX)` on POSIX systems.
 - Locks the entire file inode. Does not require the file to have a non-zero length.
 - Automatically cleaned up by the Linux kernel if the holding process dies unexpectedly.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-2)
 ### 2. Windows NT (Win32 Byte-Range Locking)
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-2)
 - Uses `msvcrt.locking(fd, msvcrt.LK_LOCK, 1)`.
@@ -57,6 +61,7 @@ The mantrap dynamically interfaces with the native file locking mechanisms of th
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-3)
 
@@ -67,6 +72,7 @@ In concurrent lock architectures, strict sequence execution prevents deadlocks:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-4)
 ## Reusable Integration Recipe
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-4)
 
@@ -92,23 +98,27 @@ def safe_update_database(db_path: str, new_data: dict):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-6)
 
 ### What happens if two agents call `execution_chamber` at the exact same time?
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-6)
 The first agent to acquire the OS lock proceeds into the chamber immediately. The second agent is paused by the operating system at the Outer Door until the first agent finishes and releases the lock.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-7)
 ### How does the mantrap prevent permanent deadlocks?
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-7)
 If an agent fails to release a lock within 10 seconds, the mantrap inspects the OS process table. If the holding process ID is dead, it automatically breaks the stale lock and grants access to the waiting agent.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-8)
 ### Does this slow down the web portal?
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-8)
 No. In benchmarks, acquiring and releasing a lock takes less than 4 milliseconds. Because reads and writes are serialized, data integrity is 100% guaranteed with imperceptible latency.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_09-SEC-9)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_09-SEC-9)
 - To understand why uncoordinated concurrency broke the server, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-03_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_16 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 03_16: Directory Tiering & Sandbox Jail Audit Logs
 
@@ -6,6 +6,7 @@ Diagnostic test execution logs and validation traces evaluating **Directory-Leve
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-1)
 ## What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-1)
 
@@ -17,6 +18,7 @@ We audited the file classification and access control enforcement engine against
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-2)
 ## Exact Command Run
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-2)
 
@@ -48,6 +50,7 @@ for path, expected in test_paths:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-3)
 ## Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-3)
 
@@ -71,6 +74,7 @@ AUDIT_STATUS: PASS (100% Boundary Containment Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-4)
 ## How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-4)
 
@@ -80,6 +84,7 @@ AUDIT_STATUS: PASS (100% Boundary Containment Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-5)
 
@@ -90,19 +95,22 @@ In RBAC boundary enforcement, path evaluation sequence ensures containment:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-7)
 
 ### Why is `core/ui_config.json` considered core engine?
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-7)
 `ui_config.json` controls which AI models are displayed in the user interface and how requests are routed. If a game developer could edit this file, they could change backend settings or redirect traffic to unauthorized endpoints.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-8)
 ### What is the `playground/` folder?
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-8)
 `playground/` is the dedicated workspace where game developers and modders build their projects. It is physically separated from the engine source code so experiments cannot damage server files.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_16-SEC-9)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-03_16-SEC-9)
 - To understand the vulnerability that prompted directory tiering, read [`01_PROBLEMS_ENCOUNTERED/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md`](/docs/devlog/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING).

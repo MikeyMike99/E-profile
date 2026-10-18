@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-SEC | VERSION: v1.1 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-SECURITY | VERSION: v1.1 | SCOPE: DEV)
 
 # Antigravity Security & Threat Model Documentation
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-1)
 ## Threat Landscape for In-Game Developer & Assistive Study Deployments
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-1)
 
@@ -9,6 +10,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-1)
 ### 1. Symlink Traversal (CWE-59)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-1)
 - **Methodology**: Canonical Path Resolution & Physical Boundary Enforcement
@@ -17,6 +19,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-2)
 ### 2. Multi-Tenant WebSocket Bleed (CWE-200)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-2)
 - **Methodology**: Session-Scoped Stream Routing
@@ -25,6 +28,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-3)
 ### 3. Subprocess Environment & Credential Exfiltration (CWE-214)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-3)
 - **Methodology**: Environment Whitelisting & Server-Side Credential Proxying
@@ -33,6 +37,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-4)
 ### 4. Indirect Prompt Injection via Untrusted Assets (CWE-74)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-4)
 - **Methodology**: Tiered Workspace Confinement & Semantic Context Delimiters
@@ -43,6 +48,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-5)
 ### 5. Localhost & Private Subnet SSRF (CWE-918)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-5)
 - **Methodology**: OS-Level Sandbox Confinement & Loopback Isolation
@@ -51,6 +57,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-6)
 ### 6. Resource Exhaustion & Runaway Subprocesses (CWE-400)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-6)
 - **Methodology**: Execution Timeouts, Write Quotas, & Bounded Event Queues
@@ -62,6 +69,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-7)
 ### 7. Dynamic Tool Feed Bleed (CWE-200 / CWE-497)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-7)
 - **Methodology**: Real-Time Telemetry Scrubbing & Stealth Obfuscation
@@ -70,6 +78,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-8)
 ### 8. Source Code Disclosure via Backup Artifacts (CWE-530)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-8)
 - **Methodology**: In-Place Atomic Editing & Zero-Residue Workspace Policy
@@ -78,6 +87,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-9)
 ### 9. Custom Extension & Protocol Evasion (CWE-284)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-9)
 - **Methodology**: Unified Pre-Execution AST Diffing Across Built-In & Custom Tools
@@ -86,6 +96,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-10)
 ### 10. Cloud Context Leakage of Sensitive Study Material & Cloud-Synced Folders (CWE-359)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-10)
 - **Methodology**: The 5-Layer "Blindfolded Broker" Architecture & Zero-Config Sync-Root Discovery
@@ -116,6 +127,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-11)
 ### 11. Regulatory & Institutional Policy Alignment (Self-Study & Accessibility)
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-11)
 - **Regulatory Scope**: Engineered to align with the **Protection of Personal Information Act 4 of 2013 (POPIA)** and institutional AI, Acceptable Use, and Data Governance standards for **personal self-study, academic research, and assistive accessibility**.
@@ -127,6 +139,7 @@ When embedding an autonomous AI portal inside developer workflows, game engines,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-12)
 ### 12. Deep Red-Team Blind-Spot Audit & Hardening Summary
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-12)
 During comprehensive red-team auditing of the runtime interceptor, local HTTP endpoints, and OS-level filesystem boundaries, **8 advanced bypass vectors** were identified, remediated, and locked behind **30 automated verification checks across 6 audit stages**:
@@ -160,6 +173,7 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
 
 
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-9)
 ## 9. Cross-References & System Parallels
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-9)
 

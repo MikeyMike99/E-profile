@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_17 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_17 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 02_17: Directory Tiering & API Contract Evidence
 
@@ -6,6 +6,7 @@ Primary source evidence from the Siraugga security manager (`security/security_m
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-1)
 ## Source Citation 1: Cryptographic Master Signature Verification (`security/security_manager.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-1)
 
@@ -42,6 +43,7 @@ def check_master_signature() -> bool:
         return False
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-2)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-2)
 - **Immunity to Reverse Engineering**: When compiled to native machine code via Nuitka, strings extracted by hackers reveal only the SHA-256 digest (`80fbad...`), which cannot be mathematically reversed to produce the raw 32-byte key file.
@@ -49,6 +51,7 @@ def check_master_signature() -> bool:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-3)
 ## Source Citation 2: Directory-Level Tiering Algorithm (`security/security_manager.py`)
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-3)
 
@@ -79,6 +82,7 @@ def classify_file(self, rel_path: str) -> str:
         return self.TIER_CORE_ENGINE
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-4)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-4)
 - **Deep Namespace Protection**: Even if a file has an innocent extension like `.json` or `.txt`, if it lives inside `core/` (e.g., `core/ui_config.json`), lines 308–309 immediately classify it as `TIER_CORE_ENGINE`.
@@ -86,6 +90,7 @@ def classify_file(self, rel_path: str) -> str:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-5)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-5)
 
@@ -96,23 +101,27 @@ In recursive security classification, path evaluation sequence prevents bypasses
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-6)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-6)
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-7)
 
 ### What is a SHA-256 digest?
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-7)
 A SHA-256 digest is a 64-character fingerprint of data. Even if you change one comma in a file, the entire fingerprint completely changes, making forgery impossible.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-8)
 ### Why do we check `parts[:-1]`?
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-8)
 `parts[:-1]` selects all folder names in the path, leaving out the file itself. This lets us check if the file is inside a protected folder before we even look at the filename.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-9)
 ### How does this protect game engine developers?
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-9)
 Third-party modders or game developers given access to write game scripts are jailed to `playground/` and blocked from modifying server code or security configs.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_17-SEC-10)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-02_17-SEC-10)
 - To understand why flat file matching failed, read [`01_PROBLEMS_ENCOUNTERED/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md`](/docs/devlog/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING).

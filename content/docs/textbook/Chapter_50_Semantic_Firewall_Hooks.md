@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: SIRA-TXT-CH50 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_50 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 50: Semantic Firewall Hooks and Pre-Execution Interception
 
 In advanced Agentic Architectures, securing the perimeter (Access Control) and the file system (RBAC and Sandboxing) is insufficient if the agent itself can manipulate system states through specialized orchestration features. This chapter introduces the concept of **Pre-Execution Interception** via Semantic Firewall Hooks.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_50-SEC-50_1)
 ## 50.1 The Vulnerability of Execution Metadata
 [//]: # (SECTION_ID: SIRA-TXT-CH50-SEC-50_1)
 Agents interact with the host system via Tool Calls (e.g., `write_to_file`, `run_command`). Beyond the raw data (like file contents), these tools often accept metadata that dictates how the orchestration layer handles the output. 
 
 A prime example is the `ArtifactMetadata.RequestFeedback` flag. In the Antigravity architecture, setting this flag to `true` on an executable plan pauses the agent and requests human approval. However, standard documentation files (like `.md` files) are often configured with "auto-approve" routing to prevent UI clutter. If an agent maliciously or accidentally hallucinates the `RequestFeedback: true` flag on a standard Markdown file, it can trigger the auto-approve policy, bypass human oversight, and cause autonomous runaway loops.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_50-SEC-50_2)
 ## 50.2 Establishing the Interceptor Hook
 [//]: # (SECTION_ID: SIRA-TXT-CH50-SEC-50_2)
 Relying on system prompts (e.g., "Rule 8: Never use RequestFeedback on standard Markdown") is fundamentally flawed because LLMs can hallucinate. Security must be enforced at the orchestration layer.
@@ -32,6 +34,7 @@ By defining an interception layer (the `PreToolUse` hook), every tool invocation
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_50-SEC-50_3)
 ## 50.3 Deterministic Denial
 [//]: # (SECTION_ID: SIRA-TXT-CH50-SEC-50_3)
 Inside the hook script, the system parses the incoming JSON payload. If the tool is `write_to_file`, the target file ends in `.md`, and the `ArtifactMetadata` contains the restricted flag, the firewall deterministicly returns a hard denial:

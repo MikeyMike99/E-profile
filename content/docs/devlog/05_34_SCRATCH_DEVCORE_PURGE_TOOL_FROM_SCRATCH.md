@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-05_34 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_34 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.34: From-Scratch Creation Guide: Environment Scratch & Dependency Purge Tool
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-1)
 ## Overview & Beginner Context
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-1)
 This guide teaches you how to write the `scratch_devcore_from_alp.sh` script line by line from a completely blank editor window. This script safely verifies that a new virtual environment is fully functional and running before purging redundant dependencies from an old environment.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-1)
 ## 1. Beginner Safety Guidelines
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-1)
 - **Windows vs Linux Line Endings**: Ensure your editor saves with Linux LF line endings, not Windows CRLF (`\r\n`), or Bash will throw `syntax error near unexpected token $'\r'`.
@@ -15,8 +17,9 @@ This guide teaches you how to write the `scratch_devcore_from_alp.sh` script lin
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-2)
 ## 2. Line-by-Line Construction
-[//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-2)
 
 ### Block 1: Shebang, Safe Bash Options & Variable Defaults (Lines 1–15)
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-2)
@@ -41,6 +44,7 @@ fi
 - **Line 2 (`set -e`)**: Tells Bash to stop immediately if any command returns an error.
 - **Lines 4–6**: Sets default virtualenv paths using parameter expansion (`${VAR:-default}`).
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-3)
 ### Block 2: Target Virtualenv Dependency Verification (Lines 16–35)
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-3)
 ```bash
@@ -60,6 +64,7 @@ echo "DevCore virtual environment dependencies verified."
 ```
 - Executes a python one-liner inside the new virtual environment. If any import fails, the script halts before any files are touched.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-4)
 ### Block 3: Port 5000 Active Listener Audit (Lines 36–55)
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-4)
 ```bash
@@ -82,6 +87,7 @@ fi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-3)
 ## 3. Complete Finished Script
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-3)
 
@@ -114,6 +120,7 @@ echo "[Step 4/4] Operation complete."
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-4)
 ## 4. 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-4)
 1. Run `./scripts/scratch_devcore_from_alp.sh --check` -> Returns exit code 0.
@@ -121,8 +128,9 @@ echo "[Step 4/4] Operation complete."
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-5)
 ## 5. Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-5)
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-5)
 
 ### What does `cut -d= -f2` do?
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-5)
@@ -130,6 +138,7 @@ It splits text using the `=` symbol as a delimiter (`-d=`) and selects the secon
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_34-SEC-6)
 ## 6. Cross-Reference Navigation
 [//]: # (SECTION_ID: SIRA-DOC-05_34-SEC-6)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_36_VENV_CONTAMINATION_AND_ALP_SCRATCH_TRAPS.md`](/docs/devlog/01_36_VENV_CONTAMINATION_AND_ALP_SCRATCH_TRAPS)

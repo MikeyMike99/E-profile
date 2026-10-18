@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_04 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_04 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.4: Problems Encountered: Zombie Subagents & Process Exhaustion
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-1)
 
@@ -17,8 +18,9 @@ This chapter details how orphaned background processes paralyzed the host machin
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-2)
 ## The Incident: Subagent Zombies & CPU Exhaustion
-[//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-3)
@@ -28,6 +30,7 @@ BlockingIOError: [Errno 11] Resource temporarily unavailable (os.fork failed)
 ```
 Upon inspecting Linux processes with `htop` and `ps aux | grep agy`, the administrator discovered dozens of orphaned `agy` and `python` worker processes running invisibly in the background, consuming 100% of available CPU cores.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-4)
 When a developer cancelled a running task in the web UI, the backend executed a standard Python coroutine cancellation:
@@ -46,11 +49,13 @@ The Python coroutine exited, but the underlying OS subprocess was detached as an
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-5)
 ## The Architectural Solution
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-5)
 
 To eliminate zombie accumulation, Siraugga implemented a three-tier Process Reaping Architecture:
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-1)
 ### 1. Process Group Isolation (`preexec_fn=os.setpgrp`)
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-1)
 When launching agent subprocesses, the server assigns each subprocess to its own unique process group ID (PGID):
@@ -61,6 +66,7 @@ process = await asyncio.create_subprocess_exec(
 )
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-2)
 ### 2. Cascading Signal Termination (`SIGTERM` -> `SIGKILL`)
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-2)
 When a cancellation is triggered, the supervisor sends termination signals to the entire process group, ensuring all child and grandchild workers are reaped:
@@ -76,12 +82,14 @@ def reap_process_group(pgid):
         pass  # Process already exited cleanly
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-3)
 ### 3. Server Shutdown & Subagent Sweeper (`kill_all`)
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-3)
 During server shutdowns or session resets, a global reaper sweeps all registered subagent conversation IDs and executes a cascading `kill_all` sequence, leaving zero orphaned processes behind.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-6)
 ## Why Order Matters in Process Termination
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-6)
 
@@ -92,13 +100,15 @@ During server shutdowns or session resets, a global reaper sweeps all registered
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-7)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-8)
 
 ### Q: What is an orphan process vs. a zombie process?
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-8)
 **A:** An **orphan** is a running child process whose parent process terminated without waiting for it; the Linux `init` process adopts it. A **zombie** is a process that has finished execution but still has an entry in the process table because its parent hasn't read its exit code.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_04-SEC-9)
 ### Q: Why doesn't `task.cancel()` kill the command running in the terminal?
 [//]: # (SECTION_ID: SIRA-DOC-01_04-SEC-9)
 **A:** `asyncio.Task` only controls Python's internal event loop. It has no native knowledge of operating system hardware processes unless you explicitly link the cancellation handler to `process.terminate()`.

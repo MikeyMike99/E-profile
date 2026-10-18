@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH27 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_27 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 27: Configuring Sandbox Zones via CLI
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-27_1)
 ## 27.1 The 5 Phases of Swarm Configuration
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_1)
 
@@ -14,6 +15,7 @@ The configuration sequence requires 5 absolute phases using the `agy` CLI:
 4.  **Bind a Zone-Pair** and match it to the Sandbox-Policy.
 5.  **Assign Directories** (Interfaces) to the appropriate Zones.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-27_2)
 ## 27.2 Phase 1 & 2: Zones and Intent-Maps
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_2)
 
@@ -34,6 +36,7 @@ agy match tool web_search
 agy match tool read_file
 ```
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-27_3)
 ## 27.3 Phase 3 & 4: Policies and Zone-Pairs
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_3)
 
@@ -53,6 +56,7 @@ agy zone-pair PRIV_PUB --source PRIVATE_WORKSPACE --destination PUBLIC_MODDER
 agy bind sandbox-policy PRIV_TO_PUB_POLICY
 ```
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-27_4)
 ## 27.4 Phase 5: Assigning Directories
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_4)
 
@@ -66,6 +70,7 @@ agy zone assign /wss/modder_stream/ PUBLIC_MODDER
 
 The ZSP is now fully active. Any `web_search` traffic sourced from the Private Workspace destined for the Public network will be *statefully inspected*, guaranteeing return traffic is allowed back into the AI's context window.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-27_5)
 ## 27.5 Verifying the Swarm
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-27_5)
 
@@ -77,11 +82,13 @@ To verify the active ZSP configuration and inspect active AI Swarm sessions, Tie
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-1)
 ## Chapter 27 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-1)
 
 Chapter 27 provides the mechanical CLI commands required to translate conceptual zone architectures into living DevCore infrastructure. By separating Intent-Mapping (identifying the traffic) from Sandbox-Policies (acting on the traffic), Tier 5 Admins gain infinite modularity. They can write a single `SAFE_TOOLS` Intent-Map and apply it to a hundred different Zone-Pairs without rewriting the underlying tool list.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_27-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 27 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH27-SEC-2)
 

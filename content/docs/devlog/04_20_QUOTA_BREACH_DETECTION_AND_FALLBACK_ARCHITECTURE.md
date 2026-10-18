@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_20 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_20 | VERSION: v1.0 | SCOPE: DEV)
 
 # Model Quota Breach Detection & Graceful Fallback Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_20-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-1)
 Modern agentic workflows consume significant LLM context and rate limits. When developers selected heavy reasoning models (such as `pro` or high-effort reasoning aliases), sudden API rate limits (HTTP 429) or token exhaustion would cause catastrophic silent failures or sudden subagent crashes.
@@ -39,6 +40,7 @@ The Quota Breach Detection & Fallback Architecture introduces an end-to-end prot
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_20-SEC-2)
 ## 2. Low-Effort Flash Default Strategy
 [//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-2)
 To prevent unexpected developer billing spikes and context starvation, all system layers enforce low-effort models by default:
@@ -48,6 +50,7 @@ To prevent unexpected developer billing spikes and context starvation, all syste
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_20-SEC-3)
 ## 3. UI Notification & ARIA Live Region Announcement
 [//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-3)
 When a fallback event arrives at the browser:
@@ -57,6 +60,7 @@ When a fallback event arrives at the browser:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_20-SEC-4)
 ## 4. Why Order Matters in Quota Handling
 [//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-4)
 1. **Emit Notification Before Downstream Calls**: Alerting the client immediately upon catching the 429 error ensures the developer understands why response speeds or reasoning depths have shifted.
@@ -65,6 +69,7 @@ When a fallback event arrives at the browser:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_20-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_20-SEC-5)
 **Q: What HTTP status code signifies a quota breach?**  

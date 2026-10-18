@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-04_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_29 | VERSION: v1.0 | SCOPE: DEV)
 
 # Hardware Inode & AST Key Map Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_29-SEC-1)
 ## 1. Architectural Concept & Core Objective
 [//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-1)
 Conventional access control models bind security permissions strictly to physical filesystem paths (e.g., `/core/server.py`). However, path-based access control fails against autonomous subagents that can rename files, create symlinks, or move files into unmonitored directories.
@@ -34,12 +35,14 @@ The Hardware Inode & AST Key Map Architecture (`generate_raugusmap.py` and `secu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_29-SEC-2)
 ## 2. Inode Evasion Immunity
 [//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-2)
 Even if an agent or malicious process executes `mv core/server.py core/tmp_server.py`, the filesystem's hardware inode remains unchanged. When the Raugus Resolver inspects the file, it looks up the inode in `raugus_map.json` and immediately re-attaches the original Tier-2 Core Engine security policy.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_29-SEC-3)
 ## 3. Semantic AST Granularity & Zero Line Drift
 [//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-3)
 Instead of addressing code by static line numbers, the architecture identifies symbols by their AST node names (`FunctionDef`, `AsyncFunctionDef`, `ClassDef`). When an edit is requested:
@@ -49,6 +52,7 @@ Instead of addressing code by static line numbers, the architecture identifies s
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_29-SEC-4)
 ## 4. Why Order Matters in VFS Mapping
 [//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-4)
 1. **Query Hardware Inode Before Path Strings**: Comparing inodes before path names detects symlink swaps and file renames instantly.
@@ -57,6 +61,7 @@ Instead of addressing code by static line numbers, the architecture identifies s
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_29-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-04_29-SEC-5)
 **Q: What is a semantic AST key?**  

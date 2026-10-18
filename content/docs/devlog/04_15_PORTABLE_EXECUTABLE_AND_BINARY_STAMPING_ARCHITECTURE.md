@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_15 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_15 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_15: Portable Executable & Binary Stamping Architecture
 
@@ -6,6 +6,7 @@ An architectural guide to Siraugga's **Portable Executable & Dynamic Binary Stam
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-1)
 ## Architectural Overview & Topology
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-1)
 
@@ -48,6 +49,7 @@ Siraugga solves this via a **4-Layer Decoupled Portable Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-2)
 ## Key Architectural Invariants
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-2)
 
@@ -60,6 +62,7 @@ Siraugga solves this via a **4-Layer Decoupled Portable Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-3)
 
@@ -70,6 +73,7 @@ In binary stamping and authentication, evaluation sequence guarantees access con
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-4)
 ## Reusable Integration Recipe
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-4)
 
@@ -88,19 +92,22 @@ python3 security/stamper.py \
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-6)
 
 ### Can a client decompile the `.exe` to remove the expiration check?
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-6)
 Because Nuitka compiles Python code into native C machine code (assembly), decompiling it is extremely difficult—similar to reverse-engineering a compiled C++ video game.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-7)
 ### What happens when the 7-day trial expires?
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-7)
 The application locks itself, disables the AI agent process, and displays a friendly notice inviting the client to upgrade their license.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_15-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_15-SEC-8)
 - To understand why portable binaries required dynamic stamping, read [`01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md`](/docs/devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS).

@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: SIRA-DOC-05_39 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_39 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.39: From-Scratch Creation Guide: RAIA Swarm Supervisor & Loop Suppressor
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-1)
 ## Overview & Beginner Context
 [//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-1)
 This guide teaches you how to write an autonomous multi-agent supervisor in Python from scratch. It implements the **Semantic Tree Protocol (STP)** to prevent conversational loops and manages an N+1 standby array of worker agents (**RAIA**).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-1)
 ## 1. Line-by-Line Construction
-[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-1)
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-2)
 
 ### Block 1: The STP Loop Detector (Lines 1–30)
 [//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-2)
@@ -44,6 +46,7 @@ class STPController:
 ```
 - Tracks hop counts and message signatures to forcefully mute repeating loops.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-3)
 ### Block 2: The RAIA Failover Supervisor (Lines 31–60)
 [//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-3)
 ```python
@@ -65,6 +68,7 @@ class RAIASupervisor:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-2)
 ## 2. 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-2)
 1. Send repetitive messages between agents -> STP stops execution on the 2nd duplicate.
@@ -72,8 +76,9 @@ class RAIASupervisor:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-3)
 ## 3. Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-3)
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-4)
 
 ### What is a "Hop Count"?
 [//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-4)
@@ -81,6 +86,7 @@ A hop count measures how many times a message has traveled from one agent to ano
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_39-SEC-4)
 ## 4. Cross-Reference Navigation
 [//]: # (SECTION_ID: SIRA-DOC-05_39-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md`](/docs/devlog/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS)

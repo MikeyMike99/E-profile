@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_07 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_07 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.7: From-Scratch Creation Guide: Bootstrap Supervisor Gateway
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-1)
 
@@ -17,8 +18,9 @@ You will implement pre-flight syntax compilation checks to prevent startup crash
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-2)
 ## Step-by-Step Implementation
-[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-2)
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-3)
 
 ### Step 1: Open a Blank Python File
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-3)
@@ -26,6 +28,7 @@ You will implement pre-flight syntax compilation checks to prevent startup crash
 nano bootstrap_gateway.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-4)
 ### Step 2: Implement Pre-Flight Syntax Compiler (Lines 1–25)
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-4)
 ```python
@@ -50,6 +53,7 @@ def preflight_check(directory: str) -> bool:
     return True
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-5)
 ### Step 3: Implement Dual-Layer WebSocket Proxy (Lines 26–65)
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-5)
 ```python
@@ -82,6 +86,7 @@ async def proxy_endpoint():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-6)
 ## Why Order Matters in Gateway Execution
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-6)
 
@@ -92,6 +97,7 @@ async def proxy_endpoint():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-7)
 ## Verification & Testing
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-7)
 
@@ -119,13 +125,15 @@ with tempfile.TemporaryDirectory() as td:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-8)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-8)
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-9)
 
 ### Q: Why run the backend on Port 5001?
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-9)
 **A:** By reserving Port 5000 for the Gateway, users always see a responsive interface. The actual server logic runs on Port 5001, allowing administrators to hot-swap or restart the backend without changing the URL.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_07-SEC-10)
 ### Q: What is `py_compile`?
 [//]: # (SECTION_ID: SIRA-DOC-05_07-SEC-10)
 **A:** `py_compile` is a built-in Python module that compiles `.py` source code into `.pyc` bytecode without executing it, catching syntax errors immediately.

@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: JOSH-DOC-02_35 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: SIRA-DEV-02_35 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 02.35: Source Code Evidence: Inno Setup & Screen Reader DLL Extraction
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-1)
 ## Overview & Context
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-1)
 This document cites primary source code evidence from `screenreader_speak.py` demonstrating how accessible applications bundle native C-libraries as base64 byte arrays to guarantee screen reader connectivity even on clean Windows systems where external DLLs are stripped.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-2)
 ## Source Citation 1: Dynamic DLL Extraction & Directory Registration (`screenreader_speak.py`)
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-2)
 
@@ -56,6 +58,7 @@ This document cites primary source code evidence from `screenreader_speak.py` de
                 pass
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-3)
 ### What This Source Proves
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-3)
 - The application guarantees zero-failure screen reader connectivity by self-extracting embedded 32-bit and 64-bit NVDA controller DLLs if they are missing from disk.
@@ -63,6 +66,7 @@ This document cites primary source code evidence from `screenreader_speak.py` de
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-4)
 ## Source Citation 2: Inno Setup Process Termination Hook (`compile_joshy.bat`)
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-4)
 
@@ -76,12 +80,14 @@ timeout /t 1 /nobreak >nul
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "JOSHY Setup.iss"
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-5)
 ### What This Source Proves
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-5)
 - The automated packaging pipeline forces running executable processes to close before Inno Setup begins compilation, eliminating `Error opening file for writing` file-locking failures.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-3)
 ## 3. Why Order Matters in DLL Discovery
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-3)
 1. **Candidate Scan Before Base64 Extraction**: Check existing directories first to avoid unnecessary disk writes and flash wear.
@@ -89,19 +95,22 @@ timeout /t 1 /nobreak >nul
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-4)
 ## 4. Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-6)
 
 ### What is `os.add_dll_directory`?
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-6)
 In Python 3.8 and newer on Windows, Python no longer searches the system `PATH` or current directory for DLLs loaded via `ctypes`. You must explicitly call `os.add_dll_directory` with the exact folder path where your `.dll` file resides.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-7)
 ### Why does NVDA have both 32-bit and 64-bit DLLs?
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-7)
 NVDA itself is a 32-bit application, but Python programs can run as either 32-bit or 64-bit processes. The controller client must match the bitness of your running Python executable to communicate with NVDA.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_35-SEC-5)
 ## 5. Cross-Reference Navigation
 [//]: # (SECTION_ID: JOSH-DOC-02_35-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md`](/docs/devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS)

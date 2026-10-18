@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_12 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_12 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 01.12: Problems Encountered: Active Threat Simulation & Password Auditing
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-1)
 
@@ -17,8 +18,9 @@ This chapter details the vulnerabilities uncovered during offline dictionary att
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-2)
 ## Issue 1: Unsalted Hashes & Dictionary Vulnerabilities
-[//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-2)
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-3)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-3)
@@ -35,6 +37,7 @@ for w in words:
 
 In less than 2 milliseconds, the script cracked the target hash and revealed the password.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-4)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-4)
 1. **Unsalted Hashes**: Fast mathematical hash functions like raw SHA-256 produce the exact same hex digest for identical passwords. An attacker with precomputed rainbow tables can crack passwords instantaneously.
@@ -42,8 +45,9 @@ In less than 2 milliseconds, the script cracked the target hash and revealed the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-5)
 ## Issue 2: AI Safety Guardrail Refusals During Security Auditing
-[//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-5)
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-6)
 
 ### What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-6)
@@ -52,23 +56,27 @@ When the team prompted the AI agent to write auditing scripts to test online rat
 
 The development workflow ground to an immediate halt. The AI could not distinguish between a malicious cyberattack and an authorized developer hardening their own local server.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-7)
 ### Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-7)
 Commercial LLM safety filters are triggered by naive keyword heuristics (like "brute force", "crack password", or "exploit"). Without proper architectural framing, the safety filters default to denial.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-8)
 ## The Architectural Solution
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-8)
 
 To harden the platform and resolve testing roadblocks, Siraugga executed two strategic upgrades:
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-1)
 ### 1. Cryptographic Salting & Slow Key Derivation
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-1)
 Migrated all administrative authentication from plain SHA-256 to **Bcrypt / Argon2id**:
 - Incorporates a unique, cryptographically random salt per user.
 - Enforces an artificial computation cost (work factor) that slows down offline attacks from billions of hashes per second to less than 10 per second.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-2)
 ### 2. Contextual Threat Simulation Framing
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-2)
 Security audit tasks are executed using the **Active Threat Simulation Pattern**:
@@ -77,6 +85,7 @@ Security audit tasks are executed using the **Active Threat Simulation Pattern**
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-9)
 ## Why Order Matters in Password Security
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-9)
 
@@ -87,13 +96,15 @@ Security audit tasks are executed using the **Active Threat Simulation Pattern**
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-10)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-10)
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-11)
 
 ### Q: What is a Salt in cryptography?
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-11)
 **A:** A salt is random data added to a password before hashing. If two users choose the password `"secret"`, salting ensures their resulting hash strings look completely different, preventing attackers from cracking multiple accounts simultaneously.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_12-SEC-12)
 ### Q: What is a Rainbow Table?
 [//]: # (SECTION_ID: SIRA-DOC-01_12-SEC-12)
 **A:** A rainbow table is a massive precomputed database of passwords and their corresponding hash values. Instead of guessing passwords, an attacker simply searches the database to find the plaintext match. Salting completely destroys the effectiveness of rainbow tables.

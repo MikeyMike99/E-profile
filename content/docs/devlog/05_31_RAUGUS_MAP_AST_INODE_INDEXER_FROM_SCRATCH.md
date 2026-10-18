@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_31 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_31 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Raugus Map AST & Inode Indexer from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_31-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-1)
 Exposing raw physical file paths to autonomous agents creates attack surfaces for path traversal and filesystem evasion attacks.
@@ -34,6 +35,7 @@ This guide details how to build `generate_raugusmap.py` from scratch. It parses 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_31-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-2)
 Save the following script as `map_generator.py`:
@@ -135,6 +137,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_31-SEC-3)
 ## 3. Why Order Matters in VFS Generation
 [//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-3)
 1. **Prune Ignore Dirs In-Place**: Modifying `dirs[:] = [...]` prevents `os.walk` from descending into massive `.git` or `node_modules` folders, speeding up indexing by 100x.
@@ -143,6 +146,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_31-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_31-SEC-4)
 **Q: What does `dirs[:] = [...]` do in Python?**  

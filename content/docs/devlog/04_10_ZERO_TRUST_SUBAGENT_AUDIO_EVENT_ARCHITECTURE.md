@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_10 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: JOSH-DEV-04_10 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 04_10: Zero-Trust Subagent Audio Event Architecture
 
@@ -6,6 +6,7 @@ An architectural guide to Siraugga's **Dual-Channel Event Pipeline**—separatin
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-1)
 ## The Dual-Channel Philosophy
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-1)
 
@@ -48,6 +49,7 @@ Siraugga enforces a **Zero-Trust Audio Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-2)
 ## Architectural Components
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-2)
 
@@ -63,6 +65,7 @@ Siraugga enforces a **Zero-Trust Audio Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-3)
 
@@ -73,6 +76,7 @@ In decoupled event pipelines, initialization sequence prevents missed cues:
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-4)
 ## Reusable Integration Recipe
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-4)
 
@@ -106,23 +110,27 @@ async def watch_subagent_events(transcript_path: str, broadcast_fn):
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-5)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-5)
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-6)
 
 ### Why not let the AI send `{"sound": "completed"}`?
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-6)
 If the AI encounters a Python error, runs out of tokens, or gets stuck in a loop, it never sends the sound! By listening to the operating system transcript directly, the audio alert plays even if the AI crashes.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-7)
 ### Does this interfere with speech synthesizers like NVDA?
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-7)
 No. Short non-vocal audio chimes (chimes and clicks) play through the default audio output device without occupying the screen reader's virtual buffer.
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-8)
 ### What happens if the transcript file doesn't exist yet?
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-8)
 The watcher runs a small 3-second retry loop (checking every 100ms) until the subagent creates the file, ensuring zero race-condition crashes.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-04_10-SEC-9)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-04_10-SEC-9)
 - To understand why standard Python file reading failed, read [`01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md`](/docs/devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS).

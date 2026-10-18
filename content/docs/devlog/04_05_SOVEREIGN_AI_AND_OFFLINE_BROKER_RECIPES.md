@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-04_05 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-04_05 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 04.5: Architecture Solutions: Sovereign AI & Offline Broker Recipes
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-1)
 
@@ -17,11 +18,13 @@ This guide provides copy-paste recipes for setting up an offline local model bro
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-2)
 ## Recipe 1: Setting Up the Local Sovereign Proxy Broker
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-2)
 
 Instead of allowing the AI CLI to connect directly to external cloud servers, Siraugga routes all traffic through a local proxy endpoint on Port 5000.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-3)
 ### Step 1: Configure the Subprocess Environment in `agent_manager.py`
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-3)
 Pass local broker URLs and synthetic dummy tokens:
@@ -43,6 +46,7 @@ def get_sovereign_environment():
     return env
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-4)
 ### Step 2: Implement the Local Broker Route in `core/routes/proxy.py`
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-4)
 ```python
@@ -71,6 +75,7 @@ async def sovereign_broker(model_name):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-5)
 ## Recipe 2: The 4-Layer Forensic Purge Script
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-5)
 
@@ -108,6 +113,7 @@ echo "[SUCCESS] 4-Layer Forensic Purge Complete. Workspace 100% compliant."
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-6)
 ## Why Order Matters in Sovereign Architecture
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-6)
 
@@ -118,13 +124,15 @@ echo "[SUCCESS] 4-Layer Forensic Purge Complete. Workspace 100% compliant."
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-7)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-8)
 
 ### Q: Why pass a dummy token like `sovereign_dummy_token`?
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-8)
 **A:** Many AI SDKs check for the existence of an API key at startup and throw an error if the string is empty. Providing a synthetic dummy token satisfies the SDK while the proxy routes traffic to your local offline model.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_05-SEC-9)
 ### Q: What is `VACUUM` in SQLite?
 [//]: # (SECTION_ID: SIRA-DOC-04_05-SEC-9)
 **A:** When you delete rows from a database, SQLite simply marks the space as free rather than erasing it from disk. `VACUUM` physically wipes and defragments the database file on your hard drive.

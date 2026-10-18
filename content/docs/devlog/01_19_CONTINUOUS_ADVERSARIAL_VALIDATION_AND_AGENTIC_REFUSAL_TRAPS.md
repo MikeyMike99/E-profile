@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-01_19 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_19 | VERSION: v1.0 | SCOPE: DEV)
 
 # Chapter 01_19: Continuous Adversarial Validation & Agentic Refusal Traps
 
@@ -6,6 +6,7 @@ Security systems cannot be validated through passive assumptions; they require c
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-1)
 ## What Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-1)
 
@@ -16,6 +17,7 @@ When the security engine sought to audit password strength, test ZIP encryption 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-2)
 ## Why It Happened
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-2)
 
@@ -34,6 +36,7 @@ Security Violation ---> Gateway Emits 403 JSON Chunk ---> Agent Catches Exceptio
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-3)
 ## The "Why Order Matters" Principle
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-3)
 
@@ -44,23 +47,27 @@ Executing automated adversarial validation without crashing client sessions requ
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-4)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-5)
 
 ### What is CART (Continuous Adversarial Red-Teaming)?
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-5)
 CART is an automated security methodology where software continuously tests its own defenses by running simulated attacks (like dictionary guessing or directory traversal) against itself in an isolated environment.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-6)
 ### Why is `os.kill(pid, 9)` dangerous in web portals?
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-6)
 Signal 9 (`SIGKILL`) instantly obliterates a process without letting it run cleanup handlers, close open files, or send a goodbye message. To the web client, the connection simply dies without explanation.
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-7)
 ### How does Siraugga make security failures constructive?
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-7)
 When an action is blocked by RBAC or Raugus rules, the gateway returns a descriptive error message explaining which tier blocked the action and what permissions are required. The agent translates this into clear advice for the developer.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_19-SEC-8)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-01_19-SEC-8)
 - To see the primary source code of the offline threat simulation harness, read [`02_SOURCE_EVIDENCE/02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE.md`](/docs/devlog/02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE).

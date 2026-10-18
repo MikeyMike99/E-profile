@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH35 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_35 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 35: Introduction to Agentic Cryptography
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_35-SEC-35_1)
 ## 35.1 The Vulnerability of a Thought
 [//]: # (SECTION_ID: SIRA-TXT-CH35-SEC-35_1)
 
@@ -11,6 +12,7 @@ If this data travels in plaintext, it is entirely vulnerable. A hacker intercept
 
 To secure data as it travels across these links, Tier 5 Admins rely on **Agentic Cryptography**. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_35-SEC-35_2)
 ## 35.2 The Computational Trade-off
 [//]: # (SECTION_ID: SIRA-TXT-CH35-SEC-35_2)
 
@@ -20,6 +22,7 @@ Every microsecond the Orchestrator spends encrypting and decrypting an AI's thou
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_35-SEC-35_3)
 ## 35.3 Module Objectives & Master Syllabus
 [//]: # (SECTION_ID: SIRA-TXT-CH35-SEC-35_3)
 

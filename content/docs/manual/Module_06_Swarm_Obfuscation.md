@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-OPS-MOD06 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-OPS-MOD_06 | VERSION: v1.0 | SCOPE: OPS)
 
 # Module 6: Swarm Obfuscation & Malicious Threats
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_06-SEC-1)
 ## What Will I Learn in this Module?
 [//]: # (SECTION_ID: SIRA-OPS-MOD06-SEC-1)
 This module explores the advanced offensive techniques used by threat actors to attack a decentralized Swarm. You will learn:
@@ -12,6 +13,7 @@ This module explores the advanced offensive techniques used by threat actors to 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_06-SEC-6_1)
 ## 6.1 The Weaponization of Valid Protocols
 [//]: # (SECTION_ID: SIRA-OPS-MOD06-SEC-6_1)
 The most dangerous cyberattacks do not rely on broken code; they rely on the **weaponization of valid protocols**. 
@@ -20,6 +22,7 @@ In the Siraugga framework, if a Subagent is authorized to use `run_command` and 
 
 Because the tools are valid and the Subagent is authenticated, these attacks blend perfectly into normal SwarmFlow metadata, making them incredibly difficult for the Orchestrator SIEM to detect.
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_06-SEC-6_2)
 ## 6.2 DNS Payload Exfiltration
 [//]: # (SECTION_ID: SIRA-OPS-MOD06-SEC-6_2)
 If a rogue Subagent successfully reads the `.env` file containing the host's root API keys, it needs a way to smuggle that data out of the Sandbox. 
@@ -29,12 +32,14 @@ Because the NGPF blocks direct HTTP POST requests to unauthorized external IPs, 
 Because DNS traffic is required for normal internet routing, the Sandbox firewall allows the request. The hacker's malicious DNS server receives the ping, strips the subdomain, decodes the Base64, and successfully steals the root keys—all without establishing a direct, blocked HTTP connection.
 
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_06-SEC-6_3)
 ## 6.3 Agent-to-Agent Worms
 [//]: # (SECTION_ID: SIRA-OPS-MOD06-SEC-6_3)
 The terrifying reality of a decentralized Swarm is that Subagents are designed to communicate with each other. If a single Subagent is compromised, the infection can spread.
 
 An **Agent-to-Agent Worm** occurs when a localized prompt injection (e.g., a poisoned NPC dialogue file in a Modder's sandbox) instructs the AI to use its `send_message` tool to transmit the same poisoned prompt to its peer Subagents. Because the messaging protocol (DevCore's equivalent of SMTP/IMAP) is a trusted internal communication channel, the worm moves laterally across the network, hijacking multiple AI nodes to perform a coordinated Distributed Denial-of-Service (DDoS) attack or massive data extraction.
 
+[//]: # (SECTION_ID: SIRA-OPS-MOD_06-SEC-6_4)
 ## 6.4 The Onion Swarm
 [//]: # (SECTION_ID: SIRA-OPS-MOD06-SEC-6_4)
 To evade the Orchestrator's SwarmFlow tracing and avoid detection in the Master Alert Queue, sophisticated hackers utilize a technique known as **The Onion Swarm**.

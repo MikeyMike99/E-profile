@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_34 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_34 | VERSION: v1.0 | SCOPE: DEV)
 
 # PreToolUse Hook Interception & Write-Lock Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_34-SEC-1)
 ## 1. The Problem: The Native Tool Bypass Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-1)
 Autonomous AI agents are equipped with powerful native file-editing tools such as `replace_file_content`, `write_to_file`, `edit_lines`, and `run_command`. While web API routes can enforce Role-Based Access Control (RBAC), an autonomous agent running inside the workspace can invoke its tools directly, completely bypassing web-level route guards.
@@ -28,12 +29,14 @@ If a junior subagent decides to overwrite `security/security_manager.py` or modi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_34-SEC-2)
 ## 2. Granular Function Write-Locks
 [//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-2)
 Even within permissible files, certain functions are mission-critical (such as password verification, hot-patch execution, or cryptographic seed derivation). Allowing an agent to modify an entire file when it only needed to update a helper utility risks accidentally deleting critical security routines.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_34-SEC-3)
 ## 3. The Solution: PreToolUse Interception & AST Write Locks
 [//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-3)
 Siraugga instituted the Raugus PreToolUse Interception Hook (`.agents/raugus_hook.py`):
@@ -44,6 +47,7 @@ Siraugga instituted the Raugus PreToolUse Interception Hook (`.agents/raugus_hoo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_34-SEC-4)
 ## 4. Why Order Matters in Tool Interception
 [//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-4)
 1. **Intercept Before OS Execution**: Inspecting payloads *before* execution prevents unauthorized disk mutations from ever touching the storage controller.
@@ -52,6 +56,7 @@ Siraugga instituted the Raugus PreToolUse Interception Hook (`.agents/raugus_hoo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_34-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_34-SEC-5)
 **Q: What is a PreToolUse hook?**  

@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: JOSH-DOC-05_38 | VERSION: v1.0 | SCOPE: JOSHY Audio Suite)
+[//]: # (DOC_ID: SIRA-ARCH-05_38 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Pillar 05.38: From-Scratch Creation Guide: Inno Setup Windows Installer Script
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-1)
 ## Overview & Beginner Context
 [//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-1)
 This guide teaches you how to write an Inno Setup script (`JOSHY Setup.iss`) and its companion build batch file (`compile_joshy.bat`) line by line from scratch. It compiles your Python executable into a professional Windows installer that terminates running background processes before overwriting binaries.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-1)
 ## 1. Line-by-Line Construction
-[//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-1)
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-2)
 
 ### Block 1: The Build Automation Script (`compile_joshy.bat`)
 [//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-2)
@@ -28,6 +30,7 @@ echo Build Complete: Output in Output\JOSHY-Setup.exe
 ```
 - Ensures running processes are killed before PyInstaller or Inno Setup attempt to write to disk.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-3)
 ### Block 2: The Inno Setup Script Definition (`JOSHY Setup.iss`)
 [//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-3)
 ```iss
@@ -57,6 +60,7 @@ Filename: "{app}\JOSHY.exe"; Description: "Launch JOSHY Audio Suite"; Flags: now
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-2)
 ## 2. 10-Second Verification Checklist
 [//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-2)
 1. Run `compile_joshy.bat`.
@@ -65,8 +69,9 @@ Filename: "{app}\JOSHY.exe"; Description: "Launch JOSHY Audio Suite"; Flags: now
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-3)
 ## 3. Beginner Coder Q&A
-[//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-3)
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-4)
 
 ### What does `PrivilegesRequired=lowest` mean in Inno Setup?
 [//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-4)
@@ -74,6 +79,7 @@ It configures the installer to run without requiring Windows Administrator (UAC)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_38-SEC-4)
 ## 4. Cross-Reference Navigation
 [//]: # (SECTION_ID: JOSH-DOC-05_38-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md`](/docs/devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS)

@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-02_03 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-02_03 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 02.3: Source Evidence: Safe Hot-Patching & Self-Healing Engine
 
@@ -8,6 +8,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-1)
 ## Overview
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-1)
 
@@ -17,6 +18,7 @@ It provides concrete code proof of how pre-compilation syntax checks, snapshot b
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-2)
 ## Source 1: The 4-Stage Hot-Patch Execution Sequence
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-2)
 
@@ -53,6 +55,7 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
             applied_targets.append((patch, target_file, backup_file))
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-3)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-3)
 1. **Pre-Flight Syntax Gating**: `py_compile.compile(..., doraise=True)` parses the staged patch before any disk changes occur. Invalid syntax is trapped immediately, protecting live code.
@@ -60,6 +63,7 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-4)
 ## Source 2: In-Memory Reload & Automated Rollback
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-4)
 
@@ -94,6 +98,7 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
         return {"success": False, "error": f"Rollback triggered: {exc}"}
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-5)
 ### What This Source Proves
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-5)
 1. **Zero Socket Destruction**: Modules are refreshed using `importlib.reload()`, keeping the Quart server and active WebSockets open.
@@ -101,6 +106,7 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-6)
 ## Why Order Matters in Hot-Patching
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-6)
 
@@ -111,13 +117,15 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-7)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-7)
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-8)
 
 ### Q: Why not just restart Python with `os.system("python3 server.py")`?
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-8)
 **A:** Restarting Python severs all active WebSocket connections, cancels background AI tasks, and can fail due to port binding collisions (`Address already in use`). Hot-patching updates logic without dropping a single packet.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_03-SEC-9)
 ### Q: What is `shutil.copy2()`?
 [//]: # (SECTION_ID: SIRA-DOC-02_03-SEC-9)
 **A:** `copy2` copies file contents *and* preserves metadata (timestamps, file permissions), ensuring backup files retain their exact historical attributes.

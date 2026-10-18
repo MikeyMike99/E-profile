@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-DOC-05_16 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_16 | VERSION: v1.0 | SCOPE: ARCH)
 
 # Chapter 05_16: KMS Mnemonic Seed Phrase Recovery From Scratch
 
@@ -6,11 +6,13 @@ A step-by-step guide to writing the offline **KMS Mnemonic Seed Phrase Generator
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-1)
 ## What We Are Building & Beginner Safety Rules
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-1)
 
 We are creating `kms_recovery.py`—a zero-dependency cryptographic tool that converts 128 bits of entropy into a 12-word human-readable seed phrase and deterministically derives a 256-bit AES master key using PBKDF2-HMAC-SHA512.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-2)
 ### Beginner Safety Directives
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-2)
 1. **Use `secrets`, Never `random`**: Python's `random` module uses Mersenne Twister, which is completely predictable by hackers. Always use `secrets.token_bytes()` for cryptography.
@@ -19,8 +21,9 @@ We are creating `kms_recovery.py`—a zero-dependency cryptographic tool that co
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-3)
 ## Step-by-Step Line Breakdown
-[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-3)
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-4)
 
 ### Block 1: Imports & Wordlist Setup (Lines 1–25)
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-4)
@@ -47,6 +50,7 @@ WORDLIST = [
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-5)
 ### Block 2: Seed Phrase Generation (Lines 26–50)
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-5)
 
@@ -68,6 +72,7 @@ def generate_recovery_phrase(num_words: int = 12) -> str:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-6)
 ### Block 3: Deterministic Key Derivation (Lines 51–75)
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-6)
 
@@ -102,6 +107,7 @@ def derive_master_key(mnemonic_phrase: str, passphrase: str = "") -> bytes:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-7)
 ### Block 4: Command-Line Interface (Lines 76–100)
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-7)
 
@@ -125,6 +131,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-8)
 ## Complete Finished File Listing
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-8)
 
@@ -176,6 +183,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-9)
 ## 10-Second Verification Checklist
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-9)
 
@@ -187,19 +195,22 @@ If it prints `KEY_LENGTH_BYTES: 32 (256-bit AES Valid)` and outputs a 64-charact
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-10)
 ## Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-10)
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-11)
 
 ### What is "Key Stretching"?
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-11)
 Key stretching takes a relatively short input (like 12 words) and runs it through thousands of mathematical hash loops. This makes it impossible for an attacker's computer to quickly guess millions of passwords per second.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-12)
 ### Why do we use SHA-512 instead of SHA-256 for the seed?
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-12)
 SHA-512 produces a 64-byte (512-bit) output, providing enough cryptographic entropy to generate both an AES encryption key (first 32 bytes) and an HMAC authentication key (second 32 bytes) from the same seed phrase.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_16-SEC-13)
 ## Next Steps & Related Chapters
 [//]: # (SECTION_ID: SIRA-DOC-05_16-SEC-13)
 - To understand why relative key paths caused sandbox lockouts, read [`01_PROBLEMS_ENCOUNTERED/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md`](/docs/devlog/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS).

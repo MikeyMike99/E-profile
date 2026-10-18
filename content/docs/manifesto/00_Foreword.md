@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: SIRA-MAN-FOREWORD | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-MAN-00_FOREWORD | VERSION: v1.0 | SCOPE: MAN)
 
 # Foreword: The Cost of Memory
 

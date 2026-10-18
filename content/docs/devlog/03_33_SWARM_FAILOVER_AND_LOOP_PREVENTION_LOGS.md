@@ -1,15 +1,17 @@
-[//]: # (DOC_ID: SIRA-DOC-03_33 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_33 | VERSION: v1.0 | SCOPE: DEV)
 
 # Pillar 03.33: Diagnostic Tests & Logs: Swarm Failover & Conversational Loop Suppression
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-1)
 ## Overview & Context
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-1)
 This document records diagnostic test runs verifying the **Semantic Tree Protocol (STP)** loop suppression engine and measuring the failover recovery speed of the **RAIA (Redundant Array of Independent Agents)** supervisor when an active primary agent process crashes or enters a simulated hallucination loop.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-1)
 ## 1. Test Execution & Diagnostic Log
-[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-1)
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-2)
 
 ### What We Tested
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-2)
@@ -17,6 +19,7 @@ This document records diagnostic test runs verifying the **Semantic Tree Protoco
 2. Rapid failover from a crashing primary agent to a hot standby replica.
 3. Token conservation during simulated conversational deadlocks.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-3)
 ### Exact Simulation Script
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-3)
 ```python
@@ -37,6 +40,7 @@ for msg in conversation_history:
     stp.evaluate_and_route(msg)
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-4)
 ### Exact Output Returned
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-4)
 ```
@@ -57,6 +61,7 @@ for msg in conversation_history:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-2)
 ## 2. Loop Suppression & Token Conservation Matrix
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-2)
 
@@ -72,6 +77,7 @@ Loop Interception Rate:   0% (Crashed)            100% (Caught on 3rd hop)
 Efficiency Gain:          97.05% reduction in wasted token expenditure.
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-5)
 ### How We Reached Our Conclusion
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-5)
 - The Semantic Tree Protocol successfully intercepted the conversational loop on the third message hop, preserving over 460,000 tokens.
@@ -79,6 +85,7 @@ Efficiency Gain:          97.05% reduction in wasted token expenditure.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-3)
 ## 3. Why Order Matters in Swarm Governance
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-3)
 1. **Compute Semantic Fingerprint Before Routing**: The message body must be hashed and checked against the sliding history window before dispatching the payload to the recipient agent.
@@ -86,19 +93,22 @@ Efficiency Gain:          97.05% reduction in wasted token expenditure.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-4)
 ## 4. Beginner Coder Q&A
-[//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-4)
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-6)
 
 ### What is a "Semantic Fingerprint"?
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-6)
 A semantic fingerprint is a compact mathematical representation (vector hash) of a message's core meaning. If an agent rephrases "Please verify test suite results" to "Kindly confirm the test outcomes", the semantic similarity detector recognizes that the intent is identical and stops the loop.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-7)
 ### How does N+1 redundancy work with AI agents?
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-7)
 If a task requires 1 active worker, N+1 means having 1 spare worker waiting in standby. If you have 3 active workers, N+1 means keeping a 4th standby worker ready to replace whichever one fails first.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_33-SEC-5)
 ## 5. Cross-Reference Navigation
 [//]: # (SECTION_ID: SIRA-DOC-03_33-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md`](/docs/devlog/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS)

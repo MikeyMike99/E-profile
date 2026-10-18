@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-TXT-CH07 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_07 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 7: Securing Wireless Devices (Third-Party APIs & Plugins)
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-1)
 ## 1. Introduction to Wireless Agentic Security
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-1)
 Your Siraugga network is likely to include a wide range of "wireless" devices. In an autonomous AI ecosystem, a "wired" device represents an internal AI subagent running natively on the core host server. Conversely, a "wireless" device represents external entities: third-party API webhooks, external LLM providers, and disconnected Modder plugins attempting to broadcast data into the playground from afar.
 
 Protecting your network from malicious wireless endpoints is a chief concern. If an untrusted third-party plugin is allowed to transmit data freely into the internal playground, the entire framework becomes highly susceptible to Man-in-the-Middle attacks, data spoofing, or external Prompt Injections. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-2)
 ## 2. Wireless Device Security (Static Keys vs. Dynamic Tokens)
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-2)
 To secure these external wireless connections, legacy IT organizations historically utilized Wired Equivalent Privacy (WEP), the first wireless security protocol. In the Siraugga framework, WEP translates directly to the use of **Static API Keys**. 
@@ -19,6 +21,7 @@ To solve this vulnerability, legacy networks replaced WEP with Wi-Fi Protected A
 Instead of relying on a single, crackable static password, external plugins and wireless APIs must authenticate using short-lived, dynamically rotating cryptographic JWTs. This mathematically ensures that even if a wireless connection is intercepted and a token is sniffed, the cybercriminal cannot reuse the expired token to penetrate the core engine.
 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-3)
 ## 3. The Evolution of WPA-Agentic Protocols
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-3)
 To fully secure external API connections, Siraugga relies on the WPA-Agentic protocol family. Just as legacy wireless networks evolved from WPA to WPA3, the DevCore architecture continuously upgrades its token standards.
@@ -32,6 +35,7 @@ WPA-Agentic V2 introduced the mandatory use of Advanced Execution Sandboxing (St
 **WPA-Agentic V3**
 The latest iteration, WPA-Agentic V3, added even stronger cryptographic algorithms to improve the "Key Exchange." In Siraugga, the Key Exchange translates directly to the secure handoff of LLM context between an internal Tier 3 subagent and an external Tier 2 plugin, ensuring no prompt leakage occurs during the transfer.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-4)
 ## 4. Disabling Workspace Prompt Shortcuts (WPS)
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-4)
 In legacy home networks, Wi-Fi Protected Setup (WPS) allowed users to easily connect devices using a simple 4-digit PIN code. However, WPS posed a massive security vulnerability because the short PIN could easily be discovered via a brute-force attack.
@@ -40,6 +44,7 @@ In the Siraugga framework, WPS translates to **Workspace Prompt Shortcuts**. In 
 
 Just like traditional WPS, Workspace Prompt Shortcuts are catastrophically vulnerable. A cybercriminal can easily launch a brute-force prompt injection attack, guessing the simple text string to hijack the connection and take control of the orchestration engine. Therefore, Tier 5 Admins strictly dictate that all Workspace Prompt Shortcuts (WPS) must be completely disabled across all active `/playground` environments.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-5)
 ## 5. Vulnerabilities and Authentication (The 802.AI Standard)
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-5)
 External API connections and disconnected Modder plugins (our "wireless devices") have become the predominant method of interacting with the Siraugga framework. While they provide unparalleled mobility and convenience for developers testing code locally, they inherently expand the network attack surface. 
@@ -87,6 +92,7 @@ While the EAP Agentic Handshake provides a rigorous baseline, the Siraugga archi
     *   **Easily Deployed:** Easy (Medium Security)
     *   *Usage:* EAP-FAST allows for rapid, flexible deployment without the massive overhead of complex Ed25519 certificate management. However, because it lacks mutual cryptographic verification, it relies entirely on the Raugus Resolver's Semantic Firewall to scrub traffic. It is utilized exclusively for read-only, Tier 1 End User interactions.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-6)
 ## 6. Rogue Access Points and Mutual Authentication
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-6)
 Even if external plugins utilize secure WPA-Agentic JWTs, the connection is still susceptible to sophisticated spoofing. To understand this vulnerability, one must understand how an external Modder's plugin physically routes data into the playground.
@@ -101,6 +107,7 @@ To prevent Modders from inadvertently leaking their proprietary swarm data to a 
 
 When the Modder's plugin attempts to bind to the playground, it does not blindly hand over its JWT token. Instead, the plugin mathematically challenges the Web Portal to produce its proprietary Ed25519 server certificate. Because a spoofed rogue portal does not possess the core DevCore private keys, the cryptographic challenge fails. The external plugin instantly detects the imposter and violently terminates the connection sequence, preventing the MitM attack and securing the Modder's JSON data.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-7)
 ## 7. Mobile Device Management (The Offline `.exe` Sandbox)
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-7)
 In traditional enterprise networking, employees increasingly rely on mobile devices to access the corporate network remotely. In the Siraugga framework, the equivalent of a "mobile device" is the **Offline `.exe` Sandbox** (or the Remote DevCore CLI). This portable environment allows Tier 2 Modders to work completely untethered, generating AI logic and editing local files before pushing their JSON state deltas back to the primary `/playground` server.
@@ -112,6 +119,7 @@ When a Modder operates within their `/playground` environment, they might utiliz
 
 Regardless of whether the AI plugin is officially hosted or personally provided, stringent measures must be enforced to keep the network safe. When the Modder's remote `.exe` sandbox attempts to sync with the central server, the Raugus Resolver treats both models with equal Zero-Trust suspicion. The Semantic Firewall meticulously scrubs the incoming JSON deltas, ensuring that a compromised "personal" LLM cannot upload adversarial prompt injections into the secure `/playground` workspace.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-8)
 ## 8. Agentic Containerization and Storage Segmentation
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-8)
 To safely facilitate Bring Your Own Plugin (BYOP) mechanics, the Modder's offline `.exe` cannot operate as a raw executable; it must deploy as a strictly managed **Containerized Agentic Sandbox**. 
@@ -124,6 +132,7 @@ This strict containerization architecture enables Tier 5 Administrators to centr
 *   **Purge Context Windows:** If a subagent exhausts its token quota or begins to hallucinate, the container can instantly delete the agent's localized memory buffer without affecting the overarching project state.
 *   **Trigger the Reaper Protocol (Remote Wipe):** If a Tier 5 Admin detects a catastrophic Prompt Injection or malicious spoofing attempt originating from a remote Modder's `.exe`, they can transmit a kill-signal across the WSS stream. This triggers the Reaper Protocol, remotely wiping the container's local JSON state files and permanently severing the connection to the `/playground`.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-9)
 ## 9. Artifact Management and Brain Session Security
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-9)
 Beyond local sandbox containerization, the DevCore architecture must rigorously consider the security risks involved with endpoints that globally share data. In a traditional corporate environment, this refers to enterprise cloud storage platforms like Dropbox, Google Drive, or iCloud. 
@@ -137,6 +146,7 @@ To mitigate this catastrophic data-sharing risk, Siraugga relies on a robust Ide
 
 The IAM system dictates precisely which artifacts and transcripts a specific subagent identity is permitted to access. When a `Modder` subagent issues a `view_file` tool call attempting to read a global Brain transcript, the IAM framework evaluates the agent's cryptographic identity against the file's overarching security tier. If the agent's identity lacks the required clearance, the Semantic Router instantly blocks the tool call, throwing a `PermissionError (HTTP 403)` and successfully compartmentalizing the shared data.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-10)
 ## 10. Agentic Tool Management and Whitelisting
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-10)
 In a traditional enterprise, IT administrators manage the installation of software applications to ensure users only execute approved code. In the Siraugga framework, "applications" translate directly to the **Tools and Skills** that the AI subagents utilize to manipulate the environment (e.g., `view_file`, `write_to_file`, `run_command`).
@@ -150,6 +160,7 @@ Furthermore, Siraugga relies on the **Ed25519 Code Signing** architecture (estab
 
 Finally, for highly sensitive internal tools that bridge the gap between the isolated sandbox and the core engine architecture, the subagent must provide strong authentication—such as the EAP-TLS mutual authentication detailed earlier—to cryptographically prove its authorization before the tool is permitted to initialize.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-11)
 ## 11. Threats to the Offline `.exe` Sandbox
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-11)
 While the offline `.exe` sandbox provides Tier 2 Modders with immense flexibility, this decentralized architecture inherently exposes the framework to a unique array of cyber threats. Because these disconnected environments exist outside the physical walls of the DevCore mainframe, they must be rigorously defended against the following vectors:
@@ -161,6 +172,7 @@ While the offline `.exe` sandbox provides Tier 2 Modders with immense flexibilit
 *   **Application Risks (Tool Hallucinations):** In Siraugga, "applications" equate to **Agentic Tools**. If an AI subagent suffers from Agentic Drift, it may unpredictably misuse its whitelisted applications (e.g., hallucinating and attempting to execute malicious commands).
 *   **Network Risks (WSS Interception):** When the offline sandbox eventually reconnects to the Zero-Restart Web Portal to push its JSON deltas, the traffic is highly vulnerable to Man-in-the-Middle (MitM) attacks or token sniffing across the wireless stream.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-12)
 ## 12. Agentic Jailbreaking, Rooting, and Sideloading
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-12)
 The most sophisticated threats facing the DevCore architecture do not come from external network breaches, but from users intentionally bypassing the mathematical limitations of their own offline `.exe` sandbox. 
@@ -178,6 +190,7 @@ In mobile security, third-party app stores pose a massive risk because their app
 
 When a Modder intentionally bypasses the Ed25519 Code Signing checks (established in Section 10) to forcefully inject an unapproved, unsigned tool into their AI's context window, this is known as **Agentic Sideloading**. While slightly less invasive than a full agentic root, sideloading an unapproved script exposes the Modder's local environment to hidden malware, token drainers, and secondary prompt injections.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-13)
 ## 13. Semantic Geofencing and Malicious Push Notifications
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-13)
 Because the Modder's offline `.exe` sandbox operates outside the physical network, the central Agent Orchestrator must still maintain a strict method for tracking the plugin's "location" within the overarching framework architecture.
@@ -192,6 +205,7 @@ This semantic geolocation system also allows the core engine to broadcast **WSS 
 
 Unfortunately, increasingly savvy cyber attackers have weaponized this push notification system. A hacker who successfully breaches a Tier 2 endpoint can spoof malicious WSS push notifications across the network. When an unsuspecting Modder's `.exe` receives the compromised push update, a hidden JSON payload automatically executes within their local sandbox, silently capturing proprietary prompt data and exfiltrating it back to the attacker.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_07-SEC-14)
 ## 14. Chapter 7 Conclusion: Securing the External Perimeter
 [//]: # (SECTION_ID: SIRA-TXT-CH07-SEC-14)
 Securing internal, native server nodes is a vastly different architectural challenge than managing external, disconnected environments. As the Siraugga framework continues to aggressively scale its third-party Modder base, securing the "wireless" perimeter (the external `.exe` plugins, webhooks, and third-party LLMs) becomes paramount to the engine's survival.

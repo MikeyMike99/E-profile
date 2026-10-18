@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-01_35 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-01_35 | VERSION: v1.0 | SCOPE: DEV)
 
 # OWASP DAST Vulnerabilities & CSP Reporting Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_35-SEC-1)
 ## 1. The Problem: The Standard Web Framework Blindspot
 [//]: # (SECTION_ID: SIRA-DOC-01_35-SEC-1)
 Default Python web frameworks (such as Flask or Quart) prioritize developer convenience over hardened defense. Out of the box, responses do not include modern HTTP security headers, leaving portals vulnerable to browser-level exploits.
@@ -31,6 +32,7 @@ When automated Dynamic Application Security Testing (DAST) suites (like OWASP ZA
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_35-SEC-2)
 ## 2. The Rigid CSP Breakage Trap
 [//]: # (SECTION_ID: SIRA-DOC-01_35-SEC-2)
 To fix Alert 10038, developers often add a rigid `default-src 'self'` policy. However, this causes severe UI breakage: Tailwind CSS CDNs fail to load, FontAwesome icons disappear, and markdown parsers (`turndown.js`) are blocked, rendering the portal visually unreadable.
@@ -39,6 +41,7 @@ Furthermore, configuring a CSP reporting endpoint without rate limiting allows m
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_35-SEC-3)
 ## 3. The Solution: Smart CSP & Automated DAST Remediation
 [//]: # (SECTION_ID: SIRA-DOC-01_35-SEC-3)
 Siraugga resolved this with the Security Headers Middleware (`security/security_headers.py`):
@@ -49,6 +52,7 @@ Siraugga resolved this with the Security Headers Middleware (`security/security_
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_35-SEC-4)
 ## 4. Why Order Matters in Security Headers
 [//]: # (SECTION_ID: SIRA-DOC-01_35-SEC-4)
 1. **Apply Headers in `@app.after_request` Hook**: Injecting headers in the universal post-response hook guarantees that 404, 500, and error pages also carry protective headers.
@@ -57,6 +61,7 @@ Siraugga resolved this with the Security Headers Middleware (`security/security_
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_35-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-01_35-SEC-5)
 **Q: What is Clickjacking?**  

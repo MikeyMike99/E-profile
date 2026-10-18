@@ -1,4 +1,4 @@
-[//]: # (DOC_ID: ENCR-VAULT-README | VERSION: v1.1 | SCOPE: EncryptMe Multi-User Vault)
+[//]: # (DOC_ID: ENCR-VAULT-README | VERSION: v1.1 | SCOPE: VAULT)
 
 # encrypt_me (v3.0) User & System Guide
 
@@ -8,12 +8,14 @@
 
 ---
 
+[//]: # (SECTION_ID: ENCR-VAULT-README-SEC-1)
 ## 1. Project Overview
 [//]: # (SECTION_ID: ENCR-VAULT-README-SEC-1)
 `encrypt_me` is a high-security, multi-user encryption utility. It allows a single file (or ZIP archive) to be shared among a team, where each member uses their own unique password to access the same data.
 
 ---
 
+[//]: # (SECTION_ID: ENCR-VAULT-README-SEC-2)
 ## 2. Security Specifications
 [//]: # (SECTION_ID: ENCR-VAULT-README-SEC-2)
 * **Encryption Standard:** AES-128/256 (Fernet) for high-level data confidentiality.
@@ -24,6 +26,7 @@
 
 ---
 
+[//]: # (SECTION_ID: ENCR-VAULT-README-SEC-3)
 ## 3. User Guide & Team Operations
 [//]: # (SECTION_ID: ENCR-VAULT-README-SEC-3)
 1. **To Encrypt:** Drag and drop any file into the `.exe`. Add team members and set passwords.

@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-DOC-05_29 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-ARCH-05_29 | VERSION: v1.0 | SCOPE: ARCH)
 
 # POPIA Offline PII Scrubber from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_29-SEC-1)
 ## 1. Architectural Role & Module Overview
 [//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-1)
 Sending raw user documents or source code to external cloud AI models violates strict regional data privacy laws like South Africa's Protection of Personal Information Act (POPIA).
@@ -37,6 +38,7 @@ This guide details how to build `local_brain_broker.py` from scratch. It creates
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_29-SEC-2)
 ## 2. Complete Python Implementation
 [//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-2)
 Save the following script as `popia_scrubber.py`:
@@ -124,6 +126,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_29-SEC-3)
 ## 3. Why Order Matters in Privacy Scrubbing
 [//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-3)
 1. **Scrub Deterministic Patterns Before NLP**: Running fast regexes first redacts obvious keys and IDs before sentence tokenization, saving significant CPU time.
@@ -132,6 +135,7 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_29-SEC-4)
 ## 4. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-05_29-SEC-4)
 **Q: How does the South African ID regex validate a date?**  

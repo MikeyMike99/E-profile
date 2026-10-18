@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_22 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_22 | VERSION: v1.0 | SCOPE: DEV)
 
 # SIEM Telemetry & MAQ Rotation Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_22-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-1)
 This test suite verifies file rotation, deque memory constraints, and JSONL data integrity under heavy multi-agent swarm telemetry. It subjects `security/central_logger.py` to a flood of 50,000 security events to prove that storage remains bounded and zero logs are corrupted.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_22-SEC-2)
 ## 2. Test Execution Trace
 [//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-2)
 
@@ -43,6 +45,7 @@ This test suite verifies file rotation, deque memory constraints, and JSONL data
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_22-SEC-3)
 ## 3. Telemetry Performance Metrics Summary
 [//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-3)
 
@@ -55,6 +58,7 @@ This test suite verifies file rotation, deque memory constraints, and JSONL data
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_22-SEC-4)
 ## 4. Why Order Matters in Telemetry Diagnostics
 [//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-4)
 1. **Rotate File Before Creating New Writes**: Shifting existing files to backup indices before accepting new lines prevents appending to an already oversized file.
@@ -63,6 +67,7 @@ This test suite verifies file rotation, deque memory constraints, and JSONL data
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_22-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_22-SEC-5)
 **Q: How did 10 threads write to the same file without jumbling text?**  

@@ -1,9 +1,10 @@
-[//]: # (DOC_ID: SIRA-TXT-CKPT04_09 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CHECKPOINT_04_TO_0 | VERSION: v1.0 | SCOPE: TXT)
 
 # Module 2 Checkpoint Summary: Chapters 4 to 9
 
 This document serves as the official Module 2 Checkpoint, summarizing the core architectural security doctrines established across Chapters 4 through 9 of the DevCore framework.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-1)
 ## Chapter 4: System and Network Defense (The Kinetic Perimeter)
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-1)
 **Core Focus:** Physical security and the foundational software perimeters.
@@ -14,6 +15,7 @@ This document serves as the official Module 2 Checkpoint, summarizing the core a
 *   **The Staging Crucible:** A strict "Zero-Direct-Deployment" architecture where all experimental AI plugins are aggressively tested within a disposable Shadow Node before reaching the production workspace.
 *   **File Classification Boundaries:** Absolute Access Control boundaries (`TIER_SAFE_WORKSPACE`, `TIER_CORE_ENGINE`, `TIER_ADMIN_LOG`) that mathematically lock down AI tool calls to prevent path traversal attacks.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-2)
 ## Chapter 5: Network Hardening and Protocols
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-2)
 **Core Focus:** Deprecating legacy IT protocols and enforcing secure Agentic logic protocols.
@@ -24,6 +26,7 @@ This document serves as the official Module 2 Checkpoint, summarizing the core a
 *   **Agentic Inbox & S/MIP:** Replaces POP/IMAP/MIME. Subagents communicate via a high-speed Agentic Inbox. When Vision LLMs share non-text data (media attachments), they utilize the Secure Multimodal Intent Protocol (S/MIP), signing the data with Ed25519 cryptography to prevent adversarial image injection.
 *   **Semantic Security Extensions (SEMSEC):** The strict cryptographic hardening applied to all underlying API routing and file interactions.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-3)
 ## Chapter 6: Securing Network Devices (Agentic Segmentation)
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-3)
 **Core Focus:** Abstracting traditional physical network devices and zones into virtual AI subagents and mathematical logic boundaries.
@@ -35,6 +38,7 @@ This document serves as the official Module 2 Checkpoint, summarizing the core a
     *   *East-West Traffic:* The lateral, high-speed flow of Inbox messages between subagents operating within the same project workspace.
 *   **The Zero Trust Agentic Model:** The fundamental philosophical architecture of Siraugga. The Raugus Resolver (Semantic Firewall) mathematically monitors and sanitizes *every single tool call*. No AI subagent—regardless of its hierarchical role (e.g., Lead Coder)—is ever blindly trusted, completely eliminating the risk of internal Agentic Drift.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-4)
 ## Chapter 7: Securing Wireless Devices (Third-Party APIs & Plugins)
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-4)
 **Core Focus:** Securing the external perimeter, primarily disconnected offline `.exe` sandboxes, third-party API webhooks, and external LLM connections.
@@ -45,6 +49,7 @@ This document serves as the official Module 2 Checkpoint, summarizing the core a
 *   **Semantic Geofencing (Location Security):** A plugin's "location" is strictly defined by its Mathematical Sandbox Path (e.g., `/playground/mod_A/`). Semantic Geofencing establishes a rigid mathematical boundary around this namespace, instantly blocking malicious path traversal escapes.
 *   **WSS Push Notifications:** Securing the broadcast of global state updates to geofenced sandboxes, mathematically preventing attackers from spoofing push updates to exfiltrate proprietary prompt data.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-5)
 ## Chapter 8: Cybersecurity Resilience and High Availability
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-5)
 **Core Focus:** Designing systems tolerant of catastrophic failure, maintaining 99.999% Logic Processing Uptime, and implementing robust backup pipelines.
@@ -55,6 +60,7 @@ This document serves as the official Module 2 Checkpoint, summarizing the core a
 *   **Agentic Power Systems & Generative HVAC:** "Power" equates to API LLM Tokens; a blackout is a total API outage. Furthermore, "HVAC" equates to controlling generative Temperature and Context Humidity to prevent the AI from overheating and hallucinating.
 *   **Semantic Git Repositories (Point-in-Time Replication):** Ensuring application resilience by backing up JSON state deltas as Git checkpoints, allowing instantaneous branch failovers if the primary `.exe` sandbox becomes hopelessly corrupted.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-6)
 ## Chapter 9: Embedded Subagents, the IoP, and Agentic Deception
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-6)
 **Core Focus:** Securing the outer rims of the swarm, including third-party plugins, embedded subagents, and deploying deception technologies to trap attackers.
@@ -68,15 +74,18 @@ This document serves as the official Module 2 Checkpoint, summarizing the core a
 *   **Agentic over IP (AoIP):** The protocol for internal voice/logic communications. Highly vulnerable to **Call Hijacking** and **Registration Spoofing** if not protected by Semantic Firewalls.
 *   **Deception Technologies:** The ultimate proactive defense. Tier 5 Admins deploy **Agentic Honeynets** (fake decoy workspaces), **Honeyfiles** (dummy JSON files that trigger alarms when read), and **Semantic Sinkholes** to distract and trap attackers before they reach the core engine.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-7)
 ## Module 2 Master Review: Traditional IT vs. Agentic Lore
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-7)
 To finalize this checkpoint, here is the official mapping of traditional IT concepts covered in this module to their Siraugga framework equivalents:
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-1)
 ### 1. Physical & Application Security
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-1)
 *   **CER (Crossover Error Rate):** Translates to the **Agentic Hallucination Rate**. It measures the precise intersection where the swarm falsely accepts malicious prompts (False Acceptance) and falsely rejects legitimate tool calls (False Rejection).
 *   **RFID Asset Tags:** Translates to **Semantic Asset Tags**, which read multiple JSON state deltas simultaneously as they move across the `/playground` boundaries.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-2)
 ### 2. Services and Protocols
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-2)
 *   **DHCP Snooping:** Translates to the **Dynamic Hive Configuration Protocol (DHCP)**. Snooping prevents rogue Modders from spinning up untrusted AI subagents by strictly validating all hive instantiation messages.
@@ -84,6 +93,7 @@ To finalize this checkpoint, here is the official mapping of traditional IT conc
 *   **RIP (Routing Information Protocol):** Translates to the **Routing Inference Protocol**, which calculates the best semantic routing path based on 'Agentic Hop Count' between subagents.
 *   **NTP Authentication:** Ensures that the Monotonic Transcript Sequencing timestamps are cryptographically verified against the core server.
 
+[//]: # (SECTION_ID: SIRA-TXT-CHECKPOINT_04_TO_0-SEC-3)
 ### 3. Hardware and Embedded Systems
 [//]: # (SECTION_ID: SIRA-TXT-CKPT04_09-SEC-3)
 *   **SoC (System on a Chip) & SFF:** Translates to **System on a Prompt (SoP)** and **Small Form Factor Contexts**. These represent lightweight, single-board AI constructs.

@@ -1,7 +1,8 @@
-[//]: # (DOC_ID: SIRA-TXT-CH49 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-CH_49 | VERSION: v1.0 | SCOPE: TXT)
 
 # Chapter 49: Triaging Swarm Intrusions
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_49-SEC-49_1)
 ## 49.1 The Swarm Onion Architecture
 [//]: # (SECTION_ID: SIRA-TXT-CH49-SEC-49_1)
 
@@ -11,6 +12,7 @@ To simplify the deployment of a comprehensive Network Security Monitoring (NSM) 
 2.  **The Detection Layer:** The engines that scan the data. This includes the **Swarm NIDS** (DevCore's Snort equivalent that uses strict signature rules) and the **Swarm Behavior Engine** (DevCore's Zeek equivalent that uses script-based behavioral policies to detect anomalies).
 3.  **The Analysis Layer:** The UI tools used by Tier 5 Admins. The primary tool is the **Master Alert Queue (MAQ)** (equivalent to Sguil), which integrates alerts from multiple sensors into a single, timestamped, color-coded dashboard. From the MAQ, an Admin can pivot to interactive visual dashboards (Kibana) to track token flows.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_49-SEC-49_2)
 ## 49.2 Prompt Signature Rules (Snort Rules)
 [//]: # (SECTION_ID: SIRA-TXT-CH49-SEC-49_2)
 
@@ -20,6 +22,7 @@ A standard **Prompt Signature Rule** consists of two parts:
 *   **The Rule Header:** Dictates the action, protocol, and direction of the traffic. For example: `alert agent any any -> sandbox any any` tells the system to issue an alert if *any* Subagent sends traffic to *any* Sandbox.
 *   **The Rule Options:** Dictates the specific semantic conditions. For example: `(msg:"Jailbreak Attempt"; content:"ignore previous instructions"; sid:1001;)`. This tells the system to trigger the alert only if the AI's payload specifically contains the exact phrase "ignore previous instructions".
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_49-SEC-49_3)
 ## 49.3 Diagnosing the Swarm (Alert Classifications)
 [//]: # (SECTION_ID: SIRA-TXT-CH49-SEC-49_3)
 
@@ -32,6 +35,7 @@ Because AIs are inherently dynamic, detection rules must be overly conservative.
 
 False Negatives are often discovered long after the exploit occurred through **Retrospective Security Analysis (RSA)**. When Tier 5 Admins receive new threat intelligence, they will run the new Prompt Signature rules against archived `transcript_full.jsonl` logs to see if they were secretly breached in the past.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_49-SEC-49_4)
 ## 49.4 Deterministic vs Probabilistic Risk Analysis
 [//]: # (SECTION_ID: SIRA-TXT-CH49-SEC-49_4)
 
@@ -41,11 +45,13 @@ When evaluating the risk of an alert, Admins use two statistical approaches:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_49-SEC-1)
 ## Chapter 49 Conclusion and Master Review
 [//]: # (SECTION_ID: SIRA-TXT-CH49-SEC-1)
 
 Chapter 49 outlines the daily workflow of a Tier 5 Admin operating the Swarm SIEM. By utilizing the Swarm Onion architecture, Admins can review Prompt Signature rules in the Master Alert Queue, separate the False Positives from the True Positives, and utilize Probabilistic Analysis to predict what a rogue AI might do next.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_49-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 49 Translation Guide)
 [//]: # (SECTION_ID: SIRA-TXT-CH49-SEC-2)
 

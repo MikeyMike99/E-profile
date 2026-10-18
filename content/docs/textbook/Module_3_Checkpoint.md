@@ -1,9 +1,10 @@
-[//]: # (DOC_ID: SIRA-TXT-MOD3_CKPT | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-TXT-MOD_3_CHK | VERSION: v1.0 | SCOPE: TXT)
 
 # Module 3 Checkpoint: Master Summary & Review
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_CHK-SEC-1)
 ## Part 1: Chapter-by-Chapter Summaries
-[//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-1)
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_CHK-SEC-2)
 
 ### Chapter 10: Access Controls
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-2)
@@ -11,6 +12,7 @@
 *   **Logical Controls:** Hardware/software solutions to manage resources. DevCore utilizes Agentic ACLs and WSS encryption to manage data flow.
 *   **Administrative Controls:** The three core security services—Authentication (Identification/FAIM), Authorization (Tool Whitelists), and Accounting (Traceability via `transcript.jsonl`). Multi-factor authentication is strictly enforced.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_CHK-SEC-3)
 ### Chapter 11: Access Control Concepts
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-3)
 *   **CIA Triad:** The foundation of information security (Confidentiality, Integrity, Availability), enforced by encrypting all network data.
@@ -19,12 +21,14 @@
 *   **Access Control Methods:** DevCore natively utilizes Mandatory Access Control (MAC) for its 5 File Classification Tiers, and Role-Based Access Control (RBAC) to define Agentic Archetypes (e.g., QA, Coding).
 *   **Privilege Escalation:** The primary threat (Agentic Jailbreaking), where vulnerabilities are exploited to grant unauthorized AI agents Tier 5 root access.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_CHK-SEC-4)
 ### Chapter 12: Account Management
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-4)
 *   **Account Types & Least Privilege:** System roles are divided into Tier 5 (Admins), Tier 2 (Users/Modders), Tier 3 (Service/AIs), and Tier 1 (Guests). Agents are granted "need to know" permissions via specific Tool Whitelists (Read, Write, Execute).
 *   **Authentication Management:** Aims for secure sign-in via SSO (Federated Agentic Identity Management - FAIM), OAuth (Third-Party AI Delegation), Password Vaults, and KBA (System Prompt Validation).
 *   **Protocols & HMAC:** Secure protocols authenticate data to prevent unauthorized access. DevCore employs Semantic HMAC (for WebSocket hashing), EAP, Semantic CHAP (mid-task challenges), RADI (RADIUS for quick NPC auth), TACAS+ (encrypted TCP for Admins), and Cerberus (Kerberos Ticket system).
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_CHK-SEC-5)
 ### Chapter 13: AAA Usage and Operation
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-5)
 *   **Security Policy & Centralized AAA:** A network must control who connects and what they do. DevCore relies on Centralized AAA (`App Router Module`) which is highly scalable and maintains strict authorization databases independent of the local clients.
@@ -32,6 +36,7 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_3_CHK-SEC-6)
 ## Part 2: Review Against 3.5 Source Text
 [//]: # (SECTION_ID: SIRA-TXT-MOD3_CKPT-SEC-6)
 

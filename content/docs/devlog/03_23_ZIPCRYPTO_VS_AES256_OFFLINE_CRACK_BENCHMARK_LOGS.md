@@ -1,13 +1,15 @@
-[//]: # (DOC_ID: SIRA-DOC-03_23 | VERSION: v1.0 | SCOPE: Siraugga / DevCore Framework)
+[//]: # (DOC_ID: SIRA-DEV-03_23 | VERSION: v1.0 | SCOPE: DEV)
 
 # ZipCrypto vs AES-256 Offline Crack Benchmark Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_23-SEC-1)
 ## 1. Test Overview & Objectives
 [//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-1)
 This benchmark document records experimental results from the Active Threat Simulation Lab (`crack_master.py` running against archives in `playground/Zip-Files/`). It compares the brute-force velocity and attack resistance of legacy 1989 ZipCrypto against modern AES-256 encrypted archives.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_23-SEC-2)
 ## 2. Test Execution Trace
 [//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-2)
 
@@ -45,6 +47,7 @@ This benchmark document records experimental results from the Active Threat Simu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_23-SEC-3)
 ## 3. Cryptographic Resistance Comparison
 [//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-3)
 
@@ -59,6 +62,7 @@ This benchmark document records experimental results from the Active Threat Simu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_23-SEC-4)
 ## 4. Why Order Matters in Cryptographic Benchmarks
 [//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-4)
 1. **Test Standard Wordlists Before Brute-Force**: Testing common passwords first reveals if human carelessness compromised security before running computationally heavy full sweeps.
@@ -67,6 +71,7 @@ This benchmark document records experimental results from the Active Threat Simu
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_23-SEC-5)
 ## 5. Beginner Coder Q&A
 [//]: # (SECTION_ID: SIRA-DOC-03_23-SEC-5)
 **Q: How did Target 2 get cracked without the password?**  
