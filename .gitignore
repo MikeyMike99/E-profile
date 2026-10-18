@@ -12,3 +12,4 @@ rename_history.json
 proposed_renames.json
 *.log
 .local/
+content/docs/.archive/

@@ -1436,6 +1436,269 @@
         font-family: monospace;
         font-size: 0.8rem;
     }
+
+    /* ==================== ADMIN EDITORIAL & RELEASE CONTROLS ==================== */
+    .admin-review-toolbar {
+        background: linear-gradient(135deg, rgba(255, 170, 0, 0.12), rgba(12, 18, 28, 0.98));
+        border: 1px solid rgba(255, 170, 0, 0.4);
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .admin-toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .admin-badge-label {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: 900;
+        background: #ffaa00;
+        color: #000;
+        padding: 2px 7px;
+        border-radius: 3px;
+        letter-spacing: 1px;
+    }
+
+    .admin-status-pill {
+        font-family: monospace;
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 4px;
+    }
+
+    .admin-status-pill.status-published {
+        background: rgba(0, 255, 136, 0.15);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .admin-status-pill.status-draft {
+        background: rgba(255, 170, 0, 0.15);
+        color: #ffaa00;
+        border: 1px solid rgba(255, 170, 0, 0.4);
+    }
+
+    .admin-status-pill.status-scheduled {
+        background: rgba(0, 243, 255, 0.15);
+        color: var(--accent);
+        border: 1px solid rgba(0, 243, 255, 0.4);
+    }
+
+    .admin-toolbar-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .admin-btn {
+        font-family: monospace;
+        font-size: 0.76rem;
+        font-weight: 800;
+        padding: 5px 11px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+
+    .admin-btn:hover, .admin-btn:focus {
+        border-color: var(--accent);
+        outline: none;
+        transform: translateY(-1px);
+    }
+
+    .admin-btn.btn-quick-toggle {
+        background: rgba(0, 255, 136, 0.15);
+        border-color: #00ff88;
+        color: #00ff88;
+    }
+
+    .admin-btn.btn-schedule {
+        background: rgba(0, 243, 255, 0.15);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .admin-btn.btn-edit {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+    }
+
+    .admin-btn.btn-create {
+        background: var(--accent);
+        color: #000;
+        font-weight: 900;
+        border-color: var(--accent);
+    }
+
+    .admin-btn.btn-delete {
+        background: rgba(255, 50, 50, 0.15);
+        border-color: rgba(255, 50, 50, 0.4);
+        color: #ff5555;
+    }
+
+    .badge-status-admin {
+        font-family: monospace;
+        font-size: 0.6rem;
+        font-weight: 800;
+        padding: 1px 4px;
+        border-radius: 3px;
+        margin-left: 4px;
+    }
+
+    .badge-status-admin.status-published {
+        background: rgba(0, 255, 136, 0.15);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .badge-status-admin.status-draft {
+        background: rgba(255, 170, 0, 0.15);
+        color: #ffaa00;
+        border: 1px solid rgba(255, 170, 0, 0.4);
+    }
+
+    .badge-status-admin.status-scheduled {
+        background: rgba(0, 243, 255, 0.15);
+        color: var(--accent);
+        border: 1px solid rgba(0, 243, 255, 0.4);
+    }
+
+    .cat-pill-btn[data-cat="published"] {
+        color: #00ff88;
+        border-color: rgba(0, 255, 136, 0.35);
+    }
+    .cat-pill-btn[data-cat="published"].active {
+        background: #00ff88;
+        color: #000;
+    }
+
+    .cat-pill-btn[data-cat="draft"] {
+        color: #ffaa00;
+        border-color: rgba(255, 170, 0, 0.35);
+    }
+    .cat-pill-btn[data-cat="draft"].active {
+        background: #ffaa00;
+        color: #000;
+    }
+
+    .cat-pill-btn[data-cat="scheduled"] {
+        color: var(--accent);
+        border-color: rgba(0, 243, 255, 0.35);
+    }
+    .cat-pill-btn[data-cat="scheduled"].active {
+        background: var(--accent);
+        color: #000;
+    }
+
+    /* Modals */
+    .admin-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 999999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .admin-modal-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(3px);
+    }
+
+    .admin-modal-card {
+        position: relative;
+        z-index: 2;
+        background: #0c1018;
+        border: 1px solid var(--accent);
+        border-radius: 10px;
+        padding: 24px 28px;
+        max-width: 540px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 243, 255, 0.25);
+    }
+
+    .admin-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 10px;
+    }
+
+    .admin-modal-title {
+        font-family: monospace;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0;
+    }
+
+    .admin-modal-close {
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 2px 8px;
+    }
+
+    .admin-modal-close:hover {
+        color: #fff;
+    }
+
+    .admin-modal-body {
+        margin: 16px 0;
+    }
+
+    .admin-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 14px;
+        margin-top: 16px;
+    }
+
+    .admin-input {
+        background: #080c14;
+        border: 1px solid var(--border);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-family: inherit;
+        font-size: 0.88rem;
+        box-sizing: border-box;
+    }
+
+    .admin-input:focus {
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: 0 0 8px rgba(0, 243, 255, 0.25);
+    }
 </style>
 
 <div class="docs-root" id="docs-root">
@@ -1479,7 +1742,16 @@
             <div class="sidebar-top-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08);">
                 <span style="font-family: monospace; font-size: 0.78rem; font-weight: 800; color: var(--accent); letter-spacing: 1px;">📑 CHAPTER NAVIGATOR</span>
                 <button type="button" class="ctrl-btn sidebar-close-btn" onclick="toggleMobileToc()" aria-label="Close Chapter Navigator" style="padding: 3px 8px; font-size: 0.72rem;">✕ Close</button>
+                <button type="button" class="ctrl-btn sidebar-close-btn" onclick="toggleMobileToc()" aria-label="Close Chapter Navigator" style="padding: 3px 8px; font-size: 0.72rem;">✕ Close</button>
             </div>
+
+            {% if is_admin %}
+            <div style="margin-bottom: 12px;">
+                <button type="button" class="ctrl-btn" onclick="openNewChapterModal()" style="width: 100%; background: var(--accent); color: #000; font-weight: 900; padding: 8px 12px; font-size: 0.8rem; border-radius: 5px; box-shadow: 0 0 10px rgba(0,243,255,0.4);">
+                    ➕ New Chapter on Server
+                </button>
+            </div>
+            {% endif %}
 
             <!-- 1. Project Selector -->
             <div class="sidebar-section-title">
@@ -1510,10 +1782,14 @@
             </div>
 
             <!-- 3. Category Quick Filter Pills -->
-            <!-- 3. Category Quick Filter Pills -->
             <div class="category-pills-row" role="tablist" aria-label="Filter by collection">
                 <button type="button" class="cat-pill-btn active" data-cat="all" onclick="handleCategoryFilter('all')">All</button>
                 <button type="button" class="cat-pill-btn" data-cat="recent" onclick="handleCategoryFilter('recent')" aria-label="Filter to newly added and updated chapters">⚡ New & Changed</button>
+                {% if is_admin %}
+                <button type="button" class="cat-pill-btn" data-cat="published" onclick="handleCategoryFilter('published')" aria-label="Filter to published chapters">🟢 Published</button>
+                <button type="button" class="cat-pill-btn" data-cat="draft" onclick="handleCategoryFilter('draft')" aria-label="Filter to draft chapters">🟡 Drafts</button>
+                <button type="button" class="cat-pill-btn" data-cat="scheduled" onclick="handleCategoryFilter('scheduled')" aria-label="Filter to scheduled chapters">🕒 Scheduled</button>
+                {% endif %}
                 <button type="button" class="cat-pill-btn" data-cat="devlog" onclick="handleCategoryFilter('devlog')">Devlogs</button>
                 <button type="button" class="cat-pill-btn" data-cat="textbook" onclick="handleCategoryFilter('textbook')">Textbook</button>
                 <button type="button" class="cat-pill-btn" data-cat="manual" onclick="handleCategoryFilter('manual')">Manual</button>
@@ -1582,6 +1858,7 @@
                                     data-slug="{{ d.slug }}" 
                                     data-title="{{ d.title }}" 
                                     data-is-latest="{{ 'true' if (d.is_latest or (d.order_score and d.order_score >= 13000)) else 'false' }}"
+                                    data-publish-status="{{ d.publish_status or 'draft' }}"
                                     onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
                                     aria-label="{{ d.project_label }} - {{ cat.title }} - {{ d.title }}"
                                 >
@@ -1590,6 +1867,9 @@
                                         <span class="badge-cat-mini">{{ cat.title }}</span>
                                         {% if d.is_latest or (d.order_score and d.order_score >= 13000) %}
                                         <span class="badge-new-pill">⚡ NEW</span>
+                                        {% endif %}
+                                        {% if is_admin %}
+                                        <span class="badge-status-admin status-{{ d.publish_status or 'draft' }}">{{ '🟢 PUB' if d.publish_status == 'published' else ('🕒 ' + (d.release_date or '') if d.publish_status == 'scheduled' else '🟡 DRAFT') }}</span>
                                         {% endif %}
                                     </div>
                                     <div class="nav-item-title">{{ d.title }}</div>
@@ -1619,6 +1899,7 @@
                     data-slug="{{ d.slug }}" 
                     data-title="{{ d.title }}" 
                     data-is-latest="{{ 'true' if (d.is_latest or (d.order_score and d.order_score >= 13000)) else 'false' }}"
+                    data-publish-status="{{ d.publish_status or 'draft' }}"
                     onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
                     aria-label="{{ d.title }}"
                 >
@@ -1627,6 +1908,9 @@
                         <span class="badge-cat-mini">{{ d.category }}</span>
                         {% if d.is_latest or (d.order_score and d.order_score >= 13000) %}
                         <span class="badge-new-pill">⚡ NEW</span>
+                        {% endif %}
+                        {% if is_admin %}
+                        <span class="badge-status-admin status-{{ d.publish_status or 'draft' }}">{{ '🟢 PUB' if d.publish_status == 'published' else ('🕒 ' + (d.release_date or '') if d.publish_status == 'scheduled' else '🟡 DRAFT') }}</span>
                         {% endif %}
                     </div>
                     <div class="nav-item-title">{{ d.title }}</div>
@@ -1858,7 +2142,44 @@
                 </div>
             </section>
             <!-- VIEW 2: CHAPTER READING VIEW -->
+            <!-- VIEW 2: CHAPTER READING VIEW -->
             <div id="docs-reader-view" style="{{ 'display: none;' if is_landing else 'display: block;' }}">
+                
+                <!-- ADMIN EDITORIAL & RELEASE REVIEW TOOLBAR -->
+                {% if is_admin %}
+                <div class="admin-review-toolbar" id="admin-review-toolbar" role="region" aria-label="Administrator Editorial and Release Controls">
+                    <div class="admin-toolbar-left">
+                        <span class="admin-badge-label">⚡ ADMIN REVIEW</span>
+                        <span id="admin-status-pill" class="admin-status-pill status-{{ active_doc.publish_status or 'draft' }}">
+                            {% if active_doc.publish_status == 'published' %}
+                            🟢 PUBLISHED (Publicly Visible)
+                            {% elif active_doc.publish_status == 'scheduled' %}
+                            🕒 SCHEDULED ({{ active_doc.release_date or 'Pending Date' }})
+                            {% else %}
+                            🟡 DRAFT (Hidden from Visitors)
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="admin-toolbar-actions">
+                        <button type="button" class="admin-btn btn-quick-toggle" id="btn-admin-toggle-pub" onclick="togglePublishCurrentChapter()" aria-label="Toggle publish status for current chapter">
+                            {{ '🔒 Revert to Draft' if active_doc.publish_status == 'published' else '⚡ Publish Now' }}
+                        </button>
+                        <button type="button" class="admin-btn btn-schedule" onclick="openScheduleModal()" aria-label="Schedule Release Date">
+                            🗓️ Schedule Release
+                        </button>
+                        <button type="button" class="admin-btn btn-edit" id="btn-admin-edit" onclick="toggleInPlaceEditor()" aria-label="Edit Chapter in Place">
+                            ✏️ Edit in Place
+                        </button>
+                        <button type="button" class="admin-btn btn-create" onclick="openNewChapterModal()" aria-label="Create New Chapter">
+                            ➕ New Chapter
+                        </button>
+                        <button type="button" class="admin-btn btn-delete" onclick="confirmDeleteCurrentChapter()" aria-label="Delete and Archive Chapter">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
                 <!-- Reader Toolbar -->
                 <div class="reader-toolbar">
                     <nav class="reader-breadcrumbs" aria-label="Breadcrumb Navigation">
@@ -1933,6 +2254,22 @@
                         {{ doc_html | safe }}
                     </div>
 
+                    <!-- In-Place Markdown Editor Wrap -->
+                    {% if is_admin %}
+                    <div id="admin-editor-wrap" style="display: none; margin: 20px 0;">
+                        <div class="editor-action-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: rgba(0, 243, 255, 0.08); padding: 10px 16px; border-radius: 6px; border: 1px solid rgba(0, 243, 255, 0.25);">
+                            <span style="font-family: monospace; font-size: 0.85rem; font-weight: 800; color: var(--accent);">✏️ EDITING CHAPTER IN PLACE (RAW MARKDOWN)</span>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span id="editor-word-count" style="font-family: monospace; font-size: 0.78rem; color: var(--text-dim);">0 words</span>
+                                <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: 900; padding: 5px 14px; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="saveInPlaceEditor()">💾 Save to Server</button>
+                                <button type="button" class="ctrl-btn" style="padding: 5px 10px;" onclick="cancelInPlaceEditor()">❌ Cancel</button>
+                            </div>
+                        </div>
+                        <label for="admin-raw-textarea" class="sr-only">Raw Markdown Document Source</label>
+                        <textarea id="admin-raw-textarea" class="admin-raw-textarea" style="width: 100%; min-height: 550px; background: #06090e; color: #00ff88; font-family: 'Courier New', Courier, monospace; font-size: 0.92rem; line-height: 1.5; padding: 18px; border: 1px solid var(--border); border-radius: 8px; resize: vertical; outline: none;">{{ active_doc.raw_markdown if (is_admin and active_doc and active_doc.raw_markdown) else '' }}</textarea>
+                    </div>
+                    {% endif %}
+
                     <!-- Bottom Collapsible Cross-Reference Details (The Dropdown Standard) -->
                     <details id="crossref-details" class="crossref-accordion" style="margin: 35px 0 15px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 8px; background: rgba(0, 243, 255, 0.03); {{ 'display: block;' if active_doc and active_doc.cross_references else 'display: none;' }}">
                         <summary id="crossref-details-summary" style="font-family: monospace; font-size: 0.88rem; font-weight: bold; cursor: pointer; color: var(--accent);">
@@ -1978,6 +2315,126 @@
     </div>
 </div>
 
+{% if is_admin %}
+<!-- ADMIN MODAL: SCHEDULE RELEASE -->
+<div id="modal-schedule" class="admin-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-sched-title">
+    <div class="admin-modal-backdrop" onclick="closeScheduleModal()"></div>
+    <div class="admin-modal-card">
+        <div class="admin-modal-header">
+            <h2 id="modal-sched-title" class="admin-modal-title">🗓️ Schedule Document Release</h2>
+            <button type="button" class="admin-modal-close" onclick="closeScheduleModal()" aria-label="Close Schedule Dialog">✕</button>
+        </div>
+        <div class="admin-modal-body">
+            <p style="font-size: 0.88rem; color: var(--text-dim); margin-bottom: 16px;">
+                Configure publication and release visibility for: <strong id="modal-sched-chapter-name" style="color: var(--accent);">{{ active_doc.title if active_doc else '' }}</strong>
+            </p>
+            <input type="hidden" id="modal-sched-slug" value="{{ active_doc.slug if active_doc else '' }}">
+            <input type="hidden" id="modal-sched-cat" value="{{ active_doc.category if active_doc else '' }}">
+
+            <fieldset style="border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; margin-bottom: 16px;">
+                <legend style="font-family: monospace; font-size: 0.82rem; font-weight: bold; color: var(--accent); padding: 0 6px;">Select Release Visibility</legend>
+                
+                <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; cursor: pointer;">
+                    <input type="radio" name="sched_status_choice" id="choice-pub" value="published" onchange="handleScheduleChoiceChange(this.value)" style="margin-top: 3px;">
+                    <div>
+                        <strong style="color: #00ff88; font-size: 0.9rem;">🟢 Published (Immediate Public Access)</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 2px;">Document will immediately appear in public catalogs, search results, and navigator for all visitors.</div>
+                    </div>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; cursor: pointer;">
+                    <input type="radio" name="sched_status_choice" id="choice-draft" value="draft" onchange="handleScheduleChoiceChange(this.value)" style="margin-top: 3px;">
+                    <div>
+                        <strong style="color: #ffaa00; font-size: 0.9rem;">🟡 Draft (Admin Review Only)</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 2px;">Hidden from public visitors. Unauthenticated visitors attempting direct URL access receive a friendly coming-soon notice.</div>
+                    </div>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                    <input type="radio" name="sched_status_choice" id="choice-sched" value="scheduled" onchange="handleScheduleChoiceChange(this.value)" style="margin-top: 3px;">
+                    <div>
+                        <strong style="color: var(--accent); font-size: 0.9rem;">🕒 Scheduled Future Release</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 2px;">Automatically flips to published on the specified target date. Remains draft until then.</div>
+                    </div>
+                </label>
+            </fieldset>
+
+            <div id="sched-date-group" style="display: none; margin-bottom: 16px;">
+                <label for="sched-date-input" style="display: block; font-family: monospace; font-size: 0.82rem; font-weight: bold; margin-bottom: 6px; color: var(--text-bright);">Target Release Date (YYYY-MM-DD):</label>
+                <input type="date" id="sched-date-input" class="admin-input" style="width: 100%; max-width: 260px;">
+            </div>
+        </div>
+        <div class="admin-modal-footer">
+            <button type="button" class="ctrl-btn" style="padding: 6px 14px;" onclick="closeScheduleModal()">Cancel</button>
+            <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: bold; padding: 6px 18px;" onclick="submitSchedule()">Save Schedule</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN MODAL: CREATE NEW CHAPTER -->
+<div id="modal-new-chapter" class="admin-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-new-title">
+    <div class="admin-modal-backdrop" onclick="closeNewChapterModal()"></div>
+    <div class="admin-modal-card" style="max-width: 680px;">
+        <div class="admin-modal-header">
+            <h2 id="modal-new-title" class="admin-modal-title">➕ Create New Documentation Chapter</h2>
+            <button type="button" class="admin-modal-close" onclick="closeNewChapterModal()" aria-label="Close Create Chapter Dialog">✕</button>
+        </div>
+        <div class="admin-modal-body">
+            <p style="font-size: 0.86rem; color: var(--text-dim); margin-bottom: 16px;">
+                Creates a new markdown document directly on the server file system and registers it in the release schedule.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+                <div>
+                    <label for="new-chap-project" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-bright);">Project Portfolio:</label>
+                    <select id="new-chap-project" class="admin-input" onchange="handleNewChapterProjectChange(this.value)" style="width: 100%;">
+                        {% for p_key, p_val in projects.items() %}
+                        <option value="{{ p_key }}" {{ 'selected' if p_key == 'siraugga' else '' }}>{{ p_val.icon }} {{ p_val.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="new-chap-category" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-bright);">Collection Category:</label>
+                    <select id="new-chap-category" class="admin-input" style="width: 100%;">
+                        {% for c_key, c_val in categories.items() %}
+                        <option value="{{ c_key }}" {{ 'selected' if c_key == 'devlog' else '' }}>{{ c_val.icon }} {{ c_val.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+                <label for="new-chap-title" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-bright);">Chapter Title:</label>
+                <input type="text" id="new-chap-title" class="admin-input" placeholder="e.g., Chapter 06: Zero-Knowledge Verification Layer" oninput="autoSuggestSlug()" style="width: 100%;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 14px;">
+                <div>
+                    <label for="new-chap-slug" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-bright);">File Slug (Filename without .md):</label>
+                    <input type="text" id="new-chap-slug" class="admin-input" placeholder="e.g., 06_zk_verification" style="width: 100%;">
+                </div>
+                <div>
+                    <label for="new-chap-status" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-bright);">Initial Status:</label>
+                    <select id="new-chap-status" class="admin-input" style="width: 100%;">
+                        <option value="draft" selected>🟡 Draft</option>
+                        <option value="published">🟢 Published</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+                <label for="new-chap-content" style="display: block; font-family: monospace; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-bright);">Initial Markdown Content:</label>
+                <textarea id="new-chap-content" class="admin-input" rows="7" style="width: 100%; font-family: 'Courier New', Courier, monospace; font-size: 0.86rem; resize: vertical;" placeholder="# Chapter Title&#10;&#10;Write initial chapter specification here..."></textarea>
+            </div>
+        </div>
+        <div class="admin-modal-footer">
+            <button type="button" class="ctrl-btn" style="padding: 6px 14px;" onclick="closeNewChapterModal()">Cancel</button>
+            <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: bold; padding: 6px 18px;" onclick="submitNewChapter()">➕ Create Chapter</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- =========================================================================
      CLIENT-SIDE SPA INTERACTION SCRIPT (ZERO PAGE RELOAD)
      ========================================================================= -->
@@ -1985,9 +2442,22 @@
     var currentFontScale = 1.0;
     var activeCategoryFilter = 'all';
 
-    // Enhance code blocks on page load
+    // Active Chapter State Tracking (Admin & SPA)
+    var currentCategory = '{{ active_doc.category if active_doc else "" }}';
+    var currentSlug = '{{ active_doc.slug if active_doc else "" }}';
+    var currentPublishStatus = '{{ active_doc.publish_status if active_doc else "draft" }}';
+    var currentReleaseDate = '{{ active_doc.release_date if active_doc and active_doc.release_date else "" }}';
+    var currentRawMarkdown = '';
+
+    // Enhance code blocks and bind admin listeners on load
     document.addEventListener('DOMContentLoaded', function() {
         enhanceCodeBlocks();
+        var rawTextarea = document.getElementById('admin-raw-textarea');
+        if (rawTextarea) {
+            currentRawMarkdown = rawTextarea.value;
+            rawTextarea.addEventListener('input', updateEditorWordCount);
+            updateEditorWordCount();
+        }
     });
 
     // 1. SHOW LANDING VIEW (PORTAL OVERVIEW HUB)
@@ -2257,7 +2727,46 @@
                         }
                     }
                 }
+                // Update Admin editorial state & in-place markdown if admin
+                if (data.is_admin) {
+                    currentCategory = data.category;
+                    currentSlug = data.slug;
+                    currentPublishStatus = data.publish_status || 'draft';
+                    currentReleaseDate = data.release_date || '';
+                    currentRawMarkdown = data.raw_markdown || '';
 
+                    var statusPill = document.getElementById('admin-status-pill');
+                    if (statusPill) {
+                        statusPill.className = 'admin-status-pill status-' + currentPublishStatus;
+                        if (currentPublishStatus === 'published') {
+                            statusPill.innerHTML = '🟢 PUBLISHED (Publicly Visible)';
+                        } else if (currentPublishStatus === 'scheduled') {
+                            statusPill.innerHTML = '🕒 SCHEDULED (' + (currentReleaseDate || 'Pending Date') + ')';
+                        } else {
+                            statusPill.innerHTML = '🟡 DRAFT (Hidden from Visitors)';
+                        }
+                    }
+
+                    var toggleBtn = document.getElementById('btn-admin-toggle-pub');
+                    if (toggleBtn) {
+                        toggleBtn.innerHTML = (currentPublishStatus === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                    }
+
+                    var rawTextarea = document.getElementById('admin-raw-textarea');
+                    if (rawTextarea) {
+                        rawTextarea.value = currentRawMarkdown;
+                        updateEditorWordCount();
+                    }
+
+                    var editorWrap = document.getElementById('admin-editor-wrap');
+                    var docBody = document.getElementById('doc-body');
+                    var btnEdit = document.getElementById('btn-admin-edit');
+                    if (editorWrap && editorWrap.style.display !== 'none') {
+                        editorWrap.style.display = 'none';
+                        if (docBody) docBody.style.display = 'block';
+                        if (btnEdit) btnEdit.innerHTML = '✏️ Edit in Place';
+                    }
+                }
                 // Update browser history & document title (ZERO PAGE RELOAD)
                 var newUrl = '/docs/' + encodeURIComponent(category) + '/' + encodeURIComponent(slug);
                 window.history.pushState({ category: category, slug: slug }, data.title, newUrl);
@@ -2353,6 +2862,8 @@
                 matchCategory = true;
             } else if (activeCategoryFilter === 'recent') {
                 matchCategory = (item.dataset.isLatest === 'true');
+            } else if (activeCategoryFilter === 'published' || activeCategoryFilter === 'draft' || activeCategoryFilter === 'scheduled') {
+                matchCategory = (item.dataset.publishStatus === activeCategoryFilter);
             } else {
                 matchCategory = (itemCategory === activeCategoryFilter);
             }
@@ -2371,7 +2882,7 @@
         var originItem = document.getElementById('origin-pinned-item');
         if (originItem) {
             var matchProj = (selectedProject === 'all' || selectedProject === 'echoes');
-            var matchCat = (activeCategoryFilter === 'all' || activeCategoryFilter === 'devlog' || activeCategoryFilter === 'echoes' || activeCategoryFilter === 'recent');
+            var matchCat = (activeCategoryFilter === 'all' || activeCategoryFilter === 'devlog' || activeCategoryFilter === 'echoes' || activeCategoryFilter === 'recent' || activeCategoryFilter === 'published');
             var matchSrch = (!searchVal || 'the origin architecture: echoes of the world'.indexOf(searchVal) !== -1);
             if (matchProj && matchCat && matchSrch) {
                 originItem.style.display = 'block';
@@ -2539,6 +3050,409 @@
                 toggleMobileToc();
             }
         }
+        }
     });
+
+    // =========================================================================
+    // 11. ADMINISTRATOR IN-PLACE EDITING & RELEASE CONTROLS
+    // =========================================================================
+
+    // Quick toggle between published and draft
+    function togglePublishCurrentChapter() {
+        if (!currentSlug) {
+            alert('No active chapter selected.');
+            return;
+        }
+        var newStatus = (currentPublishStatus === 'published') ? 'draft' : 'published';
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Updating chapter release status...';
+
+        fetch('/docs/api/admin/schedule', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: currentCategory,
+                slug: currentSlug,
+                status: newStatus,
+                release_date: null
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                currentPublishStatus = newStatus;
+                currentReleaseDate = null;
+
+                var statusPill = document.getElementById('admin-status-pill');
+                if (statusPill) {
+                    statusPill.className = 'admin-status-pill status-' + newStatus;
+                    statusPill.innerHTML = (newStatus === 'published') ? '🟢 PUBLISHED (Publicly Visible)' : '🟡 DRAFT (Hidden from Visitors)';
+                }
+
+                var toggleBtn = document.getElementById('btn-admin-toggle-pub');
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = (newStatus === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                }
+
+                var activeNav = document.querySelector('.chapter-nav-item.active');
+                if (activeNav) {
+                    activeNav.dataset.publishStatus = newStatus;
+                    var badge = activeNav.querySelector('.badge-status-admin');
+                    if (badge) {
+                        badge.className = 'badge-status-admin status-' + newStatus;
+                        badge.textContent = (newStatus === 'published') ? 'PUB' : 'DRAFT';
+                    }
+                }
+
+                if (announcer) announcer.textContent = 'Chapter status changed to ' + newStatus;
+            } else {
+                alert('Error: ' + (data.message || 'Failed to update release status.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error updating status: ' + err.message);
+        });
+    }
+
+    // Modal controls for release scheduling
+    function openScheduleModal() {
+        var modal = document.getElementById('modal-schedule');
+        if (!modal) return;
+
+        var chapName = document.getElementById('modal-sched-chapter-name');
+        var slugInput = document.getElementById('modal-sched-slug');
+        var catInput = document.getElementById('modal-sched-cat');
+        var activeHeading = document.getElementById('reader-heading');
+
+        if (chapName && activeHeading) chapName.textContent = activeHeading.textContent;
+        if (slugInput) slugInput.value = currentSlug;
+        if (catInput) catInput.value = currentCategory;
+
+        var choicePub = document.getElementById('choice-pub');
+        var choiceDraft = document.getElementById('choice-draft');
+        var choiceSched = document.getElementById('choice-sched');
+        var dateGroup = document.getElementById('sched-date-group');
+        var dateInput = document.getElementById('sched-date-input');
+
+        if (currentPublishStatus === 'published' && choicePub) {
+            choicePub.checked = true;
+            if (dateGroup) dateGroup.style.display = 'none';
+        } else if (currentPublishStatus === 'scheduled' && choiceSched) {
+            choiceSched.checked = true;
+            if (dateGroup) dateGroup.style.display = 'block';
+            if (dateInput) dateInput.value = currentReleaseDate || '';
+        } else {
+            if (choiceDraft) choiceDraft.checked = true;
+            if (dateGroup) dateGroup.style.display = 'none';
+        }
+
+        modal.style.display = 'flex';
+        if (choicePub) choicePub.focus();
+    }
+
+    function closeScheduleModal() {
+        var modal = document.getElementById('modal-schedule');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function handleScheduleChoiceChange(val) {
+        var dateGroup = document.getElementById('sched-date-group');
+        if (dateGroup) {
+            dateGroup.style.display = (val === 'scheduled') ? 'block' : 'none';
+        }
+    }
+
+    function submitSchedule() {
+        var slug = document.getElementById('modal-sched-slug')?.value || currentSlug;
+        var cat = document.getElementById('modal-sched-cat')?.value || currentCategory;
+        var selectedRadio = document.querySelector('input[name="sched_status_choice"]:checked');
+        var status = selectedRadio ? selectedRadio.value : 'draft';
+        var releaseDate = document.getElementById('sched-date-input')?.value || null;
+
+        if (status === 'scheduled' && !releaseDate) {
+            alert('Please select a target release date for scheduled publication.');
+            document.getElementById('sched-date-input')?.focus();
+            return;
+        }
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Saving release schedule...';
+
+        fetch('/docs/api/admin/schedule', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: cat,
+                slug: slug,
+                status: status,
+                release_date: releaseDate
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                currentPublishStatus = status;
+                currentReleaseDate = releaseDate;
+
+                var statusPill = document.getElementById('admin-status-pill');
+                if (statusPill) {
+                    statusPill.className = 'admin-status-pill status-' + status;
+                    if (status === 'published') {
+                        statusPill.innerHTML = '🟢 PUBLISHED (Publicly Visible)';
+                    } else if (status === 'scheduled') {
+                        statusPill.innerHTML = '🕒 SCHEDULED (' + releaseDate + ')';
+                    } else {
+                        statusPill.innerHTML = '🟡 DRAFT (Hidden from Visitors)';
+                    }
+                }
+
+                var toggleBtn = document.getElementById('btn-admin-toggle-pub');
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = (status === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                }
+
+                var activeNav = document.querySelector('.chapter-nav-item.active');
+                if (activeNav) {
+                    activeNav.dataset.publishStatus = status;
+                    var badge = activeNav.querySelector('.badge-status-admin');
+                    if (badge) {
+                        badge.className = 'badge-status-admin status-' + status;
+                        badge.textContent = (status === 'published') ? 'PUB' : ((status === 'scheduled') ? ('🕒 ' + releaseDate) : 'DRAFT');
+                    }
+                }
+
+                closeScheduleModal();
+                if (announcer) announcer.textContent = data.message;
+            } else {
+                alert('Error: ' + (data.message || 'Failed to update schedule.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error saving schedule: ' + err.message);
+        });
+    }
+
+    // Modal controls for new chapter creation
+    function openNewChapterModal() {
+        var modal = document.getElementById('modal-new-chapter');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        var titleInput = document.getElementById('new-chap-title');
+        if (titleInput) {
+            titleInput.value = '';
+            setTimeout(function() { titleInput.focus(); }, 60);
+        }
+        var slugInput = document.getElementById('new-chap-slug');
+        if (slugInput) slugInput.value = '';
+        var contentInput = document.getElementById('new-chap-content');
+        if (contentInput) contentInput.value = '';
+    }
+
+    function closeNewChapterModal() {
+        var modal = document.getElementById('modal-new-chapter');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function autoSuggestSlug() {
+        var titleInput = document.getElementById('new-chap-title');
+        var slugInput = document.getElementById('new-chap-slug');
+        if (!titleInput || !slugInput) return;
+        var text = titleInput.value.trim().toLowerCase();
+        var cleanSlug = text.replace(/[^a-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '');
+        slugInput.value = cleanSlug;
+    }
+
+    function handleNewChapterProjectChange(proj) {
+        var catSelect = document.getElementById('new-chap-category');
+        if (!catSelect) return;
+        var defaults = {
+            'eprofile': 'eprofile',
+            'encrypt_me': 'crypto',
+            'echoes': 'devlog',
+            'audio_suite': 'audio',
+            'siraugga': 'manifesto',
+            'accessible_apps': 'accessible'
+        };
+        if (defaults[proj] && catSelect.querySelector('option[value="' + defaults[proj] + '"]')) {
+            catSelect.value = defaults[proj];
+        }
+    }
+
+    function submitNewChapter() {
+        var project = document.getElementById('new-chap-project')?.value || 'siraugga';
+        var category = document.getElementById('new-chap-category')?.value || 'devlog';
+        var title = document.getElementById('new-chap-title')?.value.trim();
+        var slug = document.getElementById('new-chap-slug')?.value.trim();
+        var status = document.getElementById('new-chap-status')?.value || 'draft';
+        var content = document.getElementById('new-chap-content')?.value.trim();
+
+        if (!title) {
+            alert('Please enter a title for the chapter.');
+            document.getElementById('new-chap-title')?.focus();
+            return;
+        }
+
+        if (!slug) {
+            autoSuggestSlug();
+            slug = document.getElementById('new-chap-slug')?.value.trim();
+        }
+
+        if (!content) {
+            content = '# ' + title + '\n\nChapter documentation specification.\n';
+        }
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Creating new chapter on server...';
+
+        fetch('/docs/api/admin/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                project: project,
+                category: category,
+                title: title,
+                slug: slug,
+                status: status,
+                content: content
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                closeNewChapterModal();
+                if (announcer) announcer.textContent = data.message;
+                alert('Chapter created successfully! Navigating to new chapter.');
+                window.location.href = '/docs/' + encodeURIComponent(data.category) + '/' + encodeURIComponent(data.slug);
+            } else {
+                alert('Error creating chapter: ' + (data.message || 'Unknown error.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error creating chapter: ' + err.message);
+        });
+    }
+
+    // In-Place Markdown Editor Functions
+    function toggleInPlaceEditor() {
+        var editorWrap = document.getElementById('admin-editor-wrap');
+        var docBody = document.getElementById('doc-body');
+        var btnEdit = document.getElementById('btn-admin-edit');
+        var textarea = document.getElementById('admin-raw-textarea');
+
+        if (!editorWrap || !docBody) return;
+
+        var isEditing = (editorWrap.style.display !== 'none');
+        if (isEditing) {
+            editorWrap.style.display = 'none';
+            docBody.style.display = 'block';
+            if (btnEdit) btnEdit.innerHTML = '✏️ Edit in Place';
+        } else {
+            if (textarea) {
+                textarea.value = currentRawMarkdown;
+                updateEditorWordCount();
+            }
+            editorWrap.style.display = 'block';
+            docBody.style.display = 'none';
+            if (btnEdit) btnEdit.innerHTML = '👁️ Preview Body';
+            if (textarea) textarea.focus();
+        }
+    }
+
+    function cancelInPlaceEditor() {
+        var editorWrap = document.getElementById('admin-editor-wrap');
+        var docBody = document.getElementById('doc-body');
+        var btnEdit = document.getElementById('btn-admin-edit');
+        var textarea = document.getElementById('admin-raw-textarea');
+
+        if (editorWrap) editorWrap.style.display = 'none';
+        if (docBody) docBody.style.display = 'block';
+        if (btnEdit) btnEdit.innerHTML = '✏️ Edit in Place';
+        if (textarea) textarea.value = currentRawMarkdown;
+    }
+
+    function updateEditorWordCount() {
+        var textarea = document.getElementById('admin-raw-textarea');
+        var countLabel = document.getElementById('editor-word-count');
+        if (!textarea || !countLabel) return;
+        var words = (textarea.value.trim().match(/\S+/g) || []).length;
+        countLabel.textContent = words + ' words';
+    }
+
+    function saveInPlaceEditor() {
+        var textarea = document.getElementById('admin-raw-textarea');
+        if (!textarea) return;
+        var content = textarea.value;
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Saving markdown to server...';
+
+        fetch('/docs/api/admin/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: currentCategory,
+                slug: currentSlug,
+                content: content
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                currentRawMarkdown = content;
+                var docBody = document.getElementById('doc-body');
+                if (docBody) docBody.innerHTML = data.html;
+
+                var readerWords = document.getElementById('reader-words');
+                if (readerWords) {
+                    readerWords.textContent = data.word_count + ' WORDS • ~' + data.read_time + ' MIN READ';
+                }
+
+                enhanceCodeBlocks();
+                cancelInPlaceEditor();
+
+                if (announcer) announcer.textContent = 'Chapter saved successfully in place.';
+                alert('Chapter successfully saved to server!');
+            } else {
+                alert('Error saving chapter: ' + (data.message || 'Unknown error.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error saving chapter: ' + err.message);
+        });
+    }
+
+    // Delete and Archive Chapter
+    function confirmDeleteCurrentChapter() {
+        if (!currentSlug) {
+            alert('No active chapter selected to delete.');
+            return;
+        }
+        var heading = document.getElementById('reader-heading')?.textContent || currentSlug;
+        var confirmMsg = 'Are you sure you want to delete and archive "' + heading + '"?\n\nThe markdown file will be safely moved to .archive/ with a timestamp and removed from active release schedule.';
+        if (!confirm(confirmMsg)) return;
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Archiving chapter on server...';
+
+        fetch('/docs/api/admin/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: currentCategory,
+                slug: currentSlug
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                alert(data.message);
+                window.location.href = '/docs';
+            } else {
+                alert('Error deleting chapter: ' + (data.message || 'Unknown error.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error deleting chapter: ' + err.message);
+        });
+    }
 </script>
 {% endblock %}

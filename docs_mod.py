@@ -1,6 +1,8 @@
 import os
 import re
 import json
+import shutil
+from datetime import datetime
 from pathlib import Path
 from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session
 import markdown
@@ -12,7 +14,9 @@ docs_bp = Blueprint('docs', __name__, url_prefix='/docs')
 
 DOCS_DIR = config.CONTENT_DIR / "docs"
 CATALOG_PATH = DOCS_DIR / "docs_catalog.json"
+RELEASE_SCHEDULE_PATH = DOCS_DIR / "release_schedule.json"
 CENTRAL_DOCS_DIR = getattr(config, 'CENTRAL_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Central_Docs"))
+CENTRAL_RELEASE_SCHEDULE_PATH = CENTRAL_DOCS_DIR / "release_schedule.json"
 DEVCORE_DOCS_DIR = getattr(config, 'DEVCORE_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/DevCore/docs"))
 AUDIO_DOCS_DIR = getattr(config, 'AUDIO_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Audio_pllayback_suite/docs"))
 
@@ -100,6 +104,29 @@ TOPICS = {
     "changelog": {"title": "Devlog & Changelog", "icon": "📜"}
 }
 
+FOUNDATIONAL_PUBLISHED_KEYS = {
+    'devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD',
+    '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD',
+    'manifesto/01_Echoes_in_the_Void', '01_Echoes_in_the_Void',
+    'manifesto/02_The_Echoes_Architecture', '02_The_Echoes_Architecture',
+    'manifesto/03_The_Forge_of_Sovereignty', '03_The_Forge_of_Sovereignty',
+    'manifesto/04_The_24_Hour_Crucible', '04_The_24_Hour_Crucible',
+    'manifesto/05_The_Quantitative_Era', '05_The_Quantitative_Era',
+    'eprofile/DEVLOG',
+    'encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE', 'CRYPTOGRAPHIC_ARCHITECTURE',
+    'encrypt_me/README', 'encrypt_me/DEVLOG',
+    'echoes/CLASS_WORLD_ARCHITECTURE', 'CLASS_WORLD_ARCHITECTURE',
+    'echoes/MENU_CONFIG', 'MENU_CONFIG',
+    'audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY',
+    '00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY',
+    'audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE',
+    '05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE',
+    'guides/USER_MANUAL', 'USER_MANUAL',
+    'guides/SECURITY', 'SECURITY',
+    'guides/HOT_PATCH_ARCHITECTURE', 'HOT_PATCH_ARCHITECTURE',
+    'story/DEVLOG', 'manifesto/README'
+}
+
 _last_sync_check = 0
 
 def auto_sync_if_needed():
@@ -151,6 +178,92 @@ def load_catalog():
     except Exception:
         return []
 
+def load_release_schedule():
+    if not RELEASE_SCHEDULE_PATH.exists():
+        if CENTRAL_RELEASE_SCHEDULE_PATH.exists():
+            try:
+                data = json.loads(CENTRAL_RELEASE_SCHEDULE_PATH.read_text(encoding='utf-8'))
+                save_release_schedule(data)
+                return data
+            except Exception:
+                pass
+        initial_entries = {}
+        for s in FOUNDATIONAL_PUBLISHED_KEYS:
+            initial_entries[s] = {
+                "status": "published",
+                "release_date": None,
+                "updated_at": datetime.now().isoformat()
+            }
+        data = {
+            "version": "1.0",
+            "default_policy": "draft",
+            "entries": initial_entries
+        }
+        save_release_schedule(data)
+        return data
+    try:
+        with open(RELEASE_SCHEDULE_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {"version": "1.0", "default_policy": "draft", "entries": {}}
+
+def save_release_schedule(schedule_data):
+    try:
+        DOCS_DIR.mkdir(parents=True, exist_ok=True)
+        with open(RELEASE_SCHEDULE_PATH, 'w', encoding='utf-8') as f:
+            json.dump(schedule_data, f, indent=2)
+        if CENTRAL_DOCS_DIR.exists():
+            try:
+                with open(CENTRAL_RELEASE_SCHEDULE_PATH, 'w', encoding='utf-8') as f:
+                    json.dump(schedule_data, f, indent=2)
+            except Exception:
+                pass
+    except Exception as e:
+        print(f"[DocsMod] Failed to save release schedule: {e}")
+
+def get_user_catalog(catalog, is_admin=False):
+    schedule = load_release_schedule()
+    entries = schedule.get("entries", {})
+    now_iso = datetime.now().isoformat()
+    
+    result = []
+    for d in catalog:
+        c = d.get('category', '')
+        s = d.get('slug', '')
+        key = f"{c}/{s}"
+        entry = entries.get(key) or entries.get(s)
+        
+        status = d.get('publish_status')
+        release_date = d.get('release_date')
+        if entry:
+            status = entry.get('status', status or 'draft')
+            release_date = entry.get('release_date', release_date)
+            
+        if not status:
+            if key in FOUNDATIONAL_PUBLISHED_KEYS or s in FOUNDATIONAL_PUBLISHED_KEYS:
+                status = 'published'
+            else:
+                status = 'draft'
+                
+        is_released = False
+        if status == 'published':
+            is_released = True
+        elif status == 'scheduled' and release_date:
+            is_released = (now_iso >= release_date)
+            
+        d_copy = dict(d)
+        d_copy['publish_status'] = status
+        d_copy['release_date'] = release_date
+        d_copy['is_released'] = is_released
+        
+        if is_admin:
+            result.append(d_copy)
+        else:
+            if is_released:
+                result.append(d_copy)
+                
+    return result
+
 CURATED_NARRATIVE_FLOW = [
     ('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'),
     ('manifesto', '01_Echoes_in_the_Void'),
@@ -162,7 +275,6 @@ CURATED_NARRATIVE_FLOW = [
 ]
 
 def get_prev_next(catalog, category, slug):
-    # 1. Curated Narrative Journey: Bridges across categories for the origin story
     flow_idx = -1
     for i, (f_cat, f_slug) in enumerate(CURATED_NARRATIVE_FLOW):
         if f_slug == slug and (f_cat == category or not category):
@@ -184,7 +296,6 @@ def get_prev_next(catalog, category, slug):
                 next_doc = next((d for d in catalog if d.get('slug') == n_slug), None)
         return prev_doc, next_doc
 
-    # 2. Standard Category Traversal (Fallback for all other documents)
     cat_items = [d for d in catalog if d.get('category') == category]
     idx = -1
     for i, item in enumerate(cat_items):
@@ -196,12 +307,7 @@ def get_prev_next(catalog, category, slug):
     return prev_doc, next_doc
 
 def clean_markdown_text(raw_text: str) -> str:
-    """
-    Cleans up raw path link text, normalizes markdown headers,
-    and formats ugly relative paths into readable document labels.
-    """
     text = raw_text
-    import re
     def fix_link_label(match):
         label = match.group(1).strip()
         url = match.group(2)
@@ -224,6 +330,70 @@ def clean_markdown_text(raw_text: str) -> str:
     text = re.sub(r'\[([^\]]+)\]\((/docs/[^)]+)\)', fix_link_label, text)
     return text
 
+def resolve_physical_file(category, doc_slug, doc_meta=None):
+    if not doc_meta:
+        catalog = load_catalog()
+        doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
+        
+    paths = []
+    if CENTRAL_DOCS_DIR.exists():
+        candidates = []
+        if doc_meta and doc_meta.get('rel_path'):
+            rel = doc_meta.get('rel_path')
+            candidates.append(CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / rel)
+            candidates.append(CENTRAL_DOCS_DIR / "projects" / "audio_suite" / rel)
+            candidates.append(CENTRAL_DOCS_DIR / "projects" / rel)
+        candidates.extend([
+            CENTRAL_DOCS_DIR / "projects" / "eprofile" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "eprofile" / category / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / category / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "audio_suite" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "encrypt_me" / f"{doc_slug}.md",
+            CENTRAL_DOCS_DIR / "projects" / "echoes_of_the_world" / f"{doc_slug}.md",
+        ])
+        for c in candidates:
+            if c.exists() and c.is_file():
+                paths.append(c)
+                break
+                
+    docs_candidate = None
+    if doc_meta and doc_meta.get('rel_path'):
+        p = DOCS_DIR / doc_meta.get('rel_path', '')
+        if p.exists() and p.is_file():
+            docs_candidate = p
+    if not docs_candidate:
+        p = DOCS_DIR / category / f"{doc_slug}.md"
+        if p.exists() and p.is_file():
+            docs_candidate = p
+            
+    if docs_candidate and docs_candidate not in paths:
+        paths.append(docs_candidate)
+        
+    return paths
+
+def render_unreleased_notice(title, status, release_date):
+    date_str = f"on <strong>{release_date}</strong>" if release_date else "soon in our scheduled rollout"
+    return f"""
+    <div class="unreleased-holding-box" role="region" aria-label="Scheduled Release Notice" style="padding: 45px 30px; text-align: center; background: rgba(12, 16, 24, 0.95); border: 1px solid rgba(255, 170, 0, 0.4); border-radius: 12px; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div style="font-size: 2.8rem; margin-bottom: 12px;">🕒</div>
+        <h2 style="font-family: monospace; color: #ffaa00; font-size: 1.5rem; margin-bottom: 10px;">Chapter Scheduled for Release</h2>
+        <h3 style="font-family: monospace; color: #fff; font-size: 1.2rem; margin-bottom: 16px;">{title}</h3>
+        <p style="color: var(--text-bright); font-size: 0.98rem; line-height: 1.6; max-width: 620px; margin: 0 auto 24px auto;">
+            This chapter is part of the curated publication sequence and will be publicly released {date_str}.
+            To ensure visitors are not overwhelmed with 300+ technical blueprints at once, chapters are released on an engineering schedule.
+        </p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button type="button" class="ctrl-btn portal-crumb-btn" onclick="showLandingView()" style="padding: 8px 18px; font-weight: bold; border-color: var(--accent); color: var(--accent); background: rgba(0,243,255,0.1);">
+                🏛️ Return to Documentation Vault
+            </button>
+            <button type="button" class="ctrl-btn" onclick="openNavigatorAndSearch()" style="padding: 8px 18px;">
+                📑 Explore Available Chapters
+            </button>
+        </div>
+    </div>
+    """
+
 def render_doc_content(category, doc_slug, viewer_tier=1):
     catalog = load_catalog()
     doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
@@ -242,43 +412,15 @@ def render_doc_content(category, doc_slug, viewer_tier=1):
 
     prev_doc, next_doc = get_prev_next(catalog, category, doc_slug)
 
-    # Check if document is purely classified (base_sensitivity == 5)
     base_sens = doc_meta.get('base_sensitivity', 1) if doc_meta else 1
     if base_sens >= 5 and viewer_tier < 5:
         return doc_meta, "__LOCKED__", prev_doc, next_doc
 
-    file_path = None
-    if CENTRAL_DOCS_DIR.exists():
-        candidates = []
-        if doc_meta.get('rel_path'):
-            rel = doc_meta.get('rel_path')
-            candidates.append(CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / rel)
-            candidates.append(CENTRAL_DOCS_DIR / "projects" / "audio_suite" / rel)
-            candidates.append(CENTRAL_DOCS_DIR / "projects" / rel)
-        candidates.extend([
-            CENTRAL_DOCS_DIR / "projects" / "eprofile" / f"{doc_slug}.md",
-            CENTRAL_DOCS_DIR / "projects" / "eprofile" / category / f"{doc_slug}.md",
-            CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / category / f"{doc_slug}.md",
-            CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / f"{doc_slug}.md",
-            CENTRAL_DOCS_DIR / "projects" / "audio_suite" / f"{doc_slug}.md",
-            CENTRAL_DOCS_DIR / "projects" / "encrypt_me" / f"{doc_slug}.md",
-            CENTRAL_DOCS_DIR / "projects" / "echoes_of_the_world" / f"{doc_slug}.md",
-        ])
-        for c in candidates:
-            if c.exists() and c.is_file():
-                file_path = c
-                break
+    paths = resolve_physical_file(category, doc_slug, doc_meta)
+    if not paths:
+        return None, None, None, None
 
-    if not file_path or not file_path.exists():
-        if doc_meta.get('rel_path'):
-            file_path = DOCS_DIR / doc_meta.get('rel_path', '')
-        if not file_path or not file_path.exists():
-            candidate = DOCS_DIR / category / f"{doc_slug}.md"
-            if candidate.exists():
-                file_path = candidate
-            else:
-                return None, None, None, None
-
+    file_path = paths[0]
     try:
         raw_text = file_path.read_text(encoding='utf-8', errors='replace')
         cleaned_text = clean_markdown_text(raw_text)
@@ -302,16 +444,14 @@ def render_doc_content(category, doc_slug, viewer_tier=1):
                     return f'<{tag} id="{sec_id}"{attrs}>{inner}</{tag}>'
                 return match.group(0)
             html_body = re.sub(r'<(h[23])([^>]*)>(.*?)</\1>', _attach_h_id, html_body, flags=re.DOTALL)
+            
+        doc_meta['raw_markdown'] = raw_text
     except Exception as e:
         html_body = f"<p>Error rendering document: {e}</p>"
 
     return doc_meta, html_body, prev_doc, next_doc
 
 def build_grouped_tree(catalog):
-    """
-    Groups catalog into a hierarchical structure: Project -> Collection -> Documents.
-    Guarantees that readers always see which project each document belongs to.
-    """
     project_order = ["eprofile", "encrypt_me", "echoes", "audio_suite", "siraugga", "accessible_apps"]
     by_proj = {}
     tree = []
@@ -364,46 +504,76 @@ def build_grouped_tree(catalog):
 
 @docs_bp.route('/api/chapter/<category>/<doc_slug>')
 def docs_api_chapter(category, doc_slug):
-    viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
-    doc_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
-    if not doc_meta or html_body is None:
+    is_admin = session.get('admin', False) or session.get('is_admin', False)
+    catalog = load_catalog()
+    user_catalog = get_user_catalog(catalog, is_admin=is_admin)
+    
+    doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
+    if not doc_meta:
+        return jsonify({"status": "error", "message": "Chapter not found"}), 404
+        
+    doc_user_meta = next((d for d in user_catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
+    if not doc_user_meta and not is_admin:
+        schedule = load_release_schedule()
+        entry = schedule.get("entries", {}).get(f"{category}/{doc_slug}") or schedule.get("entries", {}).get(doc_slug, {})
+        return jsonify({
+            "status": "unreleased",
+            "title": doc_meta.get('title'),
+            "publish_status": entry.get('status', 'draft'),
+            "release_date": entry.get('release_date'),
+            "html": render_unreleased_notice(doc_meta.get('title'), entry.get('status', 'draft'), entry.get('release_date'))
+        })
+        
+    viewer_tier = 5 if is_admin else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
+    rendered_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
+    if not rendered_meta or html_body is None:
         return jsonify({"status": "error", "message": "Chapter not found"}), 404
         
     c_info = COLLECTIONS.get(category, {})
-    p_key = doc_meta.get('project', 'siraugga')
+    p_key = rendered_meta.get('project', 'siraugga')
     p_info = PROJECTS.get(p_key, {})
 
+    publish_status = doc_user_meta.get('publish_status', 'published') if doc_user_meta else 'draft'
+    release_date = doc_user_meta.get('release_date') if doc_user_meta else None
+    
     return jsonify({
         "status": "success",
-        "slug": doc_meta.get('slug'),
-        "category": doc_meta.get('category'),
-        "title": doc_meta.get('title'),
+        "slug": rendered_meta.get('slug'),
+        "category": rendered_meta.get('category'),
+        "title": rendered_meta.get('title'),
         "project": p_key,
-        "project_label": doc_meta.get('project_label', p_info.get('title', 'Siraugga Framework')),
+        "project_label": rendered_meta.get('project_label', p_info.get('title', 'Siraugga Framework')),
         "project_icon": p_info.get('icon', '⚡'),
         "project_desc": p_info.get('desc', ''),
         "collection_title": c_info.get('title', category.title()),
         "collection_desc": c_info.get('desc', ''),
         "collection_icon": c_info.get('icon', '📄'),
-        "hierarchy_path": f"{p_info.get('title', 'Siraugga Framework')} → {c_info.get('title', category.title())} → {doc_meta.get('title')}",
-        "summary": doc_meta.get('summary', ''),
-        "word_count": doc_meta.get('word_count', 0),
-        "read_time": max(1, round(doc_meta.get('word_count', 0) / 180)),
-        "base_sensitivity": doc_meta.get('base_sensitivity', 1),
-        "max_sensitivity": doc_meta.get('max_sensitivity', 1),
-        "is_proprietary": doc_meta.get('is_proprietary', False),
-        "cross_references": doc_meta.get('cross_references', []),
+        "hierarchy_path": f"{p_info.get('title', 'Siraugga Framework')} → {c_info.get('title', category.title())} → {rendered_meta.get('title')}",
+        "summary": rendered_meta.get('summary', ''),
+        "word_count": rendered_meta.get('word_count', 0),
+        "read_time": max(1, round(rendered_meta.get('word_count', 0) / 180)),
+        "base_sensitivity": rendered_meta.get('base_sensitivity', 1),
+        "max_sensitivity": rendered_meta.get('max_sensitivity', 1),
+        "is_proprietary": rendered_meta.get('is_proprietary', False),
+        "cross_references": rendered_meta.get('cross_references', []),
         "html": html_body,
         "prev_doc": prev_doc,
-        "next_doc": next_doc
+        "next_doc": next_doc,
+        "is_admin": is_admin,
+        "publish_status": publish_status,
+        "release_date": release_date,
+        "raw_markdown": rendered_meta.get('raw_markdown', '') if is_admin else ''
     })
 
 @docs_bp.route('/', strict_slashes=False)
 @docs_bp.route('', strict_slashes=False)
 def docs_index():
     catalog = load_catalog()
-    if not catalog:
-        return render_template('docs.html', active_tab='docs', all_docs=[], grouped_tree=[], total_docs=0, is_landing=True, latest_updates=[], origin_doc=None)
+    is_admin = session.get('admin', False) or session.get('is_admin', False)
+    user_catalog = get_user_catalog(catalog, is_admin=is_admin)
+    
+    if not user_catalog:
+        return render_template('docs.html', active_tab='docs', all_docs=[], grouped_tree=[], total_docs=0, is_landing=True, latest_updates=[], origin_doc=None, is_admin=is_admin)
         
     active_slug = request.args.get('slug')
     active_cat = request.args.get('category')
@@ -411,31 +581,28 @@ def docs_index():
     is_landing = False
     active_doc = None
     if active_slug and active_cat:
-        active_doc = next((d for d in catalog if d.get('slug') == active_slug and d.get('category') == active_cat), None)
+        active_doc = next((d for d in user_catalog if d.get('slug') == active_slug and d.get('category') == active_cat), None)
     
     if not active_doc:
         is_landing = True
-        active_doc = catalog[0]
+        active_doc = user_catalog[0]
         
-    viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
+    viewer_tier = 5 if is_admin else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
     doc_meta, html_body, prev_doc, next_doc = render_doc_content(active_doc.get('category'), active_doc.get('slug'), viewer_tier)
-    grouped_tree = build_grouped_tree(catalog)
-
-    origin_doc = next((d for d in catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), catalog[0])
+    if doc_meta:
+        doc_meta['publish_status'] = active_doc.get('publish_status', 'published')
+        doc_meta['release_date'] = active_doc.get('release_date')
+        doc_meta['is_released'] = active_doc.get('is_released', True)
+        
+    grouped_tree = build_grouped_tree(user_catalog)
+    origin_doc = next((d for d in user_catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), user_catalog[0])
     
-    latest_updates = []
-    for d in catalog:
-        if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD':
-            continue
-        if d.get('is_latest') or d.get('order_score', 0) >= 13000:
-            latest_updates.append(d)
-            if len(latest_updates) >= 8:
-                break
+    latest_updates = [d for d in user_catalog if d.get('slug') != '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and (d.get('is_latest') or d.get('order_score', 0) >= 13000)][:8]
 
     return render_template(
         'docs.html',
         active_tab='docs',
-        all_docs=catalog,
+        all_docs=user_catalog,
         grouped_tree=grouped_tree,
         active_doc=doc_meta or active_doc,
         doc_html=html_body,
@@ -444,10 +611,11 @@ def docs_index():
         categories=COLLECTIONS,
         projects=PROJECTS,
         topics=TOPICS,
-        total_docs=len(catalog),
+        total_docs=len(user_catalog),
         is_landing=is_landing,
         latest_updates=latest_updates,
-        origin_doc=origin_doc
+        origin_doc=origin_doc,
+        is_admin=is_admin
     )
 
 @docs_bp.route('/<category>')
@@ -455,8 +623,10 @@ def docs_category(category):
     if category not in COLLECTIONS:
         return redirect(url_for('docs.docs_index'))
     catalog = load_catalog()
-    cat_docs = [d for d in catalog if d.get('category') == category]
-    active_doc = cat_docs[0] if cat_docs else (catalog[0] if catalog else None)
+    is_admin = session.get('admin', False) or session.get('is_admin', False)
+    user_catalog = get_user_catalog(catalog, is_admin=is_admin)
+    cat_docs = [d for d in user_catalog if d.get('category') == category]
+    active_doc = cat_docs[0] if cat_docs else (user_catalog[0] if user_catalog else None)
     if not active_doc:
         return redirect(url_for('docs.docs_index'))
     return redirect(url_for('docs.docs_reader', category=active_doc.get('category'), doc_slug=active_doc.get('slug')))
@@ -464,35 +634,226 @@ def docs_category(category):
 @docs_bp.route('/<category>/<doc_slug>')
 def docs_reader(category, doc_slug):
     catalog = load_catalog()
+    is_admin = session.get('admin', False) or session.get('is_admin', False)
+    user_catalog = get_user_catalog(catalog, is_admin=is_admin)
+    
     doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
     if not doc_meta:
         return redirect(url_for('docs.docs_index'))
         
-    viewer_tier = 5 if session.get('admin') else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
-    doc_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
-    grouped_tree = build_grouped_tree(catalog)
-
-    origin_doc = next((d for d in catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), catalog[0] if catalog else None)
-    latest_updates = [d for d in catalog if d.get('slug') != '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and (d.get('is_latest') or d.get('order_score', 0) >= 13000)][:8]
+    doc_user_meta = next((d for d in user_catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
+    if not doc_user_meta and not is_admin:
+        schedule = load_release_schedule()
+        entry = schedule.get("entries", {}).get(f"{category}/{doc_slug}") or schedule.get("entries", {}).get(doc_slug, {})
+        rel_date = entry.get('release_date')
+        status = entry.get('status', 'draft')
+        return render_template(
+            'docs.html',
+            active_tab='docs',
+            all_docs=user_catalog,
+            grouped_tree=build_grouped_tree(user_catalog),
+            active_doc=doc_meta,
+            doc_html=render_unreleased_notice(doc_meta.get('title'), status, rel_date),
+            prev_doc=None,
+            next_doc=None,
+            categories=COLLECTIONS,
+            projects=PROJECTS,
+            topics=TOPICS,
+            total_docs=len(user_catalog),
+            is_landing=False,
+            latest_updates=[d for d in user_catalog if d.get('slug') != '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and (d.get('is_latest') or d.get('order_score', 0) >= 13000)][:8],
+            origin_doc=next((d for d in user_catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), user_catalog[0] if user_catalog else None),
+            is_admin=is_admin
+        )
+        
+    viewer_tier = 5 if is_admin else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
+    rendered_meta, html_body, prev_doc, next_doc = render_doc_content(category, doc_slug, viewer_tier)
+    if rendered_meta and doc_user_meta:
+        rendered_meta['publish_status'] = doc_user_meta.get('publish_status', 'published')
+        rendered_meta['release_date'] = doc_user_meta.get('release_date')
+        rendered_meta['is_released'] = doc_user_meta.get('is_released', True)
+        
+    grouped_tree = build_grouped_tree(user_catalog)
+    origin_doc = next((d for d in user_catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), user_catalog[0] if user_catalog else None)
+    latest_updates = [d for d in user_catalog if d.get('slug') != '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and (d.get('is_latest') or d.get('order_score', 0) >= 13000)][:8]
     
     return render_template(
         'docs.html',
         active_tab='docs',
-        all_docs=catalog,
+        all_docs=user_catalog,
         grouped_tree=grouped_tree,
-        active_doc=doc_meta or {"title": doc_slug.replace('_', ' '), "slug": doc_slug, "category": category},
+        active_doc=rendered_meta or doc_meta,
         doc_html=html_body,
         prev_doc=prev_doc,
         next_doc=next_doc,
         categories=COLLECTIONS,
         projects=PROJECTS,
         topics=TOPICS,
-        total_docs=len(catalog),
+        total_docs=len(user_catalog),
         is_landing=False,
         latest_updates=latest_updates,
-        origin_doc=origin_doc
+        origin_doc=origin_doc,
+        is_admin=is_admin
     )
 
+# ==================== ADMIN EDITING & RELEASE CONTROLS ====================
+
+@docs_bp.route('/api/admin/schedule', methods=['POST'])
+def docs_api_admin_schedule():
+    if not (session.get('admin', False) or session.get('is_admin', False)):
+        return jsonify({"status": "error", "message": "Admin authorization required."}), 403
+    data = request.get_json() or {}
+    category = data.get('category')
+    slug = data.get('slug')
+    status = data.get('status', 'draft')
+    release_date = data.get('release_date')
+    
+    if not slug:
+        return jsonify({"status": "error", "message": "Document slug required."}), 400
+        
+    schedule = load_release_schedule()
+    entries = schedule.setdefault("entries", {})
+    key = f"{category}/{slug}" if category else slug
+    entries[key] = {
+        "status": status,
+        "release_date": release_date if status == "scheduled" else None,
+        "updated_at": datetime.now().isoformat()
+    }
+    entries[slug] = entries[key]
+    save_release_schedule(schedule)
+    
+    return jsonify({
+        "status": "success",
+        "message": f"Release status updated to {status.upper()}" + (f" for {release_date}" if status == "scheduled" else ""),
+        "publish_status": status,
+        "release_date": release_date
+    })
+
+@docs_bp.route('/api/admin/save', methods=['POST'])
+def docs_api_admin_save():
+    if not (session.get('admin', False) or session.get('is_admin', False)):
+        return jsonify({"status": "error", "message": "Admin authorization required."}), 403
+    data = request.get_json() or {}
+    category = data.get('category')
+    slug = data.get('slug')
+    content = data.get('content')
+    
+    if not slug or content is None:
+        return jsonify({"status": "error", "message": "Slug and content are required."}), 400
+        
+    paths = resolve_physical_file(category, slug)
+    if not paths:
+        target_dir = DOCS_DIR / (category or "guides")
+        target_dir.mkdir(parents=True, exist_ok=True)
+        paths = [target_dir / f"{slug}.md"]
+        
+    for p in paths:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(content, encoding='utf-8')
+        
+    cleaned_text = clean_markdown_text(content)
+    sanitized_text = filter_document_by_sensitivity(cleaned_text, viewer_tier=5)
+    html_body = markdown.markdown(sanitized_text, extensions=['fenced_code', 'tables', 'nl2br'])
+    word_count = len(content.split())
+    
+    return jsonify({
+        "status": "success",
+        "message": f"Chapter saved in-place to {len(paths)} location(s).",
+        "html": html_body,
+        "word_count": word_count,
+        "read_time": max(1, round(word_count / 180))
+    })
+
+@docs_bp.route('/api/admin/create', methods=['POST'])
+def docs_api_admin_create():
+    if not (session.get('admin', False) or session.get('is_admin', False)):
+        return jsonify({"status": "error", "message": "Admin authorization required."}), 403
+    data = request.get_json() or {}
+    title = (data.get('title') or '').strip()
+    category = (data.get('category') or 'devlog').strip()
+    project = (data.get('project') or 'siraugga').strip()
+    raw_slug = (data.get('slug') or '').strip()
+    content = data.get('content') or f"# {title}\n\nChapter documentation."
+    status = data.get('status', 'draft')
+    release_date = data.get('release_date')
+    
+    if not title:
+        return jsonify({"status": "error", "message": "Title is required."}), 400
+        
+    slug = raw_slug if raw_slug else re.sub(r'[^a-zA-Z0-9_-]', '_', title).strip('_')
+    if not slug:
+        slug = f"chapter_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        
+    dest_dir = DOCS_DIR / category
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    file_path = dest_dir / f"{slug}.md"
+    file_path.write_text(content, encoding='utf-8')
+    
+    if CENTRAL_DOCS_DIR.exists():
+        proj_dir = CENTRAL_DOCS_DIR / "projects" / ("siraugga_framework" if project == "siraugga" else project)
+        if proj_dir.exists():
+            c_dir = proj_dir / category if (proj_dir / category).exists() else proj_dir
+            try:
+                (c_dir / f"{slug}.md").write_text(content, encoding='utf-8')
+            except Exception:
+                pass
+                
+    schedule = load_release_schedule()
+    entries = schedule.setdefault("entries", {})
+    key = f"{category}/{slug}"
+    entries[key] = {
+        "status": status,
+        "release_date": release_date if status == "scheduled" else None,
+        "updated_at": datetime.now().isoformat()
+    }
+    entries[slug] = entries[key]
+    save_release_schedule(schedule)
+    
+    auto_sync_if_needed()
+    
+    return jsonify({
+        "status": "success",
+        "message": f"Chapter '{title}' created successfully.",
+        "category": category,
+        "slug": slug,
+        "title": title
+    })
+
+@docs_bp.route('/api/admin/delete', methods=['POST'])
+def docs_api_admin_delete():
+    if not (session.get('admin', False) or session.get('is_admin', False)):
+        return jsonify({"status": "error", "message": "Admin authorization required."}), 403
+    data = request.get_json() or {}
+    category = data.get('category')
+    slug = data.get('slug')
+    
+    if not slug:
+        return jsonify({"status": "error", "message": "Slug is required."}), 400
+        
+    paths = resolve_physical_file(category, slug)
+    archive_dir = DOCS_DIR / ".archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    for p in paths:
+        try:
+            arch_target = archive_dir / f"{p.stem}_{timestamp}{p.suffix}"
+            p.rename(arch_target)
+        except Exception as e:
+            print(f"[DocsMod] Error archiving {p}: {e}")
+            
+    schedule = load_release_schedule()
+    entries = schedule.get("entries", {})
+    entries.pop(f"{category}/{slug}", None)
+    entries.pop(slug, None)
+    save_release_schedule(schedule)
+    
+    auto_sync_if_needed()
+    
+    return jsonify({
+        "status": "success",
+        "message": f"Chapter '{slug}' archived successfully."
+    })
 
 @docs_bp.route('/api/search')
 def docs_search():
@@ -503,10 +864,12 @@ def docs_search():
     if not query:
         return jsonify([])
         
+    is_admin = session.get('admin', False) or session.get('is_admin', False)
     catalog = load_catalog()
+    user_catalog = get_user_catalog(catalog, is_admin=is_admin)
     results = []
     
-    for item in catalog:
+    for item in user_catalog:
         if project_filter != 'all' and item.get('project') != project_filter:
             continue
         if topic_filter != 'all' and topic_filter not in item.get('topics', []):

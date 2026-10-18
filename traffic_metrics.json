@@ -62,7 +62,8 @@
         "3e6282a42f0d9ec38fc80d72217f63aa",
         "d5accda1867f2594ce979b9f3ed6572a",
         "2a07d775cc80a68bfaaf139c2ee6dc96",
-        "a03bccc5537aacc7c8f20528ff5f4ce9"
+        "a03bccc5537aacc7c8f20528ff5f4ce9",
+        "cb32debd289d6c37e7624a1340044c3f"
     ],
     "paths": {
         "/": 269,
@@ -98,6 +99,15 @@
         "/docs/api/chapter/manifesto/05_The_24_Hour_Crucible": 1,
         "/docs/api/chapter/manifesto/03_The_Forge_of_Sovereignty": 1,
         "/docs/api/chapter/manifesto/04_The_24_Hour_Crucible": 1,
-        "/docs/api/chapter/manifesto/05_The_Quantitative_Era": 1
+        "/docs/api/chapter/manifesto/05_The_Quantitative_Era": 1,
+        "/docs/api/admin/schedule": 11,
+        "/docs/api/admin/save": 15,
+        "/docs/api/admin/create": 11,
+        "/docs/api/admin/delete": 11,
+        "/docs/api/chapter/../../../../etc/passwd/test": 4,
+        "/docs/api/chapter/devlog/../../server": 4,
+        "/docs/../../etc/passwd": 4,
+        "/docs/devlog/../../server": 4,
+        "/docs/eprofile/DEVLOG": 4
     }
 }
