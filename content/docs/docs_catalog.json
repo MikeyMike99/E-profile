@@ -39330,7 +39330,7 @@
     "category": "guides",
     "title": "Raugus Resolver MCP Architecture: Opaque Key-Only Virtual File System (VFS) Broker",
     "summary": "In standard AI-assisted development environments, agents interact with a codebase by reading and writing **physical operating-system file paths**. While convenient for single-user local scripts, exposing physical filesys...",
-    "word_count": 1904,
+    "word_count": 2223,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -39451,8 +39451,26 @@
       {
         "id": "SIRA-DOC-RAUGUS-SEC-5",
         "num": "5",
-        "title": "Architectural Cross-References & Related Systems Dropdown",
+        "title": "Agent Recovery & Anti-Loop Triage Protocol",
         "anchor": "#SIRA-DOC-RAUGUS-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-9",
+        "num": "9",
+        "title": "The Anti-Loop Axiom: Prohibition on Tool-Hopping",
+        "anchor": "#SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-9"
+      },
+      {
+        "id": "SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-10",
+        "num": "10",
+        "title": "Prescribed Recovery Table for Autonomous Agents",
+        "anchor": "#SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-10"
+      },
+      {
+        "id": "SIRA-DOC-RAUGUS-SEC-6",
+        "num": "6",
+        "title": "Architectural Cross-References & Related Systems Dropdown",
+        "anchor": "#SIRA-DOC-RAUGUS-SEC-6"
       }
     ],
     "topics": [
