@@ -164,3 +164,17 @@ A: In the server's `ACTIVE_SESSIONS` memory set. If the server restarts, all ses
 
 **Q: Why use `defaultdict(list)` for failed attempts?**  
 A: It automatically creates a new list for each unseen IP address without raising `KeyError`, making rate limiting code clean and concise.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

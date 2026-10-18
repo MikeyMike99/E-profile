@@ -93,3 +93,17 @@ A hop count measures how many times a message has traveled from one agent to ano
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE.md`](/docs/devlog/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS.md`](/docs/devlog/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE.md`](/docs/devlog/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE)
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

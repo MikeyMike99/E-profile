@@ -227,3 +227,17 @@ Python will eventually close it when the garbage collector runs, but leaving ope
 - To understand why uncoordinated concurrency broke the server, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).
 - To inspect diagnostic benchmark logs, visit [`03_DIAGNOSTIC_TESTS/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS.md`](/docs/devlog/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS).
 - To explore the architectural deep dive, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE.md`](/docs/devlog/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE).
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

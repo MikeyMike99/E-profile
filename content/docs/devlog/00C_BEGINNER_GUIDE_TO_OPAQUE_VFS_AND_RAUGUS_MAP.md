@@ -12,7 +12,7 @@
 ## What is an Opaque Virtual File System (VFS)?
 [//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-1)
 
-In standard programming, when you want to read or write a file, you pass a physical disk path like `/home/user/app/server.py` or `C:\Projects\app\server.py`.
+In standard programming, when you want to read or write a file, you pass a physical disk path like `$HOME/app/server.py` or `C:\Projects\app\server.py`.
 
 In an autonomous AI environment, exposing physical paths is dangerous:
 1. **Information Disclosure**: Physical paths reveal the username, operating system version, drive letters, and directory layout to the AI model and third-party prompts.

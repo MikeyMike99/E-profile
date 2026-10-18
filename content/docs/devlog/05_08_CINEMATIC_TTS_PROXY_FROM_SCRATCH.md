@@ -138,3 +138,17 @@ Synthesized Audio String: Patch server.py: websocket keep-alive handler
 ### Q: What is the ideal word count for an audio developer alert?
 [//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-10)
 **A:** Between 4 and 8 words. This allows the phrase to be spoken in under 1.5 seconds, ensuring the blind developer is informed without breaking their mental train of thought.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

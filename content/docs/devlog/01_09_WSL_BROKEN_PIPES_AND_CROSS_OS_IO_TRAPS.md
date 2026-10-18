@@ -92,7 +92,7 @@ By passing files through the filesystem using native `cp` rather than streaming 
 
 ### Q: What is `wslpath`?
 [//]: # (SECTION_ID: SIRA-DOC-01_09-SEC-8)
-**A:** `wslpath` is a built-in utility in WSL that converts Windows-style paths (`C:\Users\name\file.txt`) into Linux mount paths (`/mnt/c/Users/name/file.txt`), and vice versa.
+**A:** `wslpath` is a built-in utility in WSL that converts Windows-style paths (`%USERPROFILE%\file.txt`) into Linux mount paths (`%USERPROFILE%/file.txt`), and vice versa.
 
 [//]: # (SECTION_ID: SIRA-DEV-01_09-SEC-9)
 ### Q: Why is `cp` safer than `cat > file`?

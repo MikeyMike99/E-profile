@@ -26,6 +26,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`00_PRIMERS/00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS.md`](/docs/devlog/00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS) | Zero-Modification Blueprint Architecture, dynamic JSON schemas, and containerized sandboxes. |
 | [`00_PRIMERS/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS.md`](/docs/devlog/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS) | The Voice of Siraugga, intent-driven audio feeds, ElevenLabs proxies, and structural monologue mapping. |
 | [`00_PRIMERS/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY.md`](/docs/devlog/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY) | Clean-Room development, legal IP boundaries (Section 21 of Copyright Act), and sovereign code custody. |
+| [`00_PRIMERS/00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING.md`](/docs/devlog/00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING) | Invariant document identity, version separation, pure CommonMark metadata, and zero screen reader clutter. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-3)
 ### Pillar 01: Granular Problem Breakdowns
@@ -75,6 +76,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`01_PROBLEMS_ENCOUNTERED/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS.md`](/docs/devlog/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS) | Zone-Based Policies & Wildcard Masking Traps: Subfolder escape attacks and brittle file-level ACL collapse. |
 | [`01_PROBLEMS_ENCOUNTERED/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md`](/docs/devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS) | Thought Vector Exposure & Reasoning Leak Traps: Telemetry disclosure, prompt leaks, and semantic steganography. |
 | [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS) | Token Burst & Mid-Task Resets: 200-turn context inflation, premature 75k cache resets, steering collision, and blanket pkill elimination. |
+| [`01_PROBLEMS_ENCOUNTERED/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS.md`](/docs/devlog/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS) | Cross-Reference Degradation & Tag Clutter: Link rot when moving chapters, screen reader tag speech pollution, and HTML comment stripping. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-4)
 ### Pillar 02: Source Code Evidence
@@ -120,6 +122,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`02_SOURCE_EVIDENCE/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE.md`](/docs/devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE) | Zone-Based Sandbox Policies & Wildcard Masking: `security_manager.py` directory tiering and canonical path jailing. |
 | [`02_SOURCE_EVIDENCE/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md`](/docs/devlog/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE) | Thought Vector Obfuscation & Prompt Masking: Context substitution, CSPRNG salting, and HMAC integrity. |
 | [`02_SOURCE_EVIDENCE/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md`](/docs/devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE) | Session Rollover & In-Flight Guards: Offline briefing distillation, in-flight suppression, and SIEM logging evidence. |
+| [`02_SOURCE_EVIDENCE/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE.md`](/docs/devlog/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE) | CommonMark Reference Parsing & AST Anchors: Regex extraction in `sync_to_eprofile.py` and `_attach_h_id` heading anchor injection in `docs_mod.py`. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-5)
 ### Pillar 03: Diagnostic Test Logs & Benchmarks
@@ -162,6 +165,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`03_DIAGNOSTIC_TESTS/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md`](/docs/devlog/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS) | Zone Sandbox & Wildcard Masking Evaluation: 50 synthetic injection tests proving 100% boundary integrity. |
 | [`03_DIAGNOSTIC_TESTS/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md`](/docs/devlog/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS) | Thought Vector Hashing & Masking: 0.064ms pipeline latency, CSPRNG salting, and steganography defense. |
 | [`03_DIAGNOSTIC_TESTS/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md`](/docs/devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS) | Session Rollover & In-Flight Guard Logs: 13-stage security audit, permutation testing, and SIEM JSON logs. |
+| [`03_DIAGNOSTIC_TESTS/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS.md`](/docs/devlog/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS) | Metadata Tag Integrity & DOM Verification: Multi-repo audit test runner (26/26 PASS), HTML DOM inspection proving zero tag leaks, and anchor generation. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-6)
 ### Pillar 04: Solutions & System Architecture
@@ -207,6 +211,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE.md`](/docs/devlog/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE) | Zone-Based Sandbox & Wildcards: Directory tiering, canonical path jailing, and implicit deny. |
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md`](/docs/devlog/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE) | Agentic Cryptography & Vector Masking: Prompt masking, CSPRNG salts, and semantic steganography defense. |
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md`](/docs/devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE) | Automated Silent Session Rollover: Context distillation, in-flight guard, token meter, and audit invariants. |
+| [`04_SOLUTIONS_AND_ARCHITECTURE/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE.md`](/docs/devlog/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE) | Canonical Metadata & Section Invariant Architecture: Tripartite ID scheme, Pure CommonMark reference parsing, dynamic AST heading anchors, and why order matters. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-7)
 ### Pillar 05: "From Scratch" Step-by-Step Creation Guides
@@ -255,6 +260,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH.md`](/docs/devlog/05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH) | Building the Zone-Based Sandbox path filter enforcing directory tiering and canonical jails. |
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_41_THOUGHT_VECTOR_OBFUSCATOR_FROM_SCRATCH.md`](/docs/devlog/05_41_THOUGHT_VECTOR_OBFUSCATOR_FROM_SCRATCH) | Building the Thought Vector Obfuscation pipeline with prompt masking and salted HMAC verification. |
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH.md`](/docs/devlog/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH) | Building the autonomous session rollover gatekeeper, context briefing distiller, and regression audit. |
+| [`05_FROM_SCRATCH_CREATION_GUIDES/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH.md`](/docs/devlog/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH) | Building the standalone CommonMark metadata validator and AST heading anchor generator from a blank text editor. |
 
 ---
 

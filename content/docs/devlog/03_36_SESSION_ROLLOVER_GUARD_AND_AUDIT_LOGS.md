@@ -15,7 +15,7 @@ This document records the exact diagnostic benchmarks, edge-case assertions, and
 
 Execution command:
 ```bash
-python3 /security/security_audit.py
+python3 <project_root>/security/security_audit.py
 ```
 
 Console Output:
@@ -72,7 +72,7 @@ Prior session (8a26ea19-e397-40a1-a432-388efc55c38a) turns: 209
 ✓ Briefing generated cleanly without errors:
    <SESSION_CONTINUATION_CONTEXT>
    [AUTOMATIC SESSION ROLLOVER: The previous session was archived to maintain peak responsiveness and eliminate token bloat.]
-   - Active Workspace Directory: /playground
+   - Active Workspace Directory: <project_root>/playground
    - Active Project: DevCore
    - Recent Accomplished Goals:
      • what is the next step?

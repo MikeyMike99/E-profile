@@ -145,3 +145,13 @@ It splits text using the `=` symbol as a delimiter (`-d=`) and selects the secon
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_32_SCRATCH_DEVCORE_AND_BASHRC_HOOK_EVIDENCE.md`](/docs/devlog/02_32_SCRATCH_DEVCORE_AND_BASHRC_HOOK_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_29_VENV_SWITCHING_AND_PURGE_BENCHMARK_LOGS.md`](/docs/devlog/03_29_VENV_SWITCHING_AND_PURGE_BENCHMARK_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_32_ENVIRONMENT_ISOLATION_AND_SHELL_HOOK_ARCHITECTURE.md`](/docs/devlog/04_32_ENVIRONMENT_ISOLATION_AND_SHELL_HOOK_ARCHITECTURE)
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

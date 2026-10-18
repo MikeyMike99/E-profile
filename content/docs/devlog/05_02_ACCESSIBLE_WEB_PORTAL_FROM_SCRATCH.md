@@ -157,3 +157,17 @@ nano templates/index.html
 ### Q: Why not use a rich visual editor like TinyMCE?
 [//]: # (SECTION_ID: SIRA-DOC-05_02-SEC-10)
 **A:** Visual editors generate deeply nested, irregular HTML that breaks screen reader navigation shortcuts. A plain `<textarea>` guarantees standard arrow navigation and full compatibility.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

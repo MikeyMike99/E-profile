@@ -128,7 +128,7 @@ Every time the backend server restarted—which happened constantly as we added 
 
 The AI, stripped of its context, would regress. It would forget we had built a Web UI and start telling me to run raw bash commands in the terminal again. My frustration peaked: *"I do not want to run commands I just want to prompt and press buttons. Dude, we created a web interface... this is the last time I am prompting you to add it so that our sessions can be persistent even if the server restarts."*
 
-This crisis forced us to engineer a robust Session and Workspace Manager directly into the backend. We couldn't rely on the AI's volatile memory. We built local state files that strictly bound the AI to a specific project directory (`C:\Users\michael\Documents\antigravity_test`) and a specific conversation history. From that point on, if the server crashed, the AI woke up exactly where it left off, context intact.
+This crisis forced us to engineer a robust Session and Workspace Manager directly into the backend. We couldn't rely on the AI's volatile memory. We built local state files that strictly bound the AI to a specific project directory (`%USERPROFILE%\Documents\antigravity_test`) and a specific conversation history. From that point on, if the server crashed, the AI woke up exactly where it left off, context intact.
 
 [//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-11)
 ## Chapter 11: The War on Native Popups
@@ -547,7 +547,7 @@ To solve this, we architected the **Ephemeral Plugin Pattern**:
 [//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-39)
 ### Strategic Advantages
 [//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-39)
-- **Security:** Browsers aggressively block local `file:///` links to prevent drive-by execution. By utilizing the `/static/` directory, the plugin is served securely over the existing HTTP connection. The core Chat UI remains pristine and uncompromised.
+- **Security:** Browsers aggressively block local `./` links to prevent drive-by execution. By utilizing the `/static/` directory, the plugin is served securely over the existing HTTP connection. The core Chat UI remains pristine and uncompromised.
 - **Accessibility:** By dedicating an entire browser tab to the plugin, structural navigation (Heading jumps) and keyboard shortcuts (`Alt+N`) do not collide with the Chat UI's native event listeners. The screen reader has absolute, undivided context.
 - **Agent Availability:** Because the plugin runs in a separate tab, the main Chat UI text box remains entirely unblocked. The user can take the exam in one tab while actively interrogating the Agent in the other. 
 

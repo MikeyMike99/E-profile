@@ -69,7 +69,7 @@ Whenever a Modder or an AI subagent connects, the accounting process generates a
 In traditional networking, a physical topology maps out Server Room 2158 connecting via cables to IT Office 2159 and remote Classrooms. 
 
 In DevCore, this physical topology maps directly to the **Sandbox Isolation Topology**:
-*   **The Server Room (Host OS):** The physical Linux machine running the master Quart `App Router Module` and maintaining the immutable accounting logs in `[LOCAL_BRAIN_VAULT]/`.
+*   **The Server Room (Host OS):** The physical Linux machine running the master Quart `App Router Module` and maintaining the immutable accounting logs in `$HOME/.gemini/antigravity-cli/brain/`.
 *   **The Remote Classrooms (Modder Workspaces):** The isolated `/playground/` directories where Tier 2 Modders and AI agents execute their logic. The accounting logs track exactly how much data crosses the "cables" (WebSockets) between the untrusted workspaces and the core Server Room, providing irrefutable evidence against any rogue agent or cybercriminal attempting malicious actions.
 
 ---

@@ -216,3 +216,17 @@ SHA-512 produces a 64-byte (512-bit) output, providing enough cryptographic entr
 - To understand why relative key paths caused sandbox lockouts, read [`01_PROBLEMS_ENCOUNTERED/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md`](/docs/devlog/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS).
 - To inspect primary source citations, view [`02_SOURCE_EVIDENCE/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE.md`](/docs/devlog/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE).
 - To read the architectural deep dive, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE.md`](/docs/devlog/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE).
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

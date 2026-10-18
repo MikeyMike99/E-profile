@@ -92,7 +92,7 @@ In `my_audio_player` and `stream_audio_from server`, the code isn't about gamepl
 
 These weren't games yet. They were isolated laboratory experiments. You were testing the absolute minimum viable components you would need to eventually build *Echoes of the World*.
 
-#### The Audio Player: Solving a Real Problem
+### The Audio Player: Solving a Real Problem
 The very first program that actually solved a real-world problem wasn't a gameit was an audio player. Standard Windows media players are bloated, and worse, they constantly update their UI, which causes screen readers to spam the user with annoying, cluttered speech while a track is trying to play. 
 
 To solve this, you built a frictionless, portable audio engine. The architecture was brilliant in its simplicity: you could drop the executable into *any* directory, create a `sounds` folder, drop in your files, and it would recursively find and play them. It featured a sliding memory window to prevent crashes, a 300ms debounce to stop accidental double-skips, and a perfectly silent interface. It only spoke when you wanted it topressing `TAB` would silently fetch the current track name and route it directly to NVDA.
@@ -116,7 +116,7 @@ Core Component using hashlib.sha256 to securely encrypt player logins.
 3. **Dynamic Object Creation**: Core Component dynamically generating Python class files for new players.
 
 Because the architecture was modular, the slot machine eventually inherited this advanced menu system directly from the main game. They became permanently linked in the code's history: the slot machine pioneered the server loop, and the main game perfected the state management.
-#### The Slot Machine: Pioneering the Gameplay Loop
+### The Slot Machine: Pioneering the Gameplay Loop
 Looking at the code inside `slot_meshine`, you can see exactly why this took a long time to buildthis wasn't just a test script, it was a fully functional game with complex mechanics, state management, and a persistent backend.
 
 The logic in `Core Component` reveals several massive leaps in your coding ability:
@@ -161,7 +161,7 @@ When you first started writing the RPG in December 2024, you weren't using virtu
 
 This timeline perfectly maps your transition from a beginner who runs everything globally, to an advanced Python developer who understands that every project needs its own isolated, dependency-managed environment.
 
-#### The First RPG Engine: Navigation and Physics
+### The First RPG Engine: Navigation and Physics
 When you cracked open the `GAME` folder to write the core mechanics over Christmas 2024, you didn't just build a gameyou built a completely custom physics and navigation engine for a blind player. 
 
 Looking at `Core Component` and `Core Component`, the mechanics you tested and confirmed included:
@@ -173,7 +173,7 @@ Looking at `Core Component` and `Core Component`, the mechanics you tested and c
 
 You successfully proved you could build a first-person grid-crawler using pure math and audio.
 
-#### The Architecture Layer: The Menu and State Manager
+### The Architecture Layer: The Menu and State Manager
 Once you had the physics base locked in, you needed a way to actually navigate into the game without crashing. The solution was the menu layer you built on Christmas Day 2024.
 
 You created `Core Component`, which acted as the brain of the application. It was beautifully simple: you built a stack (`game_state_stack = []`). Every time a player opened a menu, it was added to the stack. When they pressed `ESCAPE`, the `handle_escape_key()` function triggered, moving them back down the stack without losing their place.
@@ -186,7 +186,7 @@ On top of this, you built `Core Component`. This was completely isolated from th
 
 Because you separated the Menu (the UI) from the Game (the physics), your code became modular. This is exactly why you were able to just drag-and-drop this entire menu system into the Slot Machine months later!
 
-#### The Profile Manager: Privacy and Security First
+### The Profile Manager: Privacy and Security First
 Sitting parallel to the game loop were `Core Component` and `Core Component`. What's incredible about these files is that you weren't just building a game, you were actively building secure user systems. 
 
 When a player launched the Character Creation window, you programmed NVDA to greet them with this exact message:
@@ -198,10 +198,10 @@ Furthermore, you built a robust UI state machine that we later saw inherited by 
 
 You were treating your player's data with the care and security of a professional web developer, all within the terminal of an audio RPG.
 
-#### The Security Seed
+### The Security Seed
 It is no coincidence that you began studying cyber security just a few months after writing this RPG. The seeds were already there. In your very first major project, instead of taking the easy route and saving plain-text variables, your brain immediately gravitated towards importing `hashlib`, writing SHA-256 encryption functions, and anonymizing user data. You were already thinking like a security engineer before you even fully knew what one was.
 
-#### Stress Testing the Stack
+### Stress Testing the Stack
 The leftover files in the directory (`Core Component`, `Core Component`, `Core Component`) weren't abandoned code; they were a stress test. You were testing the absolute limits of your new `game_state_manager`. By building a main options menu and separate python files for each individual sub-option, you proved that a player could navigate infinitely deep into a menu tree and use the ESCAPE key to climb all the way back out to the surface without breaking the game loop. The architecture was rock solid.
 
 [//]: # (SECTION_ID: SIRA-MAN-00_THE_FORENSIC_TI-SEC-5)
@@ -219,7 +219,7 @@ In `Core Component`, you completely overhauled the game's physics, introducing t
 
 You were no longer just moving a point on a flat grid; you were simulating a physical body in a shared, multi-client world.
 
-#### The Threaded Gravity Engine
+### The Threaded Gravity Engine
 One of the most impressive mechanics in `Core Component` was how you solved 3D platforming. You built a multi-threaded gravity engine:
 
 ```python

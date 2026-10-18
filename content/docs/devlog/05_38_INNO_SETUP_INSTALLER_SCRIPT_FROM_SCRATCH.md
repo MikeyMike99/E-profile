@@ -86,3 +86,17 @@ It configures the installer to run without requiring Windows Administrator (UAC)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE.md`](/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS.md`](/docs/devlog/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE.md`](/docs/devlog/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE)
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

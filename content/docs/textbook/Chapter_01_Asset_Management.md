@@ -144,14 +144,14 @@ Relying on a single point of failure is not a security strategy; it is a suicide
 
 To guarantee the survival of the network and the absolute integrity of our data, Siraugga demands overlapping, hostile layers of protection. In the following sections, we will dissect the brutal mechanics of each individual defense strategy, stripping away the theoretical concepts to examine exactly how the code intercepts, mitigates, and punishes unauthorized incursions.
 
-#### Strategy 1: Hostile Layering
+### Strategy 1: Hostile Layering
 To guarantee that data and execution control remain exclusively in authorized hands, an organization must construct a labyrinth of overlapping defenses. A good physical example of layering is storing root credentials on a biometric-locked server, buried inside a steel vault, surrounded by an electrified perimeter fence. 
 
 In the Siraugga digital ecosystem, this means if an adversary penetrates the Semantic Edge Router, they do not find the prize—they simply find themselves staring at the uncompromising Raugus Checkpoint. If they somehow spoof the Checkpoint, they are immediately confronted by the mathematically rigid Path Resolver. 
 
 A layered approach provides the most comprehensive protection because the adversary is bled of resources, time, and stealth with every step. Crucially, each concentric layer must be exponentially more complex and hostile to overcome than the last. Defense in depth does not promise an impenetrable, mythical shield—any shield can eventually be broken. But hostile layering ensures you exhaust the attacker, mitigate the fallout, and remain one critical step ahead of a total breach.
 
-#### Strategy 2: Absolute Limitation (Least Privilege)
+### Strategy 2: Absolute Limitation (Least Privilege)
 In Siraugga, we do not operate on trust; we operate on restriction. Limiting access to data and execution privileges brutally reduces the possibility of a systemic threat. Siraugga enforces the Principle of Least Privilege: every autonomous agent and human operator is granted only the absolute microscopic sliver of access required to execute their immediate function, and nothing more.
 
 This requires unforgiving technical constraints, such as granular File Classification Tiers and strict Role-Based Access Control (RBAC), combined with ironclad procedural measures. In the physical world, a limiting procedure might require an employee to view a top-secret document only inside a CCTV-monitored SCIF (Sensitive Compartmented Information Facility) to guarantee it never leaves the premises. In the Siraugga framework, we achieve this by confining developers strictly to the `TIER_SAFE_WORKSPACE` via the Path Resolver, guaranteeing they can never view, copy, or execute the core engine logic that governs their very existence.
@@ -165,14 +165,14 @@ To mathematically enforce this limitation, Siraugga utilizes a rigid, 5-Tier RBA
 
 By slicing the organization into these five definitive tiers, we ensure that a compromised Tier 2 modder can never shatter the host environment, because they fundamentally lack the authority to even see it.
 
-#### Strategy 3: Cryptographic Diversity
+### Strategy 3: Cryptographic Diversity
 A wall built of identical bricks falls to a single sledgehammer. If all defense layers share the same fundamental architecture, an adversary who discovers a single exploit will effortlessly shatter the entire system. The layers must be fundamentally different so that a compromised outer perimeter does not guarantee the fall of the inner sanctum.
 
 In Siraugga, we enforce absolute **Cryptographic Diversity**. If an attacker uses a sophisticated prompt injection to bypass the Semantic Edge Router, that same technique is completely useless against the low-level Path Resolver, which doesn't parse semantics—it parses mathematical directory boundaries. 
 
 Furthermore, we do not rely on a monolithic security stack. To accomplish true diversity in defenses, Siraugga utilizes varied, heterogeneous security mechanisms: dynamic bearer tokens for WebSocket sessions, JIT (Just-In-Time) key rotation for active payloads, and strict, time-delayed cryptographic locks on the backend. By forcing the adversary to constantly switch tactics, tools, and paradigms at every single layer, we exhaust their resources and trigger our telemetry alarms long before they can reach the core.
 
-#### Strategy 4: The Critical Distinction—Obscurity vs. True Cryptography
+### Strategy 4: The Critical Distinction—Obscurity vs. True Cryptography
 There is no concept in this textbook of higher importance than this: you must never confuse obfuscation with encryption. Misunderstanding this distinction is the single greatest cause of catastrophic data breaches.
 
 **Definition 1: Obscurity (The Illusion of Security)**
@@ -183,7 +183,7 @@ True Cryptography is the mathematical scrambling of data, rendering it physicall
 
 While we do strip verbose telemetry from unauthenticated error channels to prevent unnecessary reconnaissance, Siraugga relies fundamentally on True Cryptography. Even if an adversary possesses our complete source code, knows exactly what Operating System we are running, and understands exactly where our target assets are stored, they still cannot breach the system. Every asset is protected by impenetrable encryption and rigid mathematical RBAC verification. True security must reside in the math, not in hiding the blueprints.
 
-#### Strategy 5: Operational Simplicity (The Silent Execution)
+### Strategy 5: Operational Simplicity (The Silent Execution)
 There is a dangerous misconception that complexity equals security. In reality, complexity breeds misconfiguration, and human misconfiguration is the single greatest ally of the adversary. If an organization implements a sprawling, convoluted security matrix that operators cannot troubleshoot, they will inevitably cut corners. If a developer cannot intuitively configure their sandbox, they will find a way to bypass the security altogether. 
 
 Siraugga mandates **Operational Simplicity**. A security architecture must be impenetrable from the outside, but utterly invisible and mathematically simple from the inside. When a Tier 2 modder connects to the workspace, they do not see the Semantic Edge Router, they do not interact with the Cryptographic Keychain, and they do not manually parse the Raugus Map. The framework handles the hostile environment silently in the background, allowing the operator to execute their authorized function without friction. 

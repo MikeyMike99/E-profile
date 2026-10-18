@@ -13,7 +13,7 @@
 ## Executive Summary
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-1)
 
-The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What began in September 2025 as a fragile, 153-line monolithic Python prototype ([`e_profile.py`](file:///mnt/c/Users/michael/Documents/e_profile.py)) has evolved into an enterprise-grade portfolio engine.
+The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What began in September 2025 as a fragile, 153-line monolithic Python prototype ([`e_profile.py`](file://<eprofile_root>.py)) has evolved into an enterprise-grade portfolio engine.
 
 Today, E-Profile features:
 1. **Zero-Trust Role-Based Access Control (RBAC)** across 5 operational tiers.
@@ -31,7 +31,7 @@ This Devlog provides an exhaustive forensic breakdown of the architectural miles
 ## Chapter 1: The Genesis — The 150-Line Monolithic Prototype (September 2025)
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-2)
 
-Every fortress begins with a single brick. In September 2025, during the initial phase of transition toward dedicated cybersecurity studies, the original version of E-Profile was conceived as a lightweight Flask script: [`C:\Users\michael\Documents\e_profile.py`](file:///mnt/c/Users/michael/Documents/e_profile.py).
+Every fortress begins with a single brick. In September 2025, during the initial phase of transition toward dedicated cybersecurity studies, the original version of E-Profile was conceived as a lightweight Flask script: [`%USERPROFILE%\Documents\e_profile.py`](file://<eprofile_root>.py).
 
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-1_1)
 ### 1.1 Forensic Code Inspection of the Monolith
@@ -121,7 +121,7 @@ Deploying to a remote, restricted PaaS platform created three distinct operation
 3. **Submodule Authentication Loops**: The modular architecture integrated auxiliary engines (such as DevCore and game frameworks) as Git submodules. Initial attempts to clone submodules triggered recurring authentication denial loops:
    - Commit `38ea461`: Converted absolute repository URLs in `.gitmodules` to relative URLs (`../DevCore.git`) to inherit the parent clone credentials.
    - Commit `dded71f`: Injected token-authenticated URLs (`https://x-access-token:${TOKEN}@github.com/...`) dynamically during CI/CD bootstrap to bypass non-interactive credential prompts.
-   - Commit `fbca68d`: Programmed automated submodule synchronization directly into [`file_mod.py`](file:///mnt/c/Users/michael/Documents/e_profile/file_mod.py).
+   - Commit `fbca68d`: Programmed automated submodule synchronization directly into [`file_mod.py`](file://<eprofile_root>/file_mod.py).
 
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-2_2)
 ### 2.2 The "Trojan Horse" Migration Architecture (`post_sync.py`)
@@ -174,8 +174,8 @@ During the fast-paced deployment iteration in July 2026, an operational security
 
 Immediate remediation was executed across commits `7c729ad` and `5188475`:
 - Purged all `.pub` and key artifacts from the git tracking index (`git rm --cached`).
-- Hardened [`.gitignore`](file:///mnt/c/Users/michael/Documents/e_profile/.gitignore) to permanently deny `.pub`, `.key`, `.pem`, `.env`, and credential artifacts.
-- Created [`.env.example`](file:///mnt/c/Users/michael/Documents/e_profile/.env.example) to establish clear separation between public repository structure and local workstation secrets.
+- Hardened [`.gitignore`](file://<eprofile_root>/.gitignore) to permanently deny `.pub`, `.key`, `.pem`, `.env`, and credential artifacts.
+- Created [`.env.example`](file://<eprofile_root>/.env.example) to establish clear separation between public repository structure and local workstation secrets.
 
 ---
 
@@ -183,7 +183,7 @@ Immediate remediation was executed across commits `7c729ad` and `5188475`:
 ## Chapter 3: Blueprint Decoupling, Schema Evolution, and Surgical Patching (August – September 2026)
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4)
 
-By August 2026, the monolithic structure had been completely disassembled into a resilient, decoupled micro-blueprint architecture registered inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py).
+By August 2026, the monolithic structure had been completely disassembled into a resilient, decoupled micro-blueprint architecture registered inside [`server.py`](file://<eprofile_root>/server.py).
 
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-3_1)
 ### 3.1 Modular Blueprint Topology
@@ -214,7 +214,7 @@ By August 2026, the monolithic structure had been completely disassembled into a
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-3_2)
 ### 3.2 Schema Migration Engine (`data_migrator.py`)
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-3_2)
-Managing user permissions, administrative profiles, and feature toggles required moving away from ad-hoc JSON key-value stores. In July 2026, [`data_migrator.py`](file:///mnt/c/Users/michael/Documents/e_profile/data_migrator.py) was built to implement schema versioning and transactional upgrades:
+Managing user permissions, administrative profiles, and feature toggles required moving away from ad-hoc JSON key-value stores. In July 2026, [`data_migrator.py`](file://<eprofile_root>/data_migrator.py) was built to implement schema versioning and transactional upgrades:
 
 ```python
 TARGET_SCHEMA_VERSION = 2
@@ -240,13 +240,13 @@ def verify_and_migrate_profiles(filepath: Path, sys_log=None):
 ```
 
 **Key Architectural Safeguards**:
-- **Timestamped Immutable Snapshots**: Prior to touching [`profiles.json`](file:///mnt/c/Users/michael/Documents/e_profile/profiles.json), a backup is generated in `backups/profiles.json.vYYYYMMDD_HHMMSS.bak`.
+- **Timestamped Immutable Snapshots**: Prior to touching [`profiles.json`](file://<eprofile_root>/profiles.json), a backup is generated in `backups/profiles.json.vYYYYMMDD_HHMMSS.bak`.
 - **ABAC Envelope Normalization**: Upgrades arbitrary role strings (`role: "admin"`) into formal Attribute-Based Access Control permissions (`is_admin: True`, `permissions: ["master:view_certs", "master:view_blogs"]`).
 
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-3_3)
 ### 3.3 Concrete Syntax Tree (CST) Surgery & Heart Draft System (`surgery.py`)
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-3_3)
-Live server hot-patching is vulnerable to race conditions and file corruption if an entire source file is overwritten during an active request. To resolve this, [`surgery.py`](file:///mnt/c/Users/michael/Documents/e_profile/surgery.py) was built using `libcst` (Concrete Syntax Tree) to parse Python source code into an AST and apply surgical modifications exclusively between target markers:
+Live server hot-patching is vulnerable to race conditions and file corruption if an entire source file is overwritten during an active request. To resolve this, [`surgery.py`](file://<eprofile_root>/surgery.py) was built using `libcst` (Concrete Syntax Tree) to parse Python source code into an AST and apply surgical modifications exclusively between target markers:
 
 ```python
 class SurgicalTransformer(cst.CSTTransformer):
@@ -310,7 +310,7 @@ Security in E-Profile is not a binary logged-in/anonymous toggle. It is governed
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-4_2)
 ### 4.2 Session Hardening & Cryptographic Hygiene
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4_2)
-Inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py), session cookies are fortified against theft, replay attacks, and script injection:
+Inside [`server.py`](file://<eprofile_root>/server.py), session cookies are fortified against theft, replay attacks, and script injection:
 ```python
 app.secret_key = os.environ.get("SECRET_KEY", "SECURE_KEY_2026_PROTOTYPE")
 app.config.update(
@@ -329,7 +329,7 @@ One of the most profound cybersecurity insights gained across both **E-Profile**
 
 > *"One of the most painful frustrations when building a fortress is accidentally locking yourself out. If a rogue policy bug, database corruption, or aggressive RBAC rule revokes your Super Admin status at the application layer, you will be trapped outside your own creation. When this happens, never try to reason with the broken application."*
 
-#### The Architectural Parallel: Siraugga vs. E-Profile
+### The Architectural Parallel: Siraugga vs. E-Profile
 This architectural dilemma did not occur in isolation; it represents a fundamental repeating pattern in zero-trust engineering across both systems:
 
 1. **In the Siraugga Framework (`rbac_textbook_tier5.md` & `TEXTBOOK.md`)**:
@@ -365,11 +365,11 @@ This architectural dilemma did not occur in isolation; it represents a fundament
                                             - Restart daemon: RESTORED!
 ```
 
-#### The Universal "Ghost Admin" Remedy
+### The Universal "Ghost Admin" Remedy
 Porting the solution directly from Siraugga's Tier 5 Recovery Protocol, E-Profile implements the **"Ghost Admin"** architecture:
 1. **Out-of-Band Boundary Bypass**: The administrator accesses the host operating system directly via encrypted SSH, completely bypassing the HTTP application stack and web routing layers.
 2. **State Freeze**: The application daemon is stopped (`systemctl stop ...` or WSGI halt). This halts in-flight requests and eliminates concurrency race conditions.
-3. **OS-Level Credential Injection**: A standalone, air-gapped script (`ghost_admin.py`) opens the raw storage file ([`profiles.json`](file:///mnt/c/Users/michael/Documents/e_profile/profiles.json)), verifies schema integrity via [`data_migrator.py`](file:///mnt/c/Users/michael/Documents/e_profile/data_migrator.py), injects the verified `is_admin: True` clearance flag, and writes the update directly to the storage driver.
+3. **OS-Level Credential Injection**: A standalone, air-gapped script (`ghost_admin.py`) opens the raw storage file ([`profiles.json`](file://<eprofile_root>/profiles.json)), verifies schema integrity via [`data_migrator.py`](file://<eprofile_root>/data_migrator.py), injects the verified `is_admin: True` clearance flag, and writes the update directly to the storage driver.
 4. **Daemon Resumption**: The daemon is restarted. Sovereign control is restored immediately without ever diluting or weakening the application layer's strict boundary checks.
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
@@ -386,7 +386,7 @@ Porting the solution directly from Siraugga's Tier 5 Recovery Protocol, E-Profil
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-4_4)
 ### 4.4 Privacy-First Native Analytics (`traffic_metrics.json`)
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-4_4)
-Modern cybersecurity mandates compliance with privacy regulations (South Africa's POPIA and Europe's GDPR). E-Profile rejects intrusive third-party trackers (such as Google Analytics) in favor of a native, privacy-first analytics engine inside [`server.py`](file:///mnt/c/Users/michael/Documents/e_profile/server.py):
+Modern cybersecurity mandates compliance with privacy regulations (South Africa's POPIA and Europe's GDPR). E-Profile rejects intrusive third-party trackers (such as Google Analytics) in favor of a native, privacy-first analytics engine inside [`server.py`](file://<eprofile_root>/server.py):
 
 ```python
 @app.before_request
@@ -479,7 +479,7 @@ Previously, documentation was fragmented across isolated project workspaces (`De
 
 To solve this, the **Central Documentation Vault** ([`MikeyMike99/Central_Docs`](https://github.com/MikeyMike99/Central_Docs)) was established as an authoritative, private repository. A zero-touch automated bridge was constructed:
 - **DevCore Post-Commit Hook (`.git/hooks/post-commit`)**: Any commit touching `docs/` in DevCore immediately copies the updated files into `Central_Docs/projects/siraugga_framework/`, commits the changes, and pushes to GitHub in the background.
-- **E-Profile Native Discovery Engine (`docs_mod.py`)**: When E-Profile boots or receives a request, `auto_sync_if_needed()` compares modification timestamps between `Central_Docs` and `docs_catalog.json`. If updates are detected, it invokes [`sync_to_eprofile.py`](file:///mnt/c/Users/michael/Documents/Central_Docs/scripts/sync_to_eprofile.py) to rebuild catalogs in under 200ms with zero server restarts.
+- **E-Profile Native Discovery Engine (`docs_mod.py`)**: When E-Profile boots or receives a request, `auto_sync_if_needed()` compares modification timestamps between `Central_Docs` and `docs_catalog.json`. If updates are detected, it invokes [`sync_to_eprofile.py`](file://<central_docs_root>/scripts/sync_to_eprofile.py) to rebuild catalogs in under 200ms with zero server restarts.
 
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-6_2)
 ### 6.2 Multi-Tier Section Sensitivity Scoring Engine (`sensitivity_engine.py`)
@@ -531,12 +531,12 @@ When a developer relies on `display: none;`, `visibility: hidden;`, or collapsed
 
 In E-Profile, this attack vector is structurally neutralized through **Strict Server-Side Redaction**:
 1. **Zero-Byte Transmission Across the Wire**:
-   Inside [`sensitivity_engine.py`](file:///mnt/c/Users/michael/Documents/e_profile/sensitivity_engine.py), the `filter_document_by_sensitivity()` function executes in server memory *before* Markdown is parsed into HTML and *before* any byte is transmitted across the network. If an anonymous or low-tier visitor requests a document, Tier 4–5 code fences and cryptographic secrets are physically stripped or replaced with high-level architectural synopses.
+   Inside [`sensitivity_engine.py`](file://<eprofile_root>/sensitivity_engine.py), the `filter_document_by_sensitivity()` function executes in server memory *before* Markdown is parsed into HTML and *before* any byte is transmitted across the network. If an anonymous or low-tier visitor requests a document, Tier 4–5 code fences and cryptographic secrets are physically stripped or replaced with high-level architectural synopses.
 2. **Impenetrable to DOM & DevTools Inspection**:
    Because the sensitive source text never leaves the server host, inspecting the DOM via Chrome DevTools or Firefox Developer Tools reveals only the sanitized markup. There are no hidden CSS classes, no obscured `<span>` tags, and no script variables holding the hidden text.
 3. **Protected API & Direct File Vectors**:
    - The asynchronous chapter API (`GET /docs/api/chapter/<category>/<slug>`) returns JSON containing only the server-sanitized HTML (`data.html`). Intercepting the network packets with Wireshark or inspecting them in the DevTools Network tab yields zero proprietary code.
-   - Raw markdown documents in [`content/docs/`](file:///mnt/c/Users/michael/Documents/e_profile/content/docs) are isolated from public static file routes. Direct URL requests (such as `GET /content/docs/devlog/...`) return HTTP `302 Redirect` or `404 Not Found`, permanently preventing raw file exfiltration.
+   - Raw markdown documents in [`content/docs/`](file://<eprofile_root>/content/docs) are isolated from public static file routes. Direct URL requests (such as `GET /content/docs/devlog/...`) return HTTP `302 Redirect` or `404 Not Found`, permanently preventing raw file exfiltration.
 
 In zero-trust architecture: **What is never transmitted cannot be inspected.**
 

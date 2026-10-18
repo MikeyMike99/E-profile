@@ -54,7 +54,7 @@ def generate_continuation_briefing(self, conv_id: str, workspace_path: str = Non
     self.ownership = self._load_ownership()
     meta = self.ownership.get(conv_id, {})
     project_name = meta.get("project") or "DevCore"
-    workspace_dir = workspace_path or "/playground"
+    workspace_dir = workspace_path or "<project_root>/playground"
     
     # ... Reads transcript.jsonl safely, strips system wrappers, caps string lengths ...
     

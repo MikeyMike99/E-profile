@@ -223,6 +223,18 @@
         "anchor": "#EPRF-PORT-LOG-SEC-4_3"
       },
       {
+        "id": "EPRF-PORT-DEVLOG-SEC-6",
+        "num": "6",
+        "title": "The Architectural Parallel: Siraugga vs. E-Profile",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-6"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-7",
+        "num": "7",
+        "title": "The Universal \"Ghost Admin\" Remedy",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-7"
+      },
+      {
         "id": "EPRF-PORT-LOG-SEC-4_4",
         "num": "4.4",
         "title": "Privacy-First Native Analytics (`traffic_metrics.json`)",
@@ -230,7 +242,7 @@
       },
       {
         "id": "EPRF-PORT-LOG-SEC-6",
-        "num": "6",
+        "num": "8",
         "title": "Chapter 5: Screen Reader Accessibility as an Operational Physical Access Point (SecOps & WCAG Synergy)",
         "anchor": "#EPRF-PORT-LOG-SEC-6"
       },
@@ -248,7 +260,7 @@
       },
       {
         "id": "EPRF-PORT-LOG-SEC-7",
-        "num": "7",
+        "num": "9",
         "title": "Chapter 6: The Central Documentation Vault, Sensitivity Scoring, and Master-Detail SPA (October 2026)",
         "anchor": "#EPRF-PORT-LOG-SEC-7"
       },
@@ -278,13 +290,13 @@
       },
       {
         "id": "EPRF-PORT-LOG-SEC-8",
-        "num": "8",
+        "num": "10",
         "title": "Chapter 7: Forensic Commit Index & Architectural Verification",
         "anchor": "#EPRF-PORT-LOG-SEC-8"
       },
       {
         "id": "EPRF-PORT-LOG-SEC-9",
-        "num": "9",
+        "num": "11",
         "title": "Chapter 8: Conclusion & The Sovereignty Dividend",
         "anchor": "#EPRF-PORT-LOG-SEC-9"
       }
@@ -371,7 +383,7 @@
     "category": "audio_suite",
     "title": "Chapter 5: Beginner's Step-by-Step Guide to Creating `compile_joshy.bat` From Scratch",
     "summary": "- **Previous**: [`04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md`](/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE)",
-    "word_count": 2258,
+    "word_count": 2563,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -500,6 +512,42 @@
         "num": "20",
         "title": "Step 9: The Complete Finished `compile_joshy.bat` File",
         "anchor": "#JOSH-PLAY-05-SEC-20"
+      },
+      {
+        "id": "JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-21",
+        "num": "21",
+        "title": "Why Order Matters",
+        "anchor": "#JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-21"
+      },
+      {
+        "id": "JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-22",
+        "num": "22",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-22"
+      },
+      {
+        "id": "JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-23",
+        "num": "23",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-23"
+      },
+      {
+        "id": "JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-24",
+        "num": "24",
+        "title": "Q1: What should I do if my script fails with 'Permission Denied'?",
+        "anchor": "#JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-24"
+      },
+      {
+        "id": "JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-25",
+        "num": "25",
+        "title": "Q2: Why does my file report syntax errors on lines that look correct?",
+        "anchor": "#JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-25"
+      },
+      {
+        "id": "JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-26",
+        "num": "26",
+        "title": "Q3: How do I test the file without modifying live data?",
+        "anchor": "#JOSH-PLAY-05_STEP_BY_STEP_BA-SEC-26"
       }
     ],
     "topics": [
@@ -3338,7 +3386,7 @@
     "category": "devlog",
     "title": "Pillar 05.42: \"From Scratch\" Step-by-Step Creation Guide: Session Rollover & In-Flight Protection",
     "summary": "This guide provides a complete, step-by-step engineering tutorial for building an autonomous, background session rollover and context transfer system from scratch. By following this guide, you will construct a distillati...",
-    "word_count": 716,
+    "word_count": 1021,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -3383,6 +3431,42 @@
         "num": "6",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_42-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-05_42-SEC-1",
+        "num": "1",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_42-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_42-SEC-2",
+        "num": "2",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_42-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_42-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-ARCH-05_42-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-05_42-SEC-4",
+        "num": "4",
+        "title": "Q1: What should I do if my script fails with 'Permission Denied'?",
+        "anchor": "#SIRA-ARCH-05_42-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_42-SEC-5",
+        "num": "5",
+        "title": "Q2: Why does my file report syntax errors on lines that look correct?",
+        "anchor": "#SIRA-ARCH-05_42-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_42-SEC-6",
+        "num": "6",
+        "title": "Q3: How do I test the file without modifying live data?",
+        "anchor": "#SIRA-ARCH-05_42-SEC-6"
       }
     ],
     "topics": [
@@ -3919,6 +4003,18 @@
         "anchor": "#EPRF-PORT-LOG-SEC-4_3"
       },
       {
+        "id": "EPRF-PORT-DEVLOG-SEC-6",
+        "num": "6",
+        "title": "The Architectural Parallel: Siraugga vs. E-Profile",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-6"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-7",
+        "num": "7",
+        "title": "The Universal \"Ghost Admin\" Remedy",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-7"
+      },
+      {
         "id": "EPRF-PORT-LOG-SEC-4_4",
         "num": "4.4",
         "title": "Privacy-First Native Analytics (`traffic_metrics.json`)",
@@ -3926,7 +4022,7 @@
       },
       {
         "id": "EPRF-PORT-LOG-SEC-6",
-        "num": "6",
+        "num": "8",
         "title": "Chapter 5: Screen Reader Accessibility as an Operational Physical Access Point (SecOps & WCAG Synergy)",
         "anchor": "#EPRF-PORT-LOG-SEC-6"
       },
@@ -3944,7 +4040,7 @@
       },
       {
         "id": "EPRF-PORT-LOG-SEC-7",
-        "num": "7",
+        "num": "9",
         "title": "Chapter 6: The Central Documentation Vault, Sensitivity Scoring, and Master-Detail SPA (October 2026)",
         "anchor": "#EPRF-PORT-LOG-SEC-7"
       },
@@ -3974,13 +4070,13 @@
       },
       {
         "id": "EPRF-PORT-LOG-SEC-8",
-        "num": "8",
+        "num": "10",
         "title": "Chapter 7: Forensic Commit Index & Architectural Verification",
         "anchor": "#EPRF-PORT-LOG-SEC-8"
       },
       {
         "id": "EPRF-PORT-LOG-SEC-9",
-        "num": "9",
+        "num": "11",
         "title": "Chapter 8: Conclusion & The Sovereignty Dividend",
         "anchor": "#EPRF-PORT-LOG-SEC-9"
       }
@@ -4058,6 +4154,292 @@
         "slug": "03_The_Forge_of_Sovereignty",
         "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS",
+    "category": "devlog",
+    "title": "Pillar 01.44: Problems Encountered: Cross-Reference Degradation & Tag Clutter Traps",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 871,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-01_44",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-01_44",
+    "versioned_id": "SIRA-DEV-01_44@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-01_44-SEC-1",
+        "num": "1",
+        "title": "Overview & Problem Context",
+        "anchor": "#SIRA-DEV-01_44-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-1",
+        "num": "1",
+        "title": "Breakdown of Specific Tagging & Link Traps",
+        "anchor": "#SIRA-DEV-01_44-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-2",
+        "num": "2",
+        "title": "Trap 1: The Chapter Reordering Link Rot Trap",
+        "anchor": "#SIRA-DEV-01_44-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-3",
+        "num": "3",
+        "title": "Trap 2: The Screen Reader Tag Noise Trap",
+        "anchor": "#SIRA-DEV-01_44-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-4",
+        "num": "4",
+        "title": "Trap 3: The HTML Comment Sanitization Trap",
+        "anchor": "#SIRA-DEV-01_44-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-5",
+        "num": "5",
+        "title": "Trap 4: The Invariant Identity vs. Mutable Version Trap",
+        "anchor": "#SIRA-DEV-01_44-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-2",
+        "num": "2",
+        "title": "Invariant Rules for Documentation Tagging",
+        "anchor": "#SIRA-DEV-01_44-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-01_44-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-6",
+        "num": "6",
+        "title": "What happens if I rename a markdown file but keep its `DOC_ID`?",
+        "anchor": "#SIRA-DEV-01_44-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-7",
+        "num": "7",
+        "title": "How do I know if my metadata tags are breaking screen reader accessibility?",
+        "anchor": "#SIRA-DEV-01_44-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-01_44-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-01_44-SEC-4"
+      }
+    ],
+    "topics": [
+      "accessibility_ui",
+      "workflow",
+      "changelog"
+    ],
+    "order_score": 440,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "echoes",
+        "slug": "CLASS_WORLD_ARCHITECTURE",
+        "title": "Echoes of the World: Class & World Architecture",
+        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "USER_MANUAL",
+        "title": "Siraugga Command Center User Manual & Interface Guide",
+        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH",
+    "category": "devlog",
+    "title": "Pillar 05.43: From-Scratch Creation Guide: Invariant Tagging Validator & AST Anchor Injector",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 1077,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-ARCH-05_43",
+    "version": "v1.0",
+    "canonical_id": "SIRA-ARCH-05_43",
+    "versioned_id": "SIRA-ARCH-05_43@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-ARCH-05_43-SEC-1",
+        "num": "1",
+        "title": "Overview & Starting From Scratch",
+        "anchor": "#SIRA-ARCH-05_43-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-1",
+        "num": "1",
+        "title": "Step-by-Step Script Construction",
+        "anchor": "#SIRA-ARCH-05_43-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-2",
+        "num": "2",
+        "title": "Step 1: Core Imports and Metadata Patterns (Lines 1\u201325)",
+        "anchor": "#SIRA-ARCH-05_43-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-3",
+        "num": "3",
+        "title": "Step 2: The Document Validation Logic (Lines 26\u201355)",
+        "anchor": "#SIRA-ARCH-05_43-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-4",
+        "num": "4",
+        "title": "Step 3: Directory Walker and CLI Entrypoint (Lines 56\u201385)",
+        "anchor": "#SIRA-ARCH-05_43-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-2",
+        "num": "2",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_43-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-3",
+        "num": "3",
+        "title": "Permissions & Execution",
+        "anchor": "#SIRA-ARCH-05_43-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-4",
+        "num": "4",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_43-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-5",
+        "num": "5",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-ARCH-05_43-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-5",
+        "num": "5",
+        "title": "Why does the script use `sys.exit(1)` when a document fails?",
+        "anchor": "#SIRA-ARCH-05_43-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-6",
+        "num": "6",
+        "title": "Can this script be extended to automatically fix broken headers?",
+        "anchor": "#SIRA-ARCH-05_43-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-05_43-SEC-6",
+        "num": "6",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-ARCH-05_43-SEC-6"
+      }
+    ],
+    "topics": [
+      "infrastructure",
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 430,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "echoes",
+        "slug": "CLASS_WORLD_ARCHITECTURE",
+        "title": "Echoes of the World: Class & World Architecture",
+        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "USER_MANUAL",
+        "title": "Siraugga Command Center User Manual & Interface Guide",
+        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
     "publish_status": "draft",
@@ -4321,7 +4703,7 @@
     "category": "devlog",
     "title": "Pillar 05.41: From-Scratch Creation Guide: Thought Vector Obfuscator & Masking Pipeline",
     "summary": "This guide teaches you how to write an in-memory Thought Vector Obfuscation and Prompt Masking pipeline in Python from scratch. It scrubs API keys and developer secrets using regular expressions and verifies frame integr...",
-    "word_count": 400,
+    "word_count": 521,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -4384,6 +4766,12 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_41-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_41-SEC-6",
+        "num": "6",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_41-SEC-6"
       }
     ],
     "topics": [
@@ -4565,11 +4953,294 @@
     "release_date": null
   },
   {
+    "slug": "02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE",
+    "category": "devlog",
+    "title": "Pillar 02.40: Source Code Evidence: CommonMark Reference Parser & AST Heading Anchors",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 766,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "project_code": "EPRF",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-02_40",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-02_40",
+    "versioned_id": "SIRA-DEV-02_40@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-02_40-SEC-1",
+        "num": "1",
+        "title": "Overview & Evidence Context",
+        "anchor": "#SIRA-DEV-02_40-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-1",
+        "num": "1",
+        "title": "Verbatim Source Excerpts",
+        "anchor": "#SIRA-DEV-02_40-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-2",
+        "num": "2",
+        "title": "Excerpt A: Extracting Invariant `DOC_ID` and `VERSION` (`sync_to_eprofile.py`)",
+        "anchor": "#SIRA-DEV-02_40-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-3",
+        "num": "3",
+        "title": "Excerpt B: Invariant Section Anchor Attachment (`e_profile/docs_mod.py`)",
+        "anchor": "#SIRA-DEV-02_40-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-4",
+        "num": "4",
+        "title": "Excerpt C: Structural Tagging & Screen Reader Gatekeeper (`audit_doc_structure.py`)",
+        "anchor": "#SIRA-DEV-02_40-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-2",
+        "num": "2",
+        "title": "What This Source Proves",
+        "anchor": "#SIRA-DEV-02_40-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-02_40-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-5",
+        "num": "5",
+        "title": "How does `_attach_h_id` determine section numbering if my heading has no numbers?",
+        "anchor": "#SIRA-DEV-02_40-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-6",
+        "num": "6",
+        "title": "What prevents the regex from modifying code blocks containing `<h2>` text?",
+        "anchor": "#SIRA-DEV-02_40-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-02_40-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-02_40-SEC-4"
+      }
+    ],
+    "topics": [
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 400,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE",
+    "category": "devlog",
+    "title": "Pillar 04.40: Solutions & Architecture: Canonical Metadata & Section Invariant Architecture",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 839,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-04_40",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-04_40",
+    "versioned_id": "SIRA-DEV-04_40@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-04_40-SEC-1",
+        "num": "1",
+        "title": "System Overview & Architectural Purpose",
+        "anchor": "#SIRA-DEV-04_40-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-2",
+        "num": "2",
+        "title": "Core Architectural Components",
+        "anchor": "#SIRA-DEV-04_40-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-1",
+        "num": "1",
+        "title": "Invariant Identity Specification",
+        "anchor": "#SIRA-DEV-04_40-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-2",
+        "num": "2",
+        "title": "The Pure CommonMark Reference Standard",
+        "anchor": "#SIRA-DEV-04_40-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-3",
+        "num": "3",
+        "title": "Dynamic Heading Anchor Injection",
+        "anchor": "#SIRA-DEV-04_40-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-3",
+        "num": "3",
+        "title": "Why Order Matters in the Metadata Pipeline",
+        "anchor": "#SIRA-DEV-04_40-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-4",
+        "num": "4",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-04_40-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-1",
+        "num": "1",
+        "title": "What happens if I forget to add a `SECTION_ID` above an `<h2>` heading?",
+        "anchor": "#SIRA-DEV-04_40-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-2",
+        "num": "2",
+        "title": "How does the system prevent broken cross-references if a project is deleted?",
+        "anchor": "#SIRA-DEV-04_40-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_40-SEC-5",
+        "num": "5",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-04_40-SEC-5"
+      }
+    ],
+    "topics": [
+      "infrastructure",
+      "accessibility_ui",
+      "changelog"
+    ],
+    "order_score": 400,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "echoes",
+        "slug": "CLASS_WORLD_ARCHITECTURE",
+        "title": "Echoes of the World: Class & World Architecture",
+        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "USER_MANUAL",
+        "title": "Siraugga Command Center User Manual & Interface Guide",
+        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
     "slug": "05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.40: From-Scratch Creation Guide: Zone-Based Sandbox & Wildcard Path Filter",
     "summary": "This guide teaches you how to write a Zone-Based Sandbox Path Filter in Python from scratch. It categorizes files into security tiers and stops directory traversal attacks (`../../`) using canonical path resolution.",
-    "word_count": 471,
+    "word_count": 592,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -4632,6 +5303,12 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_40-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_40-SEC-6",
+        "num": "6",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_40-SEC-6"
       }
     ],
     "topics": [
@@ -4825,7 +5502,7 @@
     "category": "devlog",
     "title": "Pillar 05.39: From-Scratch Creation Guide: RAIA Swarm Supervisor & Loop Suppressor",
     "summary": "This guide teaches you how to write an autonomous multi-agent supervisor in Python from scratch. It implements the **Semantic Tree Protocol (STP)** to prevent conversational loops and manages an N+1 standby array of work...",
-    "word_count": 410,
+    "word_count": 531,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -4882,6 +5559,12 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_39-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_39-SEC-5",
+        "num": "5",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_39-SEC-5"
       }
     ],
     "topics": [
@@ -5344,7 +6027,7 @@
     "category": "devlog",
     "title": "Pillar 05.38: From-Scratch Creation Guide: Inno Setup Windows Installer Script",
     "summary": "This guide teaches you how to write an Inno Setup script (`JOSHY Setup.iss`) and its companion build batch file (`compile_joshy.bat`) line by line from scratch. It compiles your Python executable into a professional Wind...",
-    "word_count": 376,
+    "word_count": 497,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -5401,6 +6084,12 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#JOSH-DOC-05_38-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_38-SEC-5",
+        "num": "5",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_38-SEC-5"
       }
     ],
     "topics": [
@@ -5715,6 +6404,181 @@
     "release_date": null
   },
   {
+    "slug": "03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS",
+    "category": "devlog",
+    "title": "Pillar 03.37: Diagnostic Tests: Metadata Tag Integrity & Screen Reader DOM Logs",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 768,
+    "project": "eprofile",
+    "project_label": "E-Profile Portal",
+    "project_code": "EPRF",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-03_37",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-03_37",
+    "versioned_id": "SIRA-DEV-03_37@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-03_37-SEC-1",
+        "num": "1",
+        "title": "Overview & Test Objective",
+        "anchor": "#SIRA-DEV-03_37-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-1",
+        "num": "1",
+        "title": "Test Suite 1: Automated Multi-Repository Tagging Audit",
+        "anchor": "#SIRA-DEV-03_37-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-2",
+        "num": "2",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_37-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-3",
+        "num": "3",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_37-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-4",
+        "num": "4",
+        "title": "Sanitized Test Output Log",
+        "anchor": "#SIRA-DEV-03_37-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-2",
+        "num": "2",
+        "title": "Test Suite 2: Rendered HTML DOM Inspection",
+        "anchor": "#SIRA-DEV-03_37-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-5",
+        "num": "5",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_37-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-6",
+        "num": "6",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_37-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-1",
+        "num": "1",
+        "title": "First Section",
+        "anchor": "#SIRA-DEV-03_37-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-7",
+        "num": "7",
+        "title": "Sanitized Test Output Log",
+        "anchor": "#SIRA-DEV-03_37-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-03_37-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-8",
+        "num": "8",
+        "title": "Why does `assert '[//]' not in html` pass?",
+        "anchor": "#SIRA-DEV-03_37-SEC-8"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-9",
+        "num": "9",
+        "title": "What happens if an author accidentally puts visible brackets around the ID?",
+        "anchor": "#SIRA-DEV-03_37-SEC-9"
+      },
+      {
+        "id": "SIRA-DEV-03_37-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-03_37-SEC-4"
+      }
+    ],
+    "topics": [
+      "security",
+      "accessibility_ui",
+      "workflow",
+      "changelog"
+    ],
+    "order_score": 370,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 2,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
     "slug": "04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.37: Architectural Blueprint: Zone-Based Sandbox Policies & Wildcard Masking",
@@ -5856,7 +6720,7 @@
     "category": "devlog",
     "title": "Pillar 05.37: From-Scratch Creation Guide: Headless Spotify Controller with Global Hotkeys",
     "summary": "This guide teaches you how to write an accessible headless Spotify controller script (`t.py`) from scratch. It registers global keyboard shortcuts that work when Spotify is minimized and modulates Spotify's internal volu...",
-    "word_count": 433,
+    "word_count": 554,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -5919,6 +6783,12 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#JOSH-DOC-05_37-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_37-SEC-6",
+        "num": "6",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_37-SEC-6"
       }
     ],
     "topics": [
@@ -6390,7 +7260,7 @@
     "category": "devlog",
     "title": "Pillar 05.36: From-Scratch Creation Guide: Local GGUF Runner & Token Cost Calculator",
     "summary": "This guide teaches you how to write a Python script from scratch that connects to a local GGUF model via `llama-cli` and calculates the financial cost of AI tokens in South African Rands (ZAR).",
-    "word_count": 440,
+    "word_count": 676,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -6447,6 +7317,36 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_36-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_36-SEC-5",
+        "num": "5",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_36-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_36-SEC-6",
+        "num": "6",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-ARCH-05_36-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-05_36-SEC-7",
+        "num": "7",
+        "title": "Q1: What should I do if my script fails with 'Permission Denied'?",
+        "anchor": "#SIRA-ARCH-05_36-SEC-7"
+      },
+      {
+        "id": "SIRA-ARCH-05_36-SEC-8",
+        "num": "8",
+        "title": "Q2: Why does my file report syntax errors on lines that look correct?",
+        "anchor": "#SIRA-ARCH-05_36-SEC-8"
+      },
+      {
+        "id": "SIRA-ARCH-05_36-SEC-9",
+        "num": "9",
+        "title": "Q3: How do I test the file without modifying live data?",
+        "anchor": "#SIRA-ARCH-05_36-SEC-9"
       }
     ],
     "topics": [
@@ -7018,7 +7918,7 @@
     "category": "devlog",
     "title": "Pillar 05.35: From-Scratch Creation Guide: Directory-Aware Bash Shell Auto-Venv Hook",
     "summary": "This guide teaches you how to write the `_auto_venv_hook` and directory-aware shell functions line by line into your Linux user profile (`~/.bashrc`). This hook automatically switches virtual environments when you change...",
-    "word_count": 452,
+    "word_count": 603,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -7081,6 +7981,12 @@
         "num": "4",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_35-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-ENV_05_35-SEC-6",
+        "num": "6",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-ENV_05_35-SEC-6"
       }
     ],
     "topics": [
@@ -7642,7 +8548,7 @@
     "category": "devlog",
     "title": "Pillar 05.34: From-Scratch Creation Guide: Environment Scratch & Dependency Purge Tool",
     "summary": "This guide teaches you how to write the `scratch_devcore_from_alp.sh` script line by line from a completely blank editor window. This script safely verifies that a new virtual environment is fully functional and running...",
-    "word_count": 693,
+    "word_count": 765,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -7717,6 +8623,12 @@
         "num": "6",
         "title": "Cross-Reference Navigation",
         "anchor": "#SIRA-DOC-05_34-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-05_34-SEC-6",
+        "num": "6",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_34-SEC-6"
       }
     ],
     "topics": [
@@ -8275,7 +9187,7 @@
     "category": "devlog",
     "title": "OWASP Security Headers & CSP from Scratch",
     "summary": "Web developer applications often suffer from baseline OWASP vulnerabilities like Clickjacking, MIME-Sniffing, and Cross-Site Scripting because default frameworks do not attach HTTP security headers.",
-    "word_count": 591,
+    "word_count": 709,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -8308,6 +9220,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_33-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_33-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_33-SEC-1"
       }
     ],
     "topics": [
@@ -8876,7 +9794,7 @@
     "category": "devlog",
     "title": "PreToolUse Hook Interceptor from Scratch",
     "summary": "Securing web APIs is not enough when autonomous AI agents have native tools to edit files and run terminal commands. Without pre-execution interception, an agent can modify critical system files directly.",
-    "word_count": 624,
+    "word_count": 742,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -8909,6 +9827,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_32-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_32-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_32-SEC-1"
       }
     ],
     "topics": [
@@ -9401,7 +10325,7 @@
     "category": "devlog",
     "title": "Raugus Map AST & Inode Indexer from Scratch",
     "summary": "Exposing raw physical file paths to autonomous agents creates attack surfaces for path traversal and filesystem evasion attacks.",
-    "word_count": 665,
+    "word_count": 783,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -9434,6 +10358,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_31-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_31-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_31-SEC-1"
       }
     ],
     "topics": [
@@ -9924,7 +10854,7 @@
     "category": "devlog",
     "title": "KMS Keychain & Cold Storage from Scratch",
     "summary": "Relying on a single static encryption key creates total vulnerability if the key is exposed, while rotating keys naively causes historical files to become unreadable.",
-    "word_count": 698,
+    "word_count": 816,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -9957,6 +10887,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_30-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_30-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_30-SEC-1"
       }
     ],
     "topics": [
@@ -10441,7 +11377,7 @@
     "category": "devlog",
     "title": "POPIA Offline PII Scrubber from Scratch",
     "summary": "Sending raw user documents or source code to external cloud AI models violates strict regional data privacy laws like South Africa's Protection of Personal Information Act (POPIA).",
-    "word_count": 693,
+    "word_count": 811,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -10474,6 +11410,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_29-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_29-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_29-SEC-1"
       }
     ],
     "topics": [
@@ -10924,7 +11866,7 @@
     "category": "devlog",
     "title": "NVDA DLL Coordinate Audio Engine from Scratch",
     "summary": "Standard game loops and command-line scripts rely on visual monitors. For blind developers, terminal output often results in the frustrating \"blank, blank, blank\" screen reader silence.",
-    "word_count": 693,
+    "word_count": 811,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
@@ -10957,6 +11899,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_28-SEC-4"
+      },
+      {
+        "id": "JOSH-ARCH-05_28-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#JOSH-ARCH-05_28-SEC-1"
       }
     ],
     "topics": [
@@ -11414,7 +12362,7 @@
     "category": "devlog",
     "title": "Offline Password Dictionary Auditor from Scratch",
     "summary": "Developers often assume that putting a password on a `.zip` archive guarantees complete data security. In reality, standard zip files historically used legacy **ZipCrypto**, which can be cracked in seconds.",
-    "word_count": 555,
+    "word_count": 673,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -11447,6 +12395,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_27-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_27-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_27-SEC-1"
       }
     ],
     "topics": [
@@ -11823,7 +12777,7 @@
     "category": "devlog",
     "title": "Central SIEM Telemetry Logger from Scratch",
     "summary": "Multi-agent swarms generate continuous operational telemetry. Without a centralized, high-throughput logging engine, security violations and quota warnings are lost in transient terminal scrolls.",
-    "word_count": 609,
+    "word_count": 727,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -11856,6 +12810,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_26-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_26-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_26-SEC-1"
       }
     ],
     "topics": [
@@ -12343,7 +13303,7 @@
     "category": "devlog",
     "title": "Deployment Token Auth Gateway from Scratch",
     "summary": "Deploying an autonomous AI web portal across a local network or remote VM without authentication creates an open door for unauthorized code execution.",
-    "word_count": 684,
+    "word_count": 802,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -12376,6 +13336,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_25-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_25-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_25-SEC-1"
       }
     ],
     "topics": [
@@ -12837,7 +13803,7 @@
     "category": "devlog",
     "title": "Accessible Video Player Application from Scratch",
     "summary": "Standard web video players rely on visual timelines and mouse hover effects, and embedding third-party players inside iframes frequently traps keyboard navigation.",
-    "word_count": 807,
+    "word_count": 925,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "project_code": "ACCS",
@@ -12870,6 +13836,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_24-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_24-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_24-SEC-1"
       }
     ],
     "topics": [
@@ -13350,7 +14322,7 @@
     "category": "devlog",
     "title": "Custom Pygame Screen Reader Chunk Reader from Scratch",
     "summary": "When text documents balloon into hundreds of thousands of lines, standard text editors and IDEs choke, crash Language Server Protocols, and freeze screen reader speech.",
-    "word_count": 804,
+    "word_count": 922,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "project_code": "ACCS",
@@ -13383,6 +14355,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_23-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_23-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_23-SEC-1"
       }
     ],
     "topics": [
@@ -13855,7 +14833,7 @@
     "category": "devlog",
     "title": "Model Quota Fallback & Accessible Banner from Scratch",
     "summary": "When developers run intensive coding tasks with heavy reasoning models (such as `pro` or high-effort reasoning configurations), API rate limits (HTTP 429) can exhaust quotas without warning. Without graceful handling, th...",
-    "word_count": 702,
+    "word_count": 820,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -13894,6 +14872,12 @@
         "num": "5",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_22-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_22-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_22-SEC-1"
       }
     ],
     "topics": [
@@ -14393,7 +15377,7 @@
     "category": "devlog",
     "title": "PyWebView Desktop Wrapper from Scratch",
     "summary": "Developers running AI portals in web browsers face constant interruptions from external browser popups, accidental tab closures, and unmanaged background server processes.",
-    "word_count": 676,
+    "word_count": 794,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "project_code": "ACCS",
@@ -14426,6 +15410,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_21-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_21-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_21-SEC-1"
       }
     ],
     "topics": [
@@ -14899,7 +15889,7 @@
     "category": "devlog",
     "title": "WCAG Accessible Slash Command Combobox from Scratch",
     "summary": "A common flaw in modern chat web applications is the uncoordinated slash command menu. When a developer types `/` and uses keyboard arrows to select a command, standard event handlers often submit the incomplete prompt o...",
-    "word_count": 877,
+    "word_count": 995,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -14932,6 +15922,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_20-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_20-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_20-SEC-1"
       }
     ],
     "topics": [
@@ -15409,7 +16405,7 @@
     "category": "devlog",
     "title": "Game Engine WebSocket Bridge from Scratch",
     "summary": "Modern video games and virtual simulations require intelligent NPCs, dynamic quest generation, and real-time world narration. However, embedding heavy AI runtimes directly inside game engines introduces memory bloat and...",
-    "word_count": 672,
+    "word_count": 790,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -15442,6 +16438,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_19-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_19-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_19-SEC-1"
       }
     ],
     "topics": [
@@ -16012,7 +17014,7 @@
     "category": "devlog",
     "title": "Pre-Flight Autonomous Self-Healer from Scratch",
     "summary": "When backend modules fail due to accidental syntax errors or corrupted patch deployments, standard servers crash abruptly on boot, taking down developer dashboards and terminating active WebSocket streams.",
-    "word_count": 738,
+    "word_count": 856,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -16045,6 +17047,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_18-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_18-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_18-SEC-1"
       }
     ],
     "topics": [
@@ -16550,7 +17558,7 @@
     "category": "devlog",
     "title": "PE Binary Stamper & Verifier from Scratch",
     "summary": "Recompiling a large Python engine using Nuitka takes 8 to 15 minutes. If license keys, user tiers, or build metadata are baked directly into source code, creating custom builds for different developers becomes impractica...",
-    "word_count": 633,
+    "word_count": 702,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -16583,6 +17591,12 @@
         "num": "4",
         "title": "Beginner Coder Q&A",
         "anchor": "#SIRA-DOC-05_17-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_17-SEC-1",
+        "num": "1",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_17-SEC-1"
       }
     ],
     "topics": [
@@ -17107,7 +18121,7 @@
     "category": "devlog",
     "title": "Chapter 05_16: KMS Mnemonic Seed Phrase Recovery From Scratch",
     "summary": "A step-by-step guide to writing the offline **KMS Mnemonic Seed Phrase Generator & Disaster Recovery Engine** (`kms_recovery.py`) line by line from a completely blank text editor window.",
-    "word_count": 987,
+    "word_count": 1108,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -17194,6 +18208,12 @@
         "num": "13",
         "title": "Next Steps & Related Chapters",
         "anchor": "#SIRA-DOC-05_16-SEC-13"
+      },
+      {
+        "id": "SIRA-ARCH-05_16-SEC-14",
+        "num": "14",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_16-SEC-14"
       }
     ],
     "topics": [
@@ -17748,7 +18768,7 @@
     "category": "devlog",
     "title": "Chapter 05_15: Git Automation & Session Recorder From Scratch",
     "summary": "A step-by-step guide to writing the developer workflow automation and session recording script (`helpers.sh`) line by line from a completely blank text editor window.",
-    "word_count": 1193,
+    "word_count": 1314,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -17835,6 +18855,12 @@
         "num": "13",
         "title": "Next Steps & Related Chapters",
         "anchor": "#SIRA-DOC-05_15-SEC-13"
+      },
+      {
+        "id": "SIRA-ARCH-05_15-SEC-14",
+        "num": "14",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_15-SEC-14"
       }
     ],
     "topics": [
@@ -18376,7 +19402,7 @@
     "category": "devlog",
     "title": "Chapter 05_14: Accessible Screen Reader Speech Module From Scratch",
     "summary": "A step-by-step guide to writing the standalone assistive speech module (`screenreader_speak.py`) line by line from a completely blank text editor window.",
-    "word_count": 875,
+    "word_count": 996,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -18457,6 +19483,12 @@
         "num": "12",
         "title": "Next Steps & Related Chapters",
         "anchor": "#SIRA-DOC-05_14-SEC-12"
+      },
+      {
+        "id": "SIRA-ARCH-05_14-SEC-13",
+        "num": "13",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_14-SEC-13"
       }
     ],
     "topics": [
@@ -18997,7 +20029,7 @@
     "category": "devlog",
     "title": "Chapter 05_13: Zero-Modification Exam Engine From Scratch",
     "summary": "A step-by-step guide to writing the schema normalization engine (`format_exam.py`) line by line from a completely blank text editor window.",
-    "word_count": 979,
+    "word_count": 1100,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
     "project_code": "ACCS",
@@ -19078,6 +20110,12 @@
         "num": "12",
         "title": "Next Steps & Related Chapters",
         "anchor": "#SIRA-DOC-05_13-SEC-12"
+      },
+      {
+        "id": "SIRA-ARCH-05_13-SEC-13",
+        "num": "13",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_13-SEC-13"
       }
     ],
     "topics": [
@@ -19681,7 +20719,7 @@
     "category": "devlog",
     "title": "Chapter 05_12: Native Transcript Tailer & Audio Router From Scratch",
     "summary": "A step-by-step guide to writing the cross-platform **Native Transcript Tailer & Audio Event Router** (`transcript_tailer.py`) line by line from a completely blank text editor window.",
-    "word_count": 917,
+    "word_count": 1038,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -19762,6 +20800,12 @@
         "num": "12",
         "title": "Next Steps & Related Chapters",
         "anchor": "#SIRA-DOC-05_12-SEC-12"
+      },
+      {
+        "id": "JOSH-ARCH-05_12-SEC-13",
+        "num": "13",
+        "title": "Why Order Matters",
+        "anchor": "#JOSH-ARCH-05_12-SEC-13"
       }
     ],
     "topics": [
@@ -20332,7 +21376,7 @@
     "category": "devlog",
     "title": "Chapter 05_11: Cross-Platform Semantic Mantrap From Scratch",
     "summary": "A step-by-step guide to writing the cross-platform **Semantic Mantrap** (`mantrap.py`) line by line from a completely blank text editor window.",
-    "word_count": 917,
+    "word_count": 1038,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -20413,6 +21457,12 @@
         "num": "12",
         "title": "Next Steps & Related Chapters",
         "anchor": "#SIRA-DOC-05_11-SEC-12"
+      },
+      {
+        "id": "SIRA-ARCH-05_11-SEC-13",
+        "num": "13",
+        "title": "Why Order Matters",
+        "anchor": "#SIRA-ARCH-05_11-SEC-13"
       }
     ],
     "topics": [
@@ -20951,7 +22001,7 @@
     "category": "devlog",
     "title": "Pillar 05.10: From-Scratch Creation Guide: WSL/Windows File Bridge",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 568,
+    "word_count": 686,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -21014,6 +22064,12 @@
         "num": "9",
         "title": "Q: Does this work for binary files (like images or zip archives)?",
         "anchor": "#SIRA-DOC-05_10-SEC-9"
+      },
+      {
+        "id": "SIRA-ARCH-05_10-SEC-10",
+        "num": "10",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_10-SEC-10"
       }
     ],
     "topics": [
@@ -21567,7 +22623,7 @@
     "category": "devlog",
     "title": "Pillar 05.9: From-Scratch Creation Guide: Offline Password Audit Lab",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 528,
+    "word_count": 646,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -21636,6 +22692,12 @@
         "num": "10",
         "title": "Q: How does adding a salt stop this script?",
         "anchor": "#SIRA-DOC-05_09-SEC-10"
+      },
+      {
+        "id": "SIRA-ARCH-05_09-SEC-11",
+        "num": "11",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_09-SEC-11"
       }
     ],
     "topics": [
@@ -22218,7 +23280,7 @@
     "category": "devlog",
     "title": "Pillar 05.8: From-Scratch Creation Guide: Cinematic TTS Proxy & Sanitizer",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 617,
+    "word_count": 735,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -22287,6 +23349,12 @@
         "num": "10",
         "title": "Q: What is the ideal word count for an audio developer alert?",
         "anchor": "#SIRA-DOC-05_08-SEC-10"
+      },
+      {
+        "id": "SIRA-ARCH-05_08-SEC-11",
+        "num": "11",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_08-SEC-11"
       }
     ],
     "topics": [
@@ -22898,7 +23966,7 @@
     "category": "devlog",
     "title": "Pillar 05.7: From-Scratch Creation Guide: Bootstrap Supervisor Gateway",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 570,
+    "word_count": 688,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -22967,6 +24035,12 @@
         "num": "10",
         "title": "Q: What is `py_compile`?",
         "anchor": "#SIRA-DOC-05_07-SEC-10"
+      },
+      {
+        "id": "SIRA-ARCH-05_07-SEC-11",
+        "num": "11",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_07-SEC-11"
       }
     ],
     "topics": [
@@ -23595,7 +24669,7 @@
     "category": "devlog",
     "title": "Pillar 05.6: From-Scratch Creation Guide: Forensic Session Vault",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 575,
+    "word_count": 693,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -23658,6 +24732,12 @@
         "num": "9",
         "title": "Q: Who is allowed to read files in the vault directory?",
         "anchor": "#SIRA-DOC-05_06-SEC-9"
+      },
+      {
+        "id": "SIRA-ARCH-05_06-SEC-10",
+        "num": "10",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_06-SEC-10"
       }
     ],
     "topics": [
@@ -24275,7 +25355,7 @@
     "category": "devlog",
     "title": "Pillar 05.5: From-Scratch Creation Guide: Zero-Downtime Hot-Patch Runner",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 638,
+    "word_count": 756,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -24338,6 +25418,12 @@
         "num": "9",
         "title": "Q: What is `sys.modules`?",
         "anchor": "#SIRA-DOC-05_05-SEC-9"
+      },
+      {
+        "id": "SIRA-ARCH-05_05-SEC-10",
+        "num": "10",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_05-SEC-10"
       }
     ],
     "topics": [
@@ -25921,7 +27007,7 @@
     "category": "devlog",
     "title": "Pillar 05.4: From-Scratch Creation Guide: Raugus Opaque VFS Resolver",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 657,
+    "word_count": 775,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -25990,6 +27076,12 @@
         "num": "10",
         "title": "Q: Does this prevent hackers from seeing where files live on the server?",
         "anchor": "#SIRA-DOC-05_04-SEC-10"
+      },
+      {
+        "id": "SIRA-ARCH-05_04-SEC-11",
+        "num": "11",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_04-SEC-11"
       }
     ],
     "topics": [
@@ -27564,7 +28656,7 @@
     "category": "devlog",
     "title": "Pillar 05.3: From-Scratch Creation Guide: Zero-Trust RBAC & Path Defense",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 691,
+    "word_count": 809,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -27639,6 +28731,12 @@
         "num": "11",
         "title": "Q: What does `fail closed` mean in cybersecurity?",
         "anchor": "#SIRA-DOC-05_03-SEC-11"
+      },
+      {
+        "id": "SIRA-ARCH-05_03-SEC-12",
+        "num": "12",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_03-SEC-12"
       }
     ],
     "topics": [
@@ -29200,7 +30298,7 @@
     "category": "devlog",
     "title": "Pillar 05.2: From-Scratch Creation Guide: Accessible Web Portal & Flip Card",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 690,
+    "word_count": 808,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -29269,6 +30367,12 @@
         "num": "10",
         "title": "Q: Why not use a rich visual editor like TinyMCE?",
         "anchor": "#SIRA-DOC-05_02-SEC-10"
+      },
+      {
+        "id": "SIRA-ARCH-05_02-SEC-11",
+        "num": "11",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_02-SEC-11"
       }
     ],
     "topics": [
@@ -31050,7 +32154,7 @@
     "category": "devlog",
     "title": "Pillar 05.1: From-Scratch Creation Guide: Asynchronous Quart Streaming Server",
     "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
-    "word_count": 654,
+    "word_count": 772,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -31125,6 +32229,12 @@
         "num": "11",
         "title": "Q: What is `popleft()`?",
         "anchor": "#SIRA-DOC-05_01-SEC-11"
+      },
+      {
+        "id": "SIRA-ARCH-05_01-SEC-12",
+        "num": "12",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_01-SEC-12"
       }
     ],
     "topics": [
@@ -32705,6 +33815,36 @@
         "num": "11",
         "title": "Defense-in-Depth Strategies",
         "anchor": "#SIRA-TXT-CH01-SEC-11"
+      },
+      {
+        "id": "SIRA-TXT-CH_01-SEC-12",
+        "num": "12",
+        "title": "Strategy 1: Hostile Layering",
+        "anchor": "#SIRA-TXT-CH_01-SEC-12"
+      },
+      {
+        "id": "SIRA-TXT-CH_01-SEC-13",
+        "num": "13",
+        "title": "Strategy 2: Absolute Limitation (Least Privilege)",
+        "anchor": "#SIRA-TXT-CH_01-SEC-13"
+      },
+      {
+        "id": "SIRA-TXT-CH_01-SEC-14",
+        "num": "14",
+        "title": "Strategy 3: Cryptographic Diversity",
+        "anchor": "#SIRA-TXT-CH_01-SEC-14"
+      },
+      {
+        "id": "SIRA-TXT-CH_01-SEC-15",
+        "num": "15",
+        "title": "Strategy 4: The Critical Distinction\u2014Obscurity vs. True Cryptography",
+        "anchor": "#SIRA-TXT-CH_01-SEC-15"
+      },
+      {
+        "id": "SIRA-TXT-CH_01-SEC-16",
+        "num": "16",
+        "title": "Strategy 5: Operational Simplicity (The Silent Execution)",
+        "anchor": "#SIRA-TXT-CH_01-SEC-16"
       }
     ],
     "topics": [
@@ -32764,7 +33904,7 @@
     "category": "devlog",
     "title": "Master Documentation Index: Siraugga Autonomous Agent & Zero-Trust Command Center",
     "summary": "Welcome to the comprehensive, beginner-friendly technical documentation suite for **Siraugga**\u2014the accessible, event-driven, zero-trust autonomous development platform and web portal.",
-    "word_count": 3710,
+    "word_count": 3842,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -33572,6 +34712,158 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "audio_suite",
+        "project_label": "JOSHY Audio Suite",
+        "category": "audio_suite",
+        "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
+        "title": "JOSHY Audio Suite: Guide to Screen Readers & Accessibility",
+        "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "echoes",
+        "slug": "CLASS_WORLD_ARCHITECTURE",
+        "title": "Echoes of the World: Class & World Architecture",
+        "relation": "Spatial Audio Trigonometry, 8-Way Compass & Audio Game Loop"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "USER_MANUAL",
+        "title": "Siraugga Command Center User Manual & Interface Guide",
+        "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING",
+    "category": "devlog",
+    "title": "Pillar 00G: Beginner Guide to Invariant Metadata & Canonical Tagging",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "word_count": 878,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-00G",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-00G",
+    "versioned_id": "SIRA-DEV-00G@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-00G-SEC-1",
+        "num": "1",
+        "title": "What Is Documentation Metadata Tagging?",
+        "anchor": "#SIRA-DEV-00G-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-2",
+        "num": "2",
+        "title": "Invariant Identity vs. Mutable Version",
+        "anchor": "#SIRA-DEV-00G-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-3",
+        "num": "3",
+        "title": "The Pure Markdown Metadata Standard (Zero Screen Reader Clutter)",
+        "anchor": "#SIRA-DEV-00G-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-1",
+        "num": "1",
+        "title": "The CommonMark Link Reference Technique",
+        "anchor": "#SIRA-DEV-00G-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-3",
+        "num": "3",
+        "title": "Section Title",
+        "anchor": "#SIRA-DEV-00G-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-2",
+        "num": "2",
+        "title": "Why This Technique Works",
+        "anchor": "#SIRA-DEV-00G-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-4",
+        "num": "4",
+        "title": "Standardized Ecosystem Code Registry",
+        "anchor": "#SIRA-DEV-00G-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-3",
+        "num": "3",
+        "title": "Project Codes",
+        "anchor": "#SIRA-DEV-00G-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-4",
+        "num": "4",
+        "title": "Collection Codes",
+        "anchor": "#SIRA-DEV-00G-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-5",
+        "num": "5",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-00G-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-5",
+        "num": "5",
+        "title": "Why can't I just use standard HTML comments like `<!-- DOC_ID: ... -->`?",
+        "anchor": "#SIRA-DEV-00G-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-6",
+        "num": "6",
+        "title": "How do section IDs help visitors share links?",
+        "anchor": "#SIRA-DEV-00G-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-00G-SEC-6",
+        "num": "6",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-00G-SEC-6"
+      }
+    ],
+    "topics": [
+      "accessibility_ui",
+      "origin_story",
+      "changelog"
+    ],
+    "order_score": 0,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -35746,10 +37038,22 @@
         "anchor": "#SIRA-MAN-TIMELINE-SEC-2"
       },
       {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-4",
+        "num": "4",
+        "title": "The Audio Player: Solving a Real Problem",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-4"
+      },
+      {
         "id": "SIRA-MAN-TIMELINE-SEC-3",
         "num": "3",
         "title": "Phase 2: The Grind of the Slot Machine & The Inherited Menu",
         "anchor": "#SIRA-MAN-TIMELINE-SEC-3"
+      },
+      {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-5",
+        "num": "5",
+        "title": "The Slot Machine: Pioneering the Gameplay Loop",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-5"
       },
       {
         "id": "SIRA-MAN-TIMELINE-SEC-3",
@@ -35764,10 +37068,46 @@
         "anchor": "#SIRA-MAN-TIMELINE-SEC-4"
       },
       {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-6",
+        "num": "6",
+        "title": "The First RPG Engine: Navigation and Physics",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-6"
+      },
+      {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-7",
+        "num": "7",
+        "title": "The Architecture Layer: The Menu and State Manager",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-7"
+      },
+      {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-8",
+        "num": "8",
+        "title": "The Profile Manager: Privacy and Security First",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-8"
+      },
+      {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-9",
+        "num": "9",
+        "title": "The Security Seed",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-9"
+      },
+      {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-10",
+        "num": "10",
+        "title": "Stress Testing the Stack",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-10"
+      },
+      {
         "id": "SIRA-MAN-TIMELINE-SEC-5",
         "num": "5",
         "title": "Phase 4: The Multiplayer Physics Engine (Spring 2025)",
         "anchor": "#SIRA-MAN-TIMELINE-SEC-5"
+      },
+      {
+        "id": "SIRA-MAN-00_THE_FORENSIC_TI-SEC-11",
+        "num": "11",
+        "title": "The Threaded Gravity Engine",
+        "anchor": "#SIRA-MAN-00_THE_FORENSIC_TI-SEC-11"
       },
       {
         "id": "SIRA-MAN-TIMELINE-SEC-6",

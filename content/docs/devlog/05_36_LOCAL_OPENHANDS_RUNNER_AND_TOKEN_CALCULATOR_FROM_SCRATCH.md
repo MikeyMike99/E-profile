@@ -107,3 +107,31 @@ if __name__ == "__main__":
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE.md`](/docs/devlog/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS.md`](/docs/devlog/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE.md`](/docs/devlog/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE)
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+
+
+---
+
+## Beginner Coder Q&A
+
+### Q1: What should I do if my script fails with 'Permission Denied'?
+**A:** Grant executable permissions on Linux or WSL using `chmod +x <filename>`, or verify that your terminal is running inside the intended virtual environment.
+
+### Q2: Why does my file report syntax errors on lines that look correct?
+**A:** This is almost always caused by Windows carriage return line endings (`CRLF`). In your text editor, switch the line ending setting to `LF` (Unix) and re-save the file.
+
+### Q3: How do I test the file without modifying live data?
+**A:** Review the 10-Second Verification Checklist above to run safe inspection commands before integrating the file into production.
+

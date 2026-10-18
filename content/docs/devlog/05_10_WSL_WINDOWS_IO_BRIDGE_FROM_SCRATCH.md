@@ -118,3 +118,17 @@ print('[PASS] Cross-OS file bridge verified with 100% byte integrity!')
 ### Q: Does this work for binary files (like images or zip archives)?
 [//]: # (SECTION_ID: SIRA-DOC-05_10-SEC-9)
 **A:** Yes! Simply open the temporary file in binary mode (`mode='wb'`) and write raw bytes. The `wsl.exe cp` command will transfer the binary file flawlessly.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

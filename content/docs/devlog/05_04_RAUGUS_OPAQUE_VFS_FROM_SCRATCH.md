@@ -163,3 +163,17 @@ print('[PASS] Admin Read Success:\n', code.strip())
 ### Q: Does this prevent hackers from seeing where files live on the server?
 [//]: # (SECTION_ID: SIRA-DOC-05_04-SEC-10)
 **A:** Yes! The client only ever sends and receives the string `"app.demo::secret_func"`. The actual Linux directory path remains hidden on the server.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+
