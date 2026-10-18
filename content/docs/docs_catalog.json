@@ -116,7 +116,7 @@
     "category": "eprofile",
     "title": "E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 5098,
+    "word_count": 6009,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -297,8 +297,50 @@
       {
         "id": "EPRF-PORT-LOG-SEC-9",
         "num": "11",
-        "title": "Chapter 8: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 8: The Automated Quality Gate & Tagging Invariant Architecture",
         "anchor": "#EPRF-PORT-LOG-SEC-9"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-10",
+        "num": "12",
+        "title": "The 4-Category Structural Taxonomy",
+        "anchor": "#EPRF-PORT-LOG-SEC-10"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-11",
+        "num": "13",
+        "title": "The \"Zero-Manual\" Remediation Engine & Pre-Commit Hook",
+        "anchor": "#EPRF-PORT-LOG-SEC-11"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-12",
+        "num": "14",
+        "title": "Chapter 9: Curated Release Staging, In-Place Surgery & Dual Persistence",
+        "anchor": "#EPRF-PORT-LOG-SEC-12"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-13",
+        "num": "15",
+        "title": "The 5-State Release Lifecycle (`release_schedule.json`)",
+        "anchor": "#EPRF-PORT-LOG-SEC-13"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-14",
+        "num": "16",
+        "title": "Server-Side In-Place Markdown Surgery",
+        "anchor": "#EPRF-PORT-LOG-SEC-14"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-15",
+        "num": "17",
+        "title": "Dual-Persistence Synchronization & 26-Point Security Verification",
+        "anchor": "#EPRF-PORT-LOG-SEC-15"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-16",
+        "num": "18",
+        "title": "Chapter 10: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-16"
       }
     ],
     "topics": [
@@ -3956,7 +3998,7 @@
     "category": "devlog",
     "title": "E-Profile Architecture & Cybersecurity Devlog",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 5098,
+    "word_count": 6009,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -4137,8 +4179,50 @@
       {
         "id": "EPRF-PORT-LOG-SEC-9",
         "num": "11",
-        "title": "Chapter 8: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 8: The Automated Quality Gate & Tagging Invariant Architecture",
         "anchor": "#EPRF-PORT-LOG-SEC-9"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-10",
+        "num": "12",
+        "title": "The 4-Category Structural Taxonomy",
+        "anchor": "#EPRF-PORT-LOG-SEC-10"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-11",
+        "num": "13",
+        "title": "The \"Zero-Manual\" Remediation Engine & Pre-Commit Hook",
+        "anchor": "#EPRF-PORT-LOG-SEC-11"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-12",
+        "num": "14",
+        "title": "Chapter 9: Curated Release Staging, In-Place Surgery & Dual Persistence",
+        "anchor": "#EPRF-PORT-LOG-SEC-12"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-13",
+        "num": "15",
+        "title": "The 5-State Release Lifecycle (`release_schedule.json`)",
+        "anchor": "#EPRF-PORT-LOG-SEC-13"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-14",
+        "num": "16",
+        "title": "Server-Side In-Place Markdown Surgery",
+        "anchor": "#EPRF-PORT-LOG-SEC-14"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-15",
+        "num": "17",
+        "title": "Dual-Persistence Synchronization & 26-Point Security Verification",
+        "anchor": "#EPRF-PORT-LOG-SEC-15"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-16",
+        "num": "18",
+        "title": "Chapter 10: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-16"
       }
     ],
     "topics": [
