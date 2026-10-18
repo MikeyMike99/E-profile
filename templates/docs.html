@@ -891,8 +891,219 @@
         line-height: 1.65;
         color: var(--text-bright);
         margin: 0;
+        margin: 0;
     }
 
+    /* Documentation Scope & System Maturity Status Box */
+    .doc-status-scope-box {
+        background: rgba(12, 16, 24, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 18px 22px;
+        margin-top: 18px;
+    }
+
+    .status-scope-title {
+        font-family: monospace;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .status-scope-desc {
+        font-size: 0.92rem;
+        line-height: 1.55;
+        color: var(--text-dim);
+        margin: 0 0 14px 0;
+    }
+
+    .status-scope-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    .status-scope-col {
+        border-radius: 6px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .status-scope-col.verified {
+        background: rgba(0, 255, 136, 0.04);
+        border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .status-scope-col.incomplete {
+        background: rgba(255, 170, 0, 0.04);
+        border: 1px solid rgba(255, 170, 0, 0.35);
+    }
+
+    .status-scope-col-header {
+        font-family: monospace;
+        font-size: 0.88rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-scope-col.verified .status-scope-col-header {
+        color: #00ff88;
+    }
+
+    .status-scope-col.incomplete .status-scope-col-header {
+        color: #ffaa00;
+    }
+
+    .status-scope-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .status-scope-list li {
+        font-size: 0.86rem;
+        line-height: 1.45;
+        color: var(--text-bright);
+        padding-left: 14px;
+        position: relative;
+    }
+
+    .status-scope-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--text-dim);
+    }
+
+    .status-scope-list strong {
+        color: #fff;
+    }
+
+    /* Fast Navigation / Quick Actions Bar */
+    .landing-quick-nav-bar {
+        background: linear-gradient(135deg, rgba(0, 243, 255, 0.08), rgba(12, 18, 28, 0.95));
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        border-radius: 8px;
+        padding: 14px 18px;
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .quick-nav-title {
+        font-family: monospace;
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .quick-nav-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .quick-action-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: monospace;
+        font-size: 0.82rem;
+        font-weight: 800;
+        padding: 8px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .quick-action-pill.jump-link {
+        background: rgba(0, 243, 255, 0.12);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+    }
+
+    .quick-action-pill.jump-link:hover, .quick-action-pill.jump-link:focus {
+        background: var(--accent);
+        color: #000;
+        outline: none;
+        box-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
+    }
+
+    .quick-action-pill.filter-btn {
+        background: rgba(0, 255, 136, 0.12);
+        border: 1px solid #00ff88;
+        color: #00ff88;
+    }
+
+    .quick-action-pill.filter-btn:hover, .quick-action-pill.filter-btn:focus {
+        background: #00ff88;
+        color: #000;
+        outline: none;
+        box-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+    }
+
+    .quick-action-pill.read-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+
+    .quick-action-pill.read-btn:hover, .quick-action-pill.read-btn:focus {
+        border-color: #fff;
+        background: rgba(255, 255, 255, 0.18);
+        outline: none;
+    }
+
+    .badge-new-pill {
+        font-family: monospace;
+        font-size: 0.6rem;
+        font-weight: 900;
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.4);
+        padding: 1px 5px;
+        border-radius: 3px;
+        margin-left: 4px;
+        display: inline-block;
+    }
+
+    .badge-recency-pill {
+        font-family: monospace;
+        font-size: 0.65rem;
+        font-weight: 800;
+        background: rgba(0, 255, 136, 0.15);
+        color: #00ff88;
+        border: 1px solid rgba(0, 255, 136, 0.4);
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+
+    .cat-pill-btn[data-cat="recent"] {
+        color: #00ff88;
+        border-color: rgba(0, 255, 136, 0.35);
+    }
+
+    .cat-pill-btn[data-cat="recent"].active {
+        background: #00ff88;
+        color: #000;
+        font-weight: 900;
+    }
     /* 2. Guided Pathways (How to Use / Where to Start) */
     .how-to-use-section {
         margin-bottom: 35px;
@@ -1230,8 +1441,8 @@
 <div class="docs-root" id="docs-root">
     <!-- Screen Reader Skip Navigation Links -->
     <a href="#main-content" class="skip-link">Skip to Main Documentation Content</a>
+    <a href="#latest-changes-section" class="skip-link">Skip to Latest Changes & Updates ({{ latest_updates|length }})</a>
     <a href="#sidebar-search-input" class="skip-link">Skip to Chapter Navigator Search</a>
-
     <!-- Accessibility Live Region for Screen Readers -->
     <div id="docs-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
@@ -1299,8 +1510,10 @@
             </div>
 
             <!-- 3. Category Quick Filter Pills -->
+            <!-- 3. Category Quick Filter Pills -->
             <div class="category-pills-row" role="tablist" aria-label="Filter by collection">
                 <button type="button" class="cat-pill-btn active" data-cat="all" onclick="handleCategoryFilter('all')">All</button>
+                <button type="button" class="cat-pill-btn" data-cat="recent" onclick="handleCategoryFilter('recent')" aria-label="Filter to newly added and updated chapters">⚡ New & Changed</button>
                 <button type="button" class="cat-pill-btn" data-cat="devlog" onclick="handleCategoryFilter('devlog')">Devlogs</button>
                 <button type="button" class="cat-pill-btn" data-cat="textbook" onclick="handleCategoryFilter('textbook')">Textbook</button>
                 <button type="button" class="cat-pill-btn" data-cat="manual" onclick="handleCategoryFilter('manual')">Manual</button>
@@ -1368,12 +1581,16 @@
                                     data-category="{{ d.category }}" 
                                     data-slug="{{ d.slug }}" 
                                     data-title="{{ d.title }}" 
+                                    data-is-latest="{{ 'true' if (d.is_latest or (d.order_score and d.order_score >= 13000)) else 'false' }}"
                                     onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
                                     aria-label="{{ d.project_label }} - {{ cat.title }} - {{ d.title }}"
                                 >
                                     <div class="nav-item-topline">
                                         <span class="badge-project-mini badge-{{ d.project }}">{{ d.project_label }}</span>
                                         <span class="badge-cat-mini">{{ cat.title }}</span>
+                                        {% if d.is_latest or (d.order_score and d.order_score >= 13000) %}
+                                        <span class="badge-new-pill">⚡ NEW</span>
+                                        {% endif %}
                                     </div>
                                     <div class="nav-item-title">{{ d.title }}</div>
                                     <div class="nav-item-meta">
@@ -1401,12 +1618,16 @@
                     data-category="{{ d.category }}" 
                     data-slug="{{ d.slug }}" 
                     data-title="{{ d.title }}" 
+                    data-is-latest="{{ 'true' if (d.is_latest or (d.order_score and d.order_score >= 13000)) else 'false' }}"
                     onclick="selectChapter('{{ d.category }}', '{{ d.slug }}')"
                     aria-label="{{ d.title }}"
                 >
                     <div class="nav-item-topline">
                         <span class="badge-project-mini badge-{{ d.project }}">{{ d.project_label }}</span>
                         <span class="badge-cat-mini">{{ d.category }}</span>
+                        {% if d.is_latest or (d.order_score and d.order_score >= 13000) %}
+                        <span class="badge-new-pill">⚡ NEW</span>
+                        {% endif %}
                     </div>
                     <div class="nav-item-title">{{ d.title }}</div>
                     <div class="nav-item-meta">
@@ -1443,6 +1664,59 @@
                             Here you will find full architectural blueprints, forensic devlogs, zero-trust cybersecurity textbooks, and step-by-step implementation guides 
                             for all 6 software systems built across the ecosystem.
                         </p>
+                    </div>
+
+                    <!-- DOCUMENTATION STATUS & SYSTEM MATURITY SCOPE -->
+                    <div class="doc-status-scope-box" role="region" aria-label="Documentation Scope and System Maturity Notice">
+                        <h3 class="status-scope-title">📋 Documentation Scope & System Maturity Status</h3>
+                        <p class="status-scope-desc">
+                            To maintain engineering rigor and avoid ambiguity, documentation across this {{ total_docs }} chapter archive is categorized into two distinct operational scopes:
+                        </p>
+                        <div class="status-scope-grid">
+                            <!-- Column 1: Verified Production -->
+                            <div class="status-scope-col verified">
+                                <div class="status-scope-col-header">
+                                    <span>✅</span>
+                                    <span>Verified Production Systems (Full Architecture Specs)</span>
+                                </div>
+                                <ul class="status-scope-list">
+                                    <li><strong>Siraugga / DevCore Framework:</strong> Complete verification spanning 199 5-Pillar Architecture Devlogs, 50-Chapter Zero-Trust Cybersecurity Textbook, and Master Manual. Active production deployment.</li>
+                                    <li><strong>E-Profile Portfolio Portal:</strong> Full forensic engineering devlog, zero-downtime hot-patching runtime, LibCST AST self-mutation, and dynamic multi-tier RBAC access control.</li>
+                                    <li><strong>EncryptMe Multi-User Vault:</strong> Industrial-grade PBKDF2 symmetric cryptography, split-key recovery (IGAR), memory zeroization, and complete architectural/user manuals.</li>
+                                    <li><strong>JOSHY Audio Suite:</strong> Standalone accessible audio suite, accessible_output2 speech drivers, Tolk DLL bridging, and Nuitka binary packaging guides.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 2: Incomplete Snapshots & Overviews -->
+                            <div class="status-scope-col incomplete">
+                                <div class="status-scope-col-header">
+                                    <span>⚠️</span>
+                                    <span>Incomplete Snapshots & Conceptual Overviews</span>
+                                </div>
+                                <ul class="status-scope-list">
+                                    <li><strong>Echoes of the World (Audio Game):</strong> <em>Incomplete Architectural Snapshot</em>. Active, evolving 3D spatial audio game codebase. The documentation preserves key foundational patterns (coordinate spaces, C-DLL screen reader bindings, decoupled state machine) from its development history, but does not represent a finished or production-stabilized software release.</li>
+                                    <li><strong>The Quantitative Era (Trading Bots):</strong> <em>High-Level Conceptual Overview Only</em>. Positioned at the conclusion of the narrative journey. It provides a general retrospective on algorithmic execution models, tick engines, and automated telemetry, but does not contain complete or exhaustive technical documentation due to fragmented historical logs.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAST NAVIGATION: NEW CONTENT & RECENT UPDATES -->
+                    <div class="landing-quick-nav-bar" role="region" aria-label="Fast Navigation for Changes and New Content">
+                        <div class="quick-nav-title">⚡ Fast Navigation: Newly Added & Updated Chapters</div>
+                        <div class="quick-nav-actions">
+                            <a href="#latest-changes-section" class="quick-action-pill jump-link">
+                                ⚡ Jump to Latest Changes ({{ latest_updates|length }} Recent Updates) &darr;
+                            </a>
+                            <button type="button" class="quick-action-pill filter-btn" onclick="openNavigatorAndFilterRecent()" aria-label="Filter sidebar tree to newly added and updated chapters">
+                                🔍 Filter Sidebar to New & Changed
+                            </button>
+                            {% if latest_updates and latest_updates|length > 0 %}
+                            <button type="button" class="quick-action-pill read-btn" onclick="selectChapter('{{ latest_updates[0].category }}', '{{ latest_updates[0].slug }}')" aria-label="Read latest release: {{ latest_updates[0].title }}">
+                                🚀 Read Newest Release: {{ latest_updates[0].title[:35] }}... &rarr;
+                            </button>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
@@ -1546,16 +1820,20 @@
                 </div>
 
                 <!-- SECTION 3: RECENT SPRINTS & UPDATES -->
-                <div class="landing-section-block">
+                <!-- SECTION 3: RECENT SPRINTS & UPDATES -->
+                <div class="landing-section-block" id="latest-changes-section" role="region" aria-label="Latest Architecture Releases">
                     <div class="landing-section-header">
-                        <h2>⚡ Latest Sprints & Recent Architecture Releases</h2>
-                        <p>Direct from active engineering logs across all projects</p>
+                        <h2>⚡ Latest Sprints & Recent Architecture Releases ({{ latest_updates|length }})</h2>
+                        <p>Direct from active engineering logs across all projects &bull; Click any card to read immediately with zero page reloads</p>
                     </div>
                     <div class="latest-updates-grid">
                         {% for update in latest_updates %}
                         <div class="update-card" onclick="selectChapter('{{ update.category }}', '{{ update.slug }}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')selectChapter('{{ update.category }}', '{{ update.slug }}')" aria-label="{{ update.project_label }}: {{ update.title }}">
                             <div class="update-card-top">
-                                <span class="badge-project-mini badge-{{ update.project }}">{{ update.project_label }}</span>
+                                <div style="display: flex; gap: 6px; align-items: center;">
+                                    <span class="badge-project-mini badge-{{ update.project }}">{{ update.project_label }}</span>
+                                    <span class="badge-recency-pill">⚡ RECENT</span>
+                                </div>
                                 <span class="update-card-cat">{{ update.category | upper }}</span>
                             </div>
                             <h3 class="update-card-title">{{ update.title }}</h3>
@@ -1773,6 +2051,40 @@
         if (announcer) announcer.textContent = 'Chapter Navigator opened. Focus moved to search filter.';
     }
 
+    // 2B. OPEN NAVIGATOR & FILTER RECENT (FAST JUMP TO NEW / CHANGED)
+    function openNavigatorAndFilterRecent() {
+        var workspace = document.getElementById('docs-workspace');
+        if (workspace) workspace.classList.remove('is-landing-mode');
+
+        var sidebar = document.getElementById('docs-sidebar');
+        if (sidebar && !sidebar.classList.contains('mobile-open')) {
+            sidebar.classList.add('mobile-open');
+        }
+
+        var toggleBtn = document.getElementById('mobile-toc-toggle');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            var cnt = document.getElementById('mobile-count')?.textContent || '{{ total_docs }}';
+            toggleBtn.innerHTML = '✕ Close Navigator (<span id="mobile-count">' + cnt + '</span>)';
+            toggleBtn.setAttribute('aria-label', 'Chapter Navigator. Currently expanded. Press Escape or click to close.');
+        }
+
+        handleCategoryFilter('recent');
+
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Filtered chapter navigator to newly added and updated chapters. Focus moved to first recent chapter.';
+
+        setTimeout(function() {
+            var firstRecent = document.querySelector('.chapter-nav-item[data-is-latest="true"]');
+            if (firstRecent) {
+                firstRecent.focus();
+                firstRecent.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            } else {
+                var searchInput = document.getElementById('sidebar-search-input');
+                if (searchInput) searchInput.focus();
+            }
+        }, 120);
+    }
     // 3. JUMP TO PROJECT (EXPLORER QUICK FILTER)
     function jumpToProject(projKey) {
         var workspace = document.getElementById('docs-workspace');
@@ -2036,7 +2348,14 @@
             var itemTitle = (item.dataset.title || '').toLowerCase();
 
             var matchProject = (selectedProject === 'all' || itemProject === selectedProject);
-            var matchCategory = (activeCategoryFilter === 'all' || itemCategory === activeCategoryFilter);
+            var matchCategory = false;
+            if (activeCategoryFilter === 'all') {
+                matchCategory = true;
+            } else if (activeCategoryFilter === 'recent') {
+                matchCategory = (item.dataset.isLatest === 'true');
+            } else {
+                matchCategory = (itemCategory === activeCategoryFilter);
+            }
             var matchSearch = (!searchVal || itemTitle.indexOf(searchVal) !== -1);
 
             if (matchProject && matchCategory && matchSearch) {
@@ -2052,7 +2371,7 @@
         var originItem = document.getElementById('origin-pinned-item');
         if (originItem) {
             var matchProj = (selectedProject === 'all' || selectedProject === 'echoes');
-            var matchCat = (activeCategoryFilter === 'all' || activeCategoryFilter === 'devlog' || activeCategoryFilter === 'echoes');
+            var matchCat = (activeCategoryFilter === 'all' || activeCategoryFilter === 'devlog' || activeCategoryFilter === 'echoes' || activeCategoryFilter === 'recent');
             var matchSrch = (!searchVal || 'the origin architecture: echoes of the world'.indexOf(searchVal) !== -1);
             if (matchProj && matchCat && matchSrch) {
                 originItem.style.display = 'block';
@@ -2071,6 +2390,15 @@
 
             if (pCount > 0) {
                 sec.style.display = 'block';
+                // If filtering by recent, automatically expand the project body
+                if (activeCategoryFilter === 'recent') {
+                    var body = sec.querySelector('.project-body');
+                    var chev = sec.querySelector('.proj-chevron');
+                    if (body && body.classList.contains('collapsed')) {
+                        body.classList.remove('collapsed');
+                        if (chev) chev.textContent = '▾';
+                    }
+                }
                 // Hide empty collection subgroups inside this project
                 var subgroups = sec.querySelectorAll('.collection-subgroup');
                 subgroups.forEach(function(sub) {
@@ -2087,7 +2415,13 @@
         if (mobileCount) mobileCount.textContent = visibleCount;
 
         var announcer = document.getElementById('docs-announcer');
-        if (announcer) announcer.textContent = 'Showing ' + visibleCount + ' chapters.';
+        if (announcer) {
+            if (activeCategoryFilter === 'recent') {
+                announcer.textContent = 'Showing ' + visibleCount + ' newly added and updated chapters.';
+            } else {
+                announcer.textContent = 'Showing ' + visibleCount + ' chapters.';
+            }
+        }
     }
 
     function toggleProjectFolder(projKey) {

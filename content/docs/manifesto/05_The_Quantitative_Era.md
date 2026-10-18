@@ -1,19 +1,23 @@
-[//]: # (DOC_ID: SIRA-MAN-05_THE_QUANTITATIV | VERSION: v1.5 | SCOPE: MAN)
+[//]: # (DOC_ID: SIRA-MAN-05_THE_QUANTITATIV | VERSION: v1.6 | SCOPE: MAN)
 
-# Chapter 5: The Quantitative Era (Algorithmic Survival & Auditory Graphs)
+# Chapter 5: The Quantitative Era (High-Level Overview & Auditory Graphs)
 
-When I stepped into financial markets and algorithmic trading, I didn't approach it like a casual retail trader staring at candlestick charts on a screen. Because I couldn't see the charts, visual indicators were completely useless to me. I had to build autonomous systems that could understand the market mathematically, manage risk without emotion, and speak the state of the market directly into my ears.
+> [!NOTE]
+> **Documentation Scope & Status: High-Level Conceptual Overview (Incomplete Historical Record)**  
+> This chapter provides a general high-level overview and architectural summary of the `trading_bots` and `PANIC_BOT` experiments. It is **not** a complete documentation suite or production manual. Because this was a fast-moving, experimental research phase with fragmented logs and incomplete historical data, fine-grained algorithmic parameters and internal execution mechanics are intentionally summarized rather than presented as verified, exhaustive documentation.
 
-I created a project called `trading_bots`. It quickly turned into an intense, multi-faceted algorithmic laboratory—the highest level of real-time engineering I had tackled to date.
+I want to be completely upfront: this chapter is a conceptual overview of an experimental laboratory, not an exhaustive production specification. Unlike E-Profile or Siraugga—where every route, AST node, and security tier is meticulously documented and verified—my work in `trading_bots` and `PANIC_BOT` was an exploratory frontier. The historical records and tick logs from this period are fragmented and incomplete. 
+
+What matters here is not the raw parameter settings of a retired trading script, but the core architectural concepts I developed: how I built autonomous survival guardrails, how I processed real-time tick streams, and how I invented multi-sensory audio graphs to listen to the market when visual charts were useless to me.
 
 ---
 
 [//]: # (SECTION_ID: SIRA-MAN-05_THE_QUANTITATIV-SEC-1)
-## 1. The Autonomous Swarm: GoldSurvivalBot and UnshackledApexBot
+## 1. The Autonomous Swarm Concept: GoldSurvivalBot and UnshackledApexBot
 
 I didn't want a single, monolithic script running trades. Markets behave differently under calm, trending conditions than they do during sudden macroeconomic shocks. So I designed a biological ecosystem of autonomous trading entities, each built with its own personality and strict logical boundaries.
 
-I deployed bots like `GoldSurvivalBot` and `UnshackledApexBot`. These weren't simplistic moving-average crossers; they were autonomous agents operating under a central nervous system module. To keep them from blowing up my account during market volatility, I engineered a dedicated `guard_engine`. The guard engine calculated mathematical survival buffers in real time, locking down trading authority the moment volatility threatened capital preservation. That concept of strict, automated guardrails became the exact blueprint for the Zero-Trust RBAC guards I later brought into Siraugga.
+I deployed experimental bots like `GoldSurvivalBot` and `UnshackledApexBot`. These were autonomous agents operating under a central nervous system module. To keep them from blowing up my account during market volatility, I engineered a dedicated `guard_engine`. The guard engine calculated mathematical survival buffers in real time, locking down trading authority the moment volatility threatened capital preservation. That concept of strict, automated guardrails became the exact blueprint for the Zero-Trust RBAC guards I later brought into Siraugga.
 
 ---
 
@@ -27,9 +31,9 @@ I built `PANIC_BOT_V1` to ingest a massive firehose of real-time market ticks an
 ---
 
 [//]: # (SECTION_ID: SIRA-MAN-05_THE_QUANTITATIV-SEC-3)
-## 3. Machine Learning and Sound: The Final PANIC_BOT
+## 3. Machine Learning and Sound: The PANIC_BOT Audio Graphs
 
-The culmination of this era was the full `PANIC_BOT` engine. I pushed deep into probabilistic data science. I implemented Gaussian Hidden Markov Models (HMM) to automatically classify latent market regimes—distinguishing between quiet drift, high-volatility distribution, and sudden liquidity drains. I also built non-parametric drift monitors to detect when statistical models were decaying.
+The culmination of this era was the full `PANIC_BOT` engine. I pushed deep into probabilistic data science, implementing Gaussian Hidden Markov Models (HMM) to classify latent market regimes—distinguishing between quiet drift, high-volatility distribution, and sudden liquidity drains.
 
 But what made `PANIC_BOT` truly personal was its accessibility architecture. 
 

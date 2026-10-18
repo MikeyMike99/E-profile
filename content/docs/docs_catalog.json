@@ -866,15 +866,15 @@
     "category": "echoes",
     "title": "Echoes of the World: Spatial Grid & World Architecture",
     "summary": "When I lost my sight, mainstream game development ceased to make sense to me. Traditional game engines dedicate 95% of their compute budget to rendering polygons, shaders, and visual lighting models that I could not see....",
-    "word_count": 952,
+    "word_count": 1016,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "CORE",
     "doc_id": "ECHO-CORE-CLASS_WORLD_ARCHIT",
-    "version": "v1.4",
+    "version": "v1.5",
     "canonical_id": "ECHO-CORE-CLASS_WORLD_ARCHIT",
-    "versioned_id": "ECHO-CORE-CLASS_WORLD_ARCHIT@v1.4",
+    "versioned_id": "ECHO-CORE-CLASS_WORLD_ARCHIT@v1.5",
     "sections": [
       {
         "id": "ECHO-CORE-CLASS_WORLD_ARCHIT-SEC-1",
@@ -914,8 +914,7 @@
       }
     ],
     "topics": [
-      "infrastructure",
-      "accessibility_ui"
+      "infrastructure"
     ],
     "order_score": 12000,
     "is_latest": true,
@@ -981,15 +980,15 @@
     "category": "echoes",
     "title": "Echoes of the World: Non-Visual Menu State Machine",
     "summary": "When I built *Echoes of the World*, visual game interfaces were useless to me. A sighted developer designs a menu by dragging buttons, textboxes, and modal panels onto a 2D canvas. When you are blind, a canvas is silent...",
-    "word_count": 576,
+    "word_count": 620,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "CORE",
     "doc_id": "ECHO-CORE-MENU_CONFIG",
-    "version": "v1.3",
+    "version": "v1.4",
     "canonical_id": "ECHO-CORE-MENU_CONFIG",
-    "versioned_id": "ECHO-CORE-MENU_CONFIG@v1.3",
+    "versioned_id": "ECHO-CORE-MENU_CONFIG@v1.4",
     "sections": [
       {
         "id": "ECHO-CORE-MENU_CONFIG-SEC-1",
@@ -35367,7 +35366,7 @@
     "category": "manifesto",
     "title": "Chapter 2: The Echoes Architecture (Building the Engine From Bare Metal)",
     "summary": "When I look back at my earliest project folders, it wasn't some grand academic master plan. It was a chaotic workbench where I was literally fighting for every single inch of progress.",
-    "word_count": 912,
+    "word_count": 956,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
@@ -35699,22 +35698,22 @@
   {
     "slug": "05_The_Quantitative_Era",
     "category": "manifesto",
-    "title": "Chapter 5: The Quantitative Era (Algorithmic Survival & Auditory Graphs)",
-    "summary": "When I stepped into financial markets and algorithmic trading, I didn't approach it like a casual retail trader staring at candlestick charts on a screen. Because I couldn't see the charts, visual indicators were complet...",
-    "word_count": 662,
+    "title": "Chapter 5: The Quantitative Era (High-Level Overview & Auditory Graphs)",
+    "summary": "I want to be completely upfront: this chapter is a conceptual overview of an experimental laboratory, not an exhaustive production specification. Unlike E-Profile or Siraugga\u2014where every route, AST node, and security tie...",
+    "word_count": 738,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
     "collection_code": "MAN",
     "doc_id": "SIRA-MAN-05_THE_QUANTITATIV",
-    "version": "v1.5",
+    "version": "v1.6",
     "canonical_id": "SIRA-MAN-05_THE_QUANTITATIV",
-    "versioned_id": "SIRA-MAN-05_THE_QUANTITATIV@v1.5",
+    "versioned_id": "SIRA-MAN-05_THE_QUANTITATIV@v1.6",
     "sections": [
       {
         "id": "SIRA-MAN-05_THE_QUANTITATIV-SEC-1",
         "num": "1",
-        "title": "The Autonomous Swarm: GoldSurvivalBot and UnshackledApexBot",
+        "title": "The Autonomous Swarm Concept: GoldSurvivalBot and UnshackledApexBot",
         "anchor": "#SIRA-MAN-05_THE_QUANTITATIV-SEC-1"
       },
       {
@@ -35726,7 +35725,7 @@
       {
         "id": "SIRA-MAN-05_THE_QUANTITATIV-SEC-3",
         "num": "3",
-        "title": "Machine Learning and Sound: The Final PANIC_BOT",
+        "title": "Machine Learning and Sound: The PANIC_BOT Audio Graphs",
         "anchor": "#SIRA-MAN-05_THE_QUANTITATIV-SEC-3"
       },
       {
@@ -35738,7 +35737,6 @@
     ],
     "topics": [
       "security",
-      "infrastructure",
       "origin_story"
     ],
     "order_score": 0,
@@ -35747,7 +35745,7 @@
     "is_proprietary": false,
     "clearance": "public",
     "base_sensitivity": 1,
-    "max_sensitivity": 2,
+    "max_sensitivity": 3,
     "rel_path": "manifesto/05_The_Quantitative_Era.md",
     "cross_references": [
       {

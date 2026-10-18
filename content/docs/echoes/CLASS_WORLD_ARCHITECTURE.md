@@ -1,7 +1,11 @@
-[//]: # (DOC_ID: ECHO-CORE-CLASS_WORLD_ARCHIT | VERSION: v1.4 | SCOPE: PROPRIETARY)
+[//]: # (DOC_ID: ECHO-CORE-CLASS_WORLD_ARCHIT | VERSION: v1.5 | SCOPE: PROPRIETARY)
 
 # Echoes of the World: Spatial Grid & World Architecture
 <!-- sensitivity: 4 -->
+
+> [!NOTE]
+> **Documentation Status: Incomplete Architectural Snapshot**  
+> This document provides an early high-level conceptual overview of the spatial audio grid and chunking system in *Echoes of the World*. It is **not** a complete game manual or production API reference. The game engine remains an evolving, incomplete project, and active audio collision formulas, spatial sound trigonometry, and entity state machines are work-in-progress specifications.
 
 When I lost my sight, mainstream game development ceased to make sense to me. Traditional game engines dedicate 95% of their compute budget to rendering polygons, shaders, and visual lighting models that I could not see. What I needed was a world constructed entirely out of sound—a physical, three-dimensional space where your ears tell you exactly where a wall stands, how deep a pit drops, and which direction a creature approaches.
 
