@@ -1,14 +1,14 @@
-[//]: # (DOC_ID: SIRA-MAN-03_THE_QUANTITATIV | VERSION: v1.4 | SCOPE: MAN)
+[//]: # (DOC_ID: SIRA-MAN-05_THE_QUANTITATIV | VERSION: v1.5 | SCOPE: MAN)
 
-# Chapter 3: The Quantitative Era (Algorithmic Survival & Auditory Graphs)
+# Chapter 5: The Quantitative Era (Algorithmic Survival & Auditory Graphs)
 
 When I stepped into financial markets and algorithmic trading, I didn't approach it like a casual retail trader staring at candlestick charts on a screen. Because I couldn't see the charts, visual indicators were completely useless to me. I had to build autonomous systems that could understand the market mathematically, manage risk without emotion, and speak the state of the market directly into my ears.
 
-I created a project called `trading_bots`. It quickly turned into an intense, multi-faceted algorithmic laboratory.
+I created a project called `trading_bots`. It quickly turned into an intense, multi-faceted algorithmic laboratory—the highest level of real-time engineering I had tackled to date.
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-03_THE_QUANTITATIV-SEC-1)
+[//]: # (SECTION_ID: SIRA-MAN-05_THE_QUANTITATIV-SEC-1)
 ## 1. The Autonomous Swarm: GoldSurvivalBot and UnshackledApexBot
 
 I didn't want a single, monolithic script running trades. Markets behave differently under calm, trending conditions than they do during sudden macroeconomic shocks. So I designed a biological ecosystem of autonomous trading entities, each built with its own personality and strict logical boundaries.
@@ -17,7 +17,7 @@ I deployed bots like `GoldSurvivalBot` and `UnshackledApexBot`. These weren't si
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-03_THE_QUANTITATIV-SEC-2)
+[//]: # (SECTION_ID: SIRA-MAN-05_THE_QUANTITATIV-SEC-2)
 ## 2. Ingesting the Firehose: PANIC_BOT_V1
 
 Survival was a great start, but in high-frequency trading, you can't just react after the damage is done. You have to anticipate shifts. 
@@ -26,7 +26,7 @@ I built `PANIC_BOT_V1` to ingest a massive firehose of real-time market ticks an
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-03_THE_QUANTITATIV-SEC-3)
+[//]: # (SECTION_ID: SIRA-MAN-05_THE_QUANTITATIV-SEC-3)
 ## 3. Machine Learning and Sound: The Final PANIC_BOT
 
 The culmination of this era was the full `PANIC_BOT` engine. I pushed deep into probabilistic data science. I implemented Gaussian Hidden Markov Models (HMM) to automatically classify latent market regimes—distinguishing between quiet drift, high-volatility distribution, and sudden liquidity drains. I also built non-parametric drift monitors to detect when statistical models were decaying.
@@ -39,7 +39,7 @@ Building `PANIC_BOT` proved that a blind developer doesn't need to conform to vi
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-03_THE_QUANTITATIV-SEC-4)
+[//]: # (SECTION_ID: SIRA-MAN-05_THE_QUANTITATIV-SEC-4)
 ## 4. Technical Cross-References & Realized Projects
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">

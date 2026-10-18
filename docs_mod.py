@@ -155,9 +155,9 @@ CURATED_NARRATIVE_FLOW = [
     ('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'),
     ('manifesto', '01_Echoes_in_the_Void'),
     ('manifesto', '02_The_Echoes_Architecture'),
-    ('manifesto', '03_The_Quantitative_Era'),
-    ('manifesto', '04_The_Forge_of_Sovereignty'),
-    ('manifesto', '05_The_24_Hour_Crucible'),
+    ('manifesto', '03_The_Forge_of_Sovereignty'),
+    ('manifesto', '04_The_24_Hour_Crucible'),
+    ('manifesto', '05_The_Quantitative_Era'),
     ('story', 'DEVLOG')
 ]
 

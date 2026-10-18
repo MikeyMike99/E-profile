@@ -40,9 +40,9 @@ This wasn't just a Python script; it was proof of concept. The jumping system, t
 [//]: # (SECTION_ID: SIRA-MAN-TIMELINE-SEC-2)
 From that first seed in July 2025, my codebase expanded across four distinct evolutionary phases:
 - **[Chapter 2: The Echoes Architecture](/docs/devlog/02_The_Echoes_Architecture)** — Forging the core state machine, menu systems, and C-level screen reader bindings.
-- **[Chapter 3: The Quantitative Era](/docs/devlog/03_The_Quantitative_Era)** — Deploying autonomous market swarms and mathematical audio graphs.
-- **[Chapter 4: The Forge of Sovereignty](/docs/devlog/04_The_Forge_of_Sovereignty)** — Constructing self-mutating AST engines, local cryptography, and MCP security tooling.
-- **[Chapter 5: The 24-Hour Crucible](/docs/devlog/05_The_24_Hour_Crucible)** — Conquering the 317,000-line crash, building a custom reader, and deploying autonomous scribes.
+- **[Chapter 3: The Forge of Sovereignty](/docs/devlog/03_The_Forge_of_Sovereignty)** — Constructing self-mutating AST engines, local cryptography, and MCP security tooling.
+- **[Chapter 4: The 24-Hour Crucible](/docs/devlog/04_The_24_Hour_Crucible)** — Conquering the 317,000-line crash, building a custom reader, and deploying autonomous scribes.
+- **[Chapter 5: The Quantitative Era](/docs/devlog/05_The_Quantitative_Era)** — Deploying autonomous market swarms and mathematical audio graphs.
 
 
 [//]: # (SECTION_ID: SIRA-MAN-00_THE_FORENSIC_TI-SEC-3)

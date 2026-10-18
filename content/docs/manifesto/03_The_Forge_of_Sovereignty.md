@@ -1,6 +1,6 @@
-[//]: # (DOC_ID: SIRA-MAN-04_THE_FORGE_OF_SO | VERSION: v1.5 | SCOPE: MAN)
+[//]: # (DOC_ID: SIRA-MAN-03_THE_FORGE_OF_SO | VERSION: v1.5 | SCOPE: MAN)
 
-# Chapter 4: The Forge of Sovereignty (Building My Own Arsenal)
+# Chapter 3: The Forge of Sovereignty (Building My Own Arsenal)
 
 When you are a blind developer navigating the tech landscape, you quickly discover that mainstream commercial tools are not built with your sovereignty in mind. Proprietary software locks you into inaccessible dashboards, external APIs change their rules without warning, and SaaS vendors treat accessibility as an afterthought.
 
@@ -8,7 +8,7 @@ I realized that if I wanted absolute independence, I couldn't rely on vendors. I
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-04_THE_FORGE_OF_SO-SEC-1)
+[//]: # (SECTION_ID: SIRA-MAN-03_THE_FORGE_OF_SO-SEC-1)
 ## 1. The Self-Mutating Engine: e_profile and AST Surgery
 
 My journey toward full platform sovereignty began with `e_profile`. I didn't want a generic WordPress blog or a static portfolio; I needed a live, web-based operations hub and content management system that could evolve without taking down the server.
@@ -17,7 +17,7 @@ I engineered `e_profile` with the ability to perform surgery on its own codebase
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-04_THE_FORGE_OF_SO-SEC-2)
+[//]: # (SECTION_ID: SIRA-MAN-03_THE_FORGE_OF_SO-SEC-2)
 ## 2. Automated Intelligence: cyber_news
 
 To stay ahead in cybersecurity and AI engineering, I had to stay on top of emerging vulnerabilities and threat intelligence. But browsing endless web pages with a screen reader is exhausting and slow.
@@ -26,7 +26,7 @@ I built `cyber_news`, an automated intelligence-gathering pipeline. It systemati
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-04_THE_FORGE_OF_SO-SEC-3)
+[//]: # (SECTION_ID: SIRA-MAN-03_THE_FORGE_OF_SO-SEC-3)
 ## 3. Industrial Cryptography: encryption_toll and EncryptMe
 
 Data sovereignty means nothing if your secrets can be seized or leaked. I needed an air-gapped cryptographic vault that I trusted completely with my credentials, private keys, and personal journals.
@@ -35,7 +35,7 @@ I engineered `encryption_toll` (the foundation of `encrypt_me`). I built it on i
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-04_THE_FORGE_OF_SO-SEC-4)
+[//]: # (SECTION_ID: SIRA-MAN-03_THE_FORGE_OF_SO-SEC-4)
 ## 4. Bare-Metal Audio Synthesis: tts+gemeni
 
 For voice feedback and audio storytelling, I refused to rely on heavy, bloated third-party audio packages that drag in dozens of breaking dependencies.
@@ -44,7 +44,7 @@ In `tts+gemeni`, I wrote a streamlined voice synthesis engine. I connected to Ge
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-04_THE_FORGE_OF_SO-SEC-5)
+[//]: # (SECTION_ID: SIRA-MAN-03_THE_FORGE_OF_SO-SEC-5)
 ## 5. Automated Security Auditing: scanners and MCP
 
 The capstone of my sovereign toolkit was `scanners`. As I prepared to enter the cybersecurity field and build multi-agent platforms, I needed automated security scanning embedded into my development loop.
@@ -55,20 +55,17 @@ Through these five projects, I built an arsenal that secured, synthesized, and a
 
 ---
 
-[//]: # (SECTION_ID: SIRA-MAN-04_THE_FORGE_OF_SO-SEC-6)
+[//]: # (SECTION_ID: SIRA-MAN-03_THE_FORGE_OF_SO-SEC-6)
 ## 6. Technical Cross-References & Realized Projects
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
 <summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Technical Cross-References & Realized Projects (Click to Expand)</summary>
 
 * **E-Profile Architecture & Forensic Devlog**:
-  * *AST Surgery (`libcst`)*: Runtime AST modification and hot-patching architecture.
-  * *The Lockout Paradox*: Super Admin recovery and break-glass credential management.
+  * *Chapter 3 — The AST Surgical Engine*: Runtime code modification with LibCST, validation gates, and self-patching workflows.
 * **EncryptMe Multi-User Vault**:
-  * *Cryptographic Architecture*: AES Fernet encryption, PBKDF2HMAC key protection, and Identity-Gated Administrative Recovery (IGAR).
-* **Raugus Resolver MCP Broker Architecture**:
-  * *Air-Gapped Tool Security*: Opaque Key-Only VFS, AST symbol extraction, and automated security audit pipeline.
-* **JOSHY Audio Playback Suite**:
-  * *Low-Level Audio & Speech*: PCM wave synthesis, Tolk DLL bridging, and screen reader output drivers.
+  * *Industrial Cryptography Specification*: PBKDF2HMAC key stretching, salt rotation, and vault immobilization mechanics.
+* **DevCore MCP Server Infrastructure**:
+  * *Tool Architecture & Scanners MCP*: Exposing host-level security tools (Bandit, OWASP ZAP) via the Model Context Protocol.
 
 </details>
