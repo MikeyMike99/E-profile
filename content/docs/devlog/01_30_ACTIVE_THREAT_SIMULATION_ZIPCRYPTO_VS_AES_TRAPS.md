@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-DEV-01_30 | VERSION: v1.0 | SCOPE: DEV)
+
 # Active Threat Simulation: ZipCrypto vs AES-256 Traps
 
+[//]: # (SECTION_ID: SIRA-DEV-01_30-SEC-1)
 ## 1. The Problem: The False Security of Legacy Zip Encryption
+[//]: # (SECTION_ID: SIRA-DOC-01_30-SEC-1)
 Developers frequently archive sensitive project files, database backups, or API keys into password-protected `.zip` files, assuming that any password-protected archive is cryptographically secure.
 
 However, standard zip software (including built-in Windows Zip compression) historically defaults to **ZipCrypto** (the original 1989 PKWARE encryption standard). ZipCrypto contains fatal mathematical weaknesses in its stream cipher that allow attackers to break the encryption in seconds using known-plaintext attacks or dictionary sweeps.
@@ -22,14 +26,18 @@ However, standard zip software (including built-in Windows Zip compression) hist
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_30-SEC-2)
 ## 2. The Offline Crack Lab Simulation
+[//]: # (SECTION_ID: SIRA-DOC-01_30-SEC-2)
 To prove this vulnerability to developers in training, DevCore established the Active Threat Simulation Lab (`playground/Offline_Crack_Lab/crack_master.py`) and packaged sample archives (`playground/Zip-Files/`):
 - `file-1.zip` through `file-3.zip`: Encrypted with standard ZipCrypto. The simulation lab cracked them in less than 500 milliseconds using basic wordlists.
 - `file-4.zip` through `file-6.zip`: Encrypted with AES-256 using `pyzipper`. The simulation lab verified that dictionary attacks failed completely, demonstrating mathematical resistance.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_30-SEC-3)
 ## 3. The Solution: Enforcing AES-256 & Argon2id Vaults
+[//]: # (SECTION_ID: SIRA-DOC-01_30-SEC-3)
 Siraugga established strict zero-trust rules for all archived assets:
 1. **Hard Prohibition of ZipCrypto**: Any archive created or ingested using legacy ZipCrypto triggers an immediate security alert in `central_logger.py`.
 2. **Standardization on AES-256**: All encrypted backup files and forensic archives must use AES-256 via modern libraries like `pyzipper`.
@@ -37,14 +45,18 @@ Siraugga established strict zero-trust rules for all archived assets:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_30-SEC-4)
 ## 4. Why Order Matters in Threat Simulation
+[//]: # (SECTION_ID: SIRA-DOC-01_30-SEC-4)
 1. **Simulate Offline Attacks Before Exposing APIs**: Testing file encryption resilience in offline sandboxes reveals vulnerabilities before malicious actors probe production endpoints.
 2. **Verify Cipher Type Before Password Strength**: A 20-character password on a ZipCrypto archive is still vulnerable to known-plaintext recovery; cipher modernness must precede password complexity.
 3. **Purge Plaintext Samples Immediately After Testing**: Decrypted test files must be deleted from memory and disk immediately following verification to adhere to the Clean Workspace Protocol.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-01_30-SEC-5)
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-01_30-SEC-5)
 **Q: What is the difference between ZipCrypto and AES-256?**  
 A: ZipCrypto uses a legacy, broken 96-bit internal state with known mathematical flaws. AES-256 is the gold-standard Advanced Encryption Standard approved by NIST for classified data.
 

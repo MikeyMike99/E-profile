@@ -1,20 +1,28 @@
+[//]: # (DOC_ID: SIRA-TXT-MOD_5_CHK | VERSION: v1.0 | SCOPE: TXT)
+
 # Module 5 Checkpoint: Firewall Technologies
 
 This checkpoint serves as the master structural review for Module 5, summarizing the DevCore translation of traditional Firewall security architectures into Agentic Sandbox Bulkheads. 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_5_CHK-SEC-1)
 ### Chapter 21: Introduction to Agentic Firewalls
+[//]: # (SECTION_ID: SIRA-TXT-MOD5_CKPT-SEC-1)
 *   **Core Concept:** While Agentic Control Lists (ACLs) are the rules that check identities, **Agentic Bulkheads** (Firewalls) are the physical steel walls dividing the sandbox.
 *   **Security Posture:** Establishing a Zero-Trust topology where all Modder-to-LLM traffic flows through a single, heavily fortified transit point, preventing end-to-end prompt injection.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_5_CHK-SEC-2)
 ### Chapter 22: Architecting Agentic Bulkheads (Firewall Types)
+[//]: # (SECTION_ID: SIRA-TXT-MOD5_CKPT-SEC-2)
 *   **Stateless Agentic Filters (Packet Filtering):** Fast, basic Layer 3/Layer 4 filtering evaluating UUIDs and Tools in a vacuum. Vulnerable to Semantic Spoofing and Fragmented Prompts.
 *   **Stateful Thought Firewalls:** Utilizes the `established` keyword to maintain a live **Thought Table** (State Table). Violently drops inbound data that does not belong to an active, AI-initiated conversational context.
 *   **The Raugus Proxy (Application Gateway):** A Layer 7 semantic proxy that sits between the Modder and the LLM API. It scrubs prompts for malicious intent and forwards them on behalf of the user.
 *   **Next-Gen Swarm Bulkheads:** The future of massive Swarm security, featuring integrated Intrusion Prevention and deep Semantic Awareness of AI attack vectors.
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_5_CHK-SEC-3)
 ### Chapter 23: Sandbox Architectural Topologies (Network Design)
+[//]: # (SECTION_ID: SIRA-TXT-MOD5_CKPT-SEC-3)
 *   **The Binary Topology (Private and Public):** A strict 2-interface design dividing the highly secure `/core_engine/` (Private) from the untrusted Modder WebSockets (Public).
 *   **The Safe Workspace Topology (DMZ):** A 3-interface design allowing untrusted Modders to safely operate in the `/playground/` directories (DMZ) without gaining access to the internal engine files.
 *   **Role-Based Sandbox Zones (ZPF):** Grouping similar Sandbox directories together (e.g., Asset Zones). AI subagents within the same zone share files freely, while zone-to-zone communication requires explicit policies. The Orchestrator operates as the restricted "Self Zone".
@@ -22,7 +30,9 @@ This checkpoint serves as the master structural review for Module 5, summarizing
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-MOD_5_CHK-SEC-5_3)
 ### 5.3 Cross-Reference Review (Validation)
+[//]: # (SECTION_ID: SIRA-TXT-MOD5_CKPT-SEC-5_3)
 
 The following verifies that all bullet points provided in the 5.3 Firewall Technologies Summary have been successfully translated into the DevCore textbook:
 

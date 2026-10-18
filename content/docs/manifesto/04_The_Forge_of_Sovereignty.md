@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-MAN-04_THE_FORGE_OF_SO | VERSION: v1.1 | SCOPE: MAN)
+
 # Chapter 4: The Forge of Sovereignty
 
 The developer's path to total technical independence required tools that no vendor could supply. Thus began the construction of a bespoke, autonomous toolkit, forged to ensure self-reliance and data sovereignty.

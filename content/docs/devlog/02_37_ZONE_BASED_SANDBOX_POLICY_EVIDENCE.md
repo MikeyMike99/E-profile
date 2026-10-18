@@ -1,11 +1,17 @@
+[//]: # (DOC_ID: SIRA-DEV-02_37 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 02.37: Source Code Evidence: Zone-Based Sandbox Policies & Wildcard Masking
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-1)
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-1)
 This document cites primary source code evidence from `security/security_manager.py` demonstrating how DevCore classifies filesystem resources into hierarchical security zones using directory-level tiering and strict wildcard path normalization.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-2)
 ## Source Citation 1: Zone Classification Engine (`security/security_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-2)
 
 ```python
 # Location: <project_root>/security/security_manager.py
@@ -40,12 +46,16 @@ This document cites primary source code evidence from `security/security_manager
         return self.TIER_SAFE_WORKSPACE
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-3)
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-3)
 - DevCore evaluates directory boundaries (`parts[:-1]`) *before* examining leaf file names. If any segment belongs to `CORE_DIRECTORIES` (`core`, `security`, `sandbox`, `plugins`, `scripts`), the entire tree is quarantined under `TIER_CORE_ENGINE` (Admin Only), preventing subfolder evasion.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-4)
 ## Source Citation 2: Canonical Path Traversal Quarantine (`security/security_manager.py`)
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-4)
 
 ```python
 # Location: <project_root>/security/security_manager.py
@@ -69,28 +79,39 @@ This document cites primary source code evidence from `security/security_manager
         return target
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-5)
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-5)
 - The path resolver canonicalizes paths with `os.path.abspath` and verifies string prefix boundaries before querying the zone classifier, mathematically preventing directory traversal exploits like `../../core/server.py`.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-3)
 ## 3. Why Order Matters in Path Verification
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-3)
 1. **Canonicalize Prior to Inspection**: Convert relative paths to absolute paths to collapse all `.` and `..` tokens before pattern matching.
 2. **Directory Check Before Extension Check**: Parent folder restrictions must override allowed extensions (e.g. an allowed `.json` file inside a forbidden `.git` directory must still be blocked).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-4)
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-6)
 
 ### What does `os.path.normpath` do?
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-6)
 `os.path.normpath` cleans up redundant separators and up-level references (such as `a//b`, `a/./b`, and `a/foo/../b`). Converting Windows backslashes to forward slashes standardizes paths across Windows and Linux.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-7)
 ### Why is `.startswith(".")` checked for directory parts?
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-7)
 Hidden directories (like `.git`, `.venv`, `.env`) start with a dot in Linux. Blocking any path segment starting with a dot ensures that configuration files and revision histories remain strictly forbidden to non-admin roles.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_37-SEC-5)
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-02_37-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS.md`](/docs/devlog/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md`](/docs/devlog/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE.md`](/docs/devlog/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE)

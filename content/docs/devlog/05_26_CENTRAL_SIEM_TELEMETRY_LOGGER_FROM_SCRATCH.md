@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_26 | VERSION: v1.0 | SCOPE: ARCH)
+
 # Central SIEM Telemetry Logger from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_26-SEC-1)
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_26-SEC-1)
 Multi-agent swarms generate continuous operational telemetry. Without a centralized, high-throughput logging engine, security violations and quota warnings are lost in transient terminal scrolls.
 
 This guide details how to build `central_logger.py` from scratch. It provides structured JSONL append-only persistence, automatic file size rotation to prevent disk bloat, and an in-memory Master Alert Queue (MAQ) using bounded ring buffers.
@@ -28,7 +32,9 @@ This guide details how to build `central_logger.py` from scratch. It provides st
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_26-SEC-2)
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_26-SEC-2)
 Save the following script as `central_logger.py`:
 
 ```python
@@ -108,14 +114,18 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_26-SEC-3)
 ## 3. Why Order Matters in Telemetry Pipelines
+[//]: # (SECTION_ID: SIRA-DOC-05_26-SEC-3)
 1. **Rotate Before Writing New Record**: Checking file size before opening in append mode prevents lines from exceeding the 10 MB limit.
 2. **Flush to Disk Before Memory Queue Push**: Ensuring the log line exists in persistent storage avoids losing evidence if memory issues crash the process.
 3. **Use UTC Timestamps**: Storing timestamps in ISO-8601 UTC ensures forensic analysis across distributed systems remains synchronized.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_26-SEC-4)
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_26-SEC-4)
 **Q: What is a Singleton?**  
 A: A software design pattern where only one instance of a class exists across the entire application, ensuring all subagents write to the same logger.
 

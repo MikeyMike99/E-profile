@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-DEV-RAUGUS_RESOLVER_MC | VERSION: v1.1 | SCOPE: DEV)
+
 # Raugus Resolver MCP Architecture: Opaque Key-Only Virtual File System (VFS) Broker
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-1)
 ## Executive Overview
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-1)
 
 In standard AI-assisted development environments, agents interact with a codebase by reading and writing **physical operating-system file paths**. While convenient for single-user local scripts, exposing physical filesystem paths to an autonomous cloud LLM introduces severe security, privacy, and stability hazards:
 
@@ -12,20 +16,26 @@ To solve this at the protocol layer, the platform implements the **Raugus Resolv
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-1)
 ## 1. The Opaque Key-Only Access Paradigm
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-1)
 
 Under the Raugus VFS Protocol, the agent interacts with the workspace exclusively through **Cryptographic / Semantic VFS Keys**:
 - **Module Keys**: Represent an abstract module container (e.g., `vfs.engine.system_router`).
 - **Symbol Keys (`<module_key>::<symbol_name>`)**: Represent an individual function, asynchronous handler, class, or module-level variable inside that container (e.g., `vfs.engine.system_router::verify_preflight_state` or `vfs.engine.system_router::PROTECTED_GUARD_SET`).
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-2)
 ### Core Zero-Trust Guarantees
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-2)
 - **Private In-Memory Path Resolution**: Only the Raugus Resolver MCP Broker holds the mapping table (the **Raugus Phonebook**) that links an abstract VFS Key to a physical storage location. That physical path exists strictly inside private server RAM during rule evaluation and is **never serialized** in any MCP response.
 - **Deterministic Host-Path Scrubbing**: Every outgoing MCP payload—whether source code, variable values, topic digests, or error messages—passes through a deterministic path-redaction filter that masks any residual OS path patterns as `<RAUGUS_VFS_ROOT>` or `<REDACTED_HOST_PATH>`.
 - **Rule-First Grant Model**: The agent submits a key and a desired operation. The Resolver locates the key in the Phonebook, evaluates all six security and syntax gates, executes the operation internally if and only if every rule is satisfied, and returns **only the granted result** back to the agent.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-2)
 ## 2. The 6-Gate Rule Evaluation Pipeline
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-2)
 
 Every request arriving at the Raugus Resolver MCP Broker must pass six sequential security gates before a result is returned or a mutation is committed.
 
@@ -49,13 +59,19 @@ flowchart TD
     I --> J
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3)
 ### Gate 1 — VFS Phonebook Existence & Anti-Traversal Gate
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3)
 Because the Broker only accepts registered VFS Keys (`<namespace>.<module>` or `<namespace>.<module>::<symbol>`), traditional path-traversal strings (`../../etc/passwd`, `%2e%2e%2f`, or raw drive letters) fail key lookup immediately. If a key does not exist in the Raugus Phonebook, the request is rejected before touching the filesystem.
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-4)
 ### Gate 2 — Role-Based Access Control (RBAC) Tier Clearance Gate
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-4)
 Each key in the Phonebook carries a mandatory `required_tier` (`Tier 1` Guest through `Tier 5` System Administrator). If the caller's `user_tier` is lower than the key's `required_tier` (or its parent module's `required_tier`), access is denied and logged to the central SIEM audit stream.
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-5)
 ### Gate 3 — Sensitive Vault, Cloud-Sync & 64-Bit Hardware Inode (`st_ino`) Gate
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-5)
 Before reading or modifying any resolved target, the Broker checks three sensitivity layers:
 1. Explicit `"sensitive": true` flags on the key or parent namespace.
 2. Automatic personal cloud-sync root detection.
@@ -63,26 +79,35 @@ Before reading or modifying any resolved target, the Broker checks three sensiti
 - **On Read**: Raw source or document text is **never** returned. Instead, the Broker invokes the air-gapped **Local CPU Inference Broker** and returns `GRANTED_SANITIZED_DIGEST_ONLY` containing only a PII-scrubbed, de-identified topic summary (with all target paths stripped).
 - **On Write**: Immediately rejected with `DENIED_SENSITIVE_VAULT`.
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-6)
 ### Gate 4 — Self-Protection & Read-Only Blueprint Lock Gate
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-6)
 - **Self-Protection Lock**: Keys corresponding to security hooks, VFS maps, offline privacy brokers, security auditors, and the Raugus Resolver MCP Broker itself are permanently locked against modification (`DENIED_SELF_PROTECTION`).
 - **Read-Only UI Blueprints**: Keys mapped to immutable frontend application templates return `DENIED_READ_ONLY` on any write attempt, enforcing the platform's Zero-Modification Blueprint doctrine.
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-7)
 ### Gate 5 — Granular AST Symbol Lock & Syntax Validation Gate
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-7)
 When the agent reads or writes a specific symbol key (`<module_key>::<symbol_name>`):
 - **Isolated Symbol Extraction (Read)**: The Broker parses the module's Abstract Syntax Tree (AST) in memory, locates the exact start and end lines of that specific function, class, or variable assignment, and returns **only that symbol's code block**—keeping the rest of the file hidden.
 - **Function-Level Write Lock & Mantrap Serialization (Write)**: Inside the OS-level **Semantic Mantrap** concurrency lock, the Broker checks whether the target symbol (or any symbol overlapped by a module write) is marked locked (`permissions.write == false` or `locked == true`).
 - **Pre-Commit AST Syntax Gate**: The Broker splices the proposed code into a candidate copy in memory and parses the entire resulting module with `ast.parse()`. If the agent hallucinated invalid syntax or broken indentation, the Broker rejects the request with `DENIED_SYNTAX_ERROR` before a single byte is written to disk.
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-8)
 ### Gate 6 — Automatic Zero-Downtime Hot-Patch Routing Gate
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-8)
 When a `write_by_key` request passes Gates 1–5 on a live backend engine key:
 - The agent does not need to know where the staging directory is or how to trigger a reload.
 - The Resolver MCP Broker **automatically stages the validated module into the Hot-Patch Quarantine**, runs the **Bootstrap Pre-Flight Bytecode Check**, snapshots the previous version into the **Backup Vault**, promotes the update, and synchronizes live routes in memory—returning `delivery_mode: "HOT_PATCH_PROMOTED"` to the agent.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3)
 ## 3. MCP Tool Reference & Sanitized Payloads
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_1)
 
 ### 3.1 `search_keys(query, entry_type="all", user_tier=5, limit=30)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_1)
 Searches the Raugus Phonebook by keyword and returns matching VFS keys and their permission metadata—never physical paths.
 
 **Example Response:**
@@ -109,7 +134,9 @@ Searches the Raugus Phonebook by keyword and returns matching VFS keys and their
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_2)
 ### 3.2 `list_module_keys(module_key, user_tier=5)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_2)
 Lists all function, async function, class, and variable keys (`<module_key>::<symbol_name>`) inside a module key along with their line spans and delivery modes.
 
 **Example Response:**
@@ -151,7 +178,9 @@ Lists all function, async function, class, and variable keys (`<module_key>::<sy
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_3)
 ### 3.3 `read_by_key(key, user_tier=5)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_3)
 Retrieves the exact source code or value of a single function, class, variable, or module purely by its VFS Key after verifying all security rules.
 
 **Example Response (Symbol Key):**
@@ -172,7 +201,9 @@ Retrieves the exact source code or value of a single function, class, variable, 
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_4)
 ### 3.4 `write_by_key(key, new_code, user_tier=5)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_4)
 Updates a specific function, class, variable (`<module_key>::<symbol_name>`), or module (`<module_key>`) by key, enforcing AST locks, syntax compilation, and automatic hot-patch promotion.
 
 **Example Response:**
@@ -189,12 +220,16 @@ Updates a specific function, class, variable (`<module_key>::<symbol_name>`), or
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_5)
 ### 3.5 `refresh_key_map(user_tier=5)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_5)
 Re-indexes workspace AST symbol keys and 64-bit hardware inodes in the Raugus Phonebook and returns only aggregate key counts (`total_keys`, `file_keys`, `symbol_keys`).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-4)
 ## 4. Security Verification Summary
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-4)
 
 The Raugus Resolver MCP Broker is continuously verified by the **Automated Workspace Tool Security Auditor**:
 - **Stage 3 AST Static Code Hygiene**: Confirms the MCP server contains **zero external HTTP client imports** (100% air-gapped), zero `shell=True` subprocess calls, and zero `eval`/`exec` primitives.
@@ -202,7 +237,9 @@ The Raugus Resolver MCP Broker is continuously verified by the **Automated Works
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-5)
 ## 5. Architectural Cross-References & Related Systems Dropdown
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-5)
 
 <details>
 <summary>🔽 Related Subsystems & Cross-Project Architectures (Click to Expand)</summary>

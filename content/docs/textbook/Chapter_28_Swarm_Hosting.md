@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_28 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 28: Introduction to Decentralized Swarm Hosting
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_28-SEC-28_1)
 ## 28.1 The Illusion of the Cloud
+[//]: # (SECTION_ID: SIRA-TXT-CH28-SEC-28_1)
 
 In traditional IT, "The Cloud" usually refers to massive, centralized data centers owned by tech monopolies. But the Siraugga Engine operates on an entirely different philosophy. 
 
@@ -8,7 +12,9 @@ DevCore is a **Self-Hosted, Decentralized, BYOK (Bring Your Own Key) Engine**. A
 
 With thousands of remote subagents storing their game data, generating code, and manipulating virtual assets on a decentralized host, this architecture demands an entirely unique approach to security. This module covers how Decentralized Swarm Hosting is made possible through Subagent Virtualization, and how that virtualized data must be defended.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_28-SEC-28_2)
 ## 28.2 Subagent Virtualization
+[//]: # (SECTION_ID: SIRA-TXT-CH28-SEC-28_2)
 
 In a legacy cloud environment, servers use hypervisors to spawn heavy Virtual Machines (VMs), each running a complete Operating System. 
 
@@ -16,7 +22,9 @@ DevCore does not use VMs. It relies on **Subagent Virtualization (SVs)**. The Or
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_28-SEC-28_3)
 ## 28.3 Module Objectives & Master Syllabus
+[//]: # (SECTION_ID: SIRA-TXT-CH28-SEC-28_3)
 
 This module shifts the focus from network firewalls to the security of the host engine itself. The objective is to learn how to recommend Swarm security requirements based on specific decentralized scenarios.
 

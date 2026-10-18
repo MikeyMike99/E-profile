@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_15 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 15: Semantic Wildcard Masking
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-15_1)
 ## 15.1 The Mathematical Filter (Wildcard Overview)
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-15_1)
 
 In the previous chapter, we established that Agentic Control Lists (ACLs) act as the physical filter to the DevCore Sandboxes. This chapter explains the mathematical mechanism the Orchestrator uses to enforce those filters across massive swarms: **The Semantic Wildcard Mask**.
 
@@ -10,29 +14,39 @@ Wildcard masks function using an ANDing process, similar to a subnet mask, but t
 *   **Wildcard mask bit `0`:** MATCH the corresponding value in the identity address.
 *   **Wildcard mask bit `1`:** IGNORE the corresponding value (accept any value).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-1)
 ### Binary Translation Examples
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-1)
 *   `0.0.0.0` (Binary: `00000000` on the last octet) $\rightarrow$ **Match all octets exactly.** Used to pinpoint one specific AI subagent.
 *   `0.0.0.255` (Binary: `11111111` on the last octet) $\rightarrow$ **Match the first three octets, ignore the last.** Used to permit an entire swarm of agents belonging to a specific Modder.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-15_2)
 ## 15.2 Masking Agentic Subnets and Ranges
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-15_2)
 
 Using wildcard masks gives the Raugus Resolver immense flexibility to filter traffic for a single subagent, a specific Modder's swarm (subnet), or a massive range of swarms.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-2)
 ### Masking an Agentic Swarm (Subnet)
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-2)
 Assume a Tier 2 Modder is assigned the identity block `192.168.1.0`. They spawn 50 concurrent QA subagents to test a level. Instead of writing 50 separate ACL rules, a Tier 5 Admin can write a single rule utilizing a wildcard mask: `0.0.0.255`. 
 *   The `0.0.0` dictates that the Modder's identity (`192.168.1`) MUST match exactly.
 *   The `255` dictates that the Orchestrator ignores the final digits (the individual agent IDs).
 *   **Resulting ACE:** `access-list 10 permit 192.168.1.0 0.0.0.255` (Permits all AI subagents belonging to this Modder).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-3)
 ### Masking Multiple Swarms (Address Ranges)
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-3)
 If an Admin wants to authorize an entire guild of Modders (e.g., Modders in the blocks `192.168.16.0` through `192.168.31.0`), they use a precise binary block: `0.0.15.255`.
 *   **Resulting ACE:** `access-list 10 permit 192.168.16.0 0.0.15.255`
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-15_3)
 ## 15.3 Calculating the Semantic Wildcard
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-15_3)
 
 Manually calculating wildcard masks in binary can be computationally tedious for a human Admin. DevCore supports the standard network shortcut method for calculating wildcards: **Subtract the standard subnet mask from the Absolute Wildcard Variable (`255.255.255.255`).**
 
@@ -46,7 +60,9 @@ The Admin can seamlessly deploy this mask to the Agentic ACL without converting 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-15_4)
 ## 15.4 Agentic Wildcard Keywords
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-15_4)
 
 Because writing out decimal representations of binary bits can lead to severe security typos, the DevCore Orchestrator provides two native keywords to substitute the most common wildcard masks. These keywords drastically reduce keystrokes and make the Agentic Control Entries (ACEs) legible to human reviewers.
 
@@ -59,11 +75,15 @@ By utilizing `host`, `any`, and calculated wildcard ranges, Tier 5 Admins can sc
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-4)
 ## Chapter 15 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-4)
 
 Chapter 15 establishes the mathematical mechanics that make Agentic Control Lists (ACLs) scalable. In a Zero-Trust environment hosting thousands of AI subagents, manually whitelisting every single unique Agent UUID would paralyze the Orchestrator. By utilizing Semantic Wildcard Masks, Tier 5 Admins can filter massive, high-density AI swarms with highly efficient, single-line rules. Whether locking down a single rogue subagent or granting sweeping permissions to an entire Modding Guild, wildcards and their corresponding keywords (`host`, `any`) are the absolute foundation of swarm traffic control.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_15-SEC-5)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 15 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH15-SEC-5)
 
 To maintain absolute clarity, here is the master translation of traditional IPv4 routing variables into their DevCore Agentic equivalents established in this chapter:
 

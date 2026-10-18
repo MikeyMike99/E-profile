@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_31 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 31: Orchestrator Infrastructure Security
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_31-SEC-31_1)
 ## 31.1 The Software-Defined Swarm
+[//]: # (SECTION_ID: SIRA-TXT-CH31-SEC-31_1)
 
 The foundation of DevCore is the Orchestrator's infrastructure—the physical CPU, memory, and storage that compute the AI Subagents. 
 
@@ -8,7 +12,9 @@ Because of the volatile nature of Subagent Virtualization (SVs), where hundreds 
 
 To secure the Orchestrator infrastructure, DevCore relies on **Software-Defined Swarm Networks (SDSN)**. Instead of physical cables, Tier 5 Admins apply virtual Agentic Bulkheads (Security Groups) directly to the virtualized subagents. This allows for absolute network isolation without the constraints of physical hardware, preventing subagents from bleeding context into each other.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_31-SEC-31_2)
 ## 31.2 The BYOK Responsibility Matrix
+[//]: # (SECTION_ID: SIRA-TXT-CH31-SEC-31_2)
 
 When a Tier 5 Admin hosts the Siraugga Engine for a community of developers, security becomes a shared burden. This is known as the **BYOK (Bring Your Own Key) Responsibility Matrix**.
 
@@ -26,7 +32,9 @@ The Admin (acting as the Service Provider) is responsible for the physical servi
 
 *Critical Note: Regardless of how much infrastructure the Admin provides, the Modder is ALWAYS responsible for the security of their own JSON Prompt Data.*
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_31-SEC-31_3)
 ## 31.3 Defense-in-Depth for the Orchestrator
+[//]: # (SECTION_ID: SIRA-TXT-CH31-SEC-31_3)
 
 Securing the physical foundation of the Swarm requires a Defense-in-Depth strategy applied directly to the Orchestrator's operating layers. 
 
@@ -38,11 +46,15 @@ Tier 5 Admins implement the following architectural safeguards:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_31-SEC-1)
 ## Chapter 31 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH31-SEC-1)
 
 Chapter 31 defines the physical and virtual boundaries of the Orchestrator. Because traditional hardware cannot keep up with rapidly spawning AI contexts, Software-Defined Swarm Networks (SDSN) are required. Furthermore, the BYOK Responsibility Matrix explicitly defines who is at fault when an attack succeeds: The Admin protects the metal, but the Modder protects the data.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_31-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 31 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH31-SEC-2)
 
 To maintain absolute clarity, here is how the traditional Cloud Infrastructure domains map directly to the DevCore Engine:
 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_08 | VERSION: v1.0 | SCOPE: ARCH)
+
 # Pillar 05.8: From-Scratch Creation Guide: Cinematic TTS Proxy & Sanitizer
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-1)
 
 This guide walks you through building an **Intent-Driven Text-to-Speech (TTS) Sanitizer & Proxy** (`cinematic_tts.py`) from a blank editor.
 
@@ -14,14 +18,19 @@ You will implement the phonetic sanitizer that strips speech-breaking punctuatio
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-2)
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-3)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-3)
 ```bash
 nano cinematic_tts.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-4)
 ### Step 2: Implement the Phonetic Text Sanitizer (Lines 1–30)
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-4)
 ```python
 import re
 
@@ -50,7 +59,9 @@ class PhoneticSanitizer:
         return cleaned[0].upper() + cleaned[1:] if cleaned else ""
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-5)
 ### Step 3: Implement Tool Metadata Mapper (Lines 31–55)
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-5)
 ```python
     @classmethod
     def map_tool_call(cls, tool_name: str, parameters: dict) -> str:
@@ -73,7 +84,9 @@ class PhoneticSanitizer:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-6)
 ## Why Order Matters in Speech Sanitization
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-6)
 
 1. **Strip Quotes Before Trimming Whitespace**:
    - Punctuation removal must happen *before* calling `.strip()`. If you trim first and then remove a quote mark, leading and trailing spaces can be exposed, causing micro-delays in audio synthesis.
@@ -82,7 +95,9 @@ class PhoneticSanitizer:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-7)
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-7)
 
 Verify that your sanitizer cleans technical syntax and creates natural speech strings:
 
@@ -111,10 +126,15 @@ Synthesized Audio String: Patch server.py: websocket keep-alive handler
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-8)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-9)
 
 ### Q: Why do neural voices sound better when quotes are removed?
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-9)
 **A:** When neural models see quotation marks, they try to modulate their pitch to imitate someone speaking dialogue. For technical software alerts, this sounds bizarre and unnatural. Stripping quotes produces an objective, narrator tone.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_08-SEC-10)
 ### Q: What is the ideal word count for an audio developer alert?
+[//]: # (SECTION_ID: SIRA-DOC-05_08-SEC-10)
 **A:** Between 4 and 8 words. This allows the phrase to be spoken in under 1.5 seconds, ensuring the blind developer is informed without breaking their mental train of thought.

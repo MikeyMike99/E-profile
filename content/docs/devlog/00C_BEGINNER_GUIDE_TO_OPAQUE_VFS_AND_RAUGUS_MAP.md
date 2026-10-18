@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-00C_BEGINNER_GUIDE | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 00C: Beginner Guide to Opaque Virtual File Systems & Raugus Map
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-1)
 ## What is an Opaque Virtual File System (VFS)?
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-1)
 
 In standard programming, when you want to read or write a file, you pass a physical disk path like `/home/user/app/server.py` or `C:\Projects\app\server.py`.
 
@@ -19,7 +23,9 @@ An **Opaque Virtual File System (VFS)** completely hides physical paths behind a
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-2)
 ## The Raugus Map VFS Architecture
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-2)
 
 Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or requests a real disk path. Instead, every module, function, and variable is cataloged in the **Raugus Map** under an opaque key:
 
@@ -47,14 +53,18 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 +---------------------------------------+   +-----------------------------------+
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-3)
 ### Key Formats
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-3)
 - **Module Key**: `devcore.core.server.py`
 - **Function / Class Symbol Key**: `devcore.core.server.py::ws_endpoint`
 - **Variable Key**: `devcore.security.security_manager.py::TIER_SAFE_WORKSPACE`
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-4)
 ## Plain-English Glossary
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-4)
 
 - **Virtual File System (VFS)**: An abstraction layer on top of a more concrete storage system, allowing applications to access files uniformly without knowing physical disk geometry.
 - **Opaque Key**: A label or token that does not reveal any details about the physical resource it points to.
@@ -63,7 +73,9 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-5)
 ## Why Order Matters in Opaque VFS Lookups
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-5)
 
 1. **Key Verification Before Path Resolution**:
    - The Resolver must check if the requested key exists in the internal registry *before* looking up any disk coordinates. If a requested key is missing, it immediately throws `KeyError` without touching the filesystem.
@@ -74,13 +86,20 @@ Siraugga enforces the **Raugus Protocol**: no client or subagent ever sees or re
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-6)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-7)
 
 ### Q: Does the Raugus Resolver replace Git?
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-7)
 **A:** No. Git tracks version history across time. The Raugus Resolver enforces spatial security in real time, preventing unauthorized agents from reading or modifying locked symbols while the application is running.
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-8)
 ### Q: What happens if an agent tries to pass `../../etc/shadow` to `read_by_key`?
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-8)
 **A:** The Resolver looks for `../../etc/shadow` in `raugus_map.json`, finds no matching key, and throws an immediate `KeyError`. The physical Linux filesystem is never interrogated.
 
+[//]: # (SECTION_ID: SIRA-DEV-00C_BEGINNER_GUIDE-SEC-9)
 ### Q: Can an agent edit one function in a file while another is locked?
+[//]: # (SECTION_ID: SIRA-DOC-00C_BEGINNER_G-SEC-9)
 **A:** Yes! Because Raugus maps symbols down to exact line spans via Python's AST parser, function-level write locks permit safe edits to helper functions while protecting core security algorithms in the same file.

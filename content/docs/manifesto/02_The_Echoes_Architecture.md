@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: ECHO-MAN-02_THE_ECHOES_ARCH | VERSION: v1.1 | SCOPE: MAN)
+
 # Chapter 2: The Echoes Architecture
 
 Every grand design begins with a chaotic workbench. For this developer, the genesis of a sprawling, accessible digital universe began not with visual spectacle, but with the quiet, fundamental mechanics of state and sound.

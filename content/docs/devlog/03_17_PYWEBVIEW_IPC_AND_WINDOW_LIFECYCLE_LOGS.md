@@ -1,11 +1,17 @@
+[//]: # (DOC_ID: SIRA-DEV-03_17 | VERSION: v1.0 | SCOPE: DEV)
+
 # PyWebView IPC & Window Lifecycle Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_17-SEC-1)
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_17-SEC-1)
 This test suite verifies the lifecycle, inter-process communication, and headless console redirection of the PyWebView native desktop wrapper (`desktop_app.py`). It validates that background ASGI threads boot cleanly, readiness probes succeed within tight timeouts, and closing the GUI window cleanly reaps child processes without leaving zombie instances.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_17-SEC-2)
 ## 2. Test Execution Environment
+[//]: # (SECTION_ID: SIRA-DOC-03_17-SEC-2)
 - **Operating System**: Windows 11 Pro 64-bit / WSL 2 Linux kernel 5.15
 - **Python Runtime**: Python 3.11.8 (C-compiled standalone environment)
 - **GUI Engine**: Microsoft Edge WebView2 Runtime (x64 v128.0)
@@ -13,7 +19,9 @@ This test suite verifies the lifecycle, inter-process communication, and headles
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_17-SEC-3)
 ## 3. Diagnostic Log Output
+[//]: # (SECTION_ID: SIRA-DOC-03_17-SEC-3)
 
 ```text
 [PYWEBVIEW-BOOT] Initializing standalone desktop wrapper...
@@ -47,7 +55,9 @@ This test suite verifies the lifecycle, inter-process communication, and headles
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_17-SEC-4)
 ## 4. Benchmark Metrics & Verification Results
+[//]: # (SECTION_ID: SIRA-DOC-03_17-SEC-4)
 
 | Diagnostic Step | Target Threshold | Measured Result | Status |
 | :--- | :--- | :--- | :--- |
@@ -60,14 +70,18 @@ This test suite verifies the lifecycle, inter-process communication, and headles
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_17-SEC-5)
 ## 5. Why Order Matters in Lifecycle Diagnostics
+[//]: # (SECTION_ID: SIRA-DOC-03_17-SEC-5)
 1. **Probe Readiness Before Window Creation**: Confirming HTTP 200 before the webview navigates guarantees users never see a white crash screen or browser error dialog.
 2. **Signal Shutdown Before Force Killing**: Triggering `shutdown_event.set()` lets Hypercorn notify active WebSockets so the frontend can save draft state before process termination.
 3. **Reap Processes Before Python Exit**: Reaping child CLI processes before calling `sys.exit(0)` prevents background AI workers from running unchecked on the developer's CPU.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_17-SEC-6)
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_17-SEC-6)
 **Q: What happens if `readiness_probe` never gets an HTTP 200?**  
 A: The loop retries up to 50 times (5 seconds total). If the server fails to bind or crashes, it raises a fatal startup exception and displays the error log.
 

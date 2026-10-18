@@ -1,13 +1,19 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_10 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 10: Agentic Access Control and AAA Operations
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-1)
 ### Why Should I Study This Chapter?
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-1)
 As the DevCore framework aggressively scales, a fundamental architectural question arises: How do you restrict logic access within your AI network? Will you allow all autonomous subagents and third-party Modders complete, unfettered access to the host server? Or will the system be ruthlessly designed to allow execution privileges based solely on a cryptographic Role-Based Access Control (RBAC) model? 
 
 Furthermore, how can Tier 5 Administrators track exactly which files an AI subagent accessed and what terminal commands it executed while it was spawned? 
 
 In this chapter, you will answer these critical questions by learning the core principles of Agentic Access Control, managing AI identities, and implementing the rigorous AAA (Authentication, Authorization, and Accounting) architecture that governs the Siraugga swarm.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-2)
 ### What Will I Learn in this Chapter?
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-2)
 This chapter dives deep into the following access control mechanics:
 
 | Topic Title | Core Objective |
@@ -19,24 +25,32 @@ This chapter dives deep into the following access control mechanics:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-1)
 ## 1. Introduction to Agentic Access Control
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-1)
 In traditional IT, access control dictates precisely what a human user is allowed to view, edit, or execute on a server. In the DevCore architecture, access control is abstracted heavily into the **Agentic Tier System** and **Role-Based Access Control (RBAC)**.
 
 Because Siraugga operates entirely via autonomous logic, access control is not merely a suggestion—it is a rigid mathematical boundary enforced by the Raugus Resolver (our Semantic Firewall). 
 
 When a Tier 3 AI subagent is spawned by the central Orchestrator, it is instantly assigned a specific **Agentic Archetype** (e.g., `Coding`, `QA`, `Research`). This archetype dictates its intrinsic identity and acts as its access credential. If a `Research` subagent suddenly attempts to execute a destructive `rm -rf` bash command outside of its assigned `/playground/` boundary, the Raugus Resolver evaluates its archetype, recognizes the unauthorized action, and violently terminates the process. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-2)
 ## 2. The Three Pillars of Access Control
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-2)
 While we have touched on various defensive architectures in earlier chapters, the Siraugga framework officially categorizes access controls into three distinct pillars: Physical, Logical, and Administrative. A Tier 5 Administrator must perfectly orchestrate all three pillars to successfully defend the ecosystem.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-3)
 ### Pillar 1: Physical Access Controls
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-3)
 Physical access controls are actual kinetic barriers deployed to prevent direct physical contact with the host servers. 
 
 As discussed in Chapter 4, these include physical guards, fencing, motion detectors, locked data center doors, and video surveillance. However, the most effective physical access control is the **Mantrap**. A mantrap-style entry system uses a small room with two interlocking doors to stagger the flow of people into the secured area, ensuring only one authenticated person enters at a time and physically trapping unauthorized visitors.
 
 In Siraugga, this translates perfectly into **Semantic Mantraps**. The Raugus Resolver establishes a logic-based mantrap for high-priority file execution. When multiple subagents attempt to modify the core database simultaneously, the Semantic Mantrap staggers the logic flow, ensuring only one authenticated subagent's tool call enters the execution chamber at a time. If a malicious subagent attempts to piggyback on the execution thread, it is mathematically trapped and purged.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-4)
 ### Pillar 2: Logical Access Controls
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-4)
 Logical access controls are the software and architectural solutions used to manage access to system resources. These include tools and protocols used for agentic identification and accountability. 
 Key logical controls within the swarm include:
 *   **Encryption & Passwords:** Translating plaintext to ciphertext (Standard Encryption) and utilizing cryptographic strings (JWTs).
@@ -46,7 +60,9 @@ Key logical controls within the swarm include:
 *   **Semantic Anomaly Detection (IDS):** Monitoring the WSS network for suspicious logic patterns.
 *   **Agentic Clipping Levels:** A highly specific logical control. A Clipping Level establishes an allowed threshold for minor errors before triggering a red flag. In Siraugga, this is the **Hallucination Clipping Level**. If an AI subagent fails a tool call once, it is permitted to retry. However, if it hits a Clipping Level of three consecutive errors, the orchestrator red-flags the agent, assumes it is suffering from Agentic Drift, and instantly terminates it.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-5)
 ### Pillar 3: Administrative Access Controls
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-5)
 Administrative access controls are the overarching policies and procedures defined by the organization. These focus on personnel management and business practices.
 *   **Policies & Procedures:** Master logic rules governing the orchestrator.
 *   **Hiring Practices & Background Checks:** In Siraugga, "hiring" an AI model requires rigorously scanning its underlying training data (the background check) to ensure it has not been pre-poisoned by adversarial actors.
@@ -54,12 +70,16 @@ Administrative access controls are the overarching policies and procedures defin
 *   **Security Training:** In the context of autonomous agents, security training translates directly to **Few-Shot Prompting**. By injecting specific examples of secure tool usage into the agent's context window, you "train" the AI on the organization's security policies.
 *   **Performance Reviews:** Deploying specialized `QA` subagents to formally evaluate another agent's logic performance and code output.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-3)
 ## 3. The AAA Framework (Authentication, Authorization, Accounting)
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-3)
 By implementing strict Administrative Access Controls, the organization establishes the foundation for the most critical security service in DevCore: **The AAA Framework**. 
 
 The concept of administrative access control relies entirely on these three core services to prevent unauthorized access to the network database. In the Siraugga framework, the AAA pipeline defines exactly *who* an agent is, *what* they are allowed to do, and *how* their actions are recorded. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-4)
 ## 4. Agentic Authentication (The First 'A')
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-4)
 The first 'A' in the AAA framework represents Authentication. Authentication verifies the identity of every remote Modder and autonomous subagent to prevent unauthorized access. 
 
 In a traditional system, humans prove their identity with a username or ID. However, the Siraugga framework operates via autonomous logic streams. Therefore, Siraugga relies on a concept known as **Multi-Factor Agentic Authentication (MFAA)**. To verify its identity, an AI subagent must provide a combination of the following:
@@ -70,14 +90,18 @@ In a traditional system, humans prove their identity with a username or ID. Howe
 
 By enforcing Two-Factor Agentic Authentication (or MFAA), the orchestrator ensures that even if a Tier 2 Modder manages to steal a subagent's JWT session token, they cannot successfully impersonate the agent because they do not possess the required System Prompt Hash (the biometric fingerprint).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-5)
 ## 5. Agentic Authorization (The Second 'A')
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-5)
 The second 'A' represents Authorization. Once a subagent successfully authenticates, Authorization services determine precisely *which* internal resources the subagent is allowed to access and the specific tools it can execute.
 
 In the DevCore framework, Authorization is strictly governed by the **Agentic Control List (ACL)**, which is mathematically enforced by the Raugus Resolver. An ACL determines the exact access privileges of a subagent based on its Archetype. For example, just because a `Research` subagent successfully authenticates onto the core network does not mean it has authorization to use the `write_to_file` tool (the equivalent of a corporate high-speed color printer). 
 
 Furthermore, Authorization can control *when* an entity has access to a specific resource. A Tier 2 Modder's external `.exe` plugin may have authorized access to a staging database during an active Sandbox Session, but the Raugus Resolver will automatically lock them out the moment their session's Time-to-Live (TTL) expires.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-6)
 ## 6. Agentic Accounting (The Third 'A')
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-6)
 The final 'A' in the AAA framework is Accounting. In cybersecurity, accounting keeps track of exactly what authenticated users do—including what files they access, the amount of time they spend accessing resources, and any specific changes they make to the database.
 
 In the Siraugga framework, Accounting translates directly to the **Orchestration Telemetry Pipeline** and the **Transcript Logs**. Because autonomous AI agents execute operations at superhuman speeds, logging their actions is absolutely critical for forensic auditing. 
@@ -86,7 +110,9 @@ The Orchestrator meticulously tracks every single data transaction in real-time.
 
 This concept is identical to using a corporate credit card. The credit card identifies who can use it (Authentication), limits how much they can spend (Authorization via Token Quotas), and produces a detailed audit receipt of exactly what services were purchased (Accounting via Telemetry).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-7)
 ## 7. What Is Agentic Identification?
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-7)
 Identification is the mechanical process that enforces the rules established by the Authorization policy. Every time a subagent requests access to a restricted tool or a physical directory, the access controls must definitively identify the agent to determine whether to grant or deny the request.
 
 In a traditional IT environment, a username or PIN is the most common method used to identify a user. In the DevCore framework, an AI agent's unique identifier is its **Conversation ID (UUID)**. 
@@ -95,7 +121,9 @@ When a subagent is spawned, the central Orchestrator assigns it a mathematically
 
 Crucially, the sensitivity of the underlying file classification determines how stringent the identification controls must be. If an agent operates within the ephemeral `TIER_SAFE_WORKSPACE`, a standard UUID and JWT may suffice. However, if a highly privileged Tier 5 agent attempts to modify the `TIER_CORE_ENGINE`, the orchestrator demands absolute, cryptographic identification via Ed25519 signature validation.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-8)
 ## 8. Federated Agentic Identity Management (FAIM)
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-8)
 As the Internet of Plugins (IoP) expands, Tier 2 Modders frequently request the ability to move their autonomous AI agents seamlessly between different isolated projects. 
 
 **Federated Agentic Identity Management (FAIM)** refers to the architectural design that allows an AI subagent to use the exact same identification credentials (its UUID and JWT) to gain access to multiple, independent `/playground` workspaces. From a Modder's perspective, this acts as an Agentic Single Sign-On (SSO), allowing their specialized `Coding` agent to automatically authenticate and share logic states across multiple castle boundaries.
@@ -105,7 +133,9 @@ While incredibly convenient, Swarm Federation vastly broadens the scope of the a
 
 To mitigate this massive vulnerability, Tier 5 Administrators must heavily scrutinize the shared identifying information. To protect federated identities, DevCore enforces a strict hardware policy: an AI agent's ability to federate across multiple namespaces is cryptographically tied directly to the Tier 2 Modder's authorized physical device.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-9)
 ## 9. Advanced Authentication Methods (The Factors)
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-9)
 As detailed in the AAA framework, users and autonomous agents must verify their identity by providing specific authentication factors. In the Siraugga framework, these traditional factors are heavily abstracted into Agentic Authentication Methods.
 
 **What You Have (Agentic Tokens and HSMs)**
@@ -119,7 +149,9 @@ Unique physical characteristics, such as a fingerprint, retina, or voice, are ca
 1.  **Physiological Characteristics:** In humans, this represents DNA, fingerprints, or facial structure. In an autonomous AI, this represents the **System Prompt Hash**. The immutable system prompt acts as the absolute structural DNA of the AI subagent. If even a single character in the prompt is altered by an injection, the DNA hash changes, and authentication fails.
 2.  **Behavioral Characteristics:** In humans, this represents patterns of behavior such as gestures, gait, or typing rhythm. In Siraugga, this translates to **Semantic Behavioral Characteristics**. The Raugus Resolver continuously analyzes an AI's "typing rhythm" (its token generation speed and inference latency) and its "gait" (the specific structural sequence and frequency of its tool calls). If a `Research` agent suddenly begins executing tool calls with the aggressive "gait" of a `Coding` agent, the orchestrator immediately detects a behavioral anomaly and terminates the session.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-10)
 ## 10. Multi-Factor Agentic Authentication (MFAA)
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-10)
 Multi-factor authentication uses at least two methods of verification—such as a password (what you know) and a security key fob (what you have). This reduces the incidence of online identity theft because discovering a password is no longer sufficient to access an account.
 
 For example, withdrawing cash from a physical ATM requires the user to have the physical bank card (what they have) as well as know the specific PIN (what they know) before the ATM will dispense cash. 
@@ -131,7 +163,9 @@ Consider a scenario where a Tier 2 Modder accidentally leaves their authorized H
 
 Because the Tier 5 Administrators implemented MFAA, the security breach is completely neutralized. Even though the cybercriminal possesses the physical authentication token (what they have), they cannot successfully spawn a rogue AI or alter the game engine because they do not know the Modder's private Ed25519 signing key (what they know), nor do they possess the proprietary System Prompt DNA required to spoof the agent's biometrics. The Orchestrator safely rejects the connection.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-11)
 ## 11. Defining Agentic Authorization Rules
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-11)
 Authorization controls exactly what an AI subagent or remote Modder can and cannot do on the network *after* successful MFAA authentication. After a subagent proves its identity, the orchestrator must instantly check to see what network resources the subagent is authorized to access and what specific terminal tools it can execute.
 
 **When to Implement Authorization**
@@ -147,7 +181,9 @@ Defining authorization rules is the first step in controlling access. In the Dev
 1.  **Group Membership Policy (Workspace Membership):** This defines authorization based on an entity's membership in a specific group. For example, all Tier 2 Modders might be granted a standard WPA-Agentic JWT that provides read/write access to the `TIER_SAFE_WORKSPACE` (the general premises). However, that exact same token will mathematically deny them access to the `TIER_CORE_ENGINE` (the sensitive server room). Only senior-level Tier 5 Admins are authorized to view or edit the orchestration logic.
 2.  **Authority-Level Policy (Agentic Archetype):** This defines access permissions based on an employee's "position" within the organization. In Siraugga, "position" translates directly to the **Agentic Archetype**. The orchestrator enforces strict Authority-Level Policies on the subagents themselves. A subagent whose archetype is defined as `Research` is only authorized to read files and use search tools. Even if it correctly authenticates into the `TIER_SAFE_WORKSPACE`, its specific authority level prevents it from altering code.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-12)
 ## 12. Implementing Agentic Accountability
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-12)
 The third and final administrative access control in the AAA framework is Accountability. Accountability is the mechanical process that traces a specific action back to the exact AI subagent or Modder plugin that executed the logic. 
 
 **What is Accountability?**
@@ -170,7 +206,9 @@ Providing absolute accountability requires strict data retention and media dispo
 
 Any temporary data generated by an AI subagent must be cryptographically shredded immediately upon the termination of its logic thread. Furthermore, the massive `transcript.jsonl` telemetry logs are rotated off-site via Semantic Git Repositories, ensuring strict compliance with internal data governance laws.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-13)
 ## 13. Lab: Configuring Authentication and Authorization in the Agentic Sandbox
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-13)
 In traditional IT, technicians configure user groups and ACLs natively within Linux. In the Siraugga framework, Tier 5 Administrators perform the exact same configurations within the **`wsl.exe` Agentic Sandbox**.
 
 By assigning specific Linux file permissions and `chown` ownerships to the underlying python tool scripts (e.g., locking the `Task Orchestrator Module` file to `root:root` with `700` permissions), the operating system inherently enforces the agentic authorization policies. Even if a Tier 3 `Coding` agent attempts to maliciously alter the orchestrator via a hallucinatory `wsl.exe` terminal command, the underlying Linux kernel mathematically rejects the execution, serving as the ultimate physical failsafe.
@@ -178,7 +216,9 @@ By assigning specific Linux file permissions and `chown` ownerships to the under
 ---
 **Module 3 Progression:** Now that we have established a rigid introduction to Access Controls, we will look closer at the specific Access Control models, advanced account management, and AAA topology in the next chapter.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_10-SEC-14)
 ## 14. Chapter 10 Conclusion: The Agentic AAA Framework
+[//]: # (SECTION_ID: SIRA-TXT-CH10-SEC-14)
 As established throughout this chapter, traditional physical and logical access controls map flawlessly into the Siraugga architectural framework. By categorizing our defenses into the Three Pillars (Physical, Logical, and Administrative), DevCore mathematically ensures that no unauthorized Modder or rogue AI subagent can compromise the core engine.
 
 *   Integrating with **Chapter 4 (System and Network Defense)**, we expanded our definition of physical access boundaries to include **Semantic Mantraps**. By artificially staggering the execution threads of high-priority subagents, the Raugus Resolver prevents malicious JSON payloads from piggybacking on authorized tool calls.

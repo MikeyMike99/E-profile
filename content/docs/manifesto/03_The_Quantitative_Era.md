@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-MAN-03_THE_QUANTITATIV | VERSION: v1.0 | SCOPE: MAN)
+
 # Chapter 3: The Quantitative Era
 
 The developer's foray into the chaotic financial markets did not begin with a single, monolithic engine, but rather a sprawling, multi-faceted algorithmic laboratory known simply as `trading_bots`. It was an attempt to conquer the markets through rigorous quantitative analysis, operating as a biological ecosystem of autonomous trading agents. Rather than standard algorithms, the developer deployed "NPC-style" autonomous entities operating under distinct logical constraints, bearing names like `GoldSurvivalBot` and `UnshackledApexBot`. This multi-agent framework utilized a core `Core Component` module as a central nervous system and relied on a dedicated `guard_engine` to calculate strict mathematical survival buffers, ensuring capital preservation against unpredictable market swings. 

@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-04_04 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 04.4: Architecture Solutions: Extending Plugins & Protected Services
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-1)
 
 This guide provides tested, copy-paste recipes for extending the Siraugga platform:
 1. **The Ephemeral Plugin Pattern**: Adding interactive UI tools without modifying core HTML templates.
@@ -14,11 +18,15 @@ This guide provides tested, copy-paste recipes for extending the Siraugga platfo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-2)
 ## Recipe 1: Creating an Ephemeral Plugin (Zero-Modification Pattern)
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-2)
 
 Siraugga plugins (such as the Exam Builder and Accessible Media Player) follow the **Zero-Modification Architecture**. The HTML and JavaScript files are permanent blueprints; all behavior is driven by injecting dynamic JSON schemas.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-3)
 ### Step 1: Create the Plugin HTML Blueprint
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-3)
 Create `templates/plugins/diff_viewer.html`:
 
 ```html
@@ -47,7 +55,9 @@ Create `templates/plugins/diff_viewer.html`:
 </html>
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-4)
 ### Step 2: Inject the Dynamic JSON Payload
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-4)
 When the AI or a user runs `/diff`, the system simply writes a temporary JSON payload:
 ```json
 {
@@ -59,9 +69,12 @@ The UI renders dynamically inside an accessible iframe without touching server t
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-5)
 ## Recipe 2: Adding a Protected RBAC Route via Safe Hot-Patch
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-6)
 
 ### Step 1: Create the Route in Staging
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-6)
 Never edit live engine files directly! Stage the route in `core/patches/custom_route.py`:
 
 ```python
@@ -86,7 +99,9 @@ async def handle_custom_action():
     })
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-7)
 ### Step 2: Trigger Hot-Patch In-Memory Swap
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-7)
 Execute the safe simulation command in your terminal:
 ```bash
 curl -s -X POST http://127.0.0.1:5000/api/simulate-patch
@@ -95,7 +110,9 @@ The server pre-compiles the file, takes a backup, swaps the module, and hot-relo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-8)
 ## Why Order Matters in Extension Workflows
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-8)
 
 1. **JSON Schema Validation Before Iframe Spawn**:
    - The JSON data file must be written and validated on disk *before* triggering the iframe load. If the iframe requests the data before the write finishes, the user receives an empty screen error.
@@ -104,10 +121,15 @@ The server pre-compiles the file, takes a backup, swaps the module, and hot-relo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-9)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-10)
 
 ### Q: Why shouldn't I just edit `index.html` directly when adding a feature?
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-10)
 **A:** Directly hacking client templates makes future system upgrades impossible and risks breaking screen reader keyboard bindings. Sticking to dynamic JSON payloads keeps your interface modular and clean.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_04-SEC-11)
 ### Q: What happens if my new route has a syntax error during hot-patching?
+[//]: # (SECTION_ID: SIRA-DOC-04_04-SEC-11)
 **A:** The `py_compile` step detects the syntax error immediately, halts the deployment, and leaves the live server untouched. Your website stays online without disruption.

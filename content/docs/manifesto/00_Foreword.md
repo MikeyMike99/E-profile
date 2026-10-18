@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-MAN-00_FOREWORD | VERSION: v1.0 | SCOPE: MAN)
+
 # Foreword: The Cost of Memory
 
 You can build the most incredible, complex systems in the world, but if you don't document them, they eventually turn into ghosts. 

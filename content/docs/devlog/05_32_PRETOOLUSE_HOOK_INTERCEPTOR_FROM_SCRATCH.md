@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_32 | VERSION: v1.0 | SCOPE: ARCH)
+
 # PreToolUse Hook Interceptor from Scratch
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-1)
 ## 1. Architectural Role & Module Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-1)
 Securing web APIs is not enough when autonomous AI agents have native tools to edit files and run terminal commands. Without pre-execution interception, an agent can modify critical system files directly.
 
 This guide details how to build `.agents/raugus_hook.py` from scratch. It acts as a PreToolUse middleware that intercepts tool calls from stdin, validates targets against the Raugus VFS map, enforces function-level write locks, blocks dangerous shell commands, and emits SIEM intrusion logs.
@@ -31,7 +35,9 @@ This guide details how to build `.agents/raugus_hook.py` from scratch. It acts a
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-2)
 ## 2. Complete Python Implementation
+[//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-2)
 Save the following script as `tool_hook.py`:
 
 ```python
@@ -99,14 +105,18 @@ if __name__ == "__main__":
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-3)
 ## 3. Why Order Matters in Tool Hook Logic
+[//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-3)
 1. **Check Shell Commands Before Inspecting Paths**: Evaluating `CommandLine` first prevents commands that combine arguments (like `rm -rf core/`) from slipping past path rules.
 2. **Log Alert to Stderr Before Printing JSON**: Printing the SIEM alert to `sys.stderr` ensures standard output (`sys.stdout`) remains clean JSON for the calling AI framework.
 3. **Fail-Closed on Parsing Errors**: If `json.loads()` fails, the hook must return `{"decision": "deny"}` rather than allowing uninspected tools to execute.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_32-SEC-4)
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-05_32-SEC-4)
 **Q: What does "fail-closed" mean?**  
 A: A security principle where if an error occurs in the security checker, it defaults to blocking the action rather than accidentally letting it through.
 

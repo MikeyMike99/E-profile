@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_23 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 23: Sandbox Architectural Topologies
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-23_1)
 ## 23.1 The Sandbox Topologies
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-23_1)
 
 Firewall design in DevCore is primarily about dictating where a Modder's WebSocket connection is allowed to physically terminate. By establishing rigid boundaries between the untrusted public connections and the highly trusted orchestration files, Tier 5 Admins construct the physical layout of the Sandbox.
 
@@ -9,7 +13,9 @@ There are three common architectural topologies utilized in the Siraugga Engine:
 2.  **The Safe Workspace Topology (The DMZ)**
 3.  **Role-Based Sandbox Zones (ZPF)**
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-23_2)
 ## 23.2 The Binary Topology (Private and Public)
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-23_2)
 
 The most basic topology divides the environment into exactly two domains:
 *   **The Trusted Domain (Inside):** The `/core_engine/` and internal `App Router Module` processes.
@@ -17,7 +23,9 @@ The most basic topology divides the environment into exactly two domains:
 
 In a Binary Topology, traffic originating from the internal engine is permitted to travel out to the internet (e.g., to query an LLM API), and the returning data is trusted. However, any unprompted traffic originating from the outside and attempting to access the `core_engine` is violently blocked.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-23_3)
 ## 23.3 The Safe Workspace Topology (The DMZ)
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-23_3)
 
 For a Game Engine, the Binary Topology is too restrictive; third-party Modders need a place to upload assets and write scripts without being blocked by the firewall. This requires a three-tiered architecture known as the **Safe Workspace Topology** (the Demilitarized Zone, or DMZ).
 
@@ -27,7 +35,9 @@ For a Game Engine, the Binary Topology is too restrictive; third-party Modders n
 
 In this architecture, Modders are selectively permitted to connect to the Safe Workspace (DMZ) to upload assets and run isolated AI agents. Those agents are permitted to query the public internet (LLMs) to generate code. However, traffic originating from the Safe Workspace and attempting to cross into the Core Engine is strictly blocked. The DMZ acts as a heavily monitored quarantine zone. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-23_4)
 ## 23.4 Role-Based Sandbox Zones (ZPF)
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-23_4)
 
 As a game project scales, Admins often manage dozens of different Safe Workspaces (e.g., `/assets/`, `/levels/`, `/npc_scripts/`). Writing individual bulkheads between every single folder is inefficient. Instead, DevCore uses **Role-Based Sandbox Zones** (Zone-Based Policy Firewalls).
 
@@ -37,7 +47,9 @@ A "Zone" is a group of directories that share a similar security classification.
 
 **The Self Zone:** The only exception to the "deny all" zone rule is the **Self Zone**. In DevCore, the Self Zone is the Orchestrator itself (`App Router Module`). Traffic destined to or sourced from the Orchestrator (such as internal telemetry and transcript logging) requires highly specialized control plane policies.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-23_5)
 ## 23.5 Defense-in-Depth Swarm Defense
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-23_5)
 
 Relying on a single bulkhead is reckless. A secure Sandbox employs a **Defense-in-Depth** (Layered Defense) approach, often utilizing a *Screened Subnet*. 
 
@@ -50,11 +62,15 @@ When an untrusted Modder connects to DevCore, their payload must survive a gaunt
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-1)
 ## Chapter 23 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-1)
 
 Chapter 23 defines the blueprints of the DevCore Sandbox. By graduating from a simple Binary Topology to a Safe Workspace DMZ, Admins can safely host untrusted Modder code without risking the core engine. Grouping these directories into Role-Based Zones allows massive AI swarms to collaborate efficiently, while a Defense-in-Depth gauntlet ensures no single failure compromises the engine. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_23-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 23 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH23-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional firewall topologies into their DevCore Agentic equivalents:
 

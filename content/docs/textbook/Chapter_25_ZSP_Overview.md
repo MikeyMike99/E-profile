@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_25 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 25: Designing Zone-Based Sandbox Policies
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_25-SEC-25_1)
 ## 25.1 The Shift from Directories to Zones
+[//]: # (SECTION_ID: SIRA-TXT-CH25-SEC-25_1)
 
 The primary motivation for DevCore network security professionals to migrate from legacy Directory-Based Bulkheads to **Zone-Based Sandbox Policies (ZSP)** is structure and ease of use. 
 
@@ -8,7 +12,9 @@ In a classic DevCore Sandbox, security policies are applied directly to the phys
 
 In a ZSP topology, interfaces (directories) are assigned to conceptual **Security Zones**. If an Admin creates a new directory and assigns it to the `Private_Asset_Zone`, the AI subagents operating in that new folder can instantly pass JSON traffic to all other subagents in the `Private_Asset_Zone` freely. The Admin does not have to write a single new security rule.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_25-SEC-25_2)
 ## 25.2 The Benefits of Swarm Zones
+[//]: # (SECTION_ID: SIRA-TXT-CH25-SEC-25_2)
 
 Transitioning to a ZSP topology offers several critical benefits for managing massive AI Swarms:
 
@@ -18,13 +24,17 @@ Transitioning to a ZSP topology offers several critical benefits for managing ma
 *   **Virtual & Physical Grouping:** Temporary in-memory virtual paths and permanent physical paths can be grouped into the exact same Zone.
 *   **Unidirectional Logic:** Policies are applied to unidirectional traffic moving between the zones. (e.g., A policy allowing traffic from the `Asset_Zone` to the `Script_Zone` does *not* automatically allow traffic in the reverse direction).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_25-SEC-25_3)
 ## 25.3 The Absolute Binding Rule
+[//]: # (SECTION_ID: SIRA-TXT-CH25-SEC-25_3)
 
 When an Admin is deciding whether to implement a legacy Directory Bulkhead or a Zone-Based Sandbox Policy, it is critical to note that both models *can* be enabled concurrently on the Orchestrator. 
 
 However, they cannot be combined on a single directory. A directory path (e.g., `/game_demo/npc/`) cannot be simultaneously configured as a ZSP Zone member *and* possess a legacy Directory Bulkhead. It must be strictly one or the other. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_25-SEC-25_4)
 ## 25.4 ZSP Orchestration Steps
+[//]: # (SECTION_ID: SIRA-TXT-CH25-SEC-25_4)
 
 Designing a Zone-Based Sandbox Policy for a massive game project involves four critical orchestration steps:
 
@@ -35,11 +45,15 @@ Designing a Zone-Based Sandbox Policy for a massive game project involves four c
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_25-SEC-1)
 ## Chapter 25 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH25-SEC-1)
 
 Chapter 25 breaks down the philosophy of why Zone-Based Sandbox Policies (ZSP) are superior to classic directory firewalls. By grouping directories into unified conceptual zones, Tier 5 Admins can automatically grant trust to new folders without manually configuring fresh bulkheads. Paired with the event-driven logic of SCPL, ZSPs are the only viable method for securing infinitely scalable AI swarms.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_25-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 25 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH25-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional Zone-Based Policy Firewall concepts into their DevCore Agentic equivalents:
 

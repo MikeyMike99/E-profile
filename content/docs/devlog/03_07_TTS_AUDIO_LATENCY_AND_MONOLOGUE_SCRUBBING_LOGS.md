@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: JOSH-DEV-03_07 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 03.7: Diagnostic Tests: TTS Latency & Monologue Scrubbing Logs
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,18 +8,25 @@
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-1)
 
 This chapter records the empirical speech synthesis benchmarks and latency tests conducted during the refactoring of Siraugga's accessible auditory feed (`agents/agent_manager.py`).
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-2)
 ## Test 1: Internal Monologue Extraction & Scrubbing Benchmark
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-3)
 
 ### What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-3)
 We fed a raw JSON stream chunk containing private reasoning (`thinking`) and tool parameters through the phonetic sanitizer, measuring string reduction and processing latency.
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-4)
 ### Exact Test Command
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-4)
 ```bash
 python3 -c "
 import time
@@ -44,25 +53,34 @@ print('[SPEECH OUTPUT]:', sanitized_speech)
 "
 ```
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-5)
 ### Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-5)
 ```text
 [PROCESSED IN 0.042 ms]
 [SPEECH OUTPUT]: Updating WebSocket Loop: Keep-alive ping handler
 ```
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-6)
 ### How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-6)
 The intent-driven extractor extracted the concise operational summary in 0.042 milliseconds while completely eliminating the 75-character internal thinking monologue.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-7)
 ## Test 2: Speech Duration & Punctuation Benchmark
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-8)
 
 ### What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-8)
 We synthesized two variations of an identical tool announcement through the ElevenLabs neural voice proxy:
 - **Variant A (Raw AI Bot-Speak)**: Unsanitized markdown containing quotes, backticks, and robotic preamble.
 - **Variant B (The Voice of Siraugga)**: Sanitized, direct intent phrase.
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-9)
 ### Benchmark Comparison Table
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-9)
 
 | Metric | Variant A (Raw Bot-Speak) | Variant B (Voice of Siraugga) | Improvement |
 | :--- | :--- | :--- | :--- |
@@ -73,7 +91,9 @@ We synthesized two variations of an identical tool announcement through the Elev
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-10)
 ## Why Order Matters in Audio Processing
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-10)
 
 1. **Extract Structured Action Before Generating Speech Audio**:
    - The JSON parser must construct the intent phrase *before* contacting the TTS audio proxy. If raw text is submitted to a speech generator, neural models pronounce punctuation marks literally.
@@ -82,10 +102,15 @@ We synthesized two variations of an identical tool announcement through the Elev
 
 ---
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-11)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-12)
 
 ### Q: Why does reducing speech duration matter so much?
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-12)
 **A:** A sighted developer can see five lines of code update instantly on screen. A blind developer must listen to audio. If every tool call takes 5 seconds to speak, a 10-step AI task adds nearly a minute of dead listening time.
 
+[//]: # (SECTION_ID: JOSH-DEV-03_07-SEC-13)
 ### Q: What is cognitive fatigue in screen reader UX?
+[//]: # (SECTION_ID: SIRA-DOC-03_07-SEC-13)
 **A:** Listening to synthesized speech requires focused mental decoding. When an assistant talks excessively with filler phrases, the developer's brain becomes exhausted, leading to missed errors and frustration.

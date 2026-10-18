@@ -1,11 +1,17 @@
+[//]: # (DOC_ID: SIRA-DEV-02_23 | VERSION: v1.0 | SCOPE: DEV)
+
 # Headless Login Authentication Source Evidence
 
+[//]: # (SECTION_ID: SIRA-DEV-02_23-SEC-1)
 ## 1. Architectural Role & File Location
+[//]: # (SECTION_ID: SIRA-DOC-02_23-SEC-1)
 This document contains source code evidence from `sandbox/templates/login.html`. It documents the client-side authentication gatekeeper used when Siraugga is deployed as a headless server, requiring clients to provide a terminal-issued deployment token before gaining access to the developer dashboard.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_23-SEC-2)
 ## 2. Accessible Form Markup Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_23-SEC-2)
 The login interface uses clean, semantic HTML with explicit accessible labels and ARIA status containers:
 
 ```html
@@ -33,7 +39,9 @@ The login interface uses clean, semantic HTML with explicit accessible labels an
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_23-SEC-3)
 ## 3. Client Verification & Session Storage Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_23-SEC-3)
 The client transmits the token via `POST /api/auth/login`, stores the authorized session key, and redirects to the root IDE:
 
 ```javascript
@@ -77,7 +85,9 @@ document.getElementById('authForm').addEventListener('submit', async (e) => {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_23-SEC-4)
 ## 4. Backend Deployment Token Validation Evidence
+[//]: # (SECTION_ID: SIRA-DOC-02_23-SEC-4)
 On startup, the server generates the token in memory and stores it securely:
 
 ```python
@@ -98,14 +108,18 @@ async def handle_login(request_data: dict) -> dict:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_23-SEC-5)
 ## 5. Why Order Matters in Client Authentication
+[//]: # (SECTION_ID: SIRA-DOC-02_23-SEC-5)
 1. **Disable Submit Button Before Network Fetch**: Disabling the button prevents double-submissions that could trigger rate limiting lockout.
 2. **Set Session Storage Before Redirection**: Writing `sessionStorage.setItem()` before calling `window.location.href = '/'` ensures the target page has credentials ready for its initial WebSocket handshake.
 3. **Use `role="alert"` for Error Announcements**: Screen readers immediately speak validation failures without requiring the user to navigate through the form.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_23-SEC-6)
 ## 6. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-02_23-SEC-6)
 **Q: Why use `sessionStorage` instead of `localStorage`?**  
 A: `sessionStorage` automatically purges credentials when the browser tab is closed, preventing accidental token retention on shared workstations.
 

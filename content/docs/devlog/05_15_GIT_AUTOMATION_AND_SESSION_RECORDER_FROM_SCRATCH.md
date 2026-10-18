@@ -1,23 +1,32 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_15 | VERSION: v1.0 | SCOPE: ARCH)
+
 # Chapter 05_15: Git Automation & Session Recorder From Scratch
 
 A step-by-step guide to writing the developer workflow automation and session recording script (`helpers.sh`) line by line from a completely blank text editor window.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-1)
 ## What We Are Building & Beginner Safety Rules
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-1)
 
 We are creating `helpers.sh`—a shell utility that provides automated SSH agent verification, organized terminal demonstration recording (`rec`), and clean branch synchronization (`sync`) without dirty tree merge conflicts.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-2)
 ### Beginner Safety Directives
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-2)
 1. **Always Resolve Repository Root Dynamically**: Never hardcode paths like `/home/developer/repo`. Use `$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)`.
 2. **Clear Conflicting Aliases**: Shell aliases can override function definitions. We must `unalias` target command names at the top of the file.
 3. **Check Working Tree Before Merging**: Always inspect `git status --porcelain` before executing `git pull` or `git checkout`.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-3)
 ## Step-by-Step Line Breakdown
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-4)
 
 ### Block 1: Shebang, Path Resolution & Alias Clearing (Lines 1–10)
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-4)
 
 Open a blank file named `helpers.sh` and write:
 
@@ -38,7 +47,9 @@ unalias rec playrec sync feature feat 2>/dev/null || true
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-5)
 ### Block 2: Persistent SSH Agent Handshake (Lines 11–35)
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-5)
 
 Add the `_ensure_ssh_agent` helper:
 
@@ -71,7 +82,9 @@ _ensure_ssh_agent() {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-6)
 ### Block 3: Watermarked Terminal Recording (`rec`) (Lines 36–60)
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-6)
 
 Add the `rec` function to record terminal sessions cleanly:
 
@@ -105,7 +118,9 @@ rec() {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-7)
 ### Block 4: Clean Sync & Auto-Stash (`sync`) (Lines 61–85)
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-7)
 
 Add the `sync` function that prevents merge conflicts:
 
@@ -145,7 +160,9 @@ sync() {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-8)
 ## Complete Finished File Listing
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-8)
 
 ```bash
 #!/usr/bin/env bash
@@ -217,7 +234,9 @@ sync() {
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-9)
 ## 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-9)
 
 ```bash
 # 1. Source the helper script
@@ -231,17 +250,24 @@ If an active PID prints, your Git automation helper is operational!
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-10)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-11)
 
 ### What is `--ff-only`?
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-11)
 `--ff-only` (Fast-Forward Only) ensures Git only merges if the local branch hasn't diverged. It prevents Git from creating unwanted, confusing merge commit bubbles in your commit history.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-12)
 ### Can I run `sync` if I am offline?
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-12)
 If you are offline, `git fetch` will fail gracefully, and the script will skip the network step while preserving your local files.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-13)
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-13)
 - To understand why automated Git scripts fail on branch merges, read [`01_PROBLEMS_ENCOUNTERED/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md`](/docs/devlog/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS).
 - To inspect primary source citations, view [`02_SOURCE_EVIDENCE/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE.md`](/docs/devlog/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE).
 - To view diagnostic test logs of automated sync and merge runs, visit [`03_DIAGNOSTIC_TESTS/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS.md`](/docs/devlog/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS).

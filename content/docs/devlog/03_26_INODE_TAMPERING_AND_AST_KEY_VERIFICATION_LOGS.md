@@ -1,11 +1,17 @@
+[//]: # (DOC_ID: SIRA-DEV-03_26 | VERSION: v1.0 | SCOPE: DEV)
+
 # Inode Tampering & AST Key Verification Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_26-SEC-1)
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_26-SEC-1)
 This test suite verifies the resilience of the Raugus Virtual File System (VFS) against evasion attacks, file renaming tricks, and AST line drift. It proves that binding security policies to hardware inodes (`st_ino`) and semantic AST keys prevents attackers from circumventing RBAC tiers by renaming files.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_26-SEC-2)
 ## 2. Test Execution Trace
+[//]: # (SECTION_ID: SIRA-DOC-03_26-SEC-2)
 
 ```text
 [RAUGUS-TEST-INIT] Loading security/raugus_map.json...
@@ -45,7 +51,9 @@ This test suite verifies the resilience of the Raugus Virtual File System (VFS) 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_26-SEC-3)
 ## 3. Benchmark Metrics & Verification Summary
+[//]: # (SECTION_ID: SIRA-DOC-03_26-SEC-3)
 
 | Test Condition | Expected Behavior | Measured Result | Status |
 | :--- | :--- | :--- | :--- |
@@ -56,14 +64,18 @@ This test suite verifies the resilience of the Raugus Virtual File System (VFS) 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_26-SEC-4)
 ## 4. Why Order Matters in Inode Verification
+[//]: # (SECTION_ID: SIRA-DOC-03_26-SEC-4)
 1. **Check Hardware Inode Before Path Name**: Validating the inode first guarantees the system knows the physical identity of the file before path-based rules are evaluated.
 2. **Re-Index AST Immediately Before Edits**: Calculating function line ranges immediately prior to applying a diff prevents concurrent edits from causing line drift.
 3. **Log Vault Denials to SIEM**: Any attempt by a lower-tier user to probe an `is_sensitive_vault` path must be recorded as an intrusion event.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_26-SEC-5)
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_26-SEC-5)
 **Q: How does the system know the file was renamed?**  
 A: Because moving or renaming a file inside the same partition does not change its inode number. The system compares the file's current inode to the phonebook in `raugus_map.json`.
 

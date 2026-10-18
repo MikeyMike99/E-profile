@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-INDEX | VERSION: v1.0 | SCOPE: DEV)
+
 # Master Documentation Index: Siraugga Autonomous Agent & Zero-Trust Command Center
 
 Welcome to the comprehensive, beginner-friendly technical documentation suite for **Siraugga**—the accessible, event-driven, zero-trust autonomous development platform and web portal.
@@ -9,9 +11,12 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-1)
 ## Master Documentation Directory Tree (200 Technical Chapters)
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-2)
 
 ### Pillar 00: Index & Foundational Primers
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-2)
 | Document Path | Role & Content Summary |
 | :--- | :--- |
 | [`00_README_INDEX.md`](/docs/devlog/00_README_INDEX) | Master directory map, project file registry, and 10-second quick commands (This File). |
@@ -22,7 +27,9 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`00_PRIMERS/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS.md`](/docs/devlog/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS) | The Voice of Siraugga, intent-driven audio feeds, ElevenLabs proxies, and structural monologue mapping. |
 | [`00_PRIMERS/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY.md`](/docs/devlog/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY) | Clean-Room development, legal IP boundaries (Section 21 of Copyright Act), and sovereign code custody. |
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-3)
 ### Pillar 01: Granular Problem Breakdowns
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-3)
 | Document Path | Role & Content Summary |
 | :--- | :--- |
 | [`01_PROBLEMS_ENCOUNTERED/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS.md`](/docs/devlog/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS) | Console tearing, screen-reader arrow key interception, and the `--trust --headless` bypass. |
@@ -69,7 +76,9 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`01_PROBLEMS_ENCOUNTERED/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md`](/docs/devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS) | Thought Vector Exposure & Reasoning Leak Traps: Telemetry disclosure, prompt leaks, and semantic steganography. |
 | [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS) | Token Burst & Mid-Task Resets: 200-turn context inflation, premature 75k cache resets, steering collision, and blanket pkill elimination. |
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-4)
 ### Pillar 02: Source Code Evidence
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-4)
 | Document Path | Role & Content Summary |
 | :--- | :--- |
 | [`02_SOURCE_EVIDENCE/02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE.md`](/docs/devlog/02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE) | `server.py` and `agent_manager.py` monotonic sequence, ACK loop, and streaming unbuffering. |
@@ -112,7 +121,9 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`02_SOURCE_EVIDENCE/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md`](/docs/devlog/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE) | Thought Vector Obfuscation & Prompt Masking: Context substitution, CSPRNG salting, and HMAC integrity. |
 | [`02_SOURCE_EVIDENCE/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md`](/docs/devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE) | Session Rollover & In-Flight Guards: Offline briefing distillation, in-flight suppression, and SIEM logging evidence. |
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-5)
 ### Pillar 03: Diagnostic Test Logs & Benchmarks
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-5)
 | Document Path | Role & Content Summary |
 | :--- | :--- |
 | [`03_DIAGNOSTIC_TESTS/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS.md`](/docs/devlog/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS) | Benchmarks testing reconnect packet replay, WebSocket keep-alives, and monotonic ACK integrity. |
@@ -152,7 +163,9 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`03_DIAGNOSTIC_TESTS/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md`](/docs/devlog/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS) | Thought Vector Hashing & Masking: 0.064ms pipeline latency, CSPRNG salting, and steganography defense. |
 | [`03_DIAGNOSTIC_TESTS/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md`](/docs/devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS) | Session Rollover & In-Flight Guard Logs: 13-stage security audit, permutation testing, and SIEM JSON logs. |
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-6)
 ### Pillar 04: Solutions & System Architecture
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-6)
 | Document Path | Role & Content Summary |
 | :--- | :--- |
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE.md`](/docs/devlog/04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE) | End-to-end architecture: browser client, Quart server, CLI orchestrator, and event bus. |
@@ -195,7 +208,9 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md`](/docs/devlog/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE) | Agentic Cryptography & Vector Masking: Prompt masking, CSPRNG salts, and semantic steganography defense. |
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md`](/docs/devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE) | Automated Silent Session Rollover: Context distillation, in-flight guard, token meter, and audit invariants. |
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-7)
 ### Pillar 05: "From Scratch" Step-by-Step Creation Guides
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-7)
 | Document Path | Role & Content Summary |
 | :--- | :--- |
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH.md`](/docs/devlog/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH) | Building the async Quart streaming server with monotonic sequence delivery and keep-alives. |
@@ -243,7 +258,9 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-8)
 ## 10-Second Quick Command Cheat Sheet
+[//]: # (SECTION_ID: SIRA-DEV-00-SEC-8)
 - **Launch Development Server**: `python3 core/server.py` (or `python3 desktop_app.py`)
 - **Simulate Zero-Downtime Hot-Patch**: `curl -s -X POST http://127.0.0.1:5000/api/simulate-patch`
 - **Run 30-Check Static Security Audit**: `python3 security/tool_security_auditor.py`

@@ -1,10 +1,14 @@
+[//]: # (DOC_ID: SIRA-DEV-04_11 | VERSION: v1.0 | SCOPE: DEV)
+
 # Chapter 04_11: Zero-Modification Ephemeral Plugin Architecture
 
 An architectural guide to Siraugga's **Zero-Modification Blueprint Pattern**—enabling rich, interactive frontend applications whose behavior is controlled 100% via validated JSON schemas while core templates remain strictly immutable.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-1)
 ## The Blueprint Concept
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-1)
 
 When autonomous coding agents are allowed to edit HTML, CSS, and JavaScript templates directly, they inevitably introduce syntax errors, break screen reader accessibility attributes, and destroy upstream upgradeability.
 
@@ -39,7 +43,9 @@ Siraugga enforces the **Zero-Modification Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-2)
 ## Architectural Advantages
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-2)
 
 1. **Permanent Modularity & Clean Upgrades**:
    - The developer can upgrade the core frontend template (e.g., adding dark mode or updating Tailwind CSS) without breaking custom exams or user content.
@@ -50,7 +56,9 @@ Siraugga enforces the **Zero-Modification Architecture**:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-3)
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-3)
 
 In schema-driven application rendering, transformation order prevents malformed UI states:
 1. **Define Schema Rules in Agent Directives First**: Agent system prompts must explicitly forbid editing HTML/JS templates, directing all effort into JSON payload generation.
@@ -59,7 +67,9 @@ In schema-driven application rendering, transformation order prevents malformed 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-4)
 ## Reusable Integration Recipe
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-4)
 
 To build a zero-modification plugin in your project in under 2 minutes:
 
@@ -81,20 +91,29 @@ def deploy_ephemeral_app(template_name: str, payload_data: dict, output_dir: str
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-5)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-6)
 
 ### What is the difference between a "Blueprint" and a standard webpage?
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-6)
 A standard webpage often mixes code and content together in HTML. A blueprint is a pure software engine designed to accept *any* content fed to it through a structured data format like JSON.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-7)
 ### What happens if the JSON data has a mistake?
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-7)
 The `format_exam.py` normalizer catches missing keys and fixes common errors (like mapping `correct_answer: "Option B"` to `correct_index: 1`) before the browser ever attempts to render it.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-8)
 ### Can an agent add custom buttons using this pattern?
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-8)
 Yes! The JSON schema can include a `"custom_actions"` array specifying button labels and callback identifiers, which the blueprint engine dynamically renders into accessible HTML buttons.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_11-SEC-9)
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-04_11-SEC-9)
 - To understand why agents broke frontend templates, read [`01_PROBLEMS_ENCOUNTERED/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS.md`](/docs/devlog/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS).
 - To inspect the primary source code of the exam normalizer, view [`02_SOURCE_EVIDENCE/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE.md`](/docs/devlog/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE).
 - To write your own schema-driven application engine from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH.md`](/docs/devlog/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH).

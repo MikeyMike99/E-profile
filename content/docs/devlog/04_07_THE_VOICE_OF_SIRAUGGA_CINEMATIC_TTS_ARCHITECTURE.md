@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-04_07 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 04.7: Architecture Solutions: The Voice of Siraugga Cinematic TTS
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-04_07-SEC-1)
 
 Screen readers provide functional text-to-speech for static documents, but fall short during rapid, multi-file agentic coding sprints.
 
@@ -14,7 +18,9 @@ This chapter details the architecture of **The Voice of Siraugga**—an intent-d
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-2)
 ## Architectural Data Flow
+[//]: # (SECTION_ID: SIRA-DOC-04_07-SEC-2)
 
 ```text
 +-------------------------------------------------------------------------------+
@@ -48,7 +54,9 @@ This chapter details the architecture of **The Voice of Siraugga**—an intent-d
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-3)
 ## Key Design Principles
+[//]: # (SECTION_ID: SIRA-DOC-04_07-SEC-3)
 
 1. **Sub-2-Second Total Latency**: By synthesizing speech concurrently as tool calls are dispatched, audio feedback arrives before file I/O operations finish.
 2. **Deterministic Intent Generation**: Never prompts an LLM to generate speech phrases. Speech strings are built deterministically from structured metadata, eliminating conversational fluff.
@@ -56,7 +64,9 @@ This chapter details the architecture of **The Voice of Siraugga**—an intent-d
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-4)
 ## Why Order Matters in Neural Audio Pipelines
+[//]: # (SECTION_ID: SIRA-DOC-04_07-SEC-4)
 
 1. **Phonetic Sanitization Before Audio Synthesis**:
    - The text must be stripped of backticks and quotes *before* being submitted to the TTS engine. Once audio waveforms are generated, pronunciation errors cannot be corrected without resynthesizing.
@@ -65,10 +75,15 @@ This chapter details the architecture of **The Voice of Siraugga**—an intent-d
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-5)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-6)
 
 ### Q: Why use the Web Audio API instead of standard `<audio>` tags?
+[//]: # (SECTION_ID: SIRA-DOC-04_07-SEC-6)
 **A:** Standard HTML `<audio>` elements suffer from 500ms startup latency and buffering delays. The Web Audio API provides hardware-accelerated, instantaneous buffer playback ideal for rapid developer updates.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_07-SEC-7)
 ### Q: What voice model is used for Siraugga?
+[//]: # (SECTION_ID: SIRA-DOC-04_07-SEC-7)
 **A:** The engine integrates with ElevenLabs using deep, authoritative, neural narrator voices designed to sound calm, clear, and distinct from the user's personal screen reader voice.

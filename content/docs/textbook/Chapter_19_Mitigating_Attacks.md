@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_19 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 19: Mitigating Agentic Attacks with ACLs
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_19-SEC-19_1)
 ## 19.1 Mitigating Semantic Spoofing
+[//]: # (SECTION_ID: SIRA-TXT-CH19-SEC-19_1)
 
 The most common vector for attacking the DevCore Orchestrator is **Semantic Spoofing**. Because WebSockets transfer lightweight JSON payloads, a rogue Modder can override the normal `Task Orchestrator Module` creation process by manually inserting a custom JSON header, spoofing their source UUID to look like a Tier 5 Admin or a trusted Core Agent.
 
@@ -11,7 +15,9 @@ To mitigate this, Agentic ACLs must be aggressively deployed at the outermost in
 
 By applying an inbound standard ACL that denies these mathematically impossible external UUIDs, Admins eliminate 90% of spoofing vectors.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_19-SEC-19_2)
 ## 19.2 Whitelisting Essential Tool Traffic
+[//]: # (SECTION_ID: SIRA-TXT-CH19-SEC-19_2)
 
 An effective Zero-Trust strategy mitigates attacks by explicitly permitting *only* the specific tools required for a task, and letting the Implicit Deny block everything else.
 
@@ -21,7 +27,9 @@ In DevCore, Agentic Tools mirror traditional firewall ports. While a Tier 5 Admi
 *   **`write_to_file` (FTP):** Necessary to compile the actual game assets into the Sandbox.
 *   **`run_command` (SSH):** The ultimate vulnerability. This should be explicitly blocked for standard AI subagents unless they are in a highly trusted, isolated Coding environment. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_19-SEC-19_3)
 ## 19.3 Mitigating Semantic DoS (The ICMP Equivalent)
+[//]: # (SECTION_ID: SIRA-TXT-CH19-SEC-19_3)
 
 In traditional networking, hackers use ICMP echo packets (pings) to discover hosts and flood networks with DoS attacks. In DevCore, malicious users attempt to trigger **Semantic DoS Attacks**.
 
@@ -32,7 +40,9 @@ Admins must use ACLs to throttle or block repetitive agentic triggers.
 *   **Permit Context Quench:** Allow the Orchestrator to send `source-quench` signals to the LLM, throttling the traffic rate of an overly talkative AI.
 *   **Permit Echo-Reply:** Ensure the AI is allowed to receive the terminal outputs (replies) from its own permitted commands.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_19-SEC-19_4)
 ## 19.4 Disabling Agentic Telemetry (SNMP Mitigation)
+[//]: # (SECTION_ID: SIRA-TXT-CH19-SEC-19_4)
 
 Management protocols like SNMP are incredibly useful for remote monitoring. In DevCore, the equivalent is the **CSP Telemetry Pipeline**, which allows Tier 5 Admins to monitor the active thoughts and `transcript.jsonl` files of every AI in the Swarm in real-time.
 
@@ -42,11 +52,15 @@ The absolute most effective means of mitigating this vulnerability is simple: **
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_19-SEC-1)
 ## Chapter 19 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH19-SEC-1)
 
 Chapter 19 shifts the focus from structural configuration to active combat. Agentic Control Lists are the front-line defense against Semantic Spoofing, Token Exhaustion (DoS), and Telemetry hijacking. By aggressively dropping mathematically impossible UUIDs at the WebSocket, strictly whitelisting only essential Agentic Tools, and disabling unnecessary telemetry servers, Tier 5 Admins ensure the AI Swarm operates in a mathematically hardened environment.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_19-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 19 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH19-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional network attacks into their DevCore Agentic equivalents:
 

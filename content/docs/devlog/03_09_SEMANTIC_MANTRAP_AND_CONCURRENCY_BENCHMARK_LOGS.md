@@ -1,10 +1,14 @@
+[//]: # (DOC_ID: SIRA-DEV-03_09 | VERSION: v1.0 | SCOPE: DEV)
+
 # Chapter 03_09: Semantic Mantrap & Concurrency Benchmark Logs
 
 Diagnostic test execution logs and benchmark results evaluating the Siraugga **Semantic Mantrap** under high-concurrency multi-agent race conditions.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-1)
 ## What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-1)
 
 We subjected the file-locking core to an aggressive concurrency stress test:
 - **Test Objective**: Evaluate whether 50 concurrent worker threads competing to increment a shared counter in `session_state.json` produce file truncation, race condition data loss, or thread deadlocks.
@@ -14,7 +18,9 @@ We subjected the file-locking core to an aggressive concurrency stress test:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-2)
 ## Exact Command Run
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-2)
 
 ```bash
 python3 -c "
@@ -47,7 +53,9 @@ os.remove(state_file)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-3)
 ## Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-3)
 
 ```
 [MANTRAP] Agent 'Worker_0' waiting at Outer Door for test_concurrency_state.json (OS: linux)
@@ -67,7 +75,9 @@ DEADLOCKS_DETECTED: 0
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-4)
 ## How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-4)
 
 - **100% Sequence Integrity**: In the uncoordinated baseline test, the final count was only 14 out of 50 due to lost updates (threads overwriting each other's state). With the Semantic Mantrap enabled, the counter reached exactly 50.
 - **Zero Syntax Errors**: Every read operation successfully parsed valid JSON without encountering `json.decoder.JSONDecodeError` or zero-byte file truncations.
@@ -75,7 +85,9 @@ DEADLOCKS_DETECTED: 0
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-5)
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-5)
 
 In high-concurrency benchmarks, measurement order validates correctness:
 1. **Initialize State File Before Spawning Thread Pool**: The target JSON file must exist on disk before threads launch. If threads race to create the file, initial JSON serialization corrupts immediately.
@@ -84,20 +96,29 @@ In high-concurrency benchmarks, measurement order validates correctness:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-6)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-7)
 
 ### What is a "Lost Update"?
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-7)
 A lost update happens when Thread A and Thread B both read the number 5 at the same time. Both add 1 to get 6. Thread A writes 6, and Thread B writes 6. Even though two updates occurred, the result is 6 instead of 7!
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-8)
 ### Why does `time.sleep(0.005)` exist in the test worker?
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-8)
 The small 5-millisecond sleep simulates the realistic amount of time an agent spends performing calculations or disk I/O, forcing race conditions to occur if locking is broken.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-9)
 ### What happens if an agent thread crashes while inside the lock?
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-9)
 Because the mantrap uses `try...finally`, Python automatically executes the `finally` block and releases the lock descriptor even if an uncaught exception is raised inside the `with` block.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_09-SEC-10)
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-03_09-SEC-10)
 - To review the problems caused by uncoordinated agent concurrency, read [`01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md`](/docs/devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS).
 - To inspect the primary source code of the mantrap, view [`02_SOURCE_EVIDENCE/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE.md`](/docs/devlog/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE).
 - To build the complete cross-platform mantrap from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH.md`](/docs/devlog/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH).

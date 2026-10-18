@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_06 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 6: Securing Network Devices (AI Subagents & Sandboxing)
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_06-SEC-1)
 ## 1. Introduction to Agentic Security
+[//]: # (SECTION_ID: SIRA-TXT-CH06-SEC-1)
 In traditional IT architecture, securing your physical network devices—such as routers, switches, and load balancers—is the most fundamental way of protecting a network from a cyberattack. 
 
 However, in the Siraugga framework, the structural "devices" on our network are not physical hardware components. Instead, the devices are the **AI Subagents** themselves. These autonomous logic nodes constantly spin up in the background, route prompt traffic, parse JSON state deltas, and gracefully collapse back into the void once their task is complete.
@@ -10,7 +14,9 @@ Because these subagents act as the dynamic infrastructure of the swarm, securing
 In this chapter, we will explore the fundamental methods of securing, restricting, and sandboxing these agentic network devices to protect the Siraugga mainframe from collapse.
 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_06-SEC-2)
 ## 2. Agentic Segmentation (Micro-Swarming)
+[//]: # (SECTION_ID: SIRA-TXT-CH06-SEC-2)
 In traditional IT infrastructure, segmentation involves physically or logically dividing a computer network into smaller parts (such as subnets or VLANs) to improve network performance and strictly limit the blast radius of a security breach. 
 
 In the Siraugga framework, this concept translates directly to **Agentic Segmentation**, commonly referred to within the industry as *Micro-Swarming*. Rather than deploying a monolithic, highly privileged Artificial Intelligence to govern the entire application, the Siraugga core architecture mathematically segments execution logic into dozens of isolated, highly specialized subagents.
@@ -21,7 +27,9 @@ By segmenting the AI network logic, Siraugga achieves two critical benefits:
 1. **Performance:** Specialized subagents running on optimized, low-latency models (such as the `flash` tier) consume vastly fewer tokens and execute at lightspeed compared to monolithic logic blocks.
 2. **Containment:** If a sophisticated attacker successfully compromises a `QA_Testing` subagent with an adversarial Prompt Injection, the blast radius is strictly contained to that single node. The primary orchestrator and the other logic nodes remain mathematically untouched and mathematically uncompromised.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_06-SEC-3)
 ## 3. Virtual Logic Area Networks (VLANs & Sandbox Isolation)
+[//]: # (SECTION_ID: SIRA-TXT-CH06-SEC-3)
 While Agentic Segmentation breaks down the AI's logic, Siraugga must also rigorously segment the physical file structure. As established previously, in the Siraugga framework, files and folders act as our network "ports." 
 
 The DevCore engineering team is constantly vigilant about protecting sensitive core architecture (`TIER_CORE_ENGINE`) from untrusted third-party developers. To solve this, Siraugga relies on a structural concept analogous to a VLAN: the **Virtual Logic Area Network**.
@@ -61,7 +69,9 @@ Despite these isolation boundaries, malicious actors can still attack a specific
 
 To protect the VLAN from these performance attacks, Tier 5 Admins must utilize the Agent Orchestrator to monitor token telemetry in real-time. Furthermore, administrators must implement advanced structural configurations—such as strict **Token Quotas** and **Maximum Context Constraints** via the Raugus Resolver—while continuously deploying SDK hot-patches using the Zero-Restart in-memory reload API to instantly close newly discovered vulnerabilities.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_06-SEC-4)
 ## 4. The Demilitarized Zone (DMZ) and Zones of Risk
+[//]: # (SECTION_ID: SIRA-TXT-CH06-SEC-4)
 A Demilitarized Zone (DMZ) is a small network situated between a trusted private network and the untrusted Internet. Traditionally, web servers are placed within the DMZ to allow external users to access services without compromising the internal LAN.
 
 In the Siraugga framework, the **Zero-Restart Web Portal** acts as our DMZ. It serves as the strict intermediary boundary layer where the remote Tier 2 Modder interacts with the Quart HTTP/WSS backend, ensuring that their potentially malicious Prompt Injections or compromised JSON payloads never directly touch the internal Agent Orchestrator. 
@@ -74,7 +84,9 @@ Traditional networks define risk across four distinct zones (LAN, Extranet, DMZ,
 *   **The Extranet Zone (Medium-Low Risk, Medium-High Trust):** This equates to the **Tier 3 (Dev Team)** operating within the `TIER_SAFE_WORKSPACE`. They are highly trusted to write code and manipulate project files, but they are mathematically sandboxed from the core engine architecture.
 *   **The Trusted LAN Zone (Low Risk, High Trust):** This maps to the **Tier 4 / Tier 5 Administrators** operating within the `TIER_CORE_ENGINE`. This is the most heavily fortified zone of the framework, containing the primary orchestration logic, root telemetry logs, and backend encryption keys.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_06-SEC-5)
 ## 5. The Zero Trust Agentic Model and Traffic Flow
+[//]: # (SECTION_ID: SIRA-TXT-CH06-SEC-5)
 In traditional network security, firewalls manage two specific directional types of data flow:
 1.  **North-South Traffic:** Data moving into and out of the organization's network. In Siraugga, this translates to the JSON state deltas and WSS event streams moving vertically between the remote Tier 2 Modders (the Untrusted Internet) and the core Agent Orchestrator (the Trusted Network), passing strictly through the Web Portal (the DMZ). 
 2.  **East-West Traffic:** Traffic that moves laterally between internal servers. In Siraugga, this translates to **Agent-to-Agent Communication**—the high-speed contextual inbox messages moving laterally between different AI subagents operating within the same `/playground` VLAN.
@@ -84,7 +96,9 @@ To protect its overarching infrastructure, the Siraugga framework is fundamental
 
 If the orchestration engine automatically trusted the `Coding` subagent simply because of its established role, a single hallucinated tool call could irreversibly delete critical project files. Therefore, Zero Trust networking in Siraugga dictates that the Raugus Resolver (our Semantic Firewall) mathematically monitors, validates, and sanitizes *every single tool call* executed by the swarm—regardless of the specific agent's hierarchical status, trust level, or assigned role. Every single action must be continuously cryptographically proven and semantically verified before execution.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_06-SEC-6)
 ## 6. Chapter 6 Conclusion: The Zero Trust Swarm
+[//]: # (SECTION_ID: SIRA-TXT-CH06-SEC-6)
 As detailed throughout this chapter, securing the fundamental "devices" of a network takes on a radically new definition within an autonomous AI ecosystem. Because the structural devices of the Siraugga framework are the AI Subagents themselves, traditional network security concepts must be deeply abstracted into mathematical sandboxing and semantic verification.
 
 *   Integrating directly with **Chapter 4 (System and Network Defense)**, we flawlessly mapped the traditional network "Zones of Risk" onto our established **Five File Classification Tiers**. This demonstrated precisely how the Raugus Resolver utilizes Virtual Logic Area Networks (VLANs) to physically isolate untrusted Tier 2 Modders away from the sensitive core engine.

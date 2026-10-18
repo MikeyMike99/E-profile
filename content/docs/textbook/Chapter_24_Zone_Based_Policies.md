@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_24 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 24: Introduction to Zone-Based Sandbox Policies
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_24-SEC-24_1)
 ## 24.1 The Evolution of Sandbox Boundaries
+[//]: # (SECTION_ID: SIRA-TXT-CH24-SEC-24_1)
 
 In the earliest iterations of the DevCore Engine, Tier 5 Admins relied heavily on **Classic Agentic Bulkheads**. These classic firewalls were strictly directory-based. An Admin had to manually write an access policy for the `/game_demo/npc/` directory, and then write a completely separate policy for the `/game_demo/items/` directory.
 
@@ -8,7 +12,9 @@ This architecture functioned perfectly for small, isolated test environments. Ho
 
 To secure massive swarms, DevCore introduced an evolutionary architectural step: **Zone-Based Sandbox Policies (ZSP)**.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_24-SEC-24_2)
 ## 24.2 The Zone-Based Paradigm
+[//]: # (SECTION_ID: SIRA-TXT-CH24-SEC-24_2)
 
 Zone-Based Sandbox Policies abstract security away from the physical directory path. Instead of assigning a firewall rule to a specific folder, an Admin assigns multiple directories to a single **Zone**. 
 
@@ -20,7 +26,9 @@ By defining security requirements by the *nature* of the zone rather than the ph
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_24-SEC-24_3)
 ## 24.3 Module Objectives & Master Syllabus
+[//]: # (SECTION_ID: SIRA-TXT-CH24-SEC-24_3)
 
 This module teaches the architecture and command-line implementation of advanced Swarm zoning.
 

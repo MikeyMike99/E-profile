@@ -1,11 +1,17 @@
+[//]: # (DOC_ID: SIRA-DEV-03_28 | VERSION: v1.0 | SCOPE: DEV)
+
 # OWASP ZAP DAST Scan & CSP Violation Diagnostic Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_28-SEC-1)
 ## 1. Test Overview & Objectives
+[//]: # (SECTION_ID: SIRA-DOC-03_28-SEC-1)
 This test suite verifies HTTP response headers, Content Security Policy (CSP) enforcement, and Dynamic Application Security Testing (DAST) compliance. It documents results from an automated Red Team strike scan targeting `http://127.0.0.1:5000` to confirm that all OWASP baseline security warnings are remediated.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_28-SEC-2)
 ## 2. DAST Automated Scan Execution Trace
+[//]: # (SECTION_ID: SIRA-DOC-03_28-SEC-2)
 
 ```text
 [DAST-STRIKE-INIT] Triggering automated scan via POST /api/security/red-team-strike...
@@ -44,7 +50,9 @@ This test suite verifies HTTP response headers, Content Security Policy (CSP) en
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_28-SEC-3)
 ## 3. OWASP Compliance Summary Table
+[//]: # (SECTION_ID: SIRA-DOC-03_28-SEC-3)
 
 | OWASP ZAP Rule ID | Vulnerability Description | Remediation Header / Rule | Scan Verdict |
 | :--- | :--- | :--- | :--- |
@@ -56,14 +64,18 @@ This test suite verifies HTTP response headers, Content Security Policy (CSP) en
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_28-SEC-4)
 ## 4. Why Order Matters in DAST Testing
+[//]: # (SECTION_ID: SIRA-DOC-03_28-SEC-4)
 1. **Apply Headers in Error Handlers First**: Verifying that 404 and 500 error pages return security headers ensures security scanners do not flag unhandled routes.
 2. **Respond with HTTP 204 Immediately on Reports**: Processing CSP telemetry without returning a response body prevents unnecessary data transfer.
 3. **Verify Cookie Flags on Login**: Confirming `HttpOnly` and `SameSite=Strict` flags during authentication testing ensures tokens are protected from the moment they are minted.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_28-SEC-5)
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-03_28-SEC-5)
 **Q: What is DAST?**  
 A: Dynamic Application Security Testing—testing a running web application from the outside by sending real HTTP requests to find security weaknesses.
 

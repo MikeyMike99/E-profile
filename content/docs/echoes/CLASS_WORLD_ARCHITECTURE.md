@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: ECHO-DEV-CLASS_WORLD_ARCHIT | VERSION: v1.3 | SCOPE: DEV)
+
 # Echoes of the World: Class & World Architecture
 
 The World class is responsible for managing players, objects, surface zones, and chunk coordinates across the audio world grid. It dynamically manages player movement between spatial chunks while pruning stale entities from prior zones to preserve audio spatial accuracy.
@@ -153,7 +155,9 @@ Confirms that the system is building chunk entries dynamically.
 Confirms whether the player was successfully added to the world.
 
 
+[//]: # (SECTION_ID: ECHO-DEV-CLASS_WORLD_ARCHIT-SEC-1)
 ## Cross-References & System Parallels
+[//]: # (SECTION_ID: ECHO-CORE-WORLD-SEC-1)
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
 <summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Spatial Coordinates & Audio Drivers (Click to Expand Dropdown)</summary>

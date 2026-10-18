@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_30 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 30: The Domains of Swarm Security
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_30-SEC-30_1)
 ## 30.1 The DevCore Security Alliance (DSA)
+[//]: # (SECTION_ID: SIRA-TXT-CH30-SEC-30_1)
 
 Because Decentralized Swarm Hosting relies on remote Modders sharing virtualized Subagents on a centralized Orchestrator, standard IT security models fall short. 
 
@@ -8,7 +12,9 @@ To standardize defenses across massive multiplayer game engines, Tier 5 Admins r
 
 Developed by the **DevCore Security Alliance (DSA)**, this document promotes best practices to provide absolute security assurance within the Swarm Hosting framework. Specifically, the document defines the 14 critical domains of Swarm Security.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_30-SEC-30_2)
 ## 30.2 The 14 Domains of Swarm Security
+[//]: # (SECTION_ID: SIRA-TXT-CH30-SEC-30_2)
 
 The DSA splits the defense of a DevCore Engine into 14 distinct disciplines. A successful Tier 5 Admin must understand how their architecture impacts every single domain.
 
@@ -31,11 +37,15 @@ In the upcoming chapters, we will dive deeply into three of the most critical do
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_30-SEC-1)
 ## Chapter 30 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH30-SEC-1)
 
 Chapter 30 serves as the high-level roadmap for defending a decentralized swarm engine. By referencing the DSA's 14 Domains, Tier 5 Admins are reminded that security is not just about writing firewall rules—it encompasses Legal Contracts, Information Governance, and strict Identity Management (IAM). 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_30-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 30 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH30-SEC-2)
 
 To maintain absolute clarity, here is how the traditional Cloud Security domains map directly to the DevCore Sandbox:
 

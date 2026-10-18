@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC | VERSION: v1.0 | SCOPE: PLAY)
+
 # Chapter 1: The Three Problems We Encountered
 
 - **Previous**: [`00_README_INDEX.md`](/docs/audio_suite/00_README_INDEX)
@@ -5,7 +7,9 @@
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-1)
 
 When taking a working Python accessibility script (`main.py` (t.py) and `screenreader_speak.py` (screenreader_speak.py)) and compiling it with **Nuitka** into a standalone GUI executable (`--windows-console-mode=disable`) and Windows installer (`--windows-create-installer`), three separate obstacles appeared at different stages.
 
@@ -13,21 +17,29 @@ Understanding each symptom is critical because each had a distinct root cause.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-2)
 ## Problem 1: The Initial `.exe` Did Not Open at All
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-3)
 
 ### What Happened
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-3)
 After the very first Nuitka compilation, double-clicking `JOSHY.exe` appeared to do nothing. Because `--windows-console-mode=disable` suppresses the terminal window and standard error output (`stderr`), the program was silently crashing during startup before the Tkinter GUI window could even be created.
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-4)
 ### Why It Happened
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-4)
 1. **Top-Level Eager Initialization**: Originally, `screenreader_speak.py` initialized `accessible_output2.outputs.auto.Auto()` immediately at import time on line 1, before the main application window opened.
 2. **Python 3.8+ Windows DLL Security**: Starting in Python 3.8, Windows and Python stopped searching arbitrary folders for native `.dll` files loaded via `ctypes.windll` unless the directory is explicitly registered with `os.add_dll_directory()`.
 3. **Uncaught Crash**: When `accessible_output2` failed to load its native screen reader DLLs from the temporary Nuitka onefile folder, an unhandled exception terminated `main.py` during `import screenreader_speak`.
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-5)
 ## Problem 2: The NSIS Setup Dialog Error (`Error opening file for writing: \JOSHY.exe`)
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-6)
 
 ### What Happened
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-6)
 When we enabled Nuitka's built-in Windows installer flag (`--windows-create-installer`) and ran `JOSHY-Setup.exe`, the installer popped up an error dialog:
 ```text
 Error opening file for writing: 
@@ -35,7 +47,9 @@ Error opening file for writing:
 Click Abort to stop the installation, Retry to try again, or Ignore to skip this file.
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-7)
 ### Why It Happened
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-7)
 1. In **Nuitka 4.2.2**, if you pass `--windows-create-installer` without specifying `--windows-installer-mode` and `--windows-installer-install-dir`, Nuitka defaults to `multiuser` mode.
 2. Inspecting the generated `JOSHY.installer-build\installer.nsi` file revealed that Nuitka's default `multiuser` template omitted the directory selection macro (`!insertmacro MUI_PAGE_DIRECTORY`) and never initialized the `$INSTDIR` variable.
 3. Because `$INSTDIR` was empty (`""`), NSIS evaluated `$INSTDIR\JOSHY.exe` as `\JOSHY.exe`—which means `C:\JOSHY.exe` (the root of the `C:` drive).
@@ -43,14 +57,19 @@ Click Abort to stop the installation, Retry to try again, or Ignore to skip this
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-8)
 ## Problem 3: Installed on Another PC, It Used Default Windows SAPI Voice Instead of the Screen Reader
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-9)
 
 ### What Happened
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-9)
 After fixing the installer path so `JOSHY-Setup.exe` installed cleanly into `%LOCALAPPDATA%\Programs\JOSHY`, we tested the installer on a **second computer**.
 - The installation succeeded, the shortcuts worked, and the application opened.
 - However, instead of speaking through the active screen reader (NVDA or JAWS), JOSHY spoke using the generic default Windows TTS voice (`SAPI.SpVoice`).
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-10)
 ### Why It Happened (Summary of the 4-Step Chain Reaction)
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-10)
 1. **Local Path Masking on the First PC**: On the development computer, `screenreader_speak.py` included a hardcoded fallback path pointing to the local developer Python directory (`<user_python_install>\Lib\site-packages\accessible_output2\lib`). Because that folder existed on the developer PC, NVDA worked locally. On the second PC, the username was different and Python was not installed at that path.
 2. **Python `from ... import` Namespace Binding**: `screenreader_speak.py` had attempted to monkey-patch `accessible_output2.load_library = _safe_load_library`. However, inside `accessible_output2/outputs/base.py`, line 1 executes `from accessible_output2 import load_library`. In Python, `from module import func` creates a direct local reference to the original function inside `base.py`, completely ignoring any later replacement of `accessible_output2.load_library`.
 3. **Frozen `embedded_data_path()` Mismatch**: When `base.py` called the original `load_library()`, `accessible_output2` checked `platform_utils.paths.is_frozen()`. Seeing that it was compiled (`True`), it asked `platform_utils.paths.embedded_data_path()` where the DLLs were. Because `platform_utils` only knows about PyInstaller (`sys._MEIPASS`) and not Nuitka, it looked inside `%LOCALAPPDATA%\Programs\JOSHY\accessible_output2\lib\`—a subfolder that did not exist on the second PC.
@@ -62,30 +81,40 @@ After fixing the installer path so `JOSHY-Setup.exe` installed cleanly into `%LO
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-11)
 ## Beginner Coder Q&A: Understanding Chapter 1 With Zero Prior Background
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-11)
 
 If you just read the three problems above without knowing anything about screen readers or `JOSHY.exe`, here is a quick beginner breakdown of what happened and why it matters for building your own accessible apps:
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-1)
 ### 1. "What is `JOSHY.exe` and why did it need to talk out loud?"
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-1)
 - `JOSHY.exe` is an accessible audio controller that lets a visually impaired user control media playback and application volume from anywhere in Windows using global keyboard shortcuts (`Ctrl+Alt+Shift+Arrow` keys).
 - Because the user might be working in another program (not looking at or focusing on the JOSHY window), a regular screen reader wouldn't automatically know that the track changed or the volume went up.
 - By calling `screenreader_speak("Volume 70%")`, the program actively sends that announcement straight to the user's running screen reader (NVDA or JAWS) so they hear it immediately and feel it on their Braille display.
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-2)
 ### 2. "In Problem 1 and Problem 3, why does Python need a `.dll` file just to speak?"
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-2)
 - A running screen reader like **NVDA** is a separate program running on Windows.
 - For your Python program to send text to NVDA, NVDA provides a tiny bridge file called `nvdaControllerClient64.dll`.
 - When you run a `.py` script on your own computer where Python is installed, that `.dll` file sits inside your Python `site-packages` folder.
 - When you compile your script into a standalone `.exe` and give it to a friend who does **not** have Python installed on their PC, that folder doesn't exist on their computer!
 - If your `.exe` doesn't carry that `.dll` file inside itself and unpack it onto your friend's PC, the bridge to NVDA is missing.
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-3)
 ### 3. "In Problem 3, why wasn't the fallback Windows voice (`SAPI.SpVoice`) good enough?"
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-3)
 - Think of a visually impaired user's screen reader (NVDA or JAWS) as their personal dashboard: they have tuned its voice, pitch, and speed (often 3x to 5x faster than normal speech), connected it to their Braille display, and use the `Ctrl` key to silence it whenever they want.
 - Windows' built-in fallback voice (`SAPI.SpVoice`) is a separate, slow, default system voice. If your app falls back to SAPI while NVDA is running, **both voices speak over each other at the same time**, SAPI ignores the user's speech rate, and nothing is sent to their Braille display.
 - Therefore, making sure `accessible_output2` finds its `.dll` bridge on every computer is the difference between an app that feels frustrating and an app that feels truly native and accessible.
 
 For the full beginner introduction and glossary, see **[`00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY.md`](/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY)**.
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-4)
 ### 4. "Wait—so the order of my `import` lines actually matters in Python?! Why did Problem 1 and Problem 3 happen just because of import order?"
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-4)
 As a beginner coder, you are usually taught to just put all your `import` statements at the top of your `.py` file in any order. For simple scripts (like `import math` or `import random`), the order does not matter.
 
 However, when you are building a Windows app that talks to screen readers and `.dll` files, **the order of your imports is critical** for three reasons that directly caused Problem 1 and Problem 3:
@@ -107,7 +136,9 @@ However, when you are building a Windows app that talks to screen readers and `.
    - If you try to replace `accessible_output2.load_library` *after* `base.py` was already imported, `base.py` never sees your change because it is still holding onto the old snapshot!
    - By instead pointing `platform_utils.paths.embedded_data_path` to the right folder and wrapping `Output.__init__` **before** `Auto()` is ever imported, every screen reader module uses our updated path and safety wrapper from the very start.
 
+[//]: # (SECTION_ID: JOSH-PLAY-01_PROBLEMS_WE_ENC-SEC-5)
 ### 5. "In Problem 1, what does 'Top-Level Eager Initialization' vs. 'Lazy Initialization' mean for a beginner?"
+[//]: # (SECTION_ID: JOSH-PLAY-01-SEC-5)
 - **Top-Level Eager Initialization (What caused Problem 1)**:
   Putting `_screenreader = Auto()` right at the top of `screenreader_speak.py` outside of any `def` function. The moment `main.py` ran `from screenreader_speak import screenreader_speak`, Python immediately executed `Auto()` before the main program window could even open. When `Auto()` crashed, the entire `.exe` died silently before the user ever saw a window.
 - **Lazy Initialization (How we fixed it)**:

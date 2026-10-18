@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_05 | VERSION: v1.0 | SCOPE: ARCH)
+
 # Pillar 05.5: From-Scratch Creation Guide: Zero-Downtime Hot-Patch Runner
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-1)
 
 This guide walks you through building an automated **Zero-Downtime Hot-Patch Runner** (`hot_patch_runner.py`) from a blank editor.
 
@@ -14,14 +18,19 @@ This script allows you to update backend Python modules in live servers on Port 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-2)
 ## Step-by-Step Implementation
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-3)
 
 ### Step 1: Open a Blank Python File
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-3)
 ```bash
 nano hot_patch_runner.py
 ```
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-4)
 ### Step 2: Implement the 4-Stage Hot-Patch Function (Lines 1–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-4)
 ```python
 import importlib
 import os
@@ -75,7 +84,9 @@ def apply_staged_patches(staging_dir: str, live_dir: str, backup_dir: str):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-5)
 ## Why Order Matters in Hot-Patch Runners
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-5)
 
 1. **`py_compile` Before Any File Copy**:
    - Staged files must be compiled *before* creating backups or touching live files. If you overwrite the live file first, a syntax error breaks the server immediately.
@@ -86,7 +97,9 @@ def apply_staged_patches(staging_dir: str, live_dir: str, backup_dir: str):
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-6)
 ## Verification & Testing
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-6)
 
 Verify that your hot-patch runner applies clean code and automatically rolls back broken code:
 
@@ -131,10 +144,15 @@ with open('/tmp/hotpatch_demo/live/worker.py') as f:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-7)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-8)
 
 ### Q: Why do we pass `doraise=True` to `py_compile.compile()`?
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-8)
 **A:** By default, `py_compile.compile()` writes errors to `sys.stderr` and returns silently. Passing `doraise=True` forces it to raise a real Python `PyCompileError` exception that our `try...except` block can catch.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_05-SEC-9)
 ### Q: What is `sys.modules`?
+[//]: # (SECTION_ID: SIRA-DOC-05_05-SEC-9)
 **A:** `sys.modules` is Python's internal dictionary where all currently loaded modules are stored. Looking up `mod_name in sys.modules` tells us if the code is actively running in memory.

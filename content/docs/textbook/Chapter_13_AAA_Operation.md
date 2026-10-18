@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_13 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 13: AAA Usage and Operation
 
 To maintain the absolute integrity of a live, multiplayer game state, the DevCore network must ruthlessly control who is allowed to connect and what they are mechanically capable of doing once inside. These design requirements form the backbone of the **Siraugga Network Security Policy**, governed dynamically by the `Access Control Module`. 
@@ -8,7 +10,9 @@ This scalable security framework is defined by the **AAA Architectural Framework
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-13_1)
 ## 13.1 The AAA Triad (The Agentic Credit Card)
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-13_1)
 
 To understand AAA in the context of DevCore, we compare it to a corporate credit card issued to an AI subagent:
 
@@ -18,7 +22,9 @@ To understand AAA in the context of DevCore, we compare it to a corporate credit
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-13_2)
 ## 13.2 Centralized Agentic Authentication
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-13_2)
 
 DevCore implements AAA services using a **Server-Based (Centralized) Authentication** model. 
 
@@ -26,7 +32,9 @@ Instead of trusting local game clients, remote Tier 2 Modders and their spawned 
 
 When a subagent needs to communicate with the central Orchestrator, it utilizes one of two primary agentic protocols, adapted from traditional IT frameworks:
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-1)
 ### RADI vs. TACAS+ (The Protocol Showdown)
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-1)
 
 *   **RADI (Rapid Agentic Data Interchange - based on RADIUS):** 
     *   **Transport:** Uses lightweight UDP / fast JSON WebSockets.
@@ -41,7 +49,9 @@ When a subagent needs to communicate with the central Orchestrator, it utilizes 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-13_3)
 ## 13.3 AAA Accounting Logs and The Transcript Ledger
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-13_3)
 
 In a Zero-Trust architecture, Auth and Authorization keep the doors locked, but **Accounting** is how you catch a thief who already has the keys. Centralized AAA ensures that records from all Sandboxes are sent to a centralized repository, drastically simplifying the forensic auditing of AI actions.
 
@@ -53,7 +63,9 @@ Whenever a Modder or an AI subagent connects, the accounting process generates a
 2.  **System Accounting:** Captures all system-level events (e.g., when a Tier 5 Admin triggers the `POST /api/reload` endpoint to hot-patch the core engine).
 3.  **EXEC / Command Accounting:** The most critical log in DevCore. The central Orchestrator keeps a hyper-detailed ledger of exactly what the authenticated AI does in the terminal sandbox. It logs the exact timestamp, the agent's UUID, and the exact `run_command` bash strings executed by the AI.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-2)
 ### Physical Topology vs. Sandbox Topology
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-2)
 In traditional networking, a physical topology maps out Server Room 2158 connecting via cables to IT Office 2159 and remote Classrooms. 
 
 In DevCore, this physical topology maps directly to the **Sandbox Isolation Topology**:
@@ -62,13 +74,17 @@ In DevCore, this physical topology maps directly to the **Sandbox Isolation Topo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-3)
 ## Chapter 13 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-3)
 
 Chapter 13 codifies the operational mechanics of the Zero-Trust Architecture. It dictates exactly *how* the Siraugga framework manages its massive, decentralized swarm of Tier 2 Modders and autonomous AI subagents. By utilizing a Centralized AAA framework, the Orchestrator maintains absolute dominion over who enters the system, what tools they are permitted to wield, and exactly how many computational tokens they are allowed to burn. 
 
 The structural translation of traditional networking protocols into the agentic sphere (RADI vs TACAS+) provides Tier 5 Admins with the flexibility to prioritize low-latency for in-game NPCs while simultaneously enforcing military-grade encryption for critical core engine modifications. Finally, the Accounting logs—the immutable Agentic Transcripts—serve as the ultimate forensic ledger, ensuring that no AI action goes unrecorded.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_13-SEC-4)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 13 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH13-SEC-4)
 
 To maintain absolute clarity, here is the master translation of traditional cybersecurity terms into their DevCore Agentic equivalents established in this chapter:
 

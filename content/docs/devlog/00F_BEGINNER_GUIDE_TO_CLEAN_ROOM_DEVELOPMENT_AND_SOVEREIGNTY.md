@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 00F: Beginner Guide to Clean-Room Development & Sovereignty
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-1)
 ## What is Clean-Room Development?
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-1)
 
 In software engineering and technology law, **Clean-Room Development** is a formal method of software engineering used to prevent copyright infringement and guarantee sovereign intellectual property ownership.
 
@@ -14,7 +18,9 @@ When developers build applications while working for a company or studying at a 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-2)
 ## The Legal Foundation: Section 21 of the Copyright Act
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-2)
 
 Under technology intellectual property law (specifically Section 21 of the South African *Copyright Act 98 of 1978* and equivalent common-law doctrines globally), an institution can typically only assert ownership over software if:
 1. The code was created **"in the course and scope"** of assigned duties.
@@ -40,7 +46,9 @@ Under technology intellectual property law (specifically Section 21 of the South
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-3)
 ## The Three Clean-Room Pillars of Siraugga
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-3)
 
 As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-room independence:
 
@@ -50,7 +58,9 @@ As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-roo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-4)
 ## Plain-English Glossary
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-4)
 
 - **Clean-Room**: Developing software in complete isolation from copyrighted source code or institutional infrastructure to prove originality.
 - **Forensic Purge**: Using low-level disk and Git rewriting tools to permanently delete data from historical commit logs and databases.
@@ -59,7 +69,9 @@ As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-roo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-5)
 ## Why Order Matters in Clean-Room Forensics
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-5)
 
 1. **Excise Content from Git Before Expiring Reflogs**:
    - `git filter-branch` must rewrite commit trees *before* running `git reflog expire`. If you expire reflogs first, unreferenced loose objects can linger in hidden packs.
@@ -68,10 +80,15 @@ As chronicled in DEVLOG Chapters 70 and 72, Siraugga established total clean-roo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-6)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-7)
 
 ### Q: Does deleting a file in Git remove it from history?
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-7)
 **A:** No! Standard `git rm` only deletes the file from the current branch head. Anyone can view past commits and recover the entire file. Total compliance requires rewriting the Git commit graph.
 
+[//]: # (SECTION_ID: SIRA-DEV-00F_BEGINNER_GUIDE_CLN-SEC-8)
 ### Q: Why is relying on a company's cloud AI dangerous for personal projects?
+[//]: # (SECTION_ID: SIRA-DOC-00F_BEGINNER_G-SEC-8)
 **A:** If an employee uses company cloud credits or tenant logins to train an AI, company lawyers can legally argue that the project belongs to the company, not the developer.

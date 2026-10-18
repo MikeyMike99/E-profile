@@ -1,13 +1,20 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_41 | VERSION: v1.0 | SCOPE: ARCH)
+
 # Pillar 05.41: From-Scratch Creation Guide: Thought Vector Obfuscator & Masking Pipeline
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-1)
 ## Overview & Beginner Context
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-1)
 This guide teaches you how to write an in-memory Thought Vector Obfuscation and Prompt Masking pipeline in Python from scratch. It scrubs API keys and developer secrets using regular expressions and verifies frame integrity using salted HMAC-SHA256 digests.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-1)
 ## 1. Line-by-Line Construction
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-2)
 
 ### Block 1: Imports and Scrubbing Regex (Lines 1–20)
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-2)
 ```python
 import re
 import os
@@ -23,7 +30,9 @@ SECRET_PATTERNS = [
 ```
 - Defines regex tuples pairing sensitive secret patterns with clean structural replacements.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-3)
 ### Block 2: The Masking & Sanitization Function (Lines 21–40)
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-3)
 ```python
 def mask_thought_vector(raw_text: str) -> str:
     """Replaces sensitive keys and PII with structural placeholders."""
@@ -34,7 +43,9 @@ def mask_thought_vector(raw_text: str) -> str:
 ```
 - Replaces matches in RAM before frames are broadcast over WebSockets or saved to logs.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-4)
 ### Block 3: The Salted HMAC Signer & Verifier (Lines 41–65)
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-4)
 ```python
 def sign_thought_frame(text: str, secret_key: bytes) -> tuple[bytes, str]:
     """Generates a 16-byte random salt and calculates HMAC-SHA256."""
@@ -51,20 +62,27 @@ def verify_thought_frame(text: str, salt: bytes, expected_mac: str, secret_key: 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-2)
 ## 2. 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-2)
 1. Feed string with API key `AIzaSy...` -> Replaced with `[MASKED_GEMINI_KEY]`.
 2. Generate salt & MAC -> Verify with `verify_thought_frame` -> Returns `True`.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-3)
 ## 3. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-5)
 
 ### Why use `os.urandom(16)` for the salt?
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-5)
 `os.urandom()` pulls random bytes directly from the Linux kernel or Windows cryptographic provider, guaranteeing that numbers cannot be predicted by external attackers.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_41-SEC-4)
 ## 4. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-05_41-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md`](/docs/devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md`](/docs/devlog/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md`](/docs/devlog/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS)

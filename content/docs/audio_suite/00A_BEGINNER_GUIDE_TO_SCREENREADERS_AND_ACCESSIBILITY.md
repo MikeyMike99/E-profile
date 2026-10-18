@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: JOSH-PLAY-00A | VERSION: v1.1 | SCOPE: PLAY)
+
 # Beginner Developer Guide: What Are Screen Readers & How Does This Help Me Build Accessible Apps?
 
 - **Back to Index**: [`00_README_INDEX.md`](/docs/audio_suite/00_README_INDEX)
@@ -5,7 +7,9 @@
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-1)
 ## Introduction: Reading This Documentation as a Beginner Coder
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-1)
 
 If you are a beginner programmer picking up this documentation for the first time—and you did not build `JOSHY.exe` and have never used a screen reader—you will naturally ask several foundational questions before reading Chapters 1 through 4.
 
@@ -13,7 +17,9 @@ This guide answers those exact beginner questions in plain English, giving you a
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-2)
 ## Question 1: What Is a Screen Reader? (I Did Not Know They Existed!)
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-2)
 
 A **screen reader** is an essential piece of software that visually impaired and blind individuals run continuously on their computers. Instead of looking at a monitor with a mouse, a visually impaired user navigates Windows entirely with keyboard shortcuts while their screen reader converts what is happening on the computer into:
 1. **High-speed spoken audio** (often 300 to 500+ words per minute, customized to the user's preferred voice and pitch).
@@ -26,7 +32,9 @@ The most common Windows screen readers you will see mentioned in this documentat
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-3)
 ## Question 2: If the User Already Has a Screen Reader Running, Why Does My App Need Special Code (`accessible_output2`) to Speak?
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-3)
 
 By default, a screen reader only reads standard menus and buttons when a user actively clicks or presses `Tab` inside a window.
 
@@ -38,7 +46,9 @@ That is what the **`accessible_output2`** library does. It gives your Python pro
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-4)
 ## Question 3: Why Was It a Problem When the App Used "Default Windows TTS (SAPI)" Instead of the Screen Reader?
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-4)
 
 In [`01_PROBLEMS_WE_ENCOUNTERED.md`](/docs/audio_suite/01_PROBLEMS_WE_ENCOUNTERED), you will read that on a second PC, the app spoke using **Microsoft SAPI (`SAPI.SpVoice`)** instead of NVDA or JAWS, and we treated that as a bug. A beginner coder might ask: *"If it still spoke out loud, why is that bad?"*
 
@@ -51,7 +61,9 @@ Here is why visually impaired users strongly prefer their active screen reader o
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-5)
 ## Question 4: Plain-English Glossary of Technical Terms Used in Chapters 1–4
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-5)
 
 When reading the rest of the documentation, you will see a few technical terms. Here is all you need to know about what they mean:
 
@@ -68,16 +80,22 @@ When reading the rest of the documentation, you will see a few technical terms. 
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-6)
 ## Question 5: How Will This Documentation Help Me Create My Own Accessible Application for Visually Impaired Individuals?
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-6)
 
 You do not need to be an expert in C, DLLs, or Nuitka internals to build an accessible application. Because all the hard investigative work documented in Chapters 1–4 is already solved, **you can reuse our exact setup as a plug-and-play building block for any project you create**:
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-1)
 ### 1. Copy Two Files Into Your New Project
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-1)
 Whenever you start a new Python project (an accessible game, a study tool, a media player, a productivity app, etc.), simply copy these two files from this project into your new folder:
 - `screenreader_speak.py` (screenreader_speak.py)
 - `nvda_client_data.py` (nvda_client_data.py)
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-2)
 ### 2. Speak Any Message With Two Lines of Python Code
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-2)
 In your own Python script, import `screenreader_speak` and call it whenever you want to announce something to the user:
 ```python
 from screenreader_speak import screenreader_speak
@@ -86,7 +104,9 @@ from screenreader_speak import screenreader_speak
 screenreader_speak("Welcome to my accessible app. Press F1 for help.")
 ```
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-3)
 ### 3. Compile Your App for Other Computers Using Chapter 4
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-3)
 When you are ready to turn your Python script into a professional `.exe` and Windows Setup Installer so visually impaired users can install it on their PCs without needing Python:
 - Open [`04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md`](/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE).
 - Copy the Nuitka command from `compile_joshy.bat` (compile_joshy.bat) and replace `main.py` and `JOSHY` with your own script and app name.
@@ -98,27 +118,37 @@ When you are ready to turn your Python script into a professional `.exe` and Win
 
 ---
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-7)
 ## Question 6: So the Order of Imports Really Matters in Python?
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-7)
 
 **Yes!** In simple everyday Python scripts (like importing `math`, `random`, or `time`), the order of your `import` lines usually does not matter.
 
 However, when you are building a Windows desktop application that uses **COM (`pywin32`)**, **native `.dll` files**, and **runtime patches**, **the order of imports matters a lot** for three specific reasons:
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-1)
 ### 1. `pythoncom` and `pywintypes` Must Be Imported First
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-1)
 - Even the original creator of `pywin32` wrote a warning inside `pywintypes.py` (located in `<python_lib>/site-packages/win32/lib/pywintypes.py`) explaining that if another Windows module is imported *before* `pywintypes`, Windows can load the wrong copy of the DLL or fail to find it in a frozen `.exe`.
 - When `import pythoncom` and `import pywintypes` run at the very top of [`screenreader_speak.py`](../screenreader_speak.py#L1-L5), Python registers them in its internal loaded-modules list (`sys.modules`). When `accessible_output2` later asks for them to talk to JAWS or SAPI, they are already loaded and ready.
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-2)
 ### 2. Setting Up Paths Must Happen *Before* Importing and Calling `Auto()`
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-2)
 - Think of `accessible_output2.outputs.auto.Auto()` like a train leaving the station: the moment it starts, it immediately checks the tracks (`platform_utils.paths.embedded_data_path()`) for its `.dll` files.
 - If you import and run `Auto()` *before* extracting the `.dll` files, calling `os.add_dll_directory()`, and pointing `embedded_data_path` to the right folder, the train derails before your setup code ever runs.
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-3)
 ### 3. The `from module import function` Timing Trap
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-3)
 - In Python, when a file runs `from accessible_output2 import load_library` (as seen in `<python_lib>/site-packages/accessible_output2/outputs/base.py` on line 1), it grabs whatever `load_library` function existed **at that exact millisecond**.
 - If you try to replace `accessible_output2.load_library` *after* `base.py` has already been imported, `base.py` ignores your change because it already saved the old function!
 - That is why in [`screenreader_speak.py`](../screenreader_speak.py#L63-L84), we configure `platform_utils.paths.embedded_data_path` and wrap `accessible_output2.outputs.base.Output.__init__` **first**, and only import `accessible_output2.outputs.auto` inside `_get_screenreader()` **after** all setup steps are complete.
 
 
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-8)
 ## Cross-References & System Parallels
+[//]: # (SECTION_ID: JOSH-PLAY-00A-SEC-8)
 
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
 <summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Accessibility & Speech Engines (Click to Expand Dropdown)</summary>

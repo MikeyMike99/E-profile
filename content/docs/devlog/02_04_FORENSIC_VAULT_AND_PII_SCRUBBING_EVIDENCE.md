@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-02_04 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 02.4: Source Evidence: Forensic Vault & PII Scrubbing Engine
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-1)
 
 This chapter documents verbatim source code citations from Siraugga's data privacy and forensic archival subsystems (`security/local_security.py` and session ownership metadata).
 
@@ -14,7 +18,9 @@ These citations prove how Microsoft Presidio scrubs PII and secrets in real time
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-2)
 ## Source 1: Real-Time PII & Secret Scrubbing
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-2)
 
 - **Source File**: `<project_root>/security/local_security.py`
 - **Location**: Presidio Anonymizer Engine
@@ -50,13 +56,17 @@ class LocalSecurity:
         return anonymized.text
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-3)
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-3)
 1. **Automated Anonymization**: Outbound text is analyzed for sensitive patterns and replaced with sanitized tokens (`<EMAIL_ADDRESS>`, `<IP_ADDRESS>`) before leaving the machine.
 2. **Graceful Degradation**: If Presidio is uninstalled, the service fails open with a system warning rather than crashing the WebSocket stream.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-4)
 ## Source 2: Forensic Vault Archival & Ownership Mapping
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-4)
 
 - **Source File**: Brain Session Ownership Registry (`session_ownership.json`)
 - **Location**: Metadata Schema Structure
@@ -79,13 +89,17 @@ class LocalSecurity:
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-5)
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-5)
 1. **Multi-Tenant Attribution**: Every historical chat transcript is cryptographically tied to its creator and assigned project workspace.
 2. **Audit Preservation**: When a user clicks "Clear History" in the UI to reclaim quota, the transcript is archived into the encrypted forensic vault before active memory is reset.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-6)
 ## Why Order Matters in Data Privacy
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-6)
 
 1. **Scrub PII Before Log Persistence**:
    - `scrub_text()` must execute *before* writing strings to disk logs or telemetry queues. Writing plain credentials to disk and scrubbing later leaves forensic traces on the file storage blocks.
@@ -94,10 +108,15 @@ class LocalSecurity:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-7)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-8)
 
 ### Q: What is Presidio?
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-8)
 **A:** Microsoft Presidio is an open-source data protection framework that identifies sensitive entities (names, phone numbers, passwords) in unstructured text using natural language processing (NLP).
 
+[//]: # (SECTION_ID: SIRA-DEV-02_04-SEC-9)
 ### Q: Why do we keep forensic archives if the user requested deletion?
+[//]: # (SECTION_ID: SIRA-DOC-02_04-SEC-9)
 **A:** In cybersecurity and corporate governance, audit trails must be preserved for compliance. Non-admin users see their active screen cleared, but administrators retain encrypted forensic records to investigate unauthorized privilege attempts.

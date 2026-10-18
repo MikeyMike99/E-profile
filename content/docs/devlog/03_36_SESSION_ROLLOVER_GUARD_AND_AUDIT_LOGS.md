@@ -1,11 +1,17 @@
+[//]: # (DOC_ID: SIRA-DEV-03_36 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 03.36: Diagnostic Test Logs: Session Rollover Guard & SIEM Audit Logs
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-1)
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-1)
 This document records the exact diagnostic benchmarks, edge-case assertions, and live SIEM log outputs validating the session stability rules, mid-conversation rollover suppression, and automated security audit invariants.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-1)
 ## 1. Automated Security Audit Output (`security/security_audit.py`)
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-1)
 
 Execution command:
 ```bash
@@ -48,7 +54,9 @@ Console Output:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-2)
 ## 2. In-Memory Permutation Assertions
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-2)
 
 Execution via Python stdin pipe:
 ```text
@@ -81,11 +89,15 @@ ALL IN-MEMORY CHECKS PASSED!
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-3)
 ## 3. SIEM Central Log Records (`logs/devcore_master.jsonl`)
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-3)
 
 The audit script and runtime engine emit structured records directly into the central SIEM log:
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-2)
 ### Audit Execution Log Entry:
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-2)
 ```json
 {
   "timestamp": "2026-10-17T17:16:02.260386+00:00",
@@ -97,7 +109,9 @@ The audit script and runtime engine emit structured records directly into the ce
 }
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-3)
 ### In-Flight Rollover Suppression Log Entry:
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-3)
 ```json
 {
   "timestamp": "2026-10-17T17:15:52.878127+00:00",
@@ -111,7 +125,9 @@ The audit script and runtime engine emit structured records directly into the ce
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_36-SEC-4)
 ## 4. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-03_36-SEC-4)
 - **Problem Statement**: [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md`](/docs/devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md`](/docs/devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE)

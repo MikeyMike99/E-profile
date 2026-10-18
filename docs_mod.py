@@ -1,4 +1,5 @@
 import os
+import re
 import json
 from pathlib import Path
 from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session
@@ -150,7 +151,44 @@ def load_catalog():
     except Exception:
         return []
 
+CURATED_NARRATIVE_FLOW = [
+    ('devlog', '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'),
+    ('manifesto', '01_Echoes_in_the_Void'),
+    ('manifesto', '02_The_Echoes_Architecture'),
+    ('echoes', 'CLASS_WORLD_ARCHITECTURE'),
+    ('echoes', 'MENU_CONFIG'),
+    ('devlog', '02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE'),
+    ('devlog', '05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH'),
+    ('manifesto', '03_The_Quantitative_Era'),
+    ('manifesto', '04_The_Forge_of_Sovereignty'),
+    ('manifesto', '05_The_24_Hour_Crucible'),
+    ('story', 'DEVLOG')
+]
+
 def get_prev_next(catalog, category, slug):
+    # 1. Curated Narrative Journey: Bridges across categories for the origin story
+    flow_idx = -1
+    for i, (f_cat, f_slug) in enumerate(CURATED_NARRATIVE_FLOW):
+        if f_slug == slug and (f_cat == category or not category):
+            flow_idx = i
+            break
+
+    if flow_idx != -1:
+        prev_doc = None
+        next_doc = None
+        if flow_idx > 0:
+            p_cat, p_slug = CURATED_NARRATIVE_FLOW[flow_idx - 1]
+            prev_doc = next((d for d in catalog if d.get('category') == p_cat and d.get('slug') == p_slug), None)
+            if not prev_doc:
+                prev_doc = next((d for d in catalog if d.get('slug') == p_slug), None)
+        if flow_idx < len(CURATED_NARRATIVE_FLOW) - 1:
+            n_cat, n_slug = CURATED_NARRATIVE_FLOW[flow_idx + 1]
+            next_doc = next((d for d in catalog if d.get('category') == n_cat and d.get('slug') == n_slug), None)
+            if not next_doc:
+                next_doc = next((d for d in catalog if d.get('slug') == n_slug), None)
+        return prev_doc, next_doc
+
+    # 2. Standard Category Traversal (Fallback for all other documents)
     cat_items = [d for d in catalog if d.get('category') == category]
     idx = -1
     for i, item in enumerate(cat_items):
@@ -250,6 +288,24 @@ def render_doc_content(category, doc_slug, viewer_tier=1):
         cleaned_text = clean_markdown_text(raw_text)
         sanitized_text = filter_document_by_sensitivity(cleaned_text, viewer_tier=viewer_tier)
         html_body = markdown.markdown(sanitized_text, extensions=['fenced_code', 'tables', 'nl2br'])
+        doc_id = doc_meta.get('doc_id')
+        if doc_id:
+            sec_idx = 1
+            def _attach_h_id(match):
+                nonlocal sec_idx
+                tag = match.group(1)
+                attrs = match.group(2)
+                inner = match.group(3)
+                clean = re.sub(r'<[^>]+>', '', inner).strip()
+                num_m = re.match(r'^\s*(\d+(?:\.\d+)*)\.?\s+(.+)$', clean)
+                sec_num = num_m.group(1).replace('.', '_') if num_m else str(sec_idx)
+                if not num_m:
+                    sec_idx += 1
+                sec_id = f"{doc_id}-SEC-{sec_num}"
+                if 'id=' not in attrs:
+                    return f'<{tag} id="{sec_id}"{attrs}>{inner}</{tag}>'
+                return match.group(0)
+            html_body = re.sub(r'<(h[23])([^>]*)>(.*?)</\1>', _attach_h_id, html_body, flags=re.DOTALL)
     except Exception as e:
         html_body = f"<p>Error rendering document: {e}</p>"
 

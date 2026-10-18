@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_38 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 38: Context Integrity and Authenticity
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_38-SEC-38_1)
 ## 38.1 The Four Elements of Secure WebSockets
+[//]: # (SECTION_ID: SIRA-TXT-CH38-SEC-38_1)
 
 When a remote Modder connects to the DevCore Orchestrator, the WebSocket connection must guarantee four distinct elements of security to prevent the Swarm from being hijacked:
 
@@ -9,7 +13,9 @@ When a remote Modder connects to the DevCore Orchestrator, the WebSocket connect
 3.  **Origin Authentication (HMAC):** Guarantees the prompt is not a forgery and actually came from the Modder.
 4.  **Data Non-Repudiation (Signatures):** Guarantees the Modder cannot mathematically deny sending a specific destructive command.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_38-SEC-38_2)
 ## 38.2 Semantic Fingerprinting (Hash Functions)
+[//]: # (SECTION_ID: SIRA-TXT-CH38-SEC-38_2)
 
 To ensure **Prompt Integrity**, the Orchestrator uses Cryptographic Hash Functions to create a "Semantic Fingerprint" of an AI's conversational history.
 
@@ -19,14 +25,18 @@ Because it is "collision-free," if a malicious Modder alters even a single comma
 
 *(Note: Legacy algorithms like MD5 and SHA-1 have known vulnerabilities. DevCore strictly enforces the use of the NSA-developed **SHA-2** (SHA-256/512) or the next-generation NIST-developed **SHA-3**).*
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_38-SEC-38_3)
 ## 38.3 The Man-in-the-Swarm Attack
+[//]: # (SECTION_ID: SIRA-TXT-CH38-SEC-38_3)
 
 There is a fatal flaw with basic Semantic Fingerprinting. While a hash guarantees a file hasn't accidentally corrupted, it **cannot** protect against deliberate changes by a hacker.
 
 Because basic hashing algorithms are public knowledge, they are vulnerable to a **Man-in-the-Swarm Attack (Man-in-the-Middle)**. 
 If a Modder sends the prompt *"Move NPC to town"*, a hacker intercepting the WebSocket can delete that text, replace it with *"Delete the game database"*, recalculate the SHA-256 hash themselves, and send the forged payload to the Orchestrator. The Orchestrator will run the hash, see that it matches the forged text perfectly, and happily execute the database deletion.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_38-SEC-38_4)
 ## 38.4 Host-Authenticated Swarm Signatures (HMAC)
+[//]: # (SECTION_ID: SIRA-TXT-CH38-SEC-38_4)
 
 To defeat the Man-in-the-Swarm attack and guarantee **Origin Authentication**, DevCore implements **HMAC** (Keyed-Hash Message Authentication Code).
 
@@ -36,11 +46,15 @@ When the hacker intercepts the transmission and changes the text to *"Delete the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_38-SEC-1)
 ## Chapter 38 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH38-SEC-1)
 
 Chapter 38 details the critical difference between hiding data (Encryption) and proving data hasn't been altered (Hashing). By utilizing SHA-2/SHA-3 hashes, the Orchestrator creates mathematical fingerprints of the AI's context. By upgrading those hashes with secret keys (HMAC), the Orchestrator renders Man-in-the-Swarm forgery attacks mathematically impossible.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_38-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 38 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH38-SEC-2)
 
 *   **Data Integrity vs Authentication:** Integrity proves the message didn't change. Authentication proves *who* sent it. 
 *   **Cryptographic Hash (SHA-2 / SHA-3)** $\rightarrow$ **Semantic Fingerprinting:** Grinding an AI's massive context history down into a fixed 256-bit string to verify it hasn't been tampered with. (MD5 and SHA-1 are legacy and banned).

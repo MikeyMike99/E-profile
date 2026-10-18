@@ -1,8 +1,12 @@
+[//]: # (DOC_ID: SIRA-MAN-README | VERSION: v1.0 | SCOPE: MAN)
+
 # The Developer's Manifesto
 
 Welcome to the definitive history of this ecosystem.
 
+[//]: # (SECTION_ID: SIRA-MAN-README-SEC-1)
 ### The Volumes
+[//]: # (SECTION_ID: SIRA-MAN-README-SEC-1)
 0. [Foreword: The Cost of Memory](/docs/manifesto/00_Foreword) - *Why this manifesto exists.*
 1. [Chapter 1: Echoes in the Dark (The True Origin)](/docs/devlog/01_Echoes_in_the_Void) - *Escaping the terminal and building the first movement grid.*
 2. [Chapter 2: The Core Architecture](/docs/devlog/02_The_Core_Architecture) - *Forging the state manager over Christmas (GAME & MAIN_MENU).*

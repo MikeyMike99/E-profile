@@ -1,13 +1,20 @@
+[//]: # (DOC_ID: SIRA-ARCH-05_40 | VERSION: v1.0 | SCOPE: ARCH)
+
 # Pillar 05.40: From-Scratch Creation Guide: Zone-Based Sandbox & Wildcard Path Filter
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-1)
 ## Overview & Beginner Context
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-1)
 This guide teaches you how to write a Zone-Based Sandbox Path Filter in Python from scratch. It categorizes files into security tiers and stops directory traversal attacks (`../../`) using canonical path resolution.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-1)
 ## 1. Line-by-Line Construction
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-2)
 
 ### Block 1: Zone Classification Constants (Lines 1–20)
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-2)
 ```python
 import os
 
@@ -22,7 +29,9 @@ ALLOWED_EXTS = {".py", ".json", ".lua", ".js", ".ts", ".md", ".txt", ".html", ".
 ```
 - Sets strict constants defining zones, forbidden folders, and allowed file extensions.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-3)
 ### Block 2: The Zone Classifier Function (Lines 21–45)
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-3)
 ```python
 def classify_path(rel_path: str) -> str:
     """Classifies a relative path into a security tier."""
@@ -51,7 +60,9 @@ def classify_path(rel_path: str) -> str:
 ```
 - Inspects every folder in the path to stop subfolder evasion attacks.
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-4)
 ### Block 3: The Canonical Jail Resolver (Lines 46–65)
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-4)
 ```python
 def resolve_safe_path(base_dir: str, rel_path: str, is_admin: bool = False) -> str:
     """Resolves path and enforces sandbox boundary."""
@@ -74,21 +85,28 @@ def resolve_safe_path(base_dir: str, rel_path: str, is_admin: bool = False) -> s
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-2)
 ## 2. 10-Second Verification Checklist
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-2)
 1. Query `../.env` -> Raises `PermissionError` (Path traversal).
 2. Query `core/server.py` as non-admin -> Raises `PermissionError` (Admin required).
 3. Query `game/player.lua` as dev -> Returns absolute path (Allowed).
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-3)
 ## 3. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-5)
 
 ### What is the difference between `os.path.abspath` and `os.path.realpath`?
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-5)
 `os.path.abspath` calculates the absolute path without resolving symbolic links. `os.path.realpath` resolves all symlinks, ensuring that an attacker cannot use a symlink to trick the system.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-ARCH-05_40-SEC-4)
 ## 4. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-05_40-SEC-4)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS.md`](/docs/devlog/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE.md`](/docs/devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md`](/docs/devlog/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS)

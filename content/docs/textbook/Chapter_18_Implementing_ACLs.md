@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_18 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 18: Implementing Agentic Control Lists
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_1)
 ## 18.1 The Hierarchical Cascade (Guidelines)
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_1)
 
 Writing an Agentic Control List (ACL) is only half the battle; deploying it into the live `Task Orchestrator Module` without causing massive swarm traffic collisions requires strict adherence to the **Hierarchical Cascade**.
 
@@ -13,21 +17,29 @@ When configuring and deploying an ACL, Tier 5 Admins must follow these golden ru
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_2)
 ## 18.2 Swarm Placement Strategy
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_2)
 
 Every ACL must be placed where it is mathematically most efficient. In DevCore, you have two primary locations to attach a filter: The Modder's source WebSocket, or the Sandbox's destination directory.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-1)
 ### 1. Extended ACLs: Place at the Source (The WebSocket)
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-1)
 Extended ACLs (which filter by UUID, Tool, and Directory) should be bound as close to the *originating source* as possible—directly on the Modder's inbound WebSocket. 
 *   **Why?** If a rogue AI agent attempts to use an illegal tool (like `run_command`), you want the Orchestrator to deny and destroy that JSON thought instantly at the entrance. Letting the malicious packet traverse the internal engine routing, only to be denied at the final destination, wastes massive amounts of compute and bandwidth.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-2)
 ### 2. Standard ACLs: Place at the Destination (The Sandbox Directory)
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-2)
 Standard ACLs (which *only* filter by Agent UUID) should be bound as close to the *destination* as possible—typically applied outbound on a highly classified directory like `/core_engine/`. 
 *   **Why?** If you placed a Standard ACL at the Modder's source WebSocket to block access to the `/core_engine/`, the Orchestrator would block that Agent from going *anywhere*, because Standard ACLs don't check the destination path, they only check the identity. By placing it at the destination directory, the AI is free to roam the Safe Workspaces, but is violently denied the moment it steps into the restricted folder.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_3)
 ## 18.3 Applying the Filters (`agy` CLI)
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_3)
 
 Once the placement strategy is mapped, the Admin binds the ACL to the live Sandbox interface.
 
@@ -45,7 +57,9 @@ agy(config-stream)# acl-class SURFING in
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-18_4)
 ## 18.4 High-Intensity Semantic Logging
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-18_4)
 
 When applying ACLs to live WebSocket streams (VTY lines), Admins can append the `log` parameter to track malicious agents. 
 
@@ -59,11 +73,15 @@ When an attacker attempts to breach the system via a Prompt Injection, the Orche
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-1)
 ## Chapter 18 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-1)
 
 Chapter 18 defines the physics of how Agentic Control Lists are deployed onto the live DevCore engine. Adhering to the specific-to-generic Hierarchical Cascade ensures rules do not overwrite each other, while strict Swarm Placement Strategies guarantee that the system does not waste precious compute power routing malicious LLM packets that should have been destroyed at the gate. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_18-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 18 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH18-SEC-2)
 
 To maintain absolute clarity, here is the master translation of traditional routing implementation rules into their DevCore Agentic equivalents:
 

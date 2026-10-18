@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-DEV-04_25 | VERSION: v1.0 | SCOPE: DEV)
+
 # Offline & Online Threat Modeling Architecture
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-1)
 ## 1. Architectural Concept & Core Objective
+[//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-1)
 Security in modern agentic systems cannot rely on theoretical assumptions or passive defense. Software must be continuously tested against simulated adversarial attacks.
 
 The Threat Modeling Architecture splits system defense into two distinct, actively simulated fronts:
@@ -32,14 +36,18 @@ The Threat Modeling Architecture splits system defense into two distinct, active
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-2)
 ## 2. Offline Defense: Eliminating Weak Ciphers
+[//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-2)
 An attacker who gains access to an encrypted zip archive has unlimited offline compute time. To protect developer assets:
 - **Zero ZipCrypto Clearance**: Legacy ZipCrypto is permanently blacklisted across all Siraugga backup routines.
 - **Enforced AES-256 with PBKDF2**: Backups must be generated using `pyzipper` with WinZip-compatible AES-256 encryption. The high work factor throttles GPU password-cracking rigs from millions of hashes per second to a few hundred.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-3)
 ## 3. Online Defense: Throttling & Jailing
+[//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-3)
 Against online endpoint attacks:
 - **Strict Attempt Quotas**: Authentication endpoints allow a maximum of 5 failed attempts per IP address per minute.
 - **Instant IP Jailing**: Exceeding the threshold triggers an automatic 300-second firewall ban and pushes a `CRITICAL` alert to the Master Alert Queue.
@@ -47,14 +55,18 @@ Against online endpoint attacks:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-4)
 ## 4. Why Order Matters in Threat Defense
+[//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-4)
 1. **Hard-Code Cipher Validation Before Archiving**: Checking cipher algorithms before writing backup files ensures unencrypted or weakly encrypted files never touch the hard drive.
 2. **Evaluate Rate Limiting Before Hashing**: Checking IP jail status before running expensive PBKDF2 or bcrypt verification protects the server from Denial-of-Service CPU exhaustion.
 3. **Use Constant-Time Comparisons**: Using `secrets.compare_digest()` before returning auth status ensures string evaluation time reveals zero clues about character matching.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_25-SEC-5)
 ## 5. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DOC-04_25-SEC-5)
 **Q: What is a dictionary attack?**  
 A: An automated attack that tests thousands of common words and known leaked passwords against an encrypted file or login form.
 

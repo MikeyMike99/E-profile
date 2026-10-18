@@ -1,18 +1,27 @@
+[//]: # (DOC_ID: SIRA-DEV-03_35 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 03.35: Diagnostic Tests & Logs: Thought Vector Hashing & Prompt Masking
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-1)
 ## Overview & Context
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-1)
 This document records diagnostic test runs verifying the **Prompt Masking** sanitization pipeline, evaluating the speed of HMAC-SHA256 vector authentication, and auditing the system's ability to detect and defuse **Semantic Steganography** attacks hidden in game assets and NPC dialogue scripts.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-1)
 ## 1. Test Execution & Diagnostic Log
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-2)
 
 ### What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-2)
 1. Prompt masking and context substitution on sensitive API keys and player credentials.
 2. Salted HMAC-SHA256 hashing speed and collision resistance on agent thought vectors.
 3. Interception of semantic steganography prompt injections hidden inside text assets.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-3)
 ### Exact Test Execution
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-3)
 ```python
 # Thought Vector Sanitization & Masking Benchmark
 import hmac, hashlib, os
@@ -33,7 +42,9 @@ print(f"[MASKED_OUTPUT]: {masked_thought}")
 print(f"[HMAC_VALID]: {is_valid}")
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-4)
 ### Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-4)
 ```
 [PROMPT_MASKING]: Raw length: 82 chars | Sensitive tokens matched: 1 (AIzaSyD...)
 [MASKED_OUTPUT]: Thinking: Using master API key [MASKED_API_KEY] to inspect user accounts.
@@ -50,7 +61,9 @@ print(f"[HMAC_VALID]: {is_valid}")
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-2)
 ## 2. Hashing Speed & Cryptographic Benchmark
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-2)
 
 ```
 Vector Obfuscation Benchmark (10,000 Thought Vector Frames):
@@ -64,29 +77,40 @@ Constant-Time Verify:         0.025 ms                     40,000 ops/sec
 Total Pipeline Overhead:      0.064 ms (Negligible impact on real-time streaming)
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-5)
 ### How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-5)
 - The total vector sanitization and cryptographic integrity verification pipeline requires only 0.064 milliseconds per frame, allowing DevCore to scrub and authenticate agent thoughts in real-time during live WebSocket streaming.
 - Sensitive tokens are reliably replaced with structural masks, preventing raw credentials from leaking into client browser inspection consoles.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-3)
 ## 3. Why Order Matters in Cryptographic Verification
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-3)
 1. **Sanitize Secrets Before Generating MAC**: Compute the cryptographic hash over the *masked* text that will actually be transmitted and stored, not the raw unscrubbed string.
 2. **Constant-Time Verification Before Action**: Always use `hmac.compare_digest` to verify frame integrity before passing the message to the model for execution.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-4)
 ## 4. Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-6)
 
 ### What is the purpose of adding a random 16-byte salt?
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-6)
 If two thoughts contain identical text, their hashes would be identical without a salt. Adding a random salt guarantees that identical thoughts produce completely different hashes, stopping attackers from analyzing patterns in telemetry logs.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-7)
 ### Can an AI model still understand a prompt if the API key is masked?
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-7)
 Yes. During testing and security audits, the agent only needs to know that an API key parameter exists and is validly formatted. It does not need the real secret key to verify syntactic correctness or generate code.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_35-SEC-5)
 ## 5. Cross-Reference Navigation
+[//]: # (SECTION_ID: SIRA-DOC-03_35-SEC-5)
 - **Problem Breakdown**: [`01_PROBLEMS_ENCOUNTERED/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md`](/docs/devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS)
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md`](/docs/devlog/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md`](/docs/devlog/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE)

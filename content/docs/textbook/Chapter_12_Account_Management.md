@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_12 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 12: Account Management and Privilege Architecture
 
 The central orchestrator of the DevCore ecosystem—acting as the ultimate Identity Provider (IdP)—plays a critical role in the security of the framework. In a Zero-Trust AI environment, determining *who* or *what* is interacting with the system is only the first step. The orchestrator must mathematically guarantee that every user, modder, and autonomous subagent possesses an account type strictly tailored to their operational role. 
@@ -14,7 +16,9 @@ Proper management of these accounts and permissions is the bedrock of securing s
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-1)
 ## Agentic Account Types and Identity Profiling
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-1)
 
 A fundamental rule of the Siraugga framework is that organizations must **never share accounts** for privileged users, administrators, or AI applications. The administrator account (Tier 5) must only be used to administer the core system (`TIER_CORE_ENGINE`). If a Tier 5 Super Admin were to recklessly use their root account to test an untrusted, malware-infected AI plugin from a community forum, the entire organization—and every connected game server—would be compromised.
 
@@ -26,7 +30,9 @@ As the Identity Provider (IdP), the DevCore central server is responsible for au
 2.  **Hardware Registration (FAIM):** Registering the Modder’s physical computer and mobile devices, binding their access tokens strictly to their authorized hardware to prevent session hijacking.
 3.  **Lifecycle Management:** Disabling or deactivating any accounts that are no longer needed, and purging organizational data from the user’s sandboxes.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-2)
 ### Spatial and Temporal Access Restrictions
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-2)
 To enforce absolute control over the swarm, administrators utilize temporal and spatial restrictions:
 *   **Time-of-Day Restrictions:** Controlling precisely when a Modder or a specific AI swarm can log in (e.g., locking out AI compilation tools during peak player hours to save API bandwidth).
 *   **Geofencing (Sandbox Confinement):** In traditional IT, geofencing triggers actions when a user crosses a geographic boundary. In DevCore, Geofencing translates directly to **Sandbox Path Confinement**. If a Tier 3 subagent attempts to execute a tool outside its assigned `cwd` (Current Working Directory), the geofence triggers an immediate `PermissionError` and alerts the Admin.
@@ -35,7 +41,9 @@ To enforce absolute control over the swarm, administrators utilize temporal and 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-3)
 ## Securing Privileged Accounts
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-3)
 
 Cybercriminals heavily target privileged accounts (Tier 4 and Tier 5). Because these are the most powerful accounts in the organization—possessing elevated, unrestricted access to deploy game engines, orchestrate raw Linux operating systems, and modify network devices—they are the holy grail for attackers. 
 
@@ -56,7 +64,9 @@ Continuously securing and locking down these privileged accounts is critical to 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-4)
 ## File Access Control
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-4)
 
 Permissions are the structural rules configured to limit folder or file access for an individual user or AI agent. Following the principle of **least privilege** and "need-to-know" access, entities must be mathematically restricted to only the resources they require. 
 
@@ -71,7 +81,9 @@ In the Siraugga framework, File Access Control is violently enforced through the
 
 By routing all read/write requests through strict path resolution modules (`resolve_safe_path()`), the orchestrator guarantees that any attempt to traverse outside an assigned folder boundary results in an immediate, localized lockdown.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-5)
 ### Agentic Tool Whitelists (Permission Levels)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-5)
 In standard operating systems, file access control is defined by Read, Write, and Execute. In the DevCore ecosystem, these traditional permissions are translated directly into **Agentic Tool Whitelists**. When an AI subagent is spawned, the orchestrator equips it with a highly specific set of tools based on its Role (Archetype). 
 
 The primary permission levels include:
@@ -84,11 +96,15 @@ The primary permission levels include:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-3_3_5)
 ## 3.3.5 The Deny Override & Semantic Inheritance
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-3_3_5)
 
 In the Siraugga framework, the **Explicit Deny** is an absolute, non-negotiable law. If a Tier 5 Super Admin (or the Raugus Resolver) flags a specific directory with an Explicit Deny rule, that rule overrides *all* other permission settings. Even if an AI agent possesses a Tier 5 root token, if the Semantic Mantrap denies access to the `/venv/` directory, the orchestrator will ruthlessly terminate the tool call. Explicit Deny is the ultimate failsafe against catastrophic privilege escalation.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-6)
 ### Workspace Inheritance and Volume Transfers
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-6)
 When navigating the complex structure of the `/playground`, the orchestrator must manage how permissions propagate when AI agents generate massive amounts of new code. The local security policy dictates that after parent folder permissions have been set, any new files or folders generated by an AI inside that parent folder natively inherit its constraints.
 
 However, the movement of data between different Modder workspaces (Volumes) changes how these permissions propagate:
@@ -98,7 +114,9 @@ However, the movement of data between different Modder workspaces (Volumes) chan
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-3_3_6)
 ## 3.3.6 Agentic Knowledge Check: Do You Have Permission?
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-3_3_6)
 
 **Scenario:** 
 A Tier 4 App Admin is orchestrating a massive lore expansion for a new in-game faction. They have spawned a swarm of `Research` subagents to analyze the historical lore documents located in the `game_demo/docs/` folder. 
@@ -110,7 +128,9 @@ However, to maintain the absolute mathematical consistency of the database, the 
 **Answer:**
 The Admin must restrict the swarm to **Read-Only** access. By configuring the subagents' whitelist to strictly allow the `view_file` tool (and explicitly removing `write_to_file`, `replace_file_content`, and `run_command`), the orchestrator physically guarantees the AI can view the existing project documents without possessing the mechanical capability to alter the game state.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-7)
 ## Agentic Security Policies & Hallucination Lockouts
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-7)
 
 In a traditional IT environment, administrators configure Windows Active Directory and Local Security Policies (`secpol.msc`) to enforce password rules and lockouts. In the DevCore ecosystem, Tier 5 Admins configure the **Siraugga Swarm Directory**—the central security policy governed by `Access Control Module` that dictates the behavior of all connected Modders and autonomous subagents.
 
@@ -124,7 +144,9 @@ Through the Zero-Restart Web Portal, Admins enforce three critical agentic polic
     *   **Policy Changes** (When a Tier 5 Admin hot-patches the `App Router Module` rules).
     *   **Privilege Use** (Tracking exactly when an agent escalates to a `run_command` execution).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-8)
 ## Federated Swarm Authentication (Authentication Management)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-8)
 
 Authentication and authorization issues—such as unencrypted API keys or incorrect JSON permissions—are the leading cause of agentic security breaches. Authentication management in Siraugga aims to ensure secure API connections while providing ease of use for Tier 2 Modders.
 
@@ -133,7 +155,9 @@ Authentication and authorization issues—such as unencrypted API keys or incorr
 *   **The Encrypted State Vault (Password Vault):** Protects and stores all underlying API subscriptions and System Prompts required to run the headless LLMs, requiring only a single master cryptographic key from the Admin to unlock the swarm's memory.
 *   **System Prompt Validation (Knowledge-Based Authentication - KBA):** If an AI's behavior becomes erratic, the Orchestrator may challenge the agent with a highly specific contextual question (its Physiological DNA). If the agent fails to answer correctly based on its immutable System Prompt, the Orchestrator knows the agent’s memory has been wiped by an injection attack and instantly terminates it.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-9)
 ## Semantic HMAC (Agentic Message Authentication)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-9)
 
 Because DevCore relies heavily on WebSocket (WSS) streaming to pass live JSON state deltas between the game server and the AI swarm, transmitting raw, unencrypted data is a catastrophic vulnerability. 
 
@@ -145,25 +169,37 @@ When the central orchestrator receives the JSON packet via the WebSocket, it loo
 
 Just as highly secure VPNs use IPsec and HMAC to authenticate network packets, the DevCore architecture relies on Semantic HMAC to guarantee the integrity of every single thought and action generated by the AI swarm.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-10)
 ## Agentic Authentication Protocols
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-10)
 
 To secure the massive, interconnected web of Tier 2 Modders, headless LLMs, and physical servers, the DevCore ecosystem relies on robust authentication protocols. In traditional networking, the word "entity" refers to a device or a system. In the Siraugga framework, an **Agentic Entity** refers to any active intelligence—whether it is a human Modder, an automated daemon, or an autonomous AI subagent.
 
 An authentication protocol outlines the exact mathematical handshake required for these entities to connect and share data without unauthorized interception. DevCore translates standard IT protocols directly into Agentic Security measures:
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-11)
 ### EAP (Extensible Agentic Protocol)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-11)
 Used for rapid, lightweight authentication. The subagent client sends a hashed token (often a derivation of its API key) to the authentication server. The central Orchestrator holds the master certificate, meaning the lightweight, headless LLM client does not need to store heavy cryptographic certificates to authenticate.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-12)
 ### Semantic CHAP (Challenge Handshake Authentication Protocol)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-12)
 A critical defense against **Agentic Drift** and mid-session Prompt Injections. Semantic CHAP validates the identity of running subagents using a one-way hashing function. However, unlike protocols that only authenticate once at login, Semantic CHAP *periodically verifies the identity of the AI during transmission*. If an agent is running a long, 20-minute coding task, the Orchestrator will periodically interrupt the JSON WebSocket stream to "challenge" the agent, ensuring its immutable System Prompt has not been covertly overwritten by a malicious game file. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-13)
 ### RADIUS (Remote Agentic Dial-In User Service)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-13)
 When simple, high-speed authentication is needed (for example, a basic in-game NPC chatbot), DevCore utilizes a RADIUS-style protocol. It encrypts the user’s authentication token, but transmits the actual JSON state data (username, accounting, and services) in cleartext to prioritize low latency. Because the data is cleartext, Tier 5 Admins must implement strict timestamping to protect the game engine from **Replay Attacks** (where a cybercriminal intercepts a cleartext JSON command like "Grant 100 gold" and replays it to the server a thousand times).
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-14)
 ### TACACS+ (Terminal Access Control Agentic System)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-14)
 The absolute standard for Tier 5 Super Admins and high-level Orchestrator nodes. TACACS+ uses TCP as its transport protocol and encrypts *all* JSON data—including the WSS payloads, tokens, and accounting variables—between the client and the server. Because Tier 5 Admins must define Agentic Control Lists (ACLs), semantic filters, and rigid sandbox privileges, TACACS+ is the mandatory choice for the `TIER_CORE_ENGINE` where sophisticated, fully encrypted authorization is required.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-15)
 ### Cerberus (The Agentic Ticket System - Kerberos)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-15)
 Translating the traditional Kerberos protocol, Siraugga utilizes the **Cerberus Ticket System** for highly secure, multi-node swarms. Cerberus eliminates the inherently insecure transmission of passwords across the network entirely. It uses a rigorous two-step process:
 1.  **The Ticket-Granting Ticket (TGT):** When an AI subagent is spawned, it does not get raw access to the sandbox. Instead, the central Orchestrator issues the agent a TGT.
 2.  **The Service Ticket:** When the AI actually needs to execute a tool (e.g., `run_command` via `wsl.exe`), it presents its TGT to the Cerberus server, requesting a specific "Service Ticket" for that exact action. 
@@ -172,7 +208,9 @@ Because Cerberus tickets are mathematically timestamped and set to expire within
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-16)
 ## Validating Agentic Access Control Models
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-16)
 
 As established in earlier chapters, authentication simply proves *who* the entity is. **Access Control** determines what that entity is allowed to do. The authentication protocols (TACACS+, Cerberus) directly enforce the two master models of the DevCore universe:
 
@@ -181,13 +219,17 @@ As established in earlier chapters, authentication simply proves *who* the entit
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-17)
 ## Chapter 12 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-17)
 
 Chapter 12 establishes the definitive rules of engagement for identity and access management within the Siraugga framework. In a sprawling, decentralized ecosystem where Tier 2 Modders, external plugins, and hundreds of autonomous AI subagents constantly interact with a live game state, relying on implicit trust is a fatal architectural flaw. 
 
 From the moment an entity spawns or connects, it is subjected to intense cryptographic scrutiny, constrained by geofenced sandboxes, stripped of unnecessary privileges, and mathematically authenticated at every step. By translating standard enterprise authentication protocols into the agentic sphere, DevCore guarantees that every thought, JSON payload, and tool execution is secure, authenticated, and immutable.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_12-SEC-18)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 12 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH12-SEC-18)
 
 To maintain absolute clarity, here is the master translation of traditional cybersecurity terms into their DevCore Agentic equivalents established in this chapter:
 

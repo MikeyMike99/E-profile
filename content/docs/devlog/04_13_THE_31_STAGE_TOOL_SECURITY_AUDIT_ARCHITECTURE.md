@@ -1,10 +1,14 @@
+[//]: # (DOC_ID: SIRA-DEV-04_13 | VERSION: v1.0 | SCOPE: DEV)
+
 # Chapter 04_13: The 31-Stage Tool Security Audit Architecture
 
 An architectural blueprint of Siraugga's **Continuous Tool Security Audit Engine**—the automated 5-stage, 31-check verification pipeline that validates RBAC boundaries, PreToolUse hooks, AST code hygiene, and DLP canary sanitization.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-1)
 ## Architectural Overview & Topology
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-1)
 
 In autonomous agent systems where LLMs generate code, execute terminal commands, and call custom tools, security cannot rely on manual code review. Every tool, plugin, and staged patch must pass through an automated verification gauntlet.
 
@@ -51,7 +55,9 @@ In autonomous agent systems where LLMs generate code, execute terminal commands,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-2)
 ## The 5 Audit Stages Explained
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-2)
 
 1. **Stage 1 (RBAC & Path Security)**:
    - Validates that `RaugusResolver.enforce_path_security()` rejects any Tier 3 developer attempting to read or write Tier 5 server code (`server.py`).
@@ -66,7 +72,9 @@ In autonomous agent systems where LLMs generate code, execute terminal commands,
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-3)
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-3)
 
 In multi-stage security validation, order prevents false positives:
 1. **Verify Static AST Before Dynamic Execution**: Checking AST code hygiene first prevents malicious code from executing during subsequent dynamic stages.
@@ -75,7 +83,9 @@ In multi-stage security validation, order prevents false positives:
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-4)
 ## Reusable Integration Recipe
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-4)
 
 To run the complete 31-stage security audit before deploying any code update:
 
@@ -95,20 +105,29 @@ fi
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-5)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-6)
 
 ### Why does the audit check both AST and runtime hooks?
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-6)
 AST checks find bad code that is written in files. Runtime hooks catch bad inputs that are sent dynamically while the program is running. Together, they provide Defense in Depth.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-7)
 ### What is the "Clean Workspace Purge"?
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-7)
 During Stage 4 and 5, fake secret tokens are logged. The purge routine scans the log files and erases only the test tokens, leaving real security alerts intact.
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-8)
 ### How fast is this audit?
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-8)
 The entire 31-check audit runs in approximately 1.4 seconds. Because it is so fast, Siraugga runs it automatically every time a developer stages an update.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-04_13-SEC-9)
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: SIRA-DOC-04_13-SEC-9)
 - To understand why automated validation is necessary, read [`01_PROBLEMS_ENCOUNTERED/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md`](/docs/devlog/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS).
 - To inspect the primary source code of the auditor, view [`02_SOURCE_EVIDENCE/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE.md`](/docs/devlog/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE).
 - To view diagnostic scan logs covering all 31 checks, visit [`03_DIAGNOSTIC_TESTS/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS.md`](/docs/devlog/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS).

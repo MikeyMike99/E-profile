@@ -1,10 +1,14 @@
+[//]: # (DOC_ID: SIRA-DEV-03_11 | VERSION: v1.0 | SCOPE: DEV)
+
 # Chapter 03_11: Screen Reader DLL & Driver Audit Logs
 
 Diagnostic test execution logs and audit traces evaluating dynamic screen reader DLL extraction, ctypes module loading, and COM thread initialization across Windows environments.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-1)
 ## What We Tested
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-1)
 
 We audited the assistive technology initialization pipeline across two distinct system states:
 - **Test State A (Unbundled Clean System)**: Running the standalone executable on a clean Windows machine without pre-installed developer tools or existing DLL dependencies.
@@ -16,7 +20,9 @@ We audited the assistive technology initialization pipeline across two distinct 
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-2)
 ## Exact Command Run
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-2)
 
 ```bash
 python3 -c "
@@ -46,7 +52,9 @@ os.remove(extracted_path)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-3)
 ## Exact Output Returned
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-3)
 
 ```
 ======================================================
@@ -76,7 +84,9 @@ AUDIT_STATUS: PASS (100% Native NVDA Routing Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-4)
 ## How We Reached Our Conclusion
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-4)
 
 - **Error 126 Confirmed Missing Binary**: State A's log proved that the application was not failing due to bad Python code, but because Windows could not find the native unmanaged C++ DLL on disk.
 - **Embedded Base64 Bypassed Distribution Hell**: In State B, embedding the DLL as a base64 string inside `nvda_client_data.py` completely eliminated the dependency on external installers or manually copying DLL files.
@@ -84,7 +94,9 @@ AUDIT_STATUS: PASS (100% Native NVDA Routing Verified)
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-5)
 ## The "Why Order Matters" Principle
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-5)
 
 In Windows assistive driver binding, initialization sequence controls output routing:
 1. **Extract DLL to Disk Before Output Module Import**: `accessible_output2` checks for DLL presence during module loading. The DLL must exist before the library is imported.
@@ -93,20 +105,29 @@ In Windows assistive driver binding, initialization sequence controls output rou
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-6)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-7)
 
 ### What does "WindowsError [Error 126]" mean?
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-7)
 Error 126 is the Windows operating system error code for `ERROR_MOD_NOT_FOUND`. It means the application requested a DLL file by name, but Windows searched all standard system paths and could not find it.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-8)
 ### Why didn't PyInstaller or Nuitka automatically include the DLL?
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-8)
 Nuitka and PyInstaller analyze Python `import` statements. Because `accessible_output2` loads the DLL dynamically using `ctypes.windll.LoadLibrary("string")` instead of an `import` statement, the compiler cannot detect the file dependency automatically.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-9)
 ### What is a COM apartment?
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-9)
 In Windows, Component Object Model (COM) uses "apartments" to manage thread safety and memory sharing for system services like audio and speech. If a thread doesn't initialize its apartment with `CoInitialize()`, COM refuses all calls.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_11-SEC-10)
 ## Next Steps & Related Chapters
+[//]: # (SECTION_ID: JOSH-DOC-03_11-SEC-10)
 - To understand why assistive speech failed on test PCs, read [`01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md`](/docs/devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS).
 - To inspect the primary source code of the embedded DLL loader, view [`02_SOURCE_EVIDENCE/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE.md`](/docs/devlog/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE).
 - To build the complete accessible speech engine from scratch, follow [`05_FROM_SCRATCH_CREATION_GUIDES/05_14_ACCESSIBLE_SCREEN_READER_SPEECH_MODULE_FROM_SCRATCH.md`](/docs/devlog/05_14_ACCESSIBLE_SCREEN_READER_SPEECH_MODULE_FROM_SCRATCH).

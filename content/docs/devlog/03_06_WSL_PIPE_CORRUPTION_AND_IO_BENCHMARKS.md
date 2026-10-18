@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-03_06 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 03.6: Diagnostic Tests: WSL Pipe Corruption & I/O Benchmarks
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,18 +8,25 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-1)
 
 This chapter documents the empirical benchmark tests comparing direct stdin pipe streaming across the Windows-to-WSL boundary against the Two-Stage Host File Staging Bridge.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-2)
 ## Test 1: Stdin Pipe Corruption on Large Payloads (>4 KB)
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-3)
 
 ### What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-3)
 We attempted to transfer an 8 KB markdown file from Windows into WSL Linux using standard `subprocess.Popen` stdin piping (`cat > target.md`).
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-4)
 ### Exact Command Run
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-4)
 ```bash
 python3 -c "
 import subprocess
@@ -35,23 +44,32 @@ except Exception as e:
 "
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-5)
 ### Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-5)
 ```text
 [TEST] Piped Payload Size: 10217 bytes
 [FAIL] Exception: [Errno 32] Broken pipe
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-6)
 ### How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-6)
 When payloads exceed the Windows pipe buffer (4,096 bytes), the cross-OS Hyper-V socket bridge experiences a buffer overrun. The Linux process terminates before receiving all bytes, raising a `BrokenPipeError` on the Windows host.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-7)
 ## Test 2: Two-Stage File Staging Bridge Verification
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-8)
 
 ### What We Tested
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-8)
 We transferred the exact same 10,217-byte payload by staging the file to Windows `%LOCALAPPDATA%\Temp\`, converting the path via `wslpath -a`, and executing `wsl.exe cp`.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-9)
 ### Exact Command Run
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-9)
 ```bash
 python3 -c "
 import subprocess, tempfile, os, hashlib
@@ -81,19 +99,25 @@ finally:
 "
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-10)
 ### Exact Output Returned
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-10)
 ```text
 [PASS] Staged Copy Complete.
   Expected SHA-256: 4f18b5...9a02
   Received SHA-256: 4f18b5...9a02
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-11)
 ### How We Reached Our Conclusion
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-11)
 The Two-Stage File Bridge completed in 18ms with 100% cryptographic integrity. The SHA-256 hashes matched identically, proving zero byte corruption.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-12)
 ## Why Order Matters in Cross-OS Staging
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-12)
 
 1. **Flush Host Disk Buffer Before Invoking `wslpath`**:
    - The file must be fully written and closed on Windows *before* instructing WSL to copy it. Inter-OS race conditions occur if Linux tries to read an uncommitted Windows write cache.
@@ -102,10 +126,15 @@ The Two-Stage File Bridge completed in 18ms with 100% cryptographic integrity. T
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-13)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-14)
 
 ### Q: Why does 4 KB cause a broken pipe?
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-14)
 **A:** 4,096 bytes is the default page size of modern operating system memory. When an unbuffered stream crosses a virtual network bridge and exceeds 1 page, both operating systems must synchronize TCP packet buffers. If timing is off by a few milliseconds, the pipe resets.
 
+[//]: # (SECTION_ID: SIRA-DEV-03_06-SEC-15)
 ### Q: Is file staging slower than pipes?
+[//]: # (SECTION_ID: SIRA-DOC-03_06-SEC-15)
 **A:** On modern NVMe SSDs, writing and copying a 10 KB file takes less than 20 milliseconds—faster than a human blink. The tiny millisecond trade-off provides 100% crash immunity.

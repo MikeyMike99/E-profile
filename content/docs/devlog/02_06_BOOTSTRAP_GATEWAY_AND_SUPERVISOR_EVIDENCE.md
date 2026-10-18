@@ -1,3 +1,5 @@
+[//]: # (DOC_ID: SIRA-DEV-02_06 | VERSION: v1.0 | SCOPE: DEV)
+
 # Pillar 02.6: Source Evidence: Bootstrap Gateway & Supervisor Architecture
 
 - **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)
@@ -6,7 +8,9 @@
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-1)
 ## Overview
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-1)
 
 This chapter documents verbatim source citations from Siraugga's dual-layer failover and pre-flight self-healing supervisor (`core/bootstrap_gateway.py`).
 
@@ -14,7 +18,9 @@ These citations prove how the system compiles all core engine modules before boo
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-2)
 ## Source 1: Pre-Flight Syntax Compilation Check
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-2)
 
 - **Source File**: `<project_root>/core/bootstrap_gateway.py`
 - **Location**: Lines 83–175
@@ -44,13 +50,17 @@ def run_preflight_checks(base_dir=None, quiet: bool = False) -> tuple:
     return len(errors) == 0, errors
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-3)
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-3)
 1. **Pre-Boot Gating**: Every critical engine file is pre-compiled using `py_compile.compile(..., doraise=True)` before Python attempts to start the web daemon.
 2. **Crash Prevention**: If a syntax error is discovered in an engine script, `run_preflight_checks()` halts the boot sequence, logs the exact line error, and prevents port-binding conflicts.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-4)
 ## Source 2: Dual-Layer WebSocket Proxy (Never Dropping Clients)
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-4)
 
 - **Source File**: `<project_root>/core/bootstrap_gateway.py`
 - **Location**: Lines 486–555
@@ -80,13 +90,17 @@ async def proxy_ws():
         pass
 ```
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-5)
 ### What This Source Proves
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-5)
 1. **Dual-Layer Uptime**: The Gateway listens on Port 5000, while the backend engine runs on Port 5001.
 2. **Zero-Disconnect Failover**: If the backend on Port 5001 crashes or reboots, the Gateway holds the client's browser WebSocket open, reconnects to the revived backend, and resumes data forwarding without the user needing to refresh.
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-6)
 ## Why Order Matters in Gateway Supervision
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-6)
 
 1. **Pre-Flight Syntax Scan Before Port Binding**:
    - `run_preflight_checks()` must succeed *before* calling `app.run(port=5000)`. If you bind the port first and an import fails, the port remains locked in a zombie state by the dying process.
@@ -95,10 +109,15 @@ async def proxy_ws():
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-7)
 ## Beginner Coder Q&A
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-8)
 
 ### Q: What is a Dual-Layer Gateway?
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-8)
 **A:** Instead of connecting browsers directly to the core server, you place a lightweight "Gateway" in front of it. If the core server crashes while testing a new feature, the Gateway stays alive and politely asks the browser to wait while it restarts the core server in the background.
 
+[//]: # (SECTION_ID: SIRA-DEV-02_06-SEC-9)
 ### Q: Why does Port 5000 remain open if the backend crashes?
+[//]: # (SECTION_ID: SIRA-DOC-02_06-SEC-9)
 **A:** Because the Gateway owns Port 5000. The backend runs on private Port 5001. A crash on Port 5001 has zero effect on Port 5000's network socket.

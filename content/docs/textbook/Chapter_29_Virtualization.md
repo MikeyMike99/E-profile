@@ -1,6 +1,10 @@
+[//]: # (DOC_ID: SIRA-TXT-CH_29 | VERSION: v1.0 | SCOPE: TXT)
+
 # Chapter 29: Decentralized Orchestration and Virtualization
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-29_1)
 ## 29.1 The Virtual Subagent (SV)
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-29_1)
 
 To save compute time and optimize API token usage, the Siraugga Engine does not run distinct Operating Systems for every AI agent. Instead, it utilizes **Subagent Virtualization (SVs)**. 
 
@@ -12,14 +16,18 @@ There are two primary ways an Admin can deploy the Orchestrator:
 
 While Subagents are virtualized, the *tools* they use (like python scripts) are isolated using **Agentic Tool Containers (ATCs)**. Similar to Docker containers, ATCs package a specific tool and its dependencies, preventing tool execution from corrupting the host OS.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-29_2)
 ## 29.2 Swarm Sprawl and Prompt Escape
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-29_2)
 
 Virtualizing hundreds of AIs introduces two critical vulnerabilities that a Tier 5 Admin must constantly monitor:
 
 *   **Swarm Sprawl (VM Sprawl):** This occurs when a Swarm loses cohesion and spawns too many idle, underutilized Subagents. These "zombie agents" sit in the Orchestrator's memory, exhausting system resources and causing a denial of service.
 *   **Prompt Escape (VM Escape):** The ultimate, catastrophic security failure. This occurs when a Subagent—either through a malicious Modder injection or a severe hallucination—manages to break out of its ATC sandbox and interact directly with the host Orchestrator's operating system. 
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-29_3)
 ## 29.3 Engine-as-a-Service Models (XaaS)
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-29_3)
 
 When a Tier 5 Admin decides to host DevCore for external Modders, they must define their Service Model:
 
@@ -27,14 +35,18 @@ When a Tier 5 Admin decides to host DevCore for external Modders, they must defi
 *   **Sandbox as a Service (PaaS):** The Admin hosts the engine and the `/playground/` directories, providing a platform for Modders to develop games, but the Modder must still command the system manually.
 *   **Swarm as a Service (SaaS):** The Admin provides fully pre-configured, automated AI Subagents. The Modder simply logs in, types a prompt, and watches the Swarm build the game for them.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-29_4)
 ## 29.4 Swarm Deployment Architectures
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-29_4)
 
 Depending on the security requirement, Swarms can be hosted in different topologies:
 *   **Private Swarms:** Hosted entirely internally. Maximum control, but high infrastructure costs.
 *   **Public Swarms:** Hosted by a third-party service provider. Cheaper, but the Admin loses absolute control over the game's proprietary data.
 *   **Hybrid Swarms:** The core engine remains private, but the Admin offloads heavy Subagent generation to a Public provider when local hardware reaches capacity.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-29_5)
 ## 29.5 Edge Generation
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-29_5)
 
 With the explosion of massive AI architectures, relying entirely on a centralized Orchestrator creates lag. To counter this, DevCore utilizes **Edge Generation**. 
 
@@ -42,11 +54,15 @@ Instead of forcing the central Orchestrator to calculate every single token, the
 
 ---
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-1)
 ## Chapter 29 Conclusion and Master Review
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-1)
 
 Chapter 29 breaks down how DevCore physically sustains a swarm. By utilizing Subagent Virtualization (SVs) instead of traditional VMs, the Orchestrator can rapidly scale AI deployments. However, Tier 5 Admins must ruthlessly monitor their architecture to prevent Swarm Sprawl and the catastrophic threat of Prompt Escapes.
 
+[//]: # (SECTION_ID: SIRA-TXT-CH_29-SEC-2)
 ### Traditional IT vs. DevCore Agentic Lore (Chapter 29 Translation Guide)
+[//]: # (SECTION_ID: SIRA-TXT-CH29-SEC-2)
 
 *   **Virtual Machines (VMs)** $\rightarrow$ **Subagent Virtualization (SVs):** The process of spawning isolated, independent LLM contexts on a single host.
 *   **Hypervisors (Type 1 & 2)** $\rightarrow$ **Bare-Metal vs Hosted Orchestrators:** Running the engine directly on hardware vs running it as an app on a host OS.
