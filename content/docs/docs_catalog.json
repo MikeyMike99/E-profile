@@ -39085,7 +39085,7 @@
     "category": "guides",
     "title": "Antigravity Security & Threat Model Documentation",
     "summary": "When embedding an autonomous AI portal inside developer workflows, game engines, and assistive study environments, standard conversational guardrails are insufficient. Hard architectural controls must prevent sandbox esc...",
-    "word_count": 3816,
+    "word_count": 3823,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
