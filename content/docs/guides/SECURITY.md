@@ -231,6 +231,22 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
 
 ---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-18)
+### 18. Autonomous Deadlock Paradox & Cryptographic Human-in-the-Loop JIT Elevation (CWE-284 / CWE-250 / CWE-863)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-18)
+- **Category**: Defense in Depth / Privilege Management / Anti-Self-Minting.
+- **Methodology**: PBKDF2 HMAC-SHA256 Token Authority, 5-Minute Auto-Purging Leases, Hardware Master Key Binding, & Anti-Self-Minting PreToolUse Guards.
+- **The Paradox**: Under strict Zero-Trust self-protection (`DENIED_SELF_PROTECTION`), core security guards (`raugus_hook.py`, `raugus_resolver.py`, `server.py`) cannot be edited by the AI agent under any circumstances. However, when legitimate security fixes, threat vector remediations, or architectural upgrades must be applied, the system encounters a circular deadlock: the agent cannot apply the verified patch, and allowing the agent to disable the hook or grant itself root privilege would violate the Zero-Trust mandate.
+- **The Vulnerability / Threat**: If the elevation mechanism can be triggered programmatically by the agent (e.g., calling `jit_elevation.py --mint` via `run_command` or fetching `/api/security/jit-elevate` via `read_url_content`), a prompt injection or rogue subagent could autonomously mint root credentials and dismantle security controls (Autonomous Self-Minting Escalation).
+- **The Cryptographic JIT Architecture**:
+  1. **Hardware-Anchored Key Authority (`security/jit_elevation.py`)**: Token generation derives a 32-byte HMAC-SHA256 signing key from the physical host hardware master key (`.devcore_master.key`) using PBKDF2 (100,000 iterations). Tokens are random 32-character hex nonces (`raugus-jit-<32hex>`).
+  2. **Anti-Self-Minting PreToolUse Firewall**: `check_self_protection()` in `raugus_hook.py` permanently blocks autonomous agents from invoking `jit_elevation.py --mint`/`--revoke`, requesting `/api/security/jit-elevate`, or modifying `jit_elevation.py`, `.jit_elevation_lease.json`, and `.devcore_master.key`. Even during active JIT elevation, these authority files remain strictly immutable.
+  3. **Ephemeral 5-Minute Lease Auto-Purge**: Elevation creates an HMAC-signed lease (`.jit_elevation_lease.json`) strictly valid for 300 seconds (`ttl_seconds=300`). Once expired or explicitly revoked via `revoke_jit_token()`, the lease is purged from disk and the security hooks snap back into immutable lock.
+  4. **Multi-Channel Elevation Verification**: JIT elevation is accepted either via active signed lease on disk or an explicit `elevation_token` argument passed to the Raugus Resolver MCP (`write_by_key`).
+  5. **Preflight AST & Snapshot Invariants**: Lifting `DENIED_SELF_PROTECTION` does not disable code hygiene. Every patch applied under JIT elevation still undergoes `ast.parse` syntax compilation and automatic backup snapshotting in `core/backups/`.
+
+---
+
 [//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-9)
 ## 9. Cross-References & System Parallels
 [//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-9)

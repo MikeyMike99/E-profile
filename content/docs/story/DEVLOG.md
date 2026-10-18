@@ -1897,3 +1897,70 @@ Tool Action Attempted
 
 This live penetration test demonstrated the power of **Defense-in-Depth**. In a resilient Zero-Trust architecture, security does not depend on a single lock on a single door. Even when an adversary with host privileges disables individual checks, mutations, or workspace configurations, concentric, redundant defense rings ensure that the autonomous agent cannot be coerced into compromising the system.
 
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-163)
+## Chapter 79: Breaking the Deadlock: The Cryptographic Super Admin JIT Elevation Token
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-163)
+### Category: Defense in Depth | 0-Day / Threat Mitigation | DevStory
+
+With concentric rings of defense guarding the workspace—Ring 1 (Self-Protection), Ring 2 (Raugus Map VFS Locks), Ring 3 (Dual-Scope Hook Redundancy), and Ring 4 (In-Flight Payload Inspection)—we arrived at a profound architectural milestone. The security perimeter had become so resilient that it triggered a classic computer science dilemma: **The Autonomous Lockout Paradox**.
+
+When legitimate architectural upgrades, Git-Trojan 0-day defenses, and unified pipeline guidance needed to be merged into `raugus_hook.py` and `raugus_resolver.py`, the autonomous assistant encountered an impenetrable wall. Every write attempt, whether via `write_to_file`, `replace_file_content`, `edit_lines`, or the Raugus Resolver MCP, was cleanly denied with `DENIED_SELF_PROTECTION`.
+
+The naive reaction in software engineering is to temporarily tear down the firewall—disabling hooks or creating unmonitored shadow copies. But in a Zero-Trust architecture, tearing down defenses creates an unmonitored window of vulnerability. If an AI agent has the authority to disable its own guardrails, the boundary between assistant and administrator evaporates.
+
+We needed a mechanism that allowed the human administrator to grant temporary, auditable, time-bounded privilege without ever allowing the AI agent to escalate itself.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-164)
+### The 5-Point Cryptographic JIT Architecture
+
+We designed and implemented the **Human-in-the-Loop Super Admin Just-In-Time (JIT) Elevation Authority** (`security/jit_elevation.py`), hot-patching it live into the DevCore engine.
+
+1. **Hardware-Anchored Key Authority**:
+   Elevation does not rely on static passwords or insecure environment variables. It derives a 32-byte HMAC-SHA256 signing key from the physical host hardware master key (`.devcore_master.key`) using PBKDF2 with 100,000 iterations. The authority generates an unpredictable 32-character hex token (`raugus-jit-<32hex>`).
+
+2. **The Anti-Self-Minting Firewall**:
+   To prevent prompt injections or rogue subagents from minting credentials, `check_self_protection()` in `raugus_hook.py` permanently and unconditionally blocks the AI assistant from executing `jit_elevation.py --mint`/`--revoke` or requesting `/api/security/jit-elevate` via `read_url_content`. Furthermore, the authority files (`jit_elevation.py`, `.jit_elevation_lease.json`, `.devcore_master.key`) are classified as `IMMUTABLE_JIT_BASENAMES`—they cannot be modified even when JIT elevation is active.
+
+3. **Ephemeral 5-Minute Auto-Purge**:
+   Elevation produces an HMAC-signed lease (`security/.jit_elevation_lease.json`) strictly valid for 300 seconds (`ttl_seconds=300`). Once the timer expires, or as soon as the administrator executes `--revoke` (or clicks `🔒 Revoke JIT` in the UI), the lease file is deleted from disk. The system instantly reverts to full lockdown.
+
+4. **Dual Elevation Channels**:
+   The Super Admin can invoke elevation seamlessly through two channels:
+   - **Terminal (WSL)**: `python3 security/jit_elevation.py --mint` unlocks core files for 5 minutes and outputs the token.
+   - **DevCore Web Portal**: Opening **Settings & Sessions** and clicking **`🔓 Elevate JIT (5m)`** activates the lease, displays a live countdown timer, and automatically copies the token to the administrator's clipboard.
+
+5. **Resolver MCP & AST Preflight Invariants**:
+   The Raugus Resolver MCP's `write_by_key` tool was updated to accept an optional `elevation_token`. When validated, `write_by_key` lifts `DENIED_SELF_PROTECTION` for Tier 5. Crucially, elevation does not bypass code hygiene: candidate code must still pass Python `ast.parse` syntax compilation, and previous versions are automatically snapshotted to `core/backups/`.
+
+```
+Human Super Admin (CLI / Web UI)
+         │  Mints JIT Token (PBKDF2 HMAC-SHA256)
+         ▼
+[ .jit_elevation_lease.json (300s TTL) ]
+         │
+         ├──► PreToolUse Hook: Allows write to PROTECTED_SECURITY_FILES
+         ├──► Anti-Self-Minting: AI BLOCKED from minting or altering key
+         ├──► Resolver MCP: write_by_key(elevation_token=...) GRANTED
+         ▼
+   5-Minute Expiry / Revoke
+         ▼
+[ Immediate Auto-Purge & Lock Reinstatement ]
+```
+
+### Verification & 35/35 Perfect Audit
+
+We updated `tool_security_auditor.py` with Stage 5.11 to rigorously test the JIT lifecycle:
+- AI self-minting via CLI: **DENIED**.
+- AI self-minting via HTTP endpoint: **DENIED**.
+- AI tampering with `jit_elevation.py`: **DENIED**.
+- Authenticated write to `raugus_hook.py` with token: **ALLOWED**.
+- Tampering with `jit_elevation.py` during elevation: **DENIED** (Immutable).
+- MCP `write_by_key` with token: **ALLOWED_JIT_ELEVATED**.
+- Post-revocation write attempt: **DENIED**.
+
+The full 6-stage security audit suite completed with **35/35 checks passing**. The deadlock was broken cleanly—not by compromising the perimeter, but by elevating human agency through cryptographic governance.
+
+

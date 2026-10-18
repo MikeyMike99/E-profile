@@ -1194,7 +1194,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 29169,
+    "word_count": 29813,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2271,6 +2271,30 @@
         "num": "165",
         "title": "Summary of the Multi-Ring Fortress",
         "anchor": "#SIRA-DEV-DEVLOG-SEC-165"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-166",
+        "num": "166",
+        "title": "Chapter 79: Breaking the Deadlock: The Cryptographic Super Admin JIT Elevation Token",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-166"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-167",
+        "num": "167",
+        "title": "Category: Defense in Depth | 0-Day / Threat Mitigation | DevStory",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-167"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-168",
+        "num": "168",
+        "title": "The 5-Point Cryptographic JIT Architecture",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-168"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-169",
+        "num": "169",
+        "title": "Verification & 35/35 Perfect Audit",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-169"
       }
     ],
     "topics": [
@@ -39061,7 +39085,7 @@
     "category": "guides",
     "title": "Antigravity Security & Threat Model Documentation",
     "summary": "When embedding an autonomous AI portal inside developer workflows, game engines, and assistive study environments, standard conversational guardrails are insufficient. Hard architectural controls must prevent sandbox esc...",
-    "word_count": 3484,
+    "word_count": 3816,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -39178,6 +39202,12 @@
         "num": "17",
         "title": "Dual-Scope Hook Redundancy & In-Flight Payload Inspection (Defense-in-Depth)",
         "anchor": "#SIRA-DOC-SEC-SEC-17"
+      },
+      {
+        "id": "SIRA-DOC-SEC-SEC-18",
+        "num": "18",
+        "title": "Autonomous Deadlock Paradox & Cryptographic Human-in-the-Loop JIT Elevation (CWE-284 / CWE-250 / CWE-863)",
+        "anchor": "#SIRA-DOC-SEC-SEC-18"
       },
       {
         "id": "SIRA-DOC-SEC-SEC-9",
