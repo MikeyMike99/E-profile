@@ -1152,7 +1152,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 25671,
+    "word_count": 26574,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2097,6 +2097,36 @@
         "num": "143",
         "title": "The Reflection",
         "anchor": "#SIRA-DOC-LOG-SEC-143"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-144",
+        "num": "144",
+        "title": "Chapter 75: Curated Release Scheduling & In-Place Dual-Persistence Surgery",
+        "anchor": "#SIRA-DOC-LOG-SEC-144"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-145",
+        "num": "145",
+        "title": "The Anti-Overwhelm 5-State Release Lifecycle",
+        "anchor": "#SIRA-DOC-LOG-SEC-145"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-146",
+        "num": "146",
+        "title": "Server-Side In-Place Markdown Surgery",
+        "anchor": "#SIRA-DOC-LOG-SEC-146"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-147",
+        "num": "147",
+        "title": "Dual-Persistence Synchronization & 26-Point Security Verification",
+        "anchor": "#SIRA-DOC-LOG-SEC-147"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-148",
+        "num": "148",
+        "title": "The Reflection",
+        "anchor": "#SIRA-DOC-LOG-SEC-148"
       }
     ],
     "topics": [

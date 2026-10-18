@@ -1607,3 +1607,66 @@ Every `git commit` invocation now intercepts the staged changeset and executes t
 [//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-143)
 
 In accessible software development, format consistency is not an aesthetic luxury; it is an accessibility requirement. A sighted engineer can glance past an inconsistent header or a missing section; a blind engineer relying on screen reader heading hotkeys (`H` and `Shift+H`) is trapped by structural chaos. By automating quality auditing and baking it into Git hooks, we ensured that accessibility standards are defended by machines, freeing the developer to focus purely on building sovereign architecture.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-144)
+## Chapter 75: Curated Release Scheduling & In-Place Dual-Persistence Surgery
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-144)
+
+With the multi-category documentation auditor running clean, we stepped back to look at our platform through the eyes of a first-time visitor. We had successfully cataloged over 315 technical chapters, primers, and devlogs across five distinct projects. But our very thoroughness created an unforeseen psychological hazard: visitor cognitive overwhelm.
+
+Dumping hundreds of deeply technical documents onto a public portal all at once is intimidating. A visitor looking for an accessible developer tool or exploring a sovereign AI platform does not want to wade through 300+ documents on day one. Navigating a massive document tree using a screen reader's virtual cursor is mentally exhausting when every folder contains dozens of uncurated files.
+
+The design mandate was clear and immediate:
+*"I think for visitors I should not overwhelm them with all the chapters at once at release. I as the admin should have a button when I am logged in and I am reviewing the documentation then I should schedule a release for a chapter or document... so that I have more control over what people can see or what they may not have access to. I as admin should be able to edit the files in place, add new chapters, delete chapters and so on right from the server."*
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-145)
+### The Anti-Overwhelm 5-State Release Lifecycle
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-145)
+
+To protect visitors from cognitive fatigue, we implemented a curated release staging subsystem governed by `release_schedule.json`. Instead of a binary public/private toggle, each document progresses through a formal 5-state lifecycle:
+
+1. **`draft` (Default)**: Completely hidden from public visitor indexes and search filters. Direct URL requests by unauthenticated visitors display an accessible, polite holding notice ("Chapter in staging; check back soon").
+2. **`scheduled`**: Assigned a target release timestamp. The chapter remains held as a draft until the system clock passes the scheduled date, preventing premature disclosure.
+3. **`published`**: Fully visible, indexed, searchable, and navigable across the public SPA catalog and cross-reference graph.
+4. **`archived`**: Retired documents removed from active navigation but preserved in an accessible `.archive/` historical vault.
+5. **`redacted`**: Proprietary architectural sections dynamically scrubbed from public display via our multi-tier sensitivity engine while preserving the surrounding educational narrative.
+
+When an admin is logged in, the portal renders visual and auditory status badges next to every chapter, complete with interactive single-click status toggles that update the catalog in real time without restarting the server.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-146)
+### Server-Side In-Place Markdown Surgery
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-146)
+
+Managing release staging across 300+ files is frustrating if every minor typo or chapter addition requires opening a terminal, modifying local git branches, running build scripts, and redeploying. The administrator needed surgical editorial authority directly inside the live web application.
+
+We built an in-place editing suite into `templates/docs.html` and `docs_mod.py`, anchored by four Zero-Trust REST endpoints:
+- **`POST /docs/api/admin/schedule`**: Dynamically toggles chapter release states between draft, scheduled, and published.
+- **`POST /docs/api/admin/save`**: Accepts updated raw markdown payloads and commits them atomically to disk.
+- **`POST /docs/api/admin/create`**: Initializes new chapter markdown files with canonical metadata templates and registers them into the active catalog.
+- **`POST /docs/api/admin/delete`**: Safely moves deprecated chapters into a timestamped `.archive/` directory, preventing accidental data loss.
+
+Crucially, the editor interface avoids complex, inaccessible rich-text JavaScript wysiwygs that hijack screen reader cursor focus. Instead, it relies on a clean, native `<textarea class="raw-markdown-editor">` with standard form controls and instant live CommonMark preview.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-147)
+### Dual-Persistence Synchronization & 26-Point Security Verification
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-147)
+
+A critical vulnerability with in-place web editing in multi-repository architectures is "upstream desynchronization." If an admin edits a chapter directly on the serving web server (`e_profile`), subsequent automated git pulls or sync passes from the master vault (`Central_Docs`) will overwrite those edits or cause merge conflicts.
+
+To solve this, `docs_mod.py` implements **Dual-Persistence Synchronization**. When a save operation executes, the backend writes atomically to both the web serving directory and the upstream `Central_Docs` project path simultaneously. Both repositories remain in lockstep.
+
+To guarantee that this editorial power could never be exploited by external attackers, we authored a comprehensive 26-point security regression test suite in `security_audit.py`:
+- **Stage 1 (RBAC Authorization)**: Verifies that unauthenticated visitors receive strict HTTP 403 Forbidden responses across all admin API endpoints, with zero editorial buttons leaked into the public DOM.
+- **Stage 2 (Path Traversal Defenses)**: Verifies that directory climbing payloads (e.g., `../../etc/passwd`) are rejected by canonical path isolation.
+- **Stage 3 (Staging Invariants)**: Confirms that visitor catalog queries strictly exclude unreleased draft chapters.
+- **Stage 4 (Tagging & Sensitivity)**: Tests that 100% of documents adhere to canonical tripartite ID schemes and dynamic sensitivity tier redaction.
+- **Stage 5 (CRUD Surgery)**: Tests chapter creation, async saving, status toggling, and timestamped archiving.
+- **Stage 6 (Dual Persistence)**: Validates that release schedules and physical files remain byte-identical across both repository roots.
+
+All 26 checks passed with 100% compliance in 3.00 seconds.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-148)
+### The Reflection
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-148)
+
+A true developer platform must respect both its creators and its consumers. Curated release scheduling protects visitors from being swamped by information overload, while in-place dual persistence gives the developer the freedom to edit, stage, and refine technical prose from any browser without fear of breaking synchronization. True sovereignty means having full, friction-free custody over your words, your code, and how they are presented to the world.
