@@ -1,18 +1,18 @@
 {
-    "total_views": 128,
+    "total_views": 144,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f"
     ],
     "paths": {
-        "/docs/api/admin/schedule": 16,
-        "/docs/api/admin/save": 24,
-        "/docs/api/admin/create": 16,
-        "/docs/api/admin/delete": 16,
-        "/docs": 16,
-        "/docs/api/chapter/../../../../etc/passwd/test": 8,
-        "/docs/api/chapter/devlog/../../server": 8,
-        "/docs/../../etc/passwd": 8,
-        "/docs/devlog/../../server": 8,
-        "/docs/eprofile/DEVLOG": 8
+        "/docs/api/admin/schedule": 18,
+        "/docs/api/admin/save": 27,
+        "/docs/api/admin/create": 18,
+        "/docs/api/admin/delete": 18,
+        "/docs": 18,
+        "/docs/api/chapter/../../../../etc/passwd/test": 9,
+        "/docs/api/chapter/devlog/../../server": 9,
+        "/docs/../../etc/passwd": 9,
+        "/docs/devlog/../../server": 9,
+        "/docs/eprofile/DEVLOG": 9
     }
 }

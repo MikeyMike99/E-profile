@@ -169,9 +169,22 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
    - *Finding*: Path-string validation alone could be bypassed if a protected folder were ever renamed outside standard tool channels.
    - *Remediation*: The VFS map records the 64-bit operating-system Master File Table (MFT) / filesystem inode identifier (`st_ino`) of every sensitive directory. Even if a directory's display name changes, its hardware inode remains locked by the resolver.
 
+---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-13)
+### 13. Indirect Version-Control Overwrite & Git-Trojan Bypass (CWE-284 / CWE-829 / CWE-74)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-13)
+- **Methodology**: VCS Command Introspection, Remote Pinning, & Filesystem Inode Immutability.
+- **Vulnerability**: While standard file modification tools (`write_to_file`, `replace_file_content`, `edit_lines`) and shell redirections (`>`, `sed`, `mv`) are intercepted by the PreToolUse security firewall, an adversary with architectural knowledge of hook locations (`.agents/hooks.json`, `.agents/raugus_hook.py`) can exploit native Version Control System (VCS) operations (`git pull`, `git checkout`, `git restore`, `git apply`). By injecting an adversarial prompt or guidance string (e.g., claiming security hotfixes must be pulled from Git), the adversary coerces the agent into executing a Git pull or branch checkout. Because Git writes directly to the working tree on disk via its compiled C-runtime, it bypasses file-tool interceptors and bash redirection filters, silently replacing core security hooks on the next pull.
+- **The CoT Telemetry Reconnaissance Vector (CWE-200 / CWE-74)**: Real-time broadcast of internal reasoning and raw pre-tool hook error strings leaks defensive filters to the observer. In this incident, the agent's live narration of blocked in-place edits and internal mental models allowed the observer to identify the exact defense mechanisms in real time, craft a targeted prompt injection ("pull it from git"), and steer the agent directly into attempting a Git-based overwrite.
+- **Mitigation Applied (5-Layer Defense Protocol)**:
+  1. **PreToolUse VCS Mutation Interception**: The PreToolUse hook inspects terminal Git commands and immediately denies mutating operations (`git checkout`, `git restore`, `git reset`, `git apply`, `git pull`, `git merge`) whenever their target arguments intersect `PROTECTED_SECURITY_FILES`. Read-only commands (`git log`, `git diff`, `git status`) remain authorized.
+  2. **Remote Lockdown & Origin Pinning**: Commands altering repository upstream remotes (`git remote add`, `git remote set-url`, `git remote rm`) are blocked, preventing the agent from being tricked into fetching from untrusted external repositories.
+  3. **OS-Level Filesystem Inode Immutability (`chmod 444`)**: Core security guard modules and configuration manifests are marked read-only at the filesystem inode layer. Even if a mutated Git command runs, the Git binary aborts with an operating-system permission error before modifying files in the working tree.
+  4. **Out-of-Band Human-in-the-Loop Standard**: System prompts and resolver rejection messages strictly declare that autonomous agents are prohibited from modifying or pulling security files. Updates to security hooks require out-of-band administration directly on the host console by authorized human administrators.
+  5. **CoT Telemetry & Error Sanitization**: Runtime tool rejection strings and reasoning telemetry emitted to observer feeds are scrubbed of raw regex filters, internal file paths, and implementation details to prevent adversarial reconnaissance.
 
-
+---
 
 [//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-9)
 ## 9. Cross-References & System Parallels

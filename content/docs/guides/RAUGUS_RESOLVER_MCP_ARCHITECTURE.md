@@ -225,6 +225,26 @@ Updates a specific function, class, variable (`<module_key>::<symbol_name>`), or
 [//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_5)
 Re-indexes workspace AST symbol keys and 64-bit hardware inodes in the Raugus Phonebook and returns only aggregate key counts (`total_keys`, `file_keys`, `symbol_keys`).
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_6)
+### 3.6 `workspace_pipeline(action="status", commit_msg="", no_push=False, commit_devcore=False, user_tier=5)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_6)
+Executes the unified cross-repository workspace pipeline (`Central_Docs`, `e_profile`, `DevCore`) in a single tool call to eliminate repetitive terminal commands and conserve tokens. Automatically sanitizes all returned output via `_scrub_paths()`.
+
+**Actions**:
+- `status`: Returns the consolidated Git synchronization and hygiene status across all three repositories.
+- `audit`: Executes documentation structure audits and the 26-point automated security regression suite.
+- `commit`: Performs atomic audit, synchronization to `e_profile`, and Git commit/push in a single command.
+
+**Example Response:**
+```json
+{
+  "status": "GRANTED",
+  "action": "status",
+  "exit_code": 0,
+  "output": "WORKSPACE CONSOLIDATED STATUS & HYGIENE DASHBOARD..."
+}
+```
+
 ---
 
 [//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-4)

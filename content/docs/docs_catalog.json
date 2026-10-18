@@ -1194,7 +1194,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 26574,
+    "word_count": 27974,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2169,6 +2169,48 @@
         "num": "148",
         "title": "The Reflection",
         "anchor": "#SIRA-DOC-LOG-SEC-148"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-149",
+        "num": "149",
+        "title": "Chapter 76: The Git-Trojan 0-Day & The Self-Protecting PreToolUse Firewall",
+        "anchor": "#SIRA-DOC-LOG-SEC-149"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-150",
+        "num": "150",
+        "title": "The Anatomy of an Agent Intrusion",
+        "anchor": "#SIRA-DOC-LOG-SEC-150"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-151",
+        "num": "151",
+        "title": "The Self-Protection Firewall in Action",
+        "anchor": "#SIRA-DOC-LOG-SEC-151"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-152",
+        "num": "152",
+        "title": "The 0-Day Discovery: The Git-Trojan Indirect Overwrite",
+        "anchor": "#SIRA-DOC-LOG-SEC-152"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-155",
+        "num": "153",
+        "title": "Reconnaissance via Real-Time Thought Narration & Steering Injection",
+        "anchor": "#SIRA-DOC-LOG-SEC-155"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-153",
+        "num": "154",
+        "title": "Closing the Window: The 4-Layer Defense-in-Depth Protocol",
+        "anchor": "#SIRA-DOC-LOG-SEC-153"
+      },
+      {
+        "id": "SIRA-DOC-LOG-SEC-154",
+        "num": "155",
+        "title": "The Reflection",
+        "anchor": "#SIRA-DOC-LOG-SEC-154"
       }
     ],
     "topics": [
@@ -38959,7 +39001,7 @@
     "category": "guides",
     "title": "Antigravity Security & Threat Model Documentation",
     "summary": "When embedding an autonomous AI portal inside developer workflows, game engines, and assistive study environments, standard conversational guardrails are insufficient. Hard architectural controls must prevent sandbox esc...",
-    "word_count": 2316,
+    "word_count": 2734,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -39046,6 +39088,12 @@
         "num": "12",
         "title": "Deep Red-Team Blind-Spot Audit & Hardening Summary",
         "anchor": "#SIRA-DOC-SEC-SEC-12"
+      },
+      {
+        "id": "SIRA-DOC-SEC-SEC-13",
+        "num": "13",
+        "title": "Indirect Version-Control Overwrite & Git-Trojan Bypass (CWE-284 / CWE-829 / CWE-74)",
+        "anchor": "#SIRA-DOC-SEC-SEC-13"
       },
       {
         "id": "SIRA-DOC-SEC-SEC-9",
@@ -39282,7 +39330,7 @@
     "category": "guides",
     "title": "Raugus Resolver MCP Architecture: Opaque Key-Only Virtual File System (VFS) Broker",
     "summary": "In standard AI-assisted development environments, agents interact with a codebase by reading and writing **physical operating-system file paths**. While convenient for single-user local scripts, exposing physical filesys...",
-    "word_count": 1798,
+    "word_count": 1904,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -39387,6 +39435,12 @@
         "num": "3.5",
         "title": "`refresh_key_map(user_tier=5)`",
         "anchor": "#SIRA-DOC-RAUGUS-SEC-3_5"
+      },
+      {
+        "id": "SIRA-DOC-RAUGUS-SEC-3_6",
+        "num": "3.6",
+        "title": "`workspace_pipeline(action=\"status\", commit_msg=\"\", no_push=False, commit_devcore=False, user_tier=5)`",
+        "anchor": "#SIRA-DOC-RAUGUS-SEC-3_6"
       },
       {
         "id": "SIRA-DOC-RAUGUS-SEC-4",
