@@ -1,5 +1,5 @@
 {
-    "total_views": 783,
+    "total_views": 785,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -62,7 +62,8 @@
         "3e6282a42f0d9ec38fc80d72217f63aa",
         "d5accda1867f2594ce979b9f3ed6572a",
         "2a07d775cc80a68bfaaf139c2ee6dc96",
-        "a03bccc5537aacc7c8f20528ff5f4ce9"
+        "a03bccc5537aacc7c8f20528ff5f4ce9",
+        "cb32debd289d6c37e7624a1340044c3f"
     ],
     "paths": {
         "/": 267,
@@ -77,7 +78,7 @@
         "/robots.txt": 47,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
-        "/docs": 19,
+        "/docs": 21,
         "/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": 1,
         "/logout": 9,
         "/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE": 1,
@@ -98,6 +99,10 @@
         "/docs/api/chapter/manifesto/05_The_24_Hour_Crucible": 1,
         "/docs/api/chapter/manifesto/03_The_Forge_of_Sovereignty": 1,
         "/docs/api/chapter/manifesto/04_The_24_Hour_Crucible": 1,
-        "/docs/api/chapter/manifesto/05_The_Quantitative_Era": 1
+        "/docs/api/chapter/manifesto/05_The_Quantitative_Era": 1,
+        "/docs/api/admin/schedule": 2,
+        "/docs/api/admin/save": 2,
+        "/docs/api/admin/create": 2,
+        "/docs/api/admin/delete": 2
     }
 }
