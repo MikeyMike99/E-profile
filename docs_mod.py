@@ -157,8 +157,8 @@ CURATED_NARRATIVE_FLOW = [
     ('manifesto', '02_The_Echoes_Architecture'),
     ('manifesto', '03_The_Forge_of_Sovereignty'),
     ('manifesto', '04_The_24_Hour_Crucible'),
-    ('manifesto', '05_The_Quantitative_Era'),
-    ('story', 'DEVLOG')
+    ('eprofile', 'DEVLOG'),
+    ('manifesto', '05_The_Quantitative_Era')
 ]
 
 def get_prev_next(catalog, category, slug):

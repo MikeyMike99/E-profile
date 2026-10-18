@@ -6,6 +6,10 @@ When I look back at my earliest project folders, it wasn't some grand academic m
 
 I was blind, armed with zero coding background, and trying to build a world I couldn't see. My only guide was a screen reader that kept choking on the command line. To turn *Echoes of the World* into a real, playable universe, I had to stop dreaming in broad strokes and start building actual engineering pipelines from the ground up.
 
+> [!NOTE]
+> **Documentation Scope & Status: Incomplete Architectural Snapshot**  
+> The game engine architecture for *Echoes of the World* remains an active, evolving, and incomplete project. The specifications described here reflect foundational milestones and architectural patterns rather than an exhaustive, finalized production manual.
+
 ---
 
 [//]: # (SECTION_ID: ECHO-MAN-02_THE_ECHOES_ARCH-SEC-1)

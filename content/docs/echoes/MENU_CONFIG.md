@@ -1,7 +1,11 @@
-[//]: # (DOC_ID: ECHO-CORE-MENU_CONFIG | VERSION: v1.3 | SCOPE: PROPRIETARY)
+[//]: # (DOC_ID: ECHO-CORE-MENU_CONFIG | VERSION: v1.4 | SCOPE: PROPRIETARY)
 
 # Echoes of the World: Non-Visual Menu State Machine
 <!-- sensitivity: 3 -->
+
+> [!NOTE]
+> **Documentation Status: Incomplete Architectural Snapshot**  
+> This guide represents an early conceptual snapshot of the menu state machine in *Echoes of the World*. It is **not** an exhaustive production manual. Active menu templates and game interaction handlers remain evolving work-in-progress specifications.
 
 When I built *Echoes of the World*, visual game interfaces were useless to me. A sighted developer designs a menu by dragging buttons, textboxes, and modal panels onto a 2D canvas. When you are blind, a canvas is silent void. 
 
