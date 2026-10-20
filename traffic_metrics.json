@@ -1,10 +1,11 @@
 {
-    "total_views": 946,
+    "total_views": 947,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
         "280fff97ac23ecaf40e34b70bf03bc5d",
-        "3c991838461074e29cf603466d7af39c"
+        "3c991838461074e29cf603466d7af39c",
+        "3427478f374f80b2a0b66bf67bb7d8c2"
     ],
     "paths": {
         "/": 323,
@@ -57,6 +58,7 @@
         "/docs/manifesto/02_The_Echoes_Architecture": 1,
         "/docs/api/admin/release_overview": 4,
         "/docs/api/chapter/echoes/MENU_CONFIG": 1,
-        "/docs/api/admin/batch_release": 1
+        "/docs/api/admin/batch_release": 1,
+        "/docs/echoes/CLASS_WORLD_ARCHITECTURE": 1
     }
 }
