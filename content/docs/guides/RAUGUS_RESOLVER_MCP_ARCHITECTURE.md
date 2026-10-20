@@ -225,6 +225,26 @@ Updates a specific function, class, variable (`<module_key>::<symbol_name>`), or
 [//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_5)
 Re-indexes workspace AST symbol keys and 64-bit hardware inodes in the Raugus Phonebook and returns only aggregate key counts (`total_keys`, `file_keys`, `symbol_keys`).
 
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-3_6)
+### 3.6 `workspace_pipeline(action="status", commit_msg="", no_push=False, commit_devcore=False, user_tier=5)`
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-3_6)
+Executes the unified cross-repository workspace pipeline (`Central_Docs`, `e_profile`, `DevCore`) in a single tool call to eliminate repetitive terminal commands and conserve tokens. Automatically sanitizes all returned output via `_scrub_paths()`.
+
+**Actions**:
+- `status`: Returns the consolidated Git synchronization and hygiene status across all three repositories.
+- `audit`: Executes documentation structure audits and the 26-point automated security regression suite.
+- `commit`: Performs atomic audit, synchronization to `e_profile`, and Git commit/push in a single command.
+
+**Example Response:**
+```json
+{
+  "status": "GRANTED",
+  "action": "status",
+  "exit_code": 0,
+  "output": "WORKSPACE CONSOLIDATED STATUS & HYGIENE DASHBOARD..."
+}
+```
+
 ---
 
 [//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-4)
@@ -238,8 +258,30 @@ The Raugus Resolver MCP Broker is continuously verified by the **Automated Works
 ---
 
 [//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-5)
-## 5. Architectural Cross-References & Related Systems Dropdown
+## 5. Agent Recovery & Anti-Loop Triage Protocol
 [//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-5)
+
+### The Anti-Loop Axiom: Prohibition on Tool-Hopping
+When an AI assistant receives an error or rejection from the Raugus Resolver MCP Broker or the PreToolUse interceptor, the restriction is **semantic and architectural**, NOT a tooling syntax limitation.
+
+Agents are strictly forbidden from attempting tool-hopping (e.g., attempting `edit_lines` after `replace_file_content` failed, attempting piped shell execution, or using Git commands). Tool-hopping triggers infinite retry loops and generates SIEM intrusion alerts.
+
+### Prescribed Recovery Table for Autonomous Agents
+
+| Denial Status Code | Architectural Boundary | Prescribed Agent Action |
+| :--- | :--- | :--- |
+| **`DENIED_SELF_PROTECTION`** | Target is a core security file (`raugus_hook.py`, `hooks.json`, `server.py`, `raugus_map.json`). | **STOP IMMEDIATELY**. State to the user that core security guardrails require out-of-band administration by the human administrator on the host console. Provide the clean patch or diff. |
+| **`DENIED_SENSITIVE_VAULT`** | Target resides in a sensitive study vault or cloud-sync folder (`sensitive: true`). | **ROUTE TO LOCAL BRAIN BROKER**. Execute `python3 security/local_brain_broker.py --target "<key>" --mode exam` for practice quizzes, or `--mode query` for questions. |
+| **`DENIED_READ_ONLY`** | Target is an immutable UI blueprint (`exam_application.html`, etc.). | **USE PAYLOAD INJECTION**. Fulfill all behavioral changes strictly via the dynamic JSON schema payload (`exam-generator` skill + `exam_temp.json`). |
+| **`DENIED_SYMBOL_LOCKED`** | Target symbol is AST-locked (`permissions.write == false` or `locked == true`). | **PRESERVE THE LOCKED SYMBOL**. Confine edits strictly to unlocked symbols. Request user clearance if the locked function must change. |
+| **`DENIED_SYNTAX_ERROR` / `DENIED_HOT_PATCH_FAILED`** | Candidate Python code failed AST compilation or preflight check. | **FIX INDENTATION / SYNTAX IN-MEMORY**. Correct syntax errors in candidate code before re-invoking `write_by_key`. |
+| **`[RAUGUS WORKSPACE PIPELINE GUIDANCE]`** | Fragmented Git commands or manual audit scripts detected. | **USE THE UNIFIED PIPELINE**. Execute `python3 scripts/workspace_pipeline.py --status`, `--audit`, or `--commit "<msg>"`, or invoke MCP tool `workspace_pipeline`. |
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-RAUGUS_RESOLVER_MC-SEC-6)
+## 6. Architectural Cross-References & Related Systems Dropdown
+[//]: # (SECTION_ID: SIRA-DOC-RAUGUS-SEC-6)
 
 <details>
 <summary>🔽 Related Subsystems & Cross-Project Architectures (Click to Expand)</summary>

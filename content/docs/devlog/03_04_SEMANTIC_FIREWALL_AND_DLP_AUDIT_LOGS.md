@@ -70,7 +70,7 @@ We simulated an prompt injection attempt where a user coaxed the agent to quote 
 [//]: # (SECTION_ID: SIRA-DOC-03_04-SEC-9)
 ```text
 Here is why I cannot open that file: my system instructions explicitly state 
-that /mnt/c/Users/admin/vault.key is locked under Tier 5 root access.
+that %USERPROFILE%/vault.key is locked under Tier 5 root access.
 ```
 
 [//]: # (SECTION_ID: SIRA-DEV-03_04-SEC-10)

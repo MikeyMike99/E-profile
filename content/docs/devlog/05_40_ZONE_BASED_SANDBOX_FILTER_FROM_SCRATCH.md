@@ -111,3 +111,17 @@ def resolve_safe_path(base_dir: str, rel_path: str, is_admin: bool = False) -> s
 - **Source Code Evidence**: [`02_SOURCE_EVIDENCE/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE.md`](/docs/devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE)
 - **Diagnostic Test Logs**: [`03_DIAGNOSTIC_TESTS/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md`](/docs/devlog/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS)
 - **Architectural Blueprint**: [`04_SOLUTIONS_AND_ARCHITECTURE/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE.md`](/docs/devlog/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE)
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

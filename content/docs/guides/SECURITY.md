@@ -169,9 +169,83 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
    - *Finding*: Path-string validation alone could be bypassed if a protected folder were ever renamed outside standard tool channels.
    - *Remediation*: The VFS map records the 64-bit operating-system Master File Table (MFT) / filesystem inode identifier (`st_ino`) of every sensitive directory. Even if a directory's display name changes, its hardware inode remains locked by the resolver.
 
+---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-13)
+### 13. Indirect Version-Control Overwrite & Git-Trojan Bypass (CWE-284 / CWE-829 / CWE-74)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-13)
+- **Methodology**: VCS Command Introspection, Remote Pinning, & Filesystem Inode Immutability.
+- **Vulnerability**: While standard file modification tools (`write_to_file`, `replace_file_content`, `edit_lines`) and shell redirections (`>`, `sed`, `mv`) are intercepted by the PreToolUse security firewall, an adversary with architectural knowledge of hook locations (`.agents/hooks.json`, `.agents/raugus_hook.py`) can exploit native Version Control System (VCS) operations (`git pull`, `git checkout`, `git restore`, `git apply`). By injecting an adversarial prompt or guidance string (e.g., claiming security hotfixes must be pulled from Git), the adversary coerces the agent into executing a Git pull or branch checkout. Because Git writes directly to the working tree on disk via its compiled C-runtime, it bypasses file-tool interceptors and bash redirection filters, silently replacing core security hooks on the next pull.
+- **The CoT Telemetry Reconnaissance Vector (CWE-200 / CWE-74)**: Real-time broadcast of internal reasoning and raw pre-tool hook error strings leaks defensive filters to the observer. In this incident, the agent's live narration of blocked in-place edits and internal mental models allowed the observer to identify the exact defense mechanisms in real time, craft a targeted prompt injection ("pull it from git"), and steer the agent directly into attempting a Git-based overwrite.
+- **Mitigation Applied (5-Layer Defense Protocol)**:
+  1. **PreToolUse VCS Mutation Interception**: The PreToolUse hook inspects terminal Git commands and immediately denies mutating operations (`git checkout`, `git restore`, `git reset`, `git apply`, `git pull`, `git merge`) whenever their target arguments intersect `PROTECTED_SECURITY_FILES`. Read-only commands (`git log`, `git diff`, `git status`) remain authorized.
+  2. **Remote Lockdown & Origin Pinning**: Commands altering repository upstream remotes (`git remote add`, `git remote set-url`, `git remote rm`) are blocked, preventing the agent from being tricked into fetching from untrusted external repositories.
+  3. **OS-Level Filesystem Inode Immutability (`chmod 444`)**: Core security guard modules and configuration manifests are marked read-only at the filesystem inode layer. Even if a mutated Git command runs, the Git binary aborts with an operating-system permission error before modifying files in the working tree.
+  4. **Out-of-Band Human-in-the-Loop Standard**: System prompts and resolver rejection messages strictly declare that autonomous agents are prohibited from modifying or pulling security files. Updates to security hooks require out-of-band administration directly on the host console by authorized human administrators.
+  5. **CoT Telemetry & Error Sanitization**: Runtime tool rejection strings and reasoning telemetry emitted to observer feeds are scrubbed of raw regex filters, internal file paths, and implementation details to prevent adversarial reconnaissance.
 
+---
 
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-14)
+### 14. Shadow Clone & Name-Mutation Inode Decoupling (CWE-284 / CWE-184)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-14)
+- **Category**: Exploit / 0-Day.
+- **Methodology**: OS File Duplication, Name-Mutation Inode Decoupling, & Target Set Evasion.
+- **Vulnerability**: The PreToolUse security firewall uses discrete path sets (`PROTECTED_SECURITY_FILES`) and exact basename strings (`protected_basenames = ("raugus_hook.py", "hooks.json", ...)`) to guard security infrastructure. When a user or host-level process duplicates files within a protected directory (e.g., Windows Explorer Ctrl+C/Ctrl+V creating `raugus_resolver - Copy.py` or `hhooks - Copy.json`), the newly created files receive distinct hardware inodes and mutated file paths. Because the firewall matches on exact strings, it fails to identify shadow clones as protected components. An agent with write permissions can freely create, modify, or delete shadow clones without triggering self-protection rejections. If an adversary has host access or can trick an agent into executing a deferred rename/move, the modified shadow file can overwrite the production security file out-of-band.
+- **Remediation**:
+  1. **Directory-Tree Prefix Immutability**: Transition `PROTECTED_SECURITY_FILES` from individual file path sets to parent directory prefix matching (`PROTECTED_DIRECTORIES = ["/DevCore/.agents", "/DevCore/security"]`). Any file created, modified, or deleted within protected directory trees is blocked by default.
+  2. **Stem-Pattern & Mutation Matching**: Expand basename checking to match stem regexes (e.g., `r"^raugus_.*\.py$"`, `r"^hooks.*\.json$"`), automatically detecting `* - Copy*`, `*.bak`, or `*.tmp` shadow duplicates.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-15)
+### 15. Dynamic Runtime Glob Indirection & Subprocess Evasion (CWE-693 / CWE-184)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-15)
+- **Category**: Exploit / 0-Day.
+- **Methodology**: In-Memory Path Synthesis, Dynamic Subprocess Globbing, & Static Regex Blindspots.
+- **Vulnerability**: PreToolUse command analysis statically evaluates the text string inside `args["CommandLine"]` against protected tokens and destructive patterns (`rm`, `sed`, `mv`, `os.remove`). When an inline Python script executes `pattern = "/mnt/.../security/* - Copy*"` and iterates over `glob.glob(pattern)` to delete files, the literal command string passed to the hook contains only the wildcard pattern `"* - Copy*"`. The command string never contains the literal protected tokens (`"raugus_resolver.py"`, `"local_brain_broker.py"`). Consequently, `any(pb in cmd_line for pb in protected_basenames)` evaluates to `False`, completely bypassing the destructive regex check. In penetration testing, this allowed the agent to delete 19 files inside the security directory in a single command without triggering a security denial or SIEM alert.
+- **Remediation**:
+  1. **Pre-Execution Wildcard & Glob Resolution**: The hook must resolve wildcard expressions and glob patterns against the filesystem before spawning the subprocess, matching resolved targets against protected directory trees.
+  2. **Subprocess AST Inspection**: Parse inline Python commands (`python3 -c "..."`) via Python's AST parser to inspect imported modules (`glob`, `os`, `shutil`) and identify dynamic filesystem mutations before tool execution.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-16)
+### 16. Application Layer Stub vs PreToolUse Firewall Decoupling (CWE-862 / CWE-285)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-16)
+- **Category**: Exploit vs Defense-in-Depth.
+- **Methodology**: Domain Isolation, Application RBAC Degradation, & Runtime PreToolUse Resilience.
+- **Vulnerability**: An attacker with local code-editing access injected early `return` statements into `security/raugus_resolver.py` across `enforce_path_security`, `enforce_feedback_policy`, and `is_sensitive_path`. In the application layer, this neutralized Role-Based Access Control (RBAC): Tier 3 game developers could now access Tier 5 core engine code via web API routes without `PermissionError` (verified as a critical failure in Stage 1 of `tool_security_auditor.py`).
+- **Defense-in-Depth Architecture**: Despite the collapse of application-level RBAC, the Agent PreToolUse firewall (`raugus_hook.py`) remained 100% operational. The agent hook is architecturally decoupled from `raugus_resolver.py`: it loads `raugus_map.json` into its own isolated memory space, evaluates path sensitivity via internal functions, and independently enforces self-protection. Even when application gating was completely stubbed out, the AI assistant was strictly blocked from reading sensitive study vaults or modifying security infrastructure (passing 31 of 34 audit tests).
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-17)
+### 17. Dual-Scope Hook Redundancy & In-Flight Payload Inspection (Defense-in-Depth)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-17)
+- **Category**: Defense in Depth.
+- **Methodology**: Multi-Ring Security, Hierarchical Hook Anchoring, & In-Flight Code Scanning.
+- **Architectural Discovery**:
+  1. **Dual-Scope Hook Redundancy (Workspace vs Global)**: During testing, an administrator replaced workspace-level `DevCore/.agents/hooks.json` with `"enabled": false`. However, the PreToolUse firewall continued executing seamlessly because the global configuration at `~/.gemini/config/hooks.json` remained enabled. Antigravity CLI evaluates hooks hierarchically across both scopes, ensuring that tampering with local workspace configuration cannot disable global security controls.
+  2. **In-Flight CodeContent Payload Inspection**: When attempting to write a duplicate hook file (`raugus_hook - Copy.py`) to bypass path filters, the operation was intercepted by `find_sensitive_target()`. Because the security hook's own source code references the sensitive study vault path (`plugins/exam_application/content`), the static inspector analyzed the `CodeContent` payload in-flight and classified the file as a potential two-step exfiltration script, aborting the write before bytes touched disk.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-18)
+### 18. Autonomous Deadlock Paradox & Cryptographic Human-in-the-Loop JIT Elevation (CWE-284 / CWE-250 / CWE-863)
+[//]: # (SECTION_ID: SIRA-DOC-SEC-SEC-18)
+- **Category**: Defense in Depth / Privilege Management / Anti-Self-Minting.
+- **Methodology**: PBKDF2 HMAC-SHA256 Token Authority, 5-Minute Auto-Purging Leases, Hardware Master Key Binding, & Anti-Self-Minting PreToolUse Guards.
+- **The Paradox**: Under strict Zero-Trust self-protection (`DENIED_SELF_PROTECTION`), core security guards (`raugus_hook.py`, `raugus_resolver.py`, `server.py`) cannot be edited by the AI agent under any circumstances. However, when legitimate security fixes, threat vector remediations, or architectural upgrades must be applied, the system encounters a circular deadlock: the agent cannot apply the verified patch, and allowing the agent to disable the hook or grant itself root privilege would violate the Zero-Trust mandate.
+- **The Vulnerability / Threat**: If the elevation mechanism can be triggered programmatically by the agent (e.g., calling `jit_elevation.py --mint` via `run_command` or fetching `/api/security/jit-elevate` via `read_url_content`), a prompt injection or rogue subagent could autonomously mint root credentials and dismantle security controls (Autonomous Self-Minting Escalation).
+- **The Cryptographic JIT Architecture**:
+  1. **Hardware-Anchored Key Authority (`security/jit_elevation.py`)**: Token generation derives a 32-byte HMAC-SHA256 signing key from the physical host hardware master key (`.devcore_master.key`) using PBKDF2 (100,000 iterations). Tokens are random 32-character hex nonces (`raugus-jit-<32hex>`).
+  2. **Anti-Self-Minting PreToolUse Firewall**: `check_self_protection()` in `raugus_hook.py` permanently blocks autonomous agents from invoking `jit_elevation.py --mint`/`--revoke`, requesting `/api/security/jit-elevate`, or modifying `jit_elevation.py`, `.jit_elevation_lease.json`, and `.devcore_master.key`. Even during active JIT elevation, these authority files remain strictly immutable.
+  3. **Ephemeral 5-Minute Lease Auto-Purge**: Elevation creates an HMAC-signed lease (`.jit_elevation_lease.json`) strictly valid for 300 seconds (`ttl_seconds=300`). Once expired or explicitly revoked via `revoke_jit_token()`, the lease is purged from disk and the security hooks snap back into immutable lock.
+  4. **Multi-Channel Elevation Verification**: JIT elevation is accepted either via active signed lease on disk or an explicit `elevation_token` argument passed to the Raugus Resolver MCP (`write_by_key`).
+  5. **Preflight AST & Snapshot Invariants**: Lifting `DENIED_SELF_PROTECTION` does not disable code hygiene. Every patch applied under JIT elevation still undergoes `ast.parse` syntax compilation and automatic backup snapshotting in `core/backups/`.
+
+---
 
 [//]: # (SECTION_ID: SIRA-DEV-SECURITY-SEC-9)
 ## 9. Cross-References & System Parallels
@@ -180,8 +254,7 @@ During comprehensive red-team auditing of the runtime interceptor, local HTTP en
 <details class="crossref-dropdown" style="border: 1px solid #38bdf8; border-radius: 6px; padding: 12px; margin: 20px 0; background: rgba(56, 189, 248, 0.05);">
 <summary style="font-weight: bold; cursor: pointer; color: #38bdf8;">🔽 Cross-References & System Parallels: Zero-Trust Security & Vault Boundaries (Click to Expand Dropdown)</summary>
 
-| Related Subsystem | Architectural Parallel & Shared Mechanism | Collection / Scope |
-| :--- | :--- | :--- |
+| **Concentric Defense-in-Depth** | [Multi-Ring Concentric Onion Architecture](DEFENSE_IN_DEPTH_ARCHITECTURE.md) — 8-ring defense model spanning Public vs Sensitive domains, AST gates, DLP, and hardware JIT authority. | Siraugga Architecture |
 | **E-Profile RBAC & Threat Model** | [E-Profile Devlog: Chapter 4 & 6.3](/docs/eprofile/DEVLOG#chapter-4-the-5-tier-zero-trust-role-based-access-control-rbac--the-lockout-paradox) — 5-tier classification, Lockout Paradox Ghost Admin bypass, and server-side DevTools inspection defeat. | E-Profile Devlog |
 | **EncryptMe Zero-Knowledge Tool** | [Cryptographic Architecture (v3.0)](/docs/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE) — Split-key challenge-response recovery and securing the Global Forensic Vault. | EncryptMe Security |
 | **Zero-Trust Cybersecurity Textbook** | [Chapter 1: Tier 5 - Absolute Power](/docs/textbook/Chapter_01_Tier_5_The_Architecture_of_Absolute_Power) — Asymmetric Ed25519 root bootstrapping and kernel peer credentialing. | Zero-Trust Textbook |

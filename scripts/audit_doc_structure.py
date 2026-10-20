@@ -109,29 +109,31 @@ def detect_document_category(file_path: Path, content: str) -> str:
     ):
         return "technical"
 
-    # 3. DIY / From-Scratch Creation Guides
+    # 3. Devlog Pillars (Inside devlog folder or pillar-numbered files)
+    if "devlog" in path_str:
+        if filename.startswith("00_") or "primer" in filename or "glossary" in filename:
+            return "devlog_p00"
+        if "01_problems" in path_str or filename.startswith("01_") or "bug_" in filename:
+            return "devlog_p01"
+        if "02_source" in path_str or filename.startswith("02_") or "source_" in filename:
+            return "devlog_p02"
+        if "03_diagnostic" in path_str or filename.startswith("03_") or "test_" in filename:
+            return "devlog_p03"
+        if "04_solutions" in path_str or filename.startswith("04_") or "blueprint" in filename:
+            return "devlog_p04"
+        if "05_from_scratch" in path_str or filename.startswith("05_") or "from_scratch" in path_str:
+            return "diy"
+        return "devlog"
+
+    # 4. DIY / From-Scratch Creation Guides (Outside devlog folder)
     if (
-        "05_" in filename
+        filename.startswith("05_")
         or "from_scratch" in path_str
         or "creation_guide" in filename
         or "bat_file_creation" in filename
         or ("blank notepad" in text_sample and "line by line" in text_sample)
     ):
         return "diy"
-
-    # 4. Devlog Pillars (Inside devlog folder or pillar-numbered files)
-    if "devlog" in path_str or "04_26" in filename:
-        if "00_" in filename or "primer" in filename or "glossary" in filename:
-            return "devlog_p00"
-        if "01_" in filename or "problems" in path_str or "bug_" in filename:
-            return "devlog_p01"
-        if "02_" in filename or "evidence" in path_str or "source_" in filename:
-            return "devlog_p02"
-        if "03_" in filename or "diagnostics" in path_str or "test_" in filename:
-            return "devlog_p03"
-        if "04_" in filename or "solutions" in path_str or "blueprint" in filename:
-            return "devlog_p04"
-        return "devlog"
 
     # 5. General Guides
     if "guides" in path_str:
@@ -185,7 +187,15 @@ class DocStructureAuditor:
     def _check_h1_title(self, lines: List[str], issues: List[AuditIssue]):
         h1_count = 0
         h1_line = None
+        in_code_block = False
         for idx, line in enumerate(lines):
+            s_line = line.strip()
+            if s_line.startswith("```"):
+                in_code_block = not in_code_block
+                continue
+            if in_code_block:
+                continue
+
             # Exclude code blocks or comments
             if line.startswith("# ") and not line.startswith("## "):
                 h1_count += 1
@@ -285,7 +295,10 @@ class DocStructureAuditor:
         text_lower = content.lower()
 
         # 1. Blank notepad / starting from scratch
-        if not any(k in text_lower for k in ["blank notepad", "blank editor", "blank file", "from scratch", "from a blank"]):
+        has_blank = any(k in text_lower for k in ["blank notepad", "blank editor", "blank file", "from scratch", "from a blank"]) or (
+            "blank" in text_lower and any(w in text_lower for w in ["notepad", "editor", "window", "file", "script", "document"])
+        )
+        if not has_blank:
             issues.append(AuditIssue(
                 "DIY-BLANK-NOTEPAD",
                 IssueSeverity.CRITICAL,
@@ -451,13 +464,84 @@ def auto_fix_document(file_path: Path) -> bool:
         # 2. Remediate leaked paths using generic placeholders
         for pat, repl in PATH_REPLACEMENTS:
             if pat.search(line):
-                line = pat.sub(repl, line)
+                line = pat.sub(lambda m, r=repl: r, line)
                 modified = True
 
         new_lines.append(line)
 
+    remediated_content = "\n".join(new_lines) + "\n"
+    category = detect_document_category(file_path, remediated_content)
+    text_lower = remediated_content.lower()
+
+    if category == "diy":
+        appended_sections = []
+
+        # 0. Blank editor notice if missing
+        has_blank = any(k in text_lower for k in ["blank notepad", "blank editor", "blank file", "from scratch", "from a blank"]) or (
+            "blank" in text_lower and any(w in text_lower for w in ["notepad", "editor", "window", "file", "script", "document"])
+        )
+        if not has_blank:
+            blank_notice = "\n> [!NOTE] Starting From Scratch\n> Open a blank editor window (such as Notepad, TextEdit, or nano) or create a fresh blank file in your terminal before building this component.\n"
+            if "## 1." in remediated_content:
+                remediated_content = remediated_content.replace("## 1.", blank_notice + "\n## 1.", 1)
+            elif "## Overview" in remediated_content:
+                remediated_content = remediated_content.replace("## Overview", blank_notice + "\n## Overview", 1)
+            else:
+                appended_sections.append(blank_notice)
+            modified = True
+
+        # 1. CRLF / LF line endings warning if missing
+        if not any(k in text_lower for k in ["crlf", "line ending", "line-ending", "\\r\\n", "unix line ending"]):
+            appended_sections.append(
+                "\n> [!WARNING] Line Ending Advisory (CRLF vs LF)\n"
+                "> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). "
+                "Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.\n"
+            )
+            modified = True
+
+        # 2. 'Why Order Matters' if missing
+        if not any(k in text_lower for k in ["order matters", "why order matters", "sequence matters", "top to bottom", "order of operations"]):
+            appended_sections.append(
+                "\n---\n\n"
+                "## Why Order Matters\n\n"
+                "Every instruction and line in this creation guide follows a strict sequence:\n"
+                "1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.\n"
+                "2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.\n"
+                "3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.\n"
+            )
+            modified = True
+
+        # 3. 10-Second Verification Checklist if missing
+        if not any(k in text_lower for k in ["verification checklist", "10-second verification", "checklist"]):
+            appended_sections.append(
+                "\n---\n\n"
+                "## 10-Second Verification Checklist\n\n"
+                "To verify that your newly created file is functioning properly:\n"
+                "- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.\n"
+                "- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.\n"
+                "- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.\n"
+            )
+            modified = True
+
+        # 4. Beginner Coder Q&A if missing
+        if "beginner coder q&a" not in text_lower and "beginner q&a" not in text_lower:
+            appended_sections.append(
+                "\n---\n\n"
+                "## Beginner Coder Q&A\n\n"
+                "### Q1: What should I do if my script fails with 'Permission Denied'?\n"
+                "**A:** Grant executable permissions on Linux or WSL using `chmod +x <filename>`, or verify that your terminal is running inside the intended virtual environment.\n\n"
+                "### Q2: Why does my file report syntax errors on lines that look correct?\n"
+                "**A:** This is almost always caused by Windows carriage return line endings (`CRLF`). In your text editor, switch the line ending setting to `LF` (Unix) and re-save the file.\n\n"
+                "### Q3: How do I test the file without modifying live data?\n"
+                "**A:** Review the 10-Second Verification Checklist above to run safe inspection commands before integrating the file into production.\n"
+            )
+            modified = True
+
+        if appended_sections:
+            remediated_content = remediated_content.rstrip() + "\n" + "\n".join(appended_sections) + "\n"
+
     if modified:
-        file_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+        file_path.write_text(remediated_content, encoding="utf-8")
         return True
     return False
 

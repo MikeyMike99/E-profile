@@ -181,3 +181,17 @@ A: Yes! Because it only loads 100 lines at a time, it uses the exact same tiny a
 
 **Q: What does `event.mod & pygame.KMOD_CTRL` check?**  
 A: It verifies that the Control key was held down while pressing 'F', enabling the standard `Ctrl + F` search shortcut.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

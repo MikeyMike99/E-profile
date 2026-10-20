@@ -239,3 +239,17 @@ In real-world applications, logs are written in chunks. If the watcher reads hal
 - To understand why standard Python file reading failed, read [`01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md`](/docs/devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS).
 - To inspect the primary source code implementation, view [`02_SOURCE_EVIDENCE/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE.md`](/docs/devlog/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE).
 - To explore the architectural deep dive, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_10_ZERO_TRUST_SUBAGENT_AUDIO_EVENT_ARCHITECTURE.md`](/docs/devlog/04_10_ZERO_TRUST_SUBAGENT_AUDIO_EVENT_ARCHITECTURE).
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

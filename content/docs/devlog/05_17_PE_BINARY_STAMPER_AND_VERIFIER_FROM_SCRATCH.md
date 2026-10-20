@@ -122,3 +122,13 @@ A: No. Because the trailer is encrypted with AES-128 via Fernet, tampering with 
 
 **Q: Where is this used in the Siraugga pipeline?**  
 A: The build pipeline generates one master `.exe` via Nuitka, and stamping deploys custom tier configurations (`dev`, `mod`, `admin`) in milliseconds.
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

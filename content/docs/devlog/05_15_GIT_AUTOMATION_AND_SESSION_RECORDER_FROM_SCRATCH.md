@@ -15,7 +15,7 @@ We are creating `helpers.sh`—a shell utility that provides automated SSH agent
 [//]: # (SECTION_ID: SIRA-ARCH-05_15-SEC-2)
 ### Beginner Safety Directives
 [//]: # (SECTION_ID: SIRA-DOC-05_15-SEC-2)
-1. **Always Resolve Repository Root Dynamically**: Never hardcode paths like `/home/developer/repo`. Use `$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)`.
+1. **Always Resolve Repository Root Dynamically**: Never hardcode paths like `$HOME/repo`. Use `$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)`.
 2. **Clear Conflicting Aliases**: Shell aliases can override function definitions. We must `unalias` target command names at the top of the file.
 3. **Check Working Tree Before Merging**: Always inspect `git status --porcelain` before executing `git pull` or `git checkout`.
 
@@ -271,3 +271,17 @@ If you are offline, `git fetch` will fail gracefully, and the script will skip t
 - To understand why automated Git scripts fail on branch merges, read [`01_PROBLEMS_ENCOUNTERED/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md`](/docs/devlog/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS).
 - To inspect primary source citations, view [`02_SOURCE_EVIDENCE/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE.md`](/docs/devlog/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE).
 - To view diagnostic test logs of automated sync and merge runs, visit [`03_DIAGNOSTIC_TESTS/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS.md`](/docs/devlog/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS).
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

@@ -144,3 +144,17 @@ A: The game bridge's connection fails gracefully with `ConnectionRefused`. The g
 
 **Q: How does the AI know where the player is located?**  
 A: The `send_game_telemetry()` function packages relevant game state (health, zone, active quest, inventory) into a JSON frame that the AI includes in its reasoning prompt.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+

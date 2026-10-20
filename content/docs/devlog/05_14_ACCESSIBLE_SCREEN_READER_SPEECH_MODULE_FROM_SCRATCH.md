@@ -241,3 +241,17 @@ Initializing the speech system takes 50–100 milliseconds. Storing the speaker 
 - To understand why assistive speech failed on test PCs, read [`01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md`](/docs/devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS).
 - To inspect primary source citations, view [`02_SOURCE_EVIDENCE/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE.md`](/docs/devlog/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE).
 - To read the architectural overview, visit [`04_SOLUTIONS_AND_ARCHITECTURE/04_12_ACCESSIBLE_AUDIO_OVERLAY_AND_SPEECH_ARCHITECTURE.md`](/docs/devlog/04_12_ACCESSIBLE_AUDIO_OVERLAY_AND_SPEECH_ARCHITECTURE).
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## Why Order Matters
+
+Every instruction and line in this creation guide follows a strict sequence:
+1. **Environment & Constants First**: Defining global configurations and imports before execution prevents unresolved symbol references.
+2. **Subsystem Dependencies**: Core logic functions rely on constructor initialization and prerequisite file structures being ready beforehand.
+3. **Execution Guardrails**: Testing, invocation, and verification commands must only be run once all preceding code has been written and saved cleanly.
+

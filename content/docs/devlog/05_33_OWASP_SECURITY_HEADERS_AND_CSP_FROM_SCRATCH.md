@@ -119,3 +119,17 @@ A: Because Tailwind CSS provides dynamic, accessible styling for the portal. Whi
 
 **Q: How do I test that headers are working?**  
 A: Run `curl -I http://127.0.0.1:5000/` in your terminal. You will see `X-Frame-Options`, `X-Content-Type-Options`, and `Content-Security-Policy` in the response headers.
+
+> [!WARNING] Line Ending Advisory (CRLF vs LF)
+> If you are authoring this file on Windows for execution within Linux or WSL, ensure your text editor saves with Unix line endings (`LF`). Windows carriage returns (`CRLF`) will cause bash and Python interpreters to fail with unexpected syntax errors.
+
+
+---
+
+## 10-Second Verification Checklist
+
+To verify that your newly created file is functioning properly:
+- [ ] Confirm the file is saved with the exact filename and correct extension in the target directory.
+- [ ] Run `python3 <filename> --help` or execute the script in dry-run mode to verify clean startup.
+- [ ] Inspect console output to confirm there are no syntax errors or missing module tracebacks.
+
