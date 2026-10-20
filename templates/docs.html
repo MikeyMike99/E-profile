@@ -1538,6 +1538,12 @@
         color: #fff;
     }
 
+    .admin-btn.btn-upload-file {
+        background: rgba(0, 243, 255, 0.12);
+        color: var(--accent);
+        border-color: rgba(0, 243, 255, 0.35);
+    }
+
     .admin-btn.btn-create {
         background: var(--accent);
         color: #000;
@@ -2049,34 +2055,6 @@
             <!-- VIEW 1: DEDICATED PORTAL LANDING PAGE -->
             <section class="docs-landing-view" id="docs-landing-view" style="{{ 'display: block;' if is_landing else 'display: none;' }}" aria-label="Documentation Vault Overview">
                 
-                <!-- ADMIN RELEASE CONTROL CENTER (ADMIN ONLY) -->
-                {% if is_admin %}
-                <div class="admin-release-hub-card" role="region" aria-label="Administrator Documentation Release Control Center">
-                    <div class="admin-release-hub-top">
-                        <div class="admin-release-title-wrap">
-                            <span class="admin-release-badge">⚡ ADMIN RELEASE CONTROLS</span>
-                            <h3 class="admin-release-hub-title">Documentation Release & Publication Center</h3>
-                        </div>
-                        <div class="admin-release-metrics" role="status" aria-live="polite">
-                            <span class="metric-pill metric-pub">🟢 <strong id="admin-summary-pub">{{ pub_count }}</strong> Published to Public</span>
-                            <span class="metric-pill metric-draft">🟡 <strong id="admin-summary-draft">{{ draft_count }}</strong> Drafts (Hidden)</span>
-                            <span class="metric-pill metric-sched">🕒 <strong id="admin-summary-sched">{{ sched_count }}</strong> Scheduled</span>
-                        </div>
-                    </div>
-                    <p class="admin-release-desc">
-                        As administrator, you control when documentation becomes visible to other profiles and public visitors. All newly created or unreleased chapters remain in <strong>🟡 Draft</strong> until you explicitly publish them.
-                    </p>
-                    <div class="admin-release-actions-row">
-                        <button type="button" class="admin-rel-btn btn-open-relmgr" onclick="openReleaseManagerModal()" aria-label="Open Full Documentation Release Manager">
-                            📢 Open Release Manager (Batch & Chapter Controls) &rarr;
-                        </button>
-                        <button type="button" class="admin-rel-btn btn-revert-all" onclick="confirmRevertAllDrafts()" aria-label="Ensure all chapters are reset to Draft">
-                            🔒 Ensure All Chapters Are Draft
-                        </button>
-                    </div>
-                </div>
-                {% endif %}
-
                 <!-- SECTION 1: WHAT IS THIS TAB FOR? -->
                 <div class="landing-welcome-header">
                     <div class="welcome-pill">SIRAUGGA / DEVCORE KNOWLEDGE ARCHIVE &bull; {{ total_docs }} CHAPTERS</div>
@@ -2288,9 +2266,9 @@
                 
                 <!-- ADMIN EDITORIAL & RELEASE REVIEW TOOLBAR -->
                 {% if is_admin %}
-                <div class="admin-review-toolbar" id="admin-review-toolbar" role="region" aria-label="Administrator Editorial and Release Controls">
+                <div class="admin-review-toolbar" id="admin-review-toolbar" role="region" aria-label="Administrator Reading Space Editorial & Release Controls">
                     <div class="admin-toolbar-left">
-                        <span class="admin-badge-label">⚡ ADMIN REVIEW</span>
+                        <span class="admin-badge-label">⚡ ADMIN CONTROLS</span>
                         <span id="admin-status-pill" class="admin-status-pill status-{{ active_doc.publish_status or 'draft' }}">
                             {% if active_doc.publish_status == 'published' %}
                             🟢 PUBLISHED (Publicly Visible)
@@ -2302,17 +2280,18 @@
                         </span>
                     </div>
                     <div class="admin-toolbar-actions">
-                        <button type="button" class="admin-btn btn-quick-toggle" id="btn-admin-toggle-pub" onclick="togglePublishCurrentChapter()" aria-label="Toggle publish status for current chapter">
-                            {{ '🔒 Revert to Draft' if active_doc.publish_status == 'published' else '⚡ Publish Now' }}
+                        <button type="button" class="admin-btn btn-quick-toggle" id="btn-admin-toggle-pub" onclick="togglePublishCurrentChapter()" aria-label="Upload and publish or revert chapter">
+                            {{ '🔒 Revert to Draft' if active_doc.publish_status == 'published' else '🚀 Upload / Publish Now' }}
                         </button>
                         <button type="button" class="admin-btn btn-schedule" onclick="openScheduleModal()" aria-label="Schedule Release Date">
                             🗓️ Schedule Release
                         </button>
-                        <button type="button" class="admin-btn btn-release-mgr" onclick="openReleaseManagerModal()" aria-label="Open Full Documentation Release Manager">
-                            📢 Release Manager
-                        </button>
                         <button type="button" class="admin-btn btn-edit" id="btn-admin-edit" onclick="toggleInPlaceEditor()" aria-label="Edit Chapter in Place">
                             ✏️ Edit in Place
+                        </button>
+                        <input type="file" id="admin-file-upload-input" accept=".md,.markdown,.txt" style="display: none;" onchange="handleAdminFileUpload(event)">
+                        <button type="button" class="admin-btn btn-upload-file" onclick="document.getElementById('admin-file-upload-input').click()" aria-label="Upload and import local Markdown file into this chapter">
+                            📂 Upload .md
                         </button>
                         <button type="button" class="admin-btn btn-create" onclick="openNewChapterModal()" aria-label="Create New Chapter">
                             ➕ New Chapter
@@ -2401,11 +2380,12 @@
                     <!-- In-Place Markdown Editor Wrap -->
                     {% if is_admin %}
                     <div id="admin-editor-wrap" style="display: none; margin: 20px 0;">
-                        <div class="editor-action-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: rgba(0, 243, 255, 0.08); padding: 10px 16px; border-radius: 6px; border: 1px solid rgba(0, 243, 255, 0.25);">
+                        <div class="editor-action-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: rgba(0, 243, 255, 0.08); padding: 10px 16px; border-radius: 6px; border: 1px solid rgba(0, 243, 255, 0.25); flex-wrap: wrap; gap: 10px;">
                             <span style="font-family: monospace; font-size: 0.85rem; font-weight: 800; color: var(--accent);">✏️ EDITING CHAPTER IN PLACE (RAW MARKDOWN)</span>
-                            <div style="display: flex; gap: 10px; align-items: center;">
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                 <span id="editor-word-count" style="font-family: monospace; font-size: 0.78rem; color: var(--text-dim);">0 words</span>
-                                <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: 900; padding: 5px 14px; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="saveInPlaceEditor()">💾 Save to Server</button>
+                                <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: 900; padding: 5px 14px; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="saveInPlaceEditor()">💾 Save Changes</button>
+                                <button type="button" class="ctrl-btn" style="background: #00ff88; color: #000; font-weight: 900; padding: 5px 14px; box-shadow: 0 0 10px rgba(0,255,136,0.4);" onclick="saveAndPublishInPlaceEditor()">🚀 Save & Upload / Publish</button>
                                 <button type="button" class="ctrl-btn" style="padding: 5px 10px;" onclick="cancelInPlaceEditor()">❌ Cancel</button>
                             </div>
                         </div>
@@ -2574,93 +2554,6 @@
         <div class="admin-modal-footer">
             <button type="button" class="ctrl-btn" style="padding: 6px 14px;" onclick="closeNewChapterModal()">Cancel</button>
             <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: bold; padding: 6px 18px;" onclick="submitNewChapter()">➕ Create Chapter</button>
-        </div>
-    </div>
-</div>
-
-<!-- ADMIN MODAL: ACCESSIBLE DOCUMENTATION RELEASE MANAGER -->
-<div id="modal-release-manager" class="admin-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-relmgr-title">
-    <div class="admin-modal-backdrop" onclick="closeReleaseManagerModal()"></div>
-    <div class="admin-modal-card relmgr-modal-card" style="max-width: 950px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
-        <div class="admin-modal-header">
-            <div>
-                <h2 id="modal-relmgr-title" class="admin-modal-title">📢 Documentation Release Manager (Cross-Profile & Public Rollout)</h2>
-                <p style="font-size: 0.8rem; color: var(--text-dim); margin: 4px 0 0 0;">
-                    Manage visibility of architecture blueprints, textbooks, and devlogs across profiles and public visitors.
-                </p>
-            </div>
-            <button type="button" class="admin-modal-close" onclick="closeReleaseManagerModal()" aria-label="Close Documentation Release Manager Dialog">✕</button>
-        </div>
-
-        <!-- Release Filters & Search Bar -->
-        <div class="relmgr-controls-bar" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; align-items: end;">
-            <div>
-                <label for="rel-filter-search" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Search Chapters:</label>
-                <input type="text" id="rel-filter-search" class="admin-input" placeholder="Filter by title, slug, or keywords..." oninput="handleRelFilterChange()" style="width: 100%;">
-            </div>
-            <div>
-                <label for="rel-filter-project" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Project:</label>
-                <select id="rel-filter-project" class="admin-input" onchange="handleRelFilterChange()" style="width: 100%;">
-                    <option value="all">🌐 All Projects</option>
-                    {% for p_key, p_val in projects.items() %}
-                    <option value="{{ p_key }}">{{ p_val.icon }} {{ p_val.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="rel-filter-category" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Collection:</label>
-                <select id="rel-filter-category" class="admin-input" onchange="handleRelFilterChange()" style="width: 100%;">
-                    <option value="all">📚 All Collections</option>
-                    {% for c_key, c_val in categories.items() %}
-                    <option value="{{ c_key }}">{{ c_val.icon }} {{ c_val.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="rel-filter-status" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Status:</label>
-                <select id="rel-filter-status" class="admin-input" onchange="handleRelFilterChange()" style="width: 100%;">
-                    <option value="all">🔍 All Statuses</option>
-                    <option value="draft">🟡 Draft (Hidden)</option>
-                    <option value="published">🟢 Published (Public)</option>
-                    <option value="scheduled">🕒 Scheduled</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Bulk Action & Summary Row -->
-        <div class="relmgr-summary-bar" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <div id="relmgr-count-label" role="status" aria-live="polite" style="font-family: monospace; font-size: 0.82rem; color: var(--accent);">
-                Loading documentation catalog...
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button type="button" class="admin-btn" style="background: rgba(0, 255, 136, 0.2); border-color: #00ff88; color: #00ff88;" onclick="batchReleaseFiltered('published')" aria-label="Publish all currently filtered chapters to public">
-                    ⚡ Publish All Filtered
-                </button>
-                <button type="button" class="admin-btn" style="background: rgba(255, 170, 0, 0.2); border-color: #ffaa00; color: #ffaa00;" onclick="batchReleaseFiltered('draft')" aria-label="Revert all currently filtered chapters to draft">
-                    🔒 Revert All Filtered to Draft
-                </button>
-            </div>
-        </div>
-
-        <!-- Scrollable Table of Chapters -->
-        <div class="admin-modal-body relmgr-table-wrap" style="flex: 1; overflow-y: auto; max-height: 480px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <table class="relmgr-table" style="width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left;">
-                <thead>
-                    <tr style="background: #111827; border-bottom: 1px solid rgba(255,255,255,0.15); position: sticky; top: 0; z-index: 3;">
-                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright);">Chapter Title & Slug</th>
-                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright);">System / Collection</th>
-                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright); width: 140px;">Current Status</th>
-                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright); text-align: right; width: 180px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="relmgr-table-body">
-                    <!-- Populated via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="admin-modal-footer" style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px;">
-            <button type="button" class="ctrl-btn" style="padding: 6px 16px;" onclick="closeReleaseManagerModal()">Done / Close</button>
         </div>
     </div>
 </div>
@@ -2980,7 +2873,7 @@
 
                     var toggleBtn = document.getElementById('btn-admin-toggle-pub');
                     if (toggleBtn) {
-                        toggleBtn.innerHTML = (currentPublishStatus === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                        toggleBtn.innerHTML = (currentPublishStatus === 'published') ? '🔒 Revert to Draft' : '🚀 Upload / Publish Now';
                     }
 
                     var rawTextarea = document.getElementById('admin-raw-textarea');
@@ -3336,7 +3229,7 @@
 
                 var toggleBtn = document.getElementById('btn-admin-toggle-pub');
                 if (toggleBtn) {
-                    toggleBtn.innerHTML = (newStatus === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                    toggleBtn.innerHTML = (newStatus === 'published') ? '🔒 Revert to Draft' : '🚀 Upload / Publish Now';
                 }
 
                 var activeNav = document.querySelector('.chapter-nav-item.active');
@@ -3453,7 +3346,7 @@
 
                 var toggleBtn = document.getElementById('btn-admin-toggle-pub');
                 if (toggleBtn) {
-                    toggleBtn.innerHTML = (status === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                    toggleBtn.innerHTML = (status === 'published') ? '🔒 Revert to Draft' : '🚀 Upload / Publish Now';
                 }
 
                 var activeNav = document.querySelector('.chapter-nav-item.active');
@@ -3964,6 +3857,118 @@
         .catch(function(err) {
             alert('Network error saving chapter: ' + err.message);
         });
+    }
+
+    function saveAndPublishInPlaceEditor() {
+        var textarea = document.getElementById('admin-raw-textarea');
+        if (!textarea) return;
+        var content = textarea.value;
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Saving markdown and releasing to public...';
+
+        fetch('/docs/api/admin/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: currentCategory,
+                slug: currentSlug,
+                content: content
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(saveData) {
+            if (saveData.status === 'success') {
+                currentRawMarkdown = content;
+                var docBody = document.getElementById('doc-body');
+                if (docBody) docBody.innerHTML = saveData.html;
+
+                var readerWords = document.getElementById('reader-words');
+                if (readerWords) {
+                    readerWords.textContent = saveData.word_count + ' WORDS • ~' + saveData.read_time + ' MIN READ';
+                }
+
+                enhanceCodeBlocks();
+                cancelInPlaceEditor();
+
+                return fetch('/docs/api/admin/schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        category: currentCategory,
+                        slug: currentSlug,
+                        status: 'published',
+                        release_date: null
+                    })
+                });
+            } else {
+                throw new Error(saveData.message || 'Error saving chapter.');
+            }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(schedData) {
+            if (schedData && schedData.status === 'success') {
+                currentPublishStatus = 'published';
+                currentReleaseDate = null;
+
+                var statusPill = document.getElementById('admin-status-pill');
+                if (statusPill) {
+                    statusPill.className = 'admin-status-pill status-published';
+                    statusPill.innerHTML = '🟢 PUBLISHED (Publicly Visible)';
+                }
+
+                var toggleBtn = document.getElementById('btn-admin-toggle-pub');
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = '🔒 Revert to Draft';
+                }
+
+                var activeNav = document.querySelector('.chapter-nav-item.active');
+                if (activeNav) {
+                    activeNav.dataset.publishStatus = 'published';
+                    var badge = activeNav.querySelector('.badge-status-admin');
+                    if (badge) {
+                        badge.className = 'badge-status-admin status-published';
+                        badge.textContent = 'PUB';
+                    }
+                }
+
+                if (announcer) announcer.textContent = 'Chapter saved and published live to public!';
+                alert('Chapter saved and published live to public visitors!');
+            }
+        })
+        .catch(function(err) {
+            alert('Error saving & publishing: ' + err.message);
+        });
+    }
+
+    function handleAdminFileUpload(event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var content = e.target.result;
+            var textarea = document.getElementById('admin-raw-textarea');
+            var editorWrap = document.getElementById('admin-editor-wrap');
+            var docBody = document.getElementById('doc-body');
+            var btnEdit = document.getElementById('btn-admin-edit');
+
+            if (textarea) {
+                textarea.value = content;
+                updateEditorWordCount();
+            }
+            if (editorWrap && docBody) {
+                editorWrap.style.display = 'block';
+                docBody.style.display = 'none';
+                if (btnEdit) btnEdit.innerHTML = '👁️ Preview Body';
+                if (textarea) textarea.focus();
+            }
+
+            var announcer = document.getElementById('docs-announcer');
+            if (announcer) announcer.textContent = 'File "' + file.name + '" loaded into editor. Review below and save or publish.';
+            alert('File "' + file.name + '" loaded directly into in-place editor!\n\nReview the content below and click "Save Changes" or "Save & Upload / Publish" to commit to server.');
+        };
+        reader.readAsText(file);
+        event.target.value = '';
     }
 
     // Delete and Archive Chapter
