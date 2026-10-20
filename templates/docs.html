@@ -2756,28 +2756,36 @@
                 return res.json();
             })
             .then(function(data) {
-                // Update breadcrumbs
-                document.getElementById('crumb-project').textContent = data.project_label;
-                document.getElementById('crumb-cat').textContent = data.collection_title || data.category.toUpperCase();
+                // Update breadcrumbs safely
+                var crumbProj = document.getElementById('crumb-project');
+                if (crumbProj) crumbProj.textContent = data.project_label || 'Siraugga Core';
+                var crumbCat = document.getElementById('crumb-cat');
+                if (crumbCat) crumbCat.textContent = data.collection_title || (data.category ? data.category.toUpperCase() : 'CHAPTER');
 
                 // Update heading and body
                 var heading = document.getElementById('reader-heading');
-                heading.textContent = data.title;
-                document.getElementById('doc-body').innerHTML = data.html;
+                if (heading) heading.textContent = data.title || 'Chapter Document';
+                var docBody = document.getElementById('doc-body');
+                if (docBody) docBody.innerHTML = data.html || '<p>No content available.</p>';
 
                 // Update sensitivity badge
                 var badge = document.getElementById('reader-badge');
-                if (data.max_sensitivity >= 4) {
-                    badge.className = 'clearance-badge-adaptive';
-                    badge.innerHTML = '🛡️ SENSITIVITY: TIER ' + data.max_sensitivity + ' (ADAPTIVE FILTER ACTIVE)';
-                } else {
-                    badge.className = 'clearance-badge-public';
-                    badge.innerHTML = '🌐 SENSITIVITY: TIER ' + data.max_sensitivity + ' (PUBLIC SPEC)';
+                if (badge) {
+                    if (data.max_sensitivity >= 4) {
+                        badge.className = 'clearance-badge-adaptive';
+                        badge.innerHTML = '🛡️ SENSITIVITY: TIER ' + data.max_sensitivity + ' (ADAPTIVE FILTER ACTIVE)';
+                    } else {
+                        badge.className = 'clearance-badge-public';
+                        badge.innerHTML = '🌐 SENSITIVITY: TIER ' + (data.max_sensitivity || 1) + ' (PUBLIC SPEC)';
+                    }
                 }
 
                 // Update reading meta
-                document.getElementById('reader-words').textContent = 
-                    data.word_count + ' WORDS • ~' + data.read_time + ' MIN READ';
+                var readerWords = document.getElementById('reader-words');
+                if (readerWords) {
+                    readerWords.textContent = 
+                        (data.word_count || 0) + ' WORDS • ~' + (data.read_time || 1) + ' MIN READ';
+                }
 
                 // Update cross-reference dropdowns (The Dropdown Standard)
                 var crContainer = document.getElementById('crossref-dropdown-container');

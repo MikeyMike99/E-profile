@@ -5,7 +5,7 @@
 [//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-1)
 ## 1. Architectural Concept & Historical Genesis
 
-Long before I built Siraugga as an autonomous cybersecurity platform with opaque virtual filesystems and hot-patching compilers, it all started with a very simple human desire in October 2024: I am blind, and I just wanted to play a good video game.
+Long before I built Siraugga as an autonomous cybersecurity platform with opaque virtual filesystems and hot-patching compilers, it all started with a very simple human desire in October 2024: I was blind, and I just wanted to play a good video game.
 
 The mainstream games I used to love—like *Minecraft*, *GTA*, and *PUBG*—were gone the moment I lost my sight in 2021. The few audio games made for the blind were either being abandoned by their developers or were so mechanically shallow that they bored me to tears. I had zero programming experience, but I was done waiting for someone else to build the world I wanted. So I decided to build it myself from scratch.
 
@@ -46,7 +46,7 @@ This document details the **Origin Architecture** of *Echoes of the World*—the
 [//]: # (SECTION_ID: ECHO-DEV-04_26-SEC-2)
 ## 2. The Four Foundational Breakthroughs
 
-1. **Rejection of the AI Illusion**: I started by asking a LLM to generate a game. It gave me a flat, empty void with basic movement to memory. This is where it all started.
+1. **Rejection of the AI Illusion**: I started by asking ChatGPT to generate a game. It gave me a flat, empty void with basic movement that looked like magic at first. But the moment I tried to add real depth, collision, or spatial physics, the AI code collapsed into an unmanageable knot. That failure was my greatest lesson: you cannot prompt a complex universe into existence. I had to learn Python from bare metal and understand how code talks to memory.
 2. **Direct C-DLL Integration**: Abandoning the terminal's slow text buffer to bridge Python directly to `NVDAController.dll` proved that accessibility cannot be an afterthought retrofitted onto a visual app. It must be a first-class C-level citizen wired directly into the event loop.
 3. **Pure Mathematical Coordinate Spaces**: Visual monitors are irrelevant. I proved to myself that a 3D universe can be built with pure mathematics: integer coordinates `(x, y, z)`, 8-way directional compass vectors, and bounding box trigonometric limits.
 4. **Decoupling State from Logic**: Ripping the player state out of the game loop and dumping it into `player_log.json` established the principle of persistent, auditable memory that later evolved into the Forensic Session Vault in Siraugga.

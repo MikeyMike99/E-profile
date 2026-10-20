@@ -495,9 +495,24 @@ def docs_api_chapter(category, doc_slug):
     if not doc_user_meta and not is_admin:
         schedule = load_release_schedule()
         entry = schedule.get("entries", {}).get(f"{category}/{doc_slug}") or schedule.get("entries", {}).get(doc_slug, {})
+        c_info = COLLECTIONS.get(category, {})
+        p_key = doc_meta.get('project', 'siraugga')
+        p_info = PROJECTS.get(p_key, {})
         return jsonify({
             "status": "unreleased",
+            "slug": doc_slug,
+            "category": category,
             "title": doc_meta.get('title'),
+            "project": p_key,
+            "project_label": doc_meta.get('project_label', p_info.get('title', 'Siraugga Framework')),
+            "project_icon": p_info.get('icon', '⚡'),
+            "project_desc": p_info.get('desc', ''),
+            "collection_title": c_info.get('title', category.title()),
+            "collection_desc": c_info.get('desc', ''),
+            "collection_icon": c_info.get('icon', '📄'),
+            "word_count": doc_meta.get('word_count', 0),
+            "read_time": max(1, round(doc_meta.get('word_count', 0) / 180)),
+            "max_sensitivity": doc_meta.get('max_sensitivity', 1),
             "publish_status": entry.get('status', 'draft'),
             "release_date": entry.get('release_date'),
             "html": render_unreleased_notice(doc_meta.get('title'), entry.get('status', 'draft'), entry.get('release_date'))
