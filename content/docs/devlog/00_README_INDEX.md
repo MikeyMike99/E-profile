@@ -79,6 +79,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md`](/docs/devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS) | Token Burst & Mid-Task Resets: 200-turn context inflation, premature 75k cache resets, steering collision, and blanket pkill elimination. |
 | [`01_PROBLEMS_ENCOUNTERED/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS.md`](/docs/devlog/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS) | Cross-Reference Degradation & Tag Clutter: Link rot when moving chapters, screen reader tag speech pollution, and HTML comment stripping. |
 | [`01_PROBLEMS_ENCOUNTERED/01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS.md`](/docs/devlog/01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS) | Visitor Cognitive Overwhelm & In-Place Edit Race Traps: First-launch mental overload, simultaneous multi-tab save overwrites, and upstream sync drift. |
+| [`01_PROBLEMS_ENCOUNTERED/01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS.md`](/docs/devlog/01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS) | Local Model Distillation & Token Burnout: Megabyte context re-reading, dynamic `/api/models` discovery, multi-turn session persistence, and token burn visibility. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-4)
 ### Pillar 02: Source Code Evidence
@@ -126,6 +127,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`02_SOURCE_EVIDENCE/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md`](/docs/devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE) | Session Rollover & In-Flight Guards: Offline briefing distillation, in-flight suppression, and SIEM logging evidence. |
 | [`02_SOURCE_EVIDENCE/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE.md`](/docs/devlog/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE) | CommonMark Reference Parsing & AST Anchors: Regex extraction in `sync_to_eprofile.py` and `_attach_h_id` heading anchor injection in `docs_mod.py`. |
 | [`02_SOURCE_EVIDENCE/02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE.md`](/docs/devlog/02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE) | Release Staging & In-Place Surgery: Admin role gating in `templates/docs.html`, dual-target atomic file writer in `docs_mod.py`, and schedule filtering. |
+| [`02_SOURCE_EVIDENCE/02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE.md`](/docs/devlog/02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE) | Local Model & Token Telemetry Evidence: Forensic citations of `discover_local_models`, `execute_local_agent_task`, `token_telemetry.py`, and Raugus Resolver MCP symbol keys. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-5)
 ### Pillar 03: Diagnostic Test Logs & Benchmarks
@@ -170,6 +172,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`03_DIAGNOSTIC_TESTS/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md`](/docs/devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS) | Session Rollover & In-Flight Guard Logs: 13-stage security audit, permutation testing, and SIEM JSON logs. |
 | [`03_DIAGNOSTIC_TESTS/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS.md`](/docs/devlog/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS) | Metadata Tag Integrity & DOM Verification: Multi-repo audit test runner (26/26 PASS), HTML DOM inspection proving zero tag leaks, and anchor generation. |
 | [`03_DIAGNOSTIC_TESTS/03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS.md`](/docs/devlog/03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS) | Release Schedule & In-Place Surgery Audits: Schedule filtering benchmarks, dual-write synchronization tests, and automated AST regression traces. |
+| [`03_DIAGNOSTIC_TESTS/03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS.md`](/docs/devlog/03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS) | Local Model Inference & Telemetry Logs: Benchmark tests, dynamic GGUF model discovery, offline distillation proof, 12,956-step telemetry scans, and live endpoint assertions. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-6)
 ### Pillar 04: Solutions & System Architecture
@@ -217,6 +220,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md`](/docs/devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE) | Automated Silent Session Rollover: Context distillation, in-flight guard, token meter, and audit invariants. |
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE.md`](/docs/devlog/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE) | Canonical Metadata & Section Invariant Architecture: Tripartite ID scheme, Pure CommonMark reference parsing, dynamic AST heading anchors, and why order matters. |
 | [`04_SOLUTIONS_AND_ARCHITECTURE/04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE.md`](/docs/devlog/04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE) | Curated Release Scheduling & Dual-Persistence Architecture: Anti-overwhelm release staging, zero-downtime in-place markdown surgery, and atomic cross-repo sync. |
+| [`04_SOLUTIONS_AND_ARCHITECTURE/04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE.md`](/docs/devlog/04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE) | Local Model Token Optimization & Distillation Architecture: Hybrid edge-cloud AI execution plane, dynamic `/api/models` discovery, in-memory telemetry engine, and accessible dashboard. |
 
 [//]: # (SECTION_ID: SIRA-DEV-INDEX-SEC-7)
 ### Pillar 05: "From Scratch" Step-by-Step Creation Guides
@@ -267,6 +271,7 @@ This modular suite synthesizes the complete developmental journey, forensic chat
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH.md`](/docs/devlog/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH) | Building the autonomous session rollover gatekeeper, context briefing distiller, and regression audit. |
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH.md`](/docs/devlog/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH) | Building the standalone CommonMark metadata validator and AST heading anchor generator from a blank text editor. |
 | [`05_FROM_SCRATCH_CREATION_GUIDES/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH.md`](/docs/devlog/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH) | Building the Curated Release Scheduler and In-Place Markdown Editor with dual persistence and live preview from scratch. |
+| [`05_FROM_SCRATCH_CREATION_GUIDES/05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH.md`](/docs/devlog/05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH) | Building the local Qwen model runner, dynamic GGUF discovery, PII distillation filter, and incremental token telemetry engine from scratch. |
 
 ---
 

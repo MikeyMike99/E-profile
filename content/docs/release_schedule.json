@@ -603,7 +603,7 @@
       "release_date": null
     },
     "devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "devlog/04_27_POPIA_COMPLIANT_OFFLINE_BROKER_ARCHITECTURE": {
@@ -1111,43 +1111,43 @@
       "release_date": null
     },
     "manifesto/01_Echoes_in_the_Void": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "manifesto/02_The_Echoes_Architecture": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "manifesto/03_The_Forge_of_Sovereignty": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "manifesto/04_The_24_Hour_Crucible": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "manifesto/05_The_Quantitative_Era": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "manifesto/README": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "story/DEVLOG": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "guides/USER_MANUAL": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "guides/SECURITY": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "guides/HOT_PATCH_ARCHITECTURE": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "guides/RAUGUS_RESOLVER_MCP_ARCHITECTURE": {
@@ -1159,7 +1159,7 @@
       "release_date": null
     },
     "audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "audio_suite/00_README_INDEX": {
@@ -1183,11 +1183,11 @@
       "release_date": null
     },
     "audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "eprofile/DEVLOG": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "devlog/06_EPROFILE_DEVLOG": {
@@ -1195,23 +1195,23 @@
       "release_date": null
     },
     "echoes/CLASS_WORLD_ARCHITECTURE": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "echoes/MENU_CONFIG": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "encrypt_me/DEVLOG": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "encrypt_me/README": {
-      "status": "published",
+      "status": "draft",
       "release_date": null
     },
     "devlog/00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING": {
@@ -1259,6 +1259,26 @@
       "release_date": null
     },
     "devlog/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE": {
+      "status": "draft",
+      "release_date": null
+    },
+    "devlog/05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH": {
       "status": "draft",
       "release_date": null
     }

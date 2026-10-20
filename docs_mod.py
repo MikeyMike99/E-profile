@@ -104,28 +104,7 @@ TOPICS = {
     "changelog": {"title": "Devlog & Changelog", "icon": "📜"}
 }
 
-FOUNDATIONAL_PUBLISHED_KEYS = {
-    'devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD',
-    '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD',
-    'manifesto/01_Echoes_in_the_Void', '01_Echoes_in_the_Void',
-    'manifesto/02_The_Echoes_Architecture', '02_The_Echoes_Architecture',
-    'manifesto/03_The_Forge_of_Sovereignty', '03_The_Forge_of_Sovereignty',
-    'manifesto/04_The_24_Hour_Crucible', '04_The_24_Hour_Crucible',
-    'manifesto/05_The_Quantitative_Era', '05_The_Quantitative_Era',
-    'eprofile/DEVLOG',
-    'encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE', 'CRYPTOGRAPHIC_ARCHITECTURE',
-    'encrypt_me/README', 'encrypt_me/DEVLOG',
-    'echoes/CLASS_WORLD_ARCHITECTURE', 'CLASS_WORLD_ARCHITECTURE',
-    'echoes/MENU_CONFIG', 'MENU_CONFIG',
-    'audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY',
-    '00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY',
-    'audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE',
-    '05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE',
-    'guides/USER_MANUAL', 'USER_MANUAL',
-    'guides/SECURITY', 'SECURITY',
-    'guides/HOT_PATCH_ARCHITECTURE', 'HOT_PATCH_ARCHITECTURE',
-    'story/DEVLOG', 'manifesto/README'
-}
+FOUNDATIONAL_PUBLISHED_KEYS = set()
 
 _last_sync_check = 0
 
@@ -571,9 +550,29 @@ def docs_index():
     catalog = load_catalog()
     is_admin = session.get('admin', False) or session.get('is_admin', False)
     user_catalog = get_user_catalog(catalog, is_admin=is_admin)
+
+    pub_count = sum(1 for d in catalog if d.get('publish_status') == 'published')
+    draft_count = sum(1 for d in catalog if d.get('publish_status') == 'draft')
+    sched_count = sum(1 for d in catalog if d.get('publish_status') == 'scheduled')
     
     if not user_catalog:
-        return render_template('docs.html', active_tab='docs', all_docs=[], grouped_tree=[], total_docs=0, is_landing=True, latest_updates=[], origin_doc=None, is_admin=is_admin)
+        return render_template(
+            'docs.html', 
+            active_tab='docs', 
+            all_docs=[], 
+            grouped_tree=[], 
+            total_docs=0, 
+            is_landing=True, 
+            latest_updates=[], 
+            origin_doc=None, 
+            is_admin=is_admin,
+            categories=COLLECTIONS,
+            projects=PROJECTS,
+            topics=TOPICS,
+            pub_count=pub_count,
+            draft_count=draft_count,
+            sched_count=sched_count
+        )
         
     active_slug = request.args.get('slug')
     active_cat = request.args.get('category')
@@ -615,7 +614,10 @@ def docs_index():
         is_landing=is_landing,
         latest_updates=latest_updates,
         origin_doc=origin_doc,
-        is_admin=is_admin
+        is_admin=is_admin,
+        pub_count=pub_count,
+        draft_count=draft_count,
+        sched_count=sched_count
     )
 
 @docs_bp.route('/<category>')
@@ -636,6 +638,10 @@ def docs_reader(category, doc_slug):
     catalog = load_catalog()
     is_admin = session.get('admin', False) or session.get('is_admin', False)
     user_catalog = get_user_catalog(catalog, is_admin=is_admin)
+
+    pub_count = sum(1 for d in catalog if d.get('publish_status') == 'published')
+    draft_count = sum(1 for d in catalog if d.get('publish_status') == 'draft')
+    sched_count = sum(1 for d in catalog if d.get('publish_status') == 'scheduled')
     
     doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
     if not doc_meta:
@@ -663,7 +669,10 @@ def docs_reader(category, doc_slug):
             is_landing=False,
             latest_updates=[d for d in user_catalog if d.get('slug') != '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD' and (d.get('is_latest') or d.get('order_score', 0) >= 13000)][:8],
             origin_doc=next((d for d in user_catalog if d.get('slug') == '04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD'), user_catalog[0] if user_catalog else None),
-            is_admin=is_admin
+            is_admin=is_admin,
+            pub_count=pub_count,
+            draft_count=draft_count,
+            sched_count=sched_count
         )
         
     viewer_tier = 5 if is_admin else (4 if session.get('is_employer') or ('view:proprietary_docs' in session.get('permissions', [])) else 1)
@@ -693,10 +702,63 @@ def docs_reader(category, doc_slug):
         is_landing=False,
         latest_updates=latest_updates,
         origin_doc=origin_doc,
-        is_admin=is_admin
+        is_admin=is_admin,
+        pub_count=pub_count,
+        draft_count=draft_count,
+        sched_count=sched_count
     )
 
 # ==================== ADMIN EDITING & RELEASE CONTROLS ====================
+
+@docs_bp.route('/api/admin/release_overview')
+def docs_api_admin_release_overview():
+    if not (session.get('admin', False) or session.get('is_admin', False)):
+        return jsonify({"status": "error", "message": "Admin authorization required."}), 403
+    catalog = load_catalog()
+    schedule = load_release_schedule()
+    entries = schedule.get("entries", {})
+    
+    items = []
+    pub_count = 0
+    draft_count = 0
+    sched_count = 0
+    
+    for d in catalog:
+        c = d.get('category', '')
+        s = d.get('slug', '')
+        key = f"{c}/{s}"
+        entry = entries.get(key) or entries.get(s, {})
+        status = entry.get('status', d.get('publish_status', 'draft'))
+        rel_date = entry.get('release_date', d.get('release_date'))
+        
+        if status == 'published':
+            pub_count += 1
+        elif status == 'scheduled':
+            sched_count += 1
+        else:
+            draft_count += 1
+            
+        items.append({
+            "key": key,
+            "category": c,
+            "slug": s,
+            "title": d.get('title', s),
+            "project": d.get('project', 'siraugga'),
+            "project_label": d.get('project_label', 'Siraugga'),
+            "collection_title": COLLECTIONS.get(c, {}).get('title', c.title()),
+            "status": status,
+            "release_date": rel_date,
+            "word_count": d.get('word_count', 0)
+        })
+        
+    return jsonify({
+        "status": "success",
+        "total": len(items),
+        "pub_count": pub_count,
+        "draft_count": draft_count,
+        "sched_count": sched_count,
+        "items": items
+    })
 
 @docs_bp.route('/api/admin/schedule', methods=['POST'])
 def docs_api_admin_schedule():
@@ -722,11 +784,94 @@ def docs_api_admin_schedule():
     entries[slug] = entries[key]
     save_release_schedule(schedule)
     
+    catalog = load_catalog()
+    for d in catalog:
+        if (category and d.get('category') == category and d.get('slug') == slug) or d.get('slug') == slug:
+            d['publish_status'] = status
+            d['release_date'] = release_date if status == "scheduled" else None
+            d['is_released'] = (status == 'published')
+    try:
+        with open(CATALOG_PATH, 'w', encoding='utf-8') as f:
+            json.dump(catalog, f, indent=2)
+    except Exception:
+        pass
+
+    pub_count = sum(1 for d in catalog if d.get('publish_status') == 'published')
+    draft_count = sum(1 for d in catalog if d.get('publish_status') == 'draft')
+    sched_count = sum(1 for d in catalog if d.get('publish_status') == 'scheduled')
+    
     return jsonify({
         "status": "success",
         "message": f"Release status updated to {status.upper()}" + (f" for {release_date}" if status == "scheduled" else ""),
         "publish_status": status,
-        "release_date": release_date
+        "release_date": release_date,
+        "published_count": pub_count,
+        "draft_count": draft_count,
+        "scheduled_count": sched_count
+    })
+
+@docs_bp.route('/api/admin/batch_release', methods=['POST'])
+def docs_api_admin_batch_release():
+    if not (session.get('admin', False) or session.get('is_admin', False)):
+        return jsonify({"status": "error", "message": "Admin authorization required."}), 403
+    data = request.get_json() or {}
+    slugs = data.get('slugs', [])
+    status = data.get('status', 'published')
+    category_filter = data.get('category')
+    project_filter = data.get('project')
+    apply_all = data.get('all', False)
+    
+    catalog = load_catalog()
+    schedule = load_release_schedule()
+    entries = schedule.setdefault("entries", {})
+    now_iso = datetime.now().isoformat()
+    
+    updated_count = 0
+    for doc in catalog:
+        c = doc.get('category', '')
+        s = doc.get('slug', '')
+        key = f"{c}/{s}"
+        
+        match = False
+        if slugs and (key in slugs or s in slugs):
+            match = True
+        elif category_filter and c == category_filter:
+            match = True
+        elif project_filter and doc.get('project') == project_filter:
+            match = True
+        elif apply_all:
+            match = True
+            
+        if match:
+            entries[key] = {
+                "status": status,
+                "release_date": None,
+                "updated_at": now_iso
+            }
+            entries[s] = entries[key]
+            doc['publish_status'] = status
+            doc['release_date'] = None
+            doc['is_released'] = (status == 'published')
+            updated_count += 1
+            
+    save_release_schedule(schedule)
+    try:
+        with open(CATALOG_PATH, 'w', encoding='utf-8') as f:
+            json.dump(catalog, f, indent=2)
+    except Exception:
+        pass
+        
+    pub_count = sum(1 for d in catalog if d.get('publish_status') == 'published')
+    draft_count = sum(1 for d in catalog if d.get('publish_status') == 'draft')
+    sched_count = sum(1 for d in catalog if d.get('publish_status') == 'scheduled')
+    
+    return jsonify({
+        "status": "success",
+        "message": f"Updated {updated_count} chapters to {status.upper()}.",
+        "updated_count": updated_count,
+        "published_count": pub_count,
+        "draft_count": draft_count,
+        "scheduled_count": sched_count
     })
 
 @docs_bp.route('/api/admin/save', methods=['POST'])
