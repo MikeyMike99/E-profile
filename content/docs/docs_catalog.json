@@ -108,8 +108,9 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "draft",
-    "release_date": null
+    "publish_status": "published",
+    "release_date": null,
+    "is_released": true
   },
   {
     "slug": "DEVLOG",
@@ -418,7 +419,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE",
@@ -649,7 +651,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
@@ -762,7 +765,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "DEVLOG",
@@ -859,7 +863,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "README",
@@ -961,7 +966,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "CLASS_WORLD_ARCHITECTURE",
@@ -1077,7 +1083,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "MENU_CONFIG",
@@ -1187,7 +1194,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "DEVLOG",
@@ -2345,7 +2353,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE",
@@ -2533,7 +2542,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS",
@@ -2823,7 +2833,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_SOURCE_CODE_EVIDENCE",
@@ -3029,7 +3040,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_PROBLEMS_WE_ENCOUNTERED",
@@ -3201,7 +3213,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
@@ -3358,7 +3371,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00_README_INDEX",
@@ -3464,7 +3478,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS",
@@ -3607,7 +3622,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH",
@@ -3760,7 +3776,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE",
@@ -3885,7 +3902,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE",
@@ -4008,7 +4026,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS",
@@ -4117,7 +4136,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "06_EPROFILE_DEVLOG",
@@ -4427,7 +4447,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS",
@@ -4568,7 +4589,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS",
@@ -4723,7 +4745,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH",
@@ -4849,7 +4872,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS",
@@ -4989,7 +5013,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH",
@@ -5118,7 +5143,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH",
@@ -5264,7 +5290,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS",
@@ -5392,7 +5419,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE",
@@ -5521,7 +5549,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE",
@@ -5658,7 +5687,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS",
@@ -5783,7 +5813,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE",
@@ -5938,7 +5969,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE",
@@ -6071,7 +6103,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_41_THOUGHT_VECTOR_OBFUSCATOR_FROM_SCRATCH",
@@ -6198,7 +6231,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS",
@@ -6325,7 +6359,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE",
@@ -6474,7 +6509,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE",
@@ -6608,7 +6644,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH",
@@ -6735,7 +6772,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS",
@@ -6870,7 +6908,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS",
@@ -7029,7 +7068,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_39_RAIA_SWARM_SUPERVISOR_FROM_SCRATCH",
@@ -7149,7 +7189,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS",
@@ -7283,7 +7324,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE",
@@ -7415,7 +7457,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS",
@@ -7582,7 +7625,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE",
@@ -7721,7 +7765,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_38_INNO_SETUP_INSTALLER_SCRIPT_FROM_SCRATCH",
@@ -7850,7 +7895,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS",
@@ -7977,7 +8023,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE",
@@ -8102,7 +8149,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS",
@@ -8277,7 +8325,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE",
@@ -8414,7 +8463,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_37_HEADLESS_SPOTIFY_CONTROLLER_FROM_SCRATCH",
@@ -8547,7 +8597,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_36_VENV_CONTAMINATION_AND_ALP_SCRATCH_TRAPS",
@@ -8675,7 +8726,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE",
@@ -8813,7 +8865,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE",
@@ -8954,7 +9007,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_36_LOCAL_OPENHANDS_RUNNER_AND_TOKEN_CALCULATOR_FROM_SCRATCH",
@@ -9096,7 +9150,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_35_OWASP_DAST_VULNERABILITIES_AND_CSP_REPORT_TRAPS",
@@ -9192,7 +9247,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE",
@@ -9327,7 +9383,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS",
@@ -9466,7 +9523,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE",
@@ -9612,7 +9670,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_35_BASHRC_AUTO_VENV_HOOK_FROM_SCRATCH",
@@ -9729,7 +9788,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_34_PRETOOLUSE_HOOK_INTERCEPTION_AND_WRITE_LOCK_TRAPS",
@@ -9827,7 +9887,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_34_SPOTIFY_HEADLESS_AND_HOTKEY_HOOK_EVIDENCE",
@@ -9960,7 +10021,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS",
@@ -10097,7 +10159,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_34_HEADLESS_AUDIO_STREAMING_AND_HOTKEY_ARCHITECTURE",
@@ -10242,7 +10305,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_34_SCRATCH_DEVCORE_PURGE_TOOL_FROM_SCRATCH",
@@ -10383,7 +10447,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_33_INODE_TAMPERING_AND_AST_KEY_DRIFT_TRAPS",
@@ -10478,7 +10543,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE",
@@ -10604,7 +10670,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS",
@@ -10744,7 +10811,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE",
@@ -10881,7 +10949,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_33_OWASP_SECURITY_HEADERS_AND_CSP_FROM_SCRATCH",
@@ -10977,7 +11046,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_32_KMS_KEY_HIERARCHY_AND_COLD_STORAGE_LOCKOUTS",
@@ -11074,7 +11144,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_32_SCRATCH_DEVCORE_AND_BASHRC_HOOK_EVIDENCE",
@@ -11202,7 +11273,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS",
@@ -11348,7 +11420,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_32_ENVIRONMENT_ISOLATION_AND_SHELL_HOOK_ARCHITECTURE",
@@ -11488,7 +11561,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_32_PRETOOLUSE_HOOK_INTERCEPTOR_FROM_SCRATCH",
@@ -11585,7 +11659,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_31_POPIA_DATA_PRIVACY_AND_CLOUD_LEAK_TRAPS",
@@ -11682,7 +11757,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_31_SECURITY_HEADERS_AND_CSP_DAST_EVIDENCE",
@@ -11778,7 +11854,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_31_SPOTIFY_GLOBAL_HOTKEY_AND_VOLUME_AUDIT_LOGS",
@@ -11923,7 +12000,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_31_OWASP_DAST_HARDENING_AND_SMART_CSP_ARCHITECTURE",
@@ -12019,7 +12097,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_31_RAUGUS_MAP_AST_INODE_INDEXER_FROM_SCRATCH",
@@ -12117,7 +12196,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_30_ACTIVE_THREAT_SIMULATION_ZIPCRYPTO_VS_AES_TRAPS",
@@ -12214,7 +12294,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_30_PRETOOLUSE_RAUGUS_HOOK_EVIDENCE",
@@ -12315,7 +12396,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS",
@@ -12452,7 +12534,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_30_PRETOOLUSE_HOOK_AND_FUNCTION_LOCK_ARCHITECTURE",
@@ -12548,7 +12631,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_30_KMS_KEYCHAIN_AND_COLD_STORAGE_FROM_SCRATCH",
@@ -12644,7 +12728,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_29_SIEM_LOG_EXHAUSTION_AND_ALERT_QUEUE_FLOODING",
@@ -12742,7 +12827,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_29_RAUGUS_MAP_AST_AND_INODE_GENERATOR_EVIDENCE",
@@ -12844,7 +12930,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_29_VENV_SWITCHING_AND_PURGE_BENCHMARK_LOGS",
@@ -12974,7 +13061,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_29_HARDWARE_INODE_AND_AST_KEY_MAP_ARCHITECTURE",
@@ -13071,7 +13159,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_29_POPIA_OFFLINE_PII_SCRUBBER_FROM_SCRATCH",
@@ -13167,7 +13256,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_28_HEADLESS_DEPLOYMENT_TOKEN_AUTH_TRAPS",
@@ -13264,7 +13354,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_28_KMS_KEYCHAIN_AND_COLD_STORAGE_EVIDENCE",
@@ -13366,7 +13457,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_28_OWASP_ZAP_DAST_SCAN_AND_CSP_VIOLATION_LOGS",
@@ -13463,7 +13555,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_28_ENTERPRISE_KMS_AND_COLD_STORAGE_ARCHITECTURE",
@@ -13560,7 +13653,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH",
@@ -13671,7 +13765,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_27_ACCESSIBLE_MEDIA_PLAYER_AND_IFRAME_FOCUS_TRAPS",
@@ -13767,7 +13862,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_27_POPIA_LOCAL_BRAIN_BROKER_EVIDENCE",
@@ -13869,7 +13965,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_27_PRETOOLUSE_HOOK_SIMULATION_30_CHECK_LOGS",
@@ -13961,7 +14058,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_27_POPIA_COMPLIANT_OFFLINE_BROKER_ARCHITECTURE",
@@ -14056,7 +14154,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_27_OFFLINE_PASSWORD_DICTIONARY_AUDITOR_FROM_SCRATCH",
@@ -14152,7 +14251,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_26_TERMINAL_BLANK_BLANK_AUDIO_GAME_ORIGINS",
@@ -14257,7 +14357,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE",
@@ -14375,7 +14476,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_26_INODE_TAMPERING_AND_AST_KEY_VERIFICATION_LOGS",
@@ -14471,7 +14573,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_26_CENTRAL_SIEM_TELEMETRY_LOGGER_FROM_SCRATCH",
@@ -14568,7 +14671,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_25_THE_317000_LINE_MANIFESTO_AND_LSP_COLLAPSE",
@@ -14690,7 +14794,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_25_OFFLINE_AND_ONLINE_THREAT_LAB_EVIDENCE",
@@ -14787,7 +14892,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_25_COLD_STORAGE_ENCRYPTION_AND_DEK_ROTATION_LOGS",
@@ -14900,7 +15006,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_25_OFFLINE_AND_ONLINE_THREAT_MODELING_ARCHITECTURE",
@@ -14997,7 +15104,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_25_DEPLOYMENT_TOKEN_AUTH_GATEWAY_FROM_SCRATCH",
@@ -15085,7 +15193,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS",
@@ -15202,7 +15311,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_24_SIEM_CENTRAL_LOGGER_SOURCE_EVIDENCE",
@@ -15298,7 +15408,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_24_POPIA_PII_SCRUBBING_AND_NLP_BENCHMARK_LOGS",
@@ -15400,7 +15511,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_24_CENTRAL_SIEM_AND_MASTER_ALERT_QUEUE_ARCHITECTURE",
@@ -15497,7 +15609,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_24_ACCESSIBLE_VIDEO_PLAYER_APPLICATION_FROM_SCRATCH",
@@ -15600,7 +15713,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_23_SLASH_MENU_ENTER_KEY_CONFLICT_AND_ACCESSIBILITY_TRAPS",
@@ -15721,7 +15835,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_23_HEADLESS_LOGIN_AUTHENTICATION_EVIDENCE",
@@ -15823,7 +15938,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_23_ZIPCRYPTO_VS_AES256_OFFLINE_CRACK_BENCHMARK_LOGS",
@@ -15920,7 +16036,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_23_HEADLESS_DEPLOYMENT_TOKEN_SECURITY_ARCHITECTURE",
@@ -16016,7 +16133,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_23_CUSTOM_PYGAME_SCREEN_READER_CHUNK_READER_FROM_SCRATCH",
@@ -16120,7 +16238,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING",
@@ -16233,7 +16352,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_22_ACCESSIBLE_VIDEO_PLAYER_SOURCE_EVIDENCE",
@@ -16335,7 +16455,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_22_SIEM_TELEMETRY_AND_MAQ_ROTATION_LOGS",
@@ -16431,7 +16552,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_22_ACCESSIBLE_MEDIA_APPLICATION_ARCHITECTURE",
@@ -16527,7 +16649,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_22_MODEL_QUOTA_FALLBACK_AND_BANNER_FROM_SCRATCH",
@@ -16637,7 +16760,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_21_SECRET_TOKEN_EXHAUSTION_AND_REASONING_ALIAS_TRAPS",
@@ -16760,7 +16884,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_21_MANIFESTO_PYGAME_READER_SOURCE_EVIDENCE",
@@ -16870,7 +16995,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_21_DEPLOY_TOKEN_BRUTE_FORCE_AND_AUTH_LOGS",
@@ -16967,7 +17093,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_21_THE_AUTONOMOUS_SCRIBE_SWARM_ARCHITECTURE",
@@ -17071,7 +17198,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_21_PYWEBVIEW_DESKTOP_WRAPPER_FROM_SCRATCH",
@@ -17158,7 +17286,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS",
@@ -17273,7 +17402,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_20_WCAG_SLASH_COMBOBOX_AND_ENTER_KEY_EVIDENCE",
@@ -17375,7 +17505,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_20_MEDIA_PLAYER_ACCESSIBLE_OVERLAY_TEST_LOGS",
@@ -17478,7 +17609,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_20_QUOTA_BREACH_DETECTION_AND_FALLBACK_ARCHITECTURE",
@@ -17583,7 +17715,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_20_WCAG_ACCESSIBLE_COMBOBOX_FROM_SCRATCH",
@@ -17686,7 +17819,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS",
@@ -17802,7 +17936,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_19_PYWEBVIEW_DESKTOP_WRAPPER_EVIDENCE",
@@ -17895,7 +18030,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_19_MANIFESTO_READER_CHUNK_LOAD_BENCHMARK_LOGS",
@@ -18005,7 +18141,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_19_PYWEBVIEW_NATIVE_DESKTOP_APP_ARCHITECTURE",
@@ -18099,7 +18236,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_19_GAME_ENGINE_WEBSOCKET_BRIDGE_FROM_SCRATCH",
@@ -18204,7 +18342,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS",
@@ -18327,7 +18466,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_18_GAME_ENGINE_HEADLESS_DAEMON_EVIDENCE",
@@ -18471,7 +18611,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_18_WCAG_COMBOBOX_KEYBOARD_ACCESSIBILITY_LOGS",
@@ -18598,7 +18739,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_18_WCAG_ACCESSIBLE_SLASH_COMBOBOX_ARCHITECTURE",
@@ -18708,7 +18850,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_18_PREFLIGHT_AUTONOMOUS_SELF_HEALER_FROM_SCRATCH",
@@ -18795,7 +18938,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS",
@@ -18917,7 +19061,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE",
@@ -19044,7 +19189,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_17_PYWEBVIEW_IPC_AND_WINDOW_LIFECYCLE_LOGS",
@@ -19138,7 +19284,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_17_GAME_ENGINE_PLUGIN_INTEGRATION_ARCHITECTURE",
@@ -19252,7 +19399,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_17_PE_BINARY_STAMPER_AND_VERIFIER_FROM_SCRATCH",
@@ -19349,7 +19497,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS",
@@ -19472,7 +19621,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_16_SELF_HEALING_BOOTSTRAP_AND_TRACEBACK_REPAIR_EVIDENCE",
@@ -19589,7 +19739,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_16_DIRECTORY_TIERING_AND_SANDBOX_JAIL_AUDIT_LOGS",
@@ -19710,7 +19861,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_16_AUTONOMOUS_SELF_HEALING_BOOT_ARCHITECTURE",
@@ -19815,7 +19967,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH",
@@ -19965,7 +20118,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_15_THE_QUOTA_WALL_AMNESIA_AND_CONTEXT_EXHAUSTION_TRAPS",
@@ -20095,7 +20249,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE",
@@ -20222,7 +20377,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_15_AUTONOMOUS_SELF_HEALING_REPAIR_LOOP_LOGS",
@@ -20348,7 +20504,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_15_PORTABLE_EXECUTABLE_AND_BINARY_STAMPING_ARCHITECTURE",
@@ -20462,7 +20619,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_15_GIT_AUTOMATION_AND_SESSION_RECORDER_FROM_SCRATCH",
@@ -20603,7 +20761,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS",
@@ -20726,7 +20885,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE",
@@ -20854,7 +21014,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_14_BINARY_STAMP_EXTRACTION_AND_EXPIRATION_LOGS",
@@ -20975,7 +21136,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE",
@@ -21096,7 +21258,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_14_ACCESSIBLE_SCREEN_READER_SPEECH_MODULE_FROM_SCRATCH",
@@ -21247,7 +21410,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS",
@@ -21360,7 +21524,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE",
@@ -21477,7 +21642,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS",
@@ -21602,7 +21768,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_13_THE_31_STAGE_TOOL_SECURITY_AUDIT_ARCHITECTURE",
@@ -21723,7 +21890,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH",
@@ -21865,7 +22033,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_12_PASSWORD_CRACKING_AND_ACTIVE_THREAT_SIMULATION_TRAPS",
@@ -22015,7 +22184,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE",
@@ -22149,7 +22319,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS",
@@ -22284,7 +22455,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_12_ACCESSIBLE_AUDIO_OVERLAY_AND_SPEECH_ARCHITECTURE",
@@ -22413,7 +22585,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_12_NATIVE_TRANSCRIPT_TAILER_AUDIO_ROUTER_FROM_SCRATCH",
@@ -22555,7 +22728,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_11_AI_INTERNAL_MONOLOGUE_AND_ROBOTIC_BOT_SPEAK",
@@ -22691,7 +22865,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE",
@@ -22808,7 +22983,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_11_SCREEN_READER_DLL_AND_DRIVER_AUDIT_LOGS",
@@ -22942,7 +23118,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_11_ZERO_MODIFICATION_EPHEMERAL_PLUGIN_ARCHITECTURE",
@@ -23070,7 +23247,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH",
@@ -23214,7 +23392,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_10_INGESTION_SWARM_PRIVILEGE_ESCALATION_TRAPS",
@@ -23340,7 +23519,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE",
@@ -23457,7 +23637,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_10_NATIVE_TAIL_VS_PYTHON_BUFFER_BENCHMARK_LOGS",
@@ -23574,7 +23755,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_10_ZERO_TRUST_SUBAGENT_AUDIO_EVENT_ARCHITECTURE",
@@ -23695,7 +23877,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_10_WSL_WINDOWS_IO_BRIDGE_FROM_SCRATCH",
@@ -23822,7 +24005,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_09_WSL_BROKEN_PIPES_AND_CROSS_OS_IO_TRAPS",
@@ -23935,7 +24119,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE",
@@ -24060,7 +24245,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS",
@@ -24185,7 +24371,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE",
@@ -24317,7 +24504,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_09_OFFLINE_PASSWORD_CRACK_LAB_FROM_SCRATCH",
@@ -24451,7 +24639,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_08_THE_ENTERPRISE_PRE_AUTHORIZATION_WALL",
@@ -24568,7 +24757,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE",
@@ -24677,7 +24867,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_08_OFFLINE_PASSWORD_AUDIT_AND_CRACK_LOGS",
@@ -24840,7 +25031,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL",
@@ -24974,7 +25166,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_08_CINEMATIC_TTS_PROXY_FROM_SCRATCH",
@@ -25107,7 +25300,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_07_NUITKA_COMPILATION_AND_BINARY_PACKAGING_TRAPS",
@@ -25276,7 +25470,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_07_CINEMATIC_TTS_AND_STEALTH_FEED_EVIDENCE",
@@ -25399,7 +25594,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_07_TTS_AUDIO_LATENCY_AND_MONOLOGUE_SCRUBBING_LOGS",
@@ -25544,7 +25740,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_07_THE_VOICE_OF_SIRAUGGA_CINEMATIC_TTS_ARCHITECTURE",
@@ -25660,7 +25857,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_07_BOOTSTRAP_SUPERVISOR_GATEWAY_FROM_SCRATCH",
@@ -25793,7 +25991,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_06_THE_FRIENDLY_LEAK_AND_EGRESS_FIREWALL_TRAPS",
@@ -25934,7 +26133,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_06_BOOTSTRAP_GATEWAY_AND_SUPERVISOR_EVIDENCE",
@@ -26063,7 +26263,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_06_WSL_PIPE_CORRUPTION_AND_IO_BENCHMARKS",
@@ -26229,7 +26430,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_06_PRE_FLIGHT_SELF_HEALING_SUPERVISOR_ARCHITECTURE",
@@ -26363,7 +26565,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_06_FORENSIC_SESSION_VAULT_FROM_SCRATCH",
@@ -26491,7 +26694,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES",
@@ -26654,7 +26858,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE",
@@ -26774,7 +26979,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_05_COMPILATION_AND_BINARY_INTEGRITY_LOGS",
@@ -26930,7 +27136,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_05_SOVEREIGN_AI_AND_OFFLINE_BROKER_RECIPES",
@@ -27049,7 +27256,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_05_ZERO_DOWNTIME_HOT_PATCH_RUNNER_FROM_SCRATCH",
@@ -27176,7 +27384,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_50_Semantic_Firewall_Hooks",
@@ -27258,7 +27467,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_49_Triaging_Swarm_Intrusions",
@@ -27358,7 +27568,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_48_Evaluating_Alerts",
@@ -27441,7 +27652,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_47_Centralized_Swarm_Auditing",
@@ -27548,7 +27760,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_46_Types_of_Security_Data",
@@ -27648,7 +27861,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_45_The_Black_Box_Effect",
@@ -27748,7 +27962,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_44_Auditing_Swarm_Telemetry",
@@ -27855,7 +28070,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_43_Swarm_Telemetry",
@@ -27938,7 +28154,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_42_Impacts_of_Cryptography",
@@ -28034,7 +28251,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_41_PKI_Trust_System",
@@ -28137,7 +28355,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_04_ZOMBIE_SUBAGENTS_AND_PROCESS_EXHAUSTION",
@@ -28283,7 +28502,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_04_FORENSIC_VAULT_AND_PII_SCRUBBING_EVIDENCE",
@@ -28404,7 +28624,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_04_SEMANTIC_FIREWALL_AND_DLP_AUDIT_LOGS",
@@ -28569,7 +28790,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_04_EXTENDING_SIRAUGGA_PLUGINS_AND_SERVICES",
@@ -28701,7 +28923,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_04_RAUGUS_OPAQUE_VFS_FROM_SCRATCH",
@@ -28832,7 +29055,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_40_Public_Key_Cryptography",
@@ -28928,7 +29152,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_39_Hashing_and_Salting",
@@ -29031,7 +29256,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_38_Integrity_Authenticity",
@@ -29134,7 +29360,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_37_Obscuring_Data",
@@ -29235,7 +29462,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_36_Context_Confidentiality",
@@ -29331,7 +29559,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_35_Agentic_Cryptography",
@@ -29415,7 +29644,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_34_Protecting_SVs",
@@ -29510,7 +29740,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_33_Data_Security",
@@ -29607,7 +29838,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_32_Application_Security",
@@ -29708,7 +29940,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_31_Infrastructure_Security",
@@ -29803,7 +30036,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_03_PATH_TRAVERSAL_AND_PRIVILEGE_ESCALATION",
@@ -29959,7 +30193,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_03_HOT_PATCH_AND_SELF_HEALING_EVIDENCE",
@@ -30080,7 +30315,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_03_ZOMBIE_REAPING_AND_PROCESS_AUDIT_LOGS",
@@ -30236,7 +30472,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_03_OPAQUE_VFS_AND_AST_DIFFING_ARCHITECTURE",
@@ -30350,7 +30587,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH",
@@ -30490,7 +30728,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_30_Domains_of_Security",
@@ -30579,7 +30818,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_29_Virtualization",
@@ -30687,7 +30927,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_28_Swarm_Hosting",
@@ -30769,7 +31010,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_27_Configure_ZSP",
@@ -30875,7 +31117,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_26_ZSP_Operation",
@@ -30969,7 +31212,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_25_ZSP_Overview",
@@ -31069,7 +31313,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_24_Zone_Based_Policies",
@@ -31151,7 +31396,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_23_Sandbox_Topologies",
@@ -31259,7 +31505,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_22_Agentic_Bulkheads",
@@ -31366,7 +31613,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_21_Agentic_Firewalls",
@@ -31444,7 +31692,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES",
@@ -31594,7 +31843,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE",
@@ -31714,7 +31964,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS",
@@ -31876,7 +32127,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_02_THE_5_TIER_ZERO_TRUST_HIERARCHY",
@@ -31992,7 +32244,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH",
@@ -32124,7 +32377,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_20_Swarm_ACLs",
@@ -32225,7 +32479,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_19_Mitigating_Attacks",
@@ -32326,7 +32581,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_18_Implementing_ACLs",
@@ -32439,7 +32695,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_17_Modifying_ACLs",
@@ -32535,7 +32792,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_16_Configuring_ACLs",
@@ -32648,7 +32906,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_15_Wildcard_Masking",
@@ -32768,7 +33027,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_14_Agentic_Control_Lists",
@@ -32888,7 +33148,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_13_AAA_Operation",
@@ -32995,7 +33256,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_12_Account_Management",
@@ -33179,7 +33441,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_11_Access_Control_Concepts",
@@ -33279,7 +33542,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS",
@@ -33418,7 +33682,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE",
@@ -33564,7 +33829,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS",
@@ -33714,7 +33980,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE",
@@ -33848,7 +34115,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_01_QUART_STREAMING_SERVER_FROM_SCRATCH",
@@ -33978,7 +34246,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_10_Access_Control",
@@ -34157,7 +34426,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_09_Agentic_Deception",
@@ -34276,7 +34546,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_08_Cybersecurity_Resilience",
@@ -34480,7 +34751,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_07_Securing_Wireless_Devices",
@@ -34630,7 +34902,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_06_Securing_Network_Devices",
@@ -34731,7 +35004,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_05_Network_Hardening_and_Protocols",
@@ -34883,7 +35157,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_04_System_and_Network_Defense",
@@ -35170,7 +35445,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_03_Governance_and_Policies",
@@ -35295,7 +35571,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_02_Operational_Management",
@@ -35434,7 +35711,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Chapter_01_Asset_Management",
@@ -35598,7 +35876,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00_README_INDEX",
@@ -35716,7 +35995,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00A_BEGINNER_GUIDE_TO_SIRAUGGA_AND_ZERO_TRUST",
@@ -35844,7 +36124,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00B_BEGINNER_GUIDE_TO_ACCESSIBLE_WEBSOCKET_STREAMING",
@@ -35984,7 +36265,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00C_BEGINNER_GUIDE_TO_OPAQUE_VFS_AND_RAUGUS_MAP",
@@ -36106,7 +36388,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS",
@@ -36216,7 +36499,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS",
@@ -36333,7 +36617,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY",
@@ -36456,7 +36741,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING",
@@ -36608,7 +36894,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING",
@@ -36707,7 +36994,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Checkpoint_01_to_03",
@@ -36834,7 +37122,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Checkpoint_04_to_09",
@@ -36961,7 +37250,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_10_Checkpoint",
@@ -37055,7 +37345,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_11_Checkpoint",
@@ -37156,7 +37447,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_3_Checkpoint",
@@ -37257,7 +37549,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_3_Summary",
@@ -37347,7 +37640,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_4_Checkpoint",
@@ -37461,7 +37755,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_5_Checkpoint",
@@ -37550,7 +37845,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_6_Checkpoint",
@@ -37644,7 +37940,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_7_Checkpoint",
@@ -37757,7 +38054,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_8_Checkpoint",
@@ -37877,7 +38175,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_9_Checkpoint",
@@ -37967,7 +38266,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_01_Sandbox_and_Tiers",
@@ -38087,7 +38387,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_02_Access_Control",
@@ -38235,7 +38536,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_03_Swarm_Telemetry",
@@ -38329,7 +38631,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_04_Orchestrator_SIEM",
@@ -38423,7 +38726,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_05_Cryptography",
@@ -38525,7 +38829,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_06_Swarm_Obfuscation",
@@ -38623,7 +38928,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "Module_07_Threat_Intelligence",
@@ -38705,7 +39011,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00_Foreword",
@@ -38784,7 +39091,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "00_The_Forensic_Timeline",
@@ -39002,7 +39310,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "01_Echoes_in_the_Void",
@@ -39085,7 +39394,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "02_The_Echoes_Architecture",
@@ -39191,7 +39501,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "03_The_Forge_of_Sovereignty",
@@ -39312,7 +39623,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "04_The_24_Hour_Crucible",
@@ -39417,7 +39729,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "05_The_Quantitative_Era",
@@ -39506,7 +39819,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "README",
@@ -39595,7 +39909,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "USER_MANUAL",
@@ -39770,7 +40085,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "SECURITY",
@@ -39949,7 +40265,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "HOT_PATCH_ARCHITECTURE",
@@ -40129,7 +40446,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
@@ -40320,7 +40638,8 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   },
   {
     "slug": "DOCUMENTATION_TAGGING_AND_VERSIONING_GUIDE",
@@ -40512,6 +40831,7 @@
       }
     ],
     "publish_status": "draft",
-    "release_date": null
+    "release_date": null,
+    "is_released": false
   }
 ]
