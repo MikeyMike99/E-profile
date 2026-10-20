@@ -1605,6 +1605,119 @@
         color: #000;
     }
 
+    /* Admin Documentation Release Hub Card */
+    .admin-release-hub-card {
+        background: linear-gradient(135deg, rgba(255, 170, 0, 0.08), rgba(12, 18, 28, 0.98));
+        border: 1px solid rgba(255, 170, 0, 0.45);
+        border-radius: 10px;
+        padding: 18px 22px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .admin-release-hub-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+    .admin-release-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .admin-release-badge {
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: 900;
+        background: #ffaa00;
+        color: #000;
+        padding: 3px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+    }
+    .admin-release-hub-title {
+        font-family: monospace;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 0;
+    }
+    .admin-release-metrics {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .admin-release-desc {
+        color: var(--text-bright);
+        font-size: 0.88rem;
+        line-height: 1.5;
+        margin: 0 0 14px 0;
+    }
+    .admin-release-actions-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .admin-rel-btn {
+        font-family: monospace;
+        font-size: 0.8rem;
+        font-weight: 800;
+        padding: 7px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border: 1px solid var(--border);
+    }
+    .admin-rel-btn:hover, .admin-rel-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        transform: translateY(-1px);
+    }
+    .admin-rel-btn.btn-open-relmgr {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+    }
+    .admin-rel-btn.btn-revert-all {
+        background: rgba(255, 170, 0, 0.15);
+        color: #ffaa00;
+        border-color: rgba(255, 170, 0, 0.4);
+    }
+    .metric-pill {
+        font-family: monospace;
+        font-size: 0.76rem;
+        font-weight: bold;
+        padding: 3px 9px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+    }
+    .metric-pill.metric-pub {
+        background: rgba(0, 255, 136, 0.12);
+        color: #00ff88;
+        border-color: rgba(0, 255, 136, 0.35);
+    }
+    .metric-pill.metric-draft {
+        background: rgba(255, 170, 0, 0.12);
+        color: #ffaa00;
+        border-color: rgba(255, 170, 0, 0.35);
+    }
+    .metric-pill.metric-sched {
+        background: rgba(0, 243, 255, 0.12);
+        color: var(--accent);
+        border-color: rgba(0, 243, 255, 0.35);
+    }
+    .relmgr-table tr:hover {
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .relmgr-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
     /* Modals */
     .admin-modal {
         position: fixed;
@@ -1936,6 +2049,34 @@
             <!-- VIEW 1: DEDICATED PORTAL LANDING PAGE -->
             <section class="docs-landing-view" id="docs-landing-view" style="{{ 'display: block;' if is_landing else 'display: none;' }}" aria-label="Documentation Vault Overview">
                 
+                <!-- ADMIN RELEASE CONTROL CENTER (ADMIN ONLY) -->
+                {% if is_admin %}
+                <div class="admin-release-hub-card" role="region" aria-label="Administrator Documentation Release Control Center">
+                    <div class="admin-release-hub-top">
+                        <div class="admin-release-title-wrap">
+                            <span class="admin-release-badge">⚡ ADMIN RELEASE CONTROLS</span>
+                            <h3 class="admin-release-hub-title">Documentation Release & Publication Center</h3>
+                        </div>
+                        <div class="admin-release-metrics" role="status" aria-live="polite">
+                            <span class="metric-pill metric-pub">🟢 <strong id="admin-summary-pub">{{ pub_count }}</strong> Published to Public</span>
+                            <span class="metric-pill metric-draft">🟡 <strong id="admin-summary-draft">{{ draft_count }}</strong> Drafts (Hidden)</span>
+                            <span class="metric-pill metric-sched">🕒 <strong id="admin-summary-sched">{{ sched_count }}</strong> Scheduled</span>
+                        </div>
+                    </div>
+                    <p class="admin-release-desc">
+                        As administrator, you control when documentation becomes visible to other profiles and public visitors. All newly created or unreleased chapters remain in <strong>🟡 Draft</strong> until you explicitly publish them.
+                    </p>
+                    <div class="admin-release-actions-row">
+                        <button type="button" class="admin-rel-btn btn-open-relmgr" onclick="openReleaseManagerModal()" aria-label="Open Full Documentation Release Manager">
+                            📢 Open Release Manager (Batch & Chapter Controls) &rarr;
+                        </button>
+                        <button type="button" class="admin-rel-btn btn-revert-all" onclick="confirmRevertAllDrafts()" aria-label="Ensure all chapters are reset to Draft">
+                            🔒 Ensure All Chapters Are Draft
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
                 <!-- SECTION 1: WHAT IS THIS TAB FOR? -->
                 <div class="landing-welcome-header">
                     <div class="welcome-pill">SIRAUGGA / DEVCORE KNOWLEDGE ARCHIVE &bull; {{ total_docs }} CHAPTERS</div>
@@ -1989,7 +2130,7 @@
                     <div class="landing-quick-nav-bar" role="region" aria-label="Fast Navigation for Changes and New Content">
                         <div class="quick-nav-title">⚡ Fast Navigation: Newly Added & Updated Chapters</div>
                         <div class="quick-nav-actions">
-                            <a href="#latest-changes-section" class="quick-action-pill jump-link">
+                            <a href="#latest-changes-section" class="quick-action-pill jump-link" onclick="document.getElementById('latest-changes-section')?.scrollIntoView({ behavior: 'smooth' }); return false;" aria-label="Jump directly to latest architecture releases section">
                                 ⚡ Jump to Latest Changes ({{ latest_updates|length }} Recent Updates) &darr;
                             </a>
                             <button type="button" class="quick-action-pill filter-btn" onclick="openNavigatorAndFilterRecent()" aria-label="Filter sidebar tree to newly added and updated chapters">
@@ -2166,6 +2307,9 @@
                         </button>
                         <button type="button" class="admin-btn btn-schedule" onclick="openScheduleModal()" aria-label="Schedule Release Date">
                             🗓️ Schedule Release
+                        </button>
+                        <button type="button" class="admin-btn btn-release-mgr" onclick="openReleaseManagerModal()" aria-label="Open Full Documentation Release Manager">
+                            📢 Release Manager
                         </button>
                         <button type="button" class="admin-btn btn-edit" id="btn-admin-edit" onclick="toggleInPlaceEditor()" aria-label="Edit Chapter in Place">
                             ✏️ Edit in Place
@@ -2430,6 +2574,93 @@
         <div class="admin-modal-footer">
             <button type="button" class="ctrl-btn" style="padding: 6px 14px;" onclick="closeNewChapterModal()">Cancel</button>
             <button type="button" class="ctrl-btn" style="background: var(--accent); color: #000; font-weight: bold; padding: 6px 18px;" onclick="submitNewChapter()">➕ Create Chapter</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN MODAL: ACCESSIBLE DOCUMENTATION RELEASE MANAGER -->
+<div id="modal-release-manager" class="admin-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-relmgr-title">
+    <div class="admin-modal-backdrop" onclick="closeReleaseManagerModal()"></div>
+    <div class="admin-modal-card relmgr-modal-card" style="max-width: 950px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="admin-modal-header">
+            <div>
+                <h2 id="modal-relmgr-title" class="admin-modal-title">📢 Documentation Release Manager (Cross-Profile & Public Rollout)</h2>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin: 4px 0 0 0;">
+                    Manage visibility of architecture blueprints, textbooks, and devlogs across profiles and public visitors.
+                </p>
+            </div>
+            <button type="button" class="admin-modal-close" onclick="closeReleaseManagerModal()" aria-label="Close Documentation Release Manager Dialog">✕</button>
+        </div>
+
+        <!-- Release Filters & Search Bar -->
+        <div class="relmgr-controls-bar" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; align-items: end;">
+            <div>
+                <label for="rel-filter-search" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Search Chapters:</label>
+                <input type="text" id="rel-filter-search" class="admin-input" placeholder="Filter by title, slug, or keywords..." oninput="handleRelFilterChange()" style="width: 100%;">
+            </div>
+            <div>
+                <label for="rel-filter-project" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Project:</label>
+                <select id="rel-filter-project" class="admin-input" onchange="handleRelFilterChange()" style="width: 100%;">
+                    <option value="all">🌐 All Projects</option>
+                    {% for p_key, p_val in projects.items() %}
+                    <option value="{{ p_key }}">{{ p_val.icon }} {{ p_val.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="rel-filter-category" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Collection:</label>
+                <select id="rel-filter-category" class="admin-input" onchange="handleRelFilterChange()" style="width: 100%;">
+                    <option value="all">📚 All Collections</option>
+                    {% for c_key, c_val in categories.items() %}
+                    <option value="{{ c_key }}">{{ c_val.icon }} {{ c_val.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="rel-filter-status" style="display: block; font-family: monospace; font-size: 0.76rem; font-weight: bold; margin-bottom: 4px; color: var(--text-bright);">Status:</label>
+                <select id="rel-filter-status" class="admin-input" onchange="handleRelFilterChange()" style="width: 100%;">
+                    <option value="all">🔍 All Statuses</option>
+                    <option value="draft">🟡 Draft (Hidden)</option>
+                    <option value="published">🟢 Published (Public)</option>
+                    <option value="scheduled">🕒 Scheduled</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Bulk Action & Summary Row -->
+        <div class="relmgr-summary-bar" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div id="relmgr-count-label" role="status" aria-live="polite" style="font-family: monospace; font-size: 0.82rem; color: var(--accent);">
+                Loading documentation catalog...
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="admin-btn" style="background: rgba(0, 255, 136, 0.2); border-color: #00ff88; color: #00ff88;" onclick="batchReleaseFiltered('published')" aria-label="Publish all currently filtered chapters to public">
+                    ⚡ Publish All Filtered
+                </button>
+                <button type="button" class="admin-btn" style="background: rgba(255, 170, 0, 0.2); border-color: #ffaa00; color: #ffaa00;" onclick="batchReleaseFiltered('draft')" aria-label="Revert all currently filtered chapters to draft">
+                    🔒 Revert All Filtered to Draft
+                </button>
+            </div>
+        </div>
+
+        <!-- Scrollable Table of Chapters -->
+        <div class="admin-modal-body relmgr-table-wrap" style="flex: 1; overflow-y: auto; max-height: 480px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+            <table class="relmgr-table" style="width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left;">
+                <thead>
+                    <tr style="background: #111827; border-bottom: 1px solid rgba(255,255,255,0.15); position: sticky; top: 0; z-index: 3;">
+                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright);">Chapter Title & Slug</th>
+                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright);">System / Collection</th>
+                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright); width: 140px;">Current Status</th>
+                        <th scope="col" style="padding: 10px 12px; font-family: monospace; color: var(--text-bright); text-align: right; width: 180px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="relmgr-table-body">
+                    <!-- Populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="admin-modal-footer" style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px;">
+            <button type="button" class="ctrl-btn" style="padding: 6px 16px;" onclick="closeReleaseManagerModal()">Done / Close</button>
         </div>
     </div>
 </div>
@@ -3045,11 +3276,25 @@
     // Global Escape Key Listener for Screen Reader Drawer Dismissal
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
+            var relModal = document.getElementById('modal-release-manager');
+            if (relModal && relModal.style.display !== 'none') {
+                closeReleaseManagerModal();
+                return;
+            }
+            var schedModal = document.getElementById('modal-schedule');
+            if (schedModal && schedModal.style.display !== 'none') {
+                closeScheduleModal();
+                return;
+            }
+            var newModal = document.getElementById('modal-new-chapter');
+            if (newModal && newModal.style.display !== 'none') {
+                closeNewChapterModal();
+                return;
+            }
             var sidebar = document.getElementById('docs-sidebar');
             if (sidebar && sidebar.classList.contains('mobile-open')) {
                 toggleMobileToc();
             }
-        }
         }
     });
 
@@ -3251,6 +3496,307 @@
     function closeNewChapterModal() {
         var modal = document.getElementById('modal-new-chapter');
         if (modal) modal.style.display = 'none';
+    }
+
+    // =========================================================================
+    // 12. ADMINISTRATOR DOCUMENTATION RELEASE MANAGER (BATCH & PER-CHAPTER)
+    // =========================================================================
+    var relItemsCache = [];
+
+    function openReleaseManagerModal() {
+        var modal = document.getElementById('modal-release-manager');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        var search = document.getElementById('rel-filter-search');
+        if (search) {
+            setTimeout(function() { search.focus(); }, 80);
+        }
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Documentation Release Manager opened.';
+        loadReleaseOverview();
+    }
+
+    function closeReleaseManagerModal() {
+        var modal = document.getElementById('modal-release-manager');
+        if (modal) modal.style.display = 'none';
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Documentation Release Manager closed.';
+    }
+
+    function loadReleaseOverview() {
+        var countLabel = document.getElementById('relmgr-count-label');
+        if (countLabel) countLabel.textContent = 'Loading live chapter release schedule...';
+
+        fetch('/docs/api/admin/release_overview')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.status === 'success') {
+                    relItemsCache = data.items || [];
+                    updateAdminMetrics(data.pub_count, data.draft_count, data.sched_count);
+                    renderReleaseManagerTable();
+                } else {
+                    if (countLabel) countLabel.textContent = 'Failed to load release overview.';
+                }
+            })
+            .catch(function(err) {
+                if (countLabel) countLabel.textContent = 'Network error: ' + err.message;
+            });
+    }
+
+    function updateAdminMetrics(pub, draft, sched) {
+        var elPub = document.getElementById('admin-summary-pub');
+        var elDraft = document.getElementById('admin-summary-draft');
+        var elSched = document.getElementById('admin-summary-sched');
+        if (elPub) elPub.textContent = pub;
+        if (elDraft) elDraft.textContent = draft;
+        if (elSched) elSched.textContent = sched;
+    }
+
+    function handleRelFilterChange() {
+        renderReleaseManagerTable();
+    }
+
+    function getFilteredRelItems() {
+        var q = (document.getElementById('rel-filter-search')?.value || '').trim().toLowerCase();
+        var proj = document.getElementById('rel-filter-project')?.value || 'all';
+        var cat = document.getElementById('rel-filter-category')?.value || 'all';
+        var status = document.getElementById('rel-filter-status')?.value || 'all';
+
+        return relItemsCache.filter(function(item) {
+            if (proj !== 'all' && item.project !== proj) return false;
+            if (cat !== 'all' && item.category !== cat) return false;
+            if (status !== 'all' && item.status !== status) return false;
+            if (q) {
+                var haystack = (item.title + ' ' + item.slug + ' ' + item.project_label + ' ' + item.collection_title).toLowerCase();
+                if (haystack.indexOf(q) === -1) return false;
+            }
+            return true;
+        });
+    }
+
+    function renderReleaseManagerTable() {
+        var tbody = document.getElementById('relmgr-table-body');
+        var countLabel = document.getElementById('relmgr-count-label');
+        if (!tbody) return;
+
+        var filtered = getFilteredRelItems();
+        var pubInFiltered = filtered.filter(function(x) { return x.status === 'published'; }).length;
+        var draftInFiltered = filtered.filter(function(x) { return x.status === 'draft'; }).length;
+        var schedInFiltered = filtered.filter(function(x) { return x.status === 'scheduled'; }).length;
+
+        if (countLabel) {
+            countLabel.textContent = 'Showing ' + filtered.length + ' of ' + relItemsCache.length + ' chapters (' + pubInFiltered + ' published, ' + draftInFiltered + ' draft, ' + schedInFiltered + ' scheduled)';
+        }
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 24px; color: var(--text-dim); font-family: monospace;">No chapters match the selected filters.</td></tr>';
+            return;
+        }
+
+        var html = '';
+        filtered.forEach(function(item) {
+            var statusHtml = '';
+            var actionBtn = '';
+            var safeTitle = (item.title || item.slug).replace(/"/g, '&quot;');
+            var safeSlug = (item.slug || '').replace(/"/g, '&quot;');
+            var safeCat = (item.category || '').replace(/"/g, '&quot;');
+
+            if (item.status === 'published') {
+                statusHtml = '<span class="admin-status-pill status-published">🟢 PUBLISHED</span>';
+                actionBtn = '<button type="button" class="admin-btn relmgr-act-btn" style="background: rgba(255,170,0,0.15); border-color: #ffaa00; color: #ffaa00;" data-cat="' + safeCat + '" data-slug="' + safeSlug + '" data-status="draft" aria-label="Revert ' + safeTitle + ' to Draft">🔒 Revert to Draft</button>';
+            } else if (item.status === 'scheduled') {
+                statusHtml = '<span class="admin-status-pill status-scheduled">🕒 ' + (item.release_date || 'Scheduled') + '</span>';
+                actionBtn = '<button type="button" class="admin-btn btn-quick-toggle relmgr-act-btn" style="margin-right: 4px;" data-cat="' + safeCat + '" data-slug="' + safeSlug + '" data-status="published" aria-label="Publish ' + safeTitle + ' now">⚡ Publish Now</button>' +
+                            '<button type="button" class="admin-btn relmgr-act-btn" style="color: #ffaa00;" data-cat="' + safeCat + '" data-slug="' + safeSlug + '" data-status="draft" aria-label="Revert ' + safeTitle + ' to Draft">Draft</button>';
+            } else {
+                statusHtml = '<span class="admin-status-pill status-draft">🟡 DRAFT</span>';
+                actionBtn = '<button type="button" class="admin-btn btn-quick-toggle relmgr-act-btn" data-cat="' + safeCat + '" data-slug="' + safeSlug + '" data-status="published" aria-label="Publish ' + safeTitle + ' to public">⚡ Publish to Public</button>';
+            }
+
+            html += '<tr>' +
+                '<td style="padding: 10px 12px; font-weight: bold; color: var(--text-bright);">' +
+                    '<div>' + item.title + '</div>' +
+                    '<div style="font-family: monospace; font-size: 0.72rem; color: var(--text-dim); margin-top: 2px;">' + item.category + '/' + item.slug + ' &bull; ~' + Math.max(1, Math.round((item.word_count || 0) / 180)) + 'm read</div>' +
+                '</td>' +
+                '<td style="padding: 10px 12px;">' +
+                    '<span class="badge-project-mini badge-' + item.project + '">' + item.project_label + '</span> ' +
+                    '<span class="badge-cat-mini">' + item.collection_title + '</span>' +
+                '</td>' +
+                '<td style="padding: 10px 12px;">' + statusHtml + '</td>' +
+                '<td style="padding: 10px 12px; text-align: right;">' + actionBtn + '</td>' +
+            '</tr>';
+        });
+
+        tbody.innerHTML = html;
+
+        var actButtons = tbody.querySelectorAll('.relmgr-act-btn');
+        actButtons.forEach(function(b) {
+            b.addEventListener('click', function() {
+                var c = this.getAttribute('data-cat');
+                var s = this.getAttribute('data-slug');
+                var st = this.getAttribute('data-status');
+                setChapterReleaseStatus(c, s, st);
+            });
+        });
+    }
+
+    function setChapterReleaseStatus(category, slug, newStatus) {
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Updating release status...';
+
+        fetch('/docs/api/admin/schedule', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: category,
+                slug: slug,
+                status: newStatus,
+                release_date: null
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                var target = relItemsCache.find(function(x) { return x.slug === slug && (x.category === category || !category); });
+                if (target) {
+                    target.status = newStatus;
+                    target.release_date = null;
+                }
+                updateAdminMetrics(data.published_count, data.draft_count, data.scheduled_count);
+                renderReleaseManagerTable();
+
+                if (currentSlug === slug) {
+                    currentPublishStatus = newStatus;
+                    var statusPill = document.getElementById('admin-status-pill');
+                    if (statusPill) {
+                        statusPill.className = 'admin-status-pill status-' + newStatus;
+                        statusPill.innerHTML = (newStatus === 'published') ? '🟢 PUBLISHED (Publicly Visible)' : '🟡 DRAFT (Hidden from Visitors)';
+                    }
+                    var toggleBtn = document.getElementById('btn-admin-toggle-pub');
+                    if (toggleBtn) {
+                        toggleBtn.innerHTML = (newStatus === 'published') ? '🔒 Revert to Draft' : '⚡ Publish Now';
+                    }
+                }
+
+                var sidebarItems = document.querySelectorAll('.chapter-nav-item');
+                sidebarItems.forEach(function(el) {
+                    if (el.dataset.slug === slug) {
+                        el.dataset.publishStatus = newStatus;
+                        var b = el.querySelector('.badge-status-admin');
+                        if (b) {
+                            b.className = 'badge-status-admin status-' + newStatus;
+                            b.textContent = (newStatus === 'published') ? 'PUB' : 'DRAFT';
+                        }
+                    }
+                });
+
+                var msg = (newStatus === 'published') ? 'Chapter published! Now publicly visible to other profiles and visitors.' : 'Chapter reverted to draft. Hidden from visitors.';
+                if (announcer) announcer.textContent = msg;
+            } else {
+                alert('Error: ' + (data.message || 'Failed to update status.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error updating status: ' + err.message);
+        });
+    }
+
+    function batchReleaseFiltered(targetStatus) {
+        var filtered = getFilteredRelItems();
+        if (filtered.length === 0) {
+            alert('No chapters match the current filter.');
+            return;
+        }
+
+        var label = (targetStatus === 'published') ? 'PUBLISH to public' : 'REVERT to draft (hide from public)';
+        var confirmMsg = 'Are you sure you want to ' + label + ' for ' + filtered.length + ' chapters?';
+        if (!confirm(confirmMsg)) return;
+
+        var slugs = filtered.map(function(x) { return x.category + '/' + x.slug; });
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Updating ' + filtered.length + ' chapters in batch...';
+
+        fetch('/docs/api/admin/batch_release', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                slugs: slugs,
+                status: targetStatus
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                filtered.forEach(function(item) {
+                    item.status = targetStatus;
+                    item.release_date = null;
+                });
+                updateAdminMetrics(data.published_count, data.draft_count, data.scheduled_count);
+                renderReleaseManagerTable();
+
+                slugs.forEach(function(sKey) {
+                    var pureSlug = sKey.split('/')[1] || sKey;
+                    var el = document.querySelector('.chapter-nav-item[data-slug="' + pureSlug + '"]');
+                    if (el) {
+                        el.dataset.publishStatus = targetStatus;
+                        var b = el.querySelector('.badge-status-admin');
+                        if (b) {
+                            b.className = 'badge-status-admin status-' + targetStatus;
+                            b.textContent = (targetStatus === 'published') ? 'PUB' : 'DRAFT';
+                        }
+                    }
+                });
+
+                if (announcer) announcer.textContent = data.message;
+            } else {
+                alert('Batch release error: ' + (data.message || 'Operation failed.'));
+            }
+        })
+        .catch(function(err) {
+            alert('Network error during batch update: ' + err.message);
+        });
+    }
+
+    function confirmRevertAllDrafts() {
+        if (!confirm('This will revert ALL chapters across all systems to DRAFT status so nothing is published yet. Proceed?')) {
+            return;
+        }
+        var announcer = document.getElementById('docs-announcer');
+        if (announcer) announcer.textContent = 'Reverting all chapters to draft...';
+
+        fetch('/docs/api/admin/batch_release', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                all: true,
+                status: 'draft'
+            })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                relItemsCache.forEach(function(x) {
+                    x.status = 'draft';
+                    x.release_date = null;
+                });
+                updateAdminMetrics(data.published_count, data.draft_count, data.scheduled_count);
+                renderReleaseManagerTable();
+
+                var badges = document.querySelectorAll('.badge-status-admin');
+                badges.forEach(function(b) {
+                    b.className = 'badge-status-admin status-draft';
+                    b.textContent = 'DRAFT';
+                });
+
+                if (announcer) announcer.textContent = 'All chapters have been reverted to Draft. Nothing is published to public.';
+                alert('All documentation chapters are now set to DRAFT (0 published to public).');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(function(err) {
+            alert('Network error: ' + err.message);
+        });
     }
 
     function autoSuggestSlug() {

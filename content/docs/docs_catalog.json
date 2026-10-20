@@ -108,7 +108,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -417,7 +417,7 @@
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -648,7 +648,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -761,7 +761,7 @@
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -858,7 +858,7 @@
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -960,7 +960,7 @@
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -1076,7 +1076,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -1186,7 +1186,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -2344,7 +2344,7 @@
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -3357,7 +3357,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -4430,6 +4430,147 @@
     "release_date": null
   },
   {
+    "slug": "01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS",
+    "category": "devlog",
+    "title": "Pillar 01.46: Problems Encountered: Local Model Distillation & Token Burnout Traps",
+    "summary": "Modern agentic workflows depend heavily on frontier Large Language Models (LLMs) hosted in cloud environments. While cloud LLMs excel at complex reasoning, relying on them for routine repetitive tasks\u2014such as summarizing...",
+    "word_count": 1032,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-01_46",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-01_46",
+    "versioned_id": "SIRA-DEV-01_46@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-01_46-SEC-1",
+        "num": "1",
+        "title": "Overview & Context",
+        "anchor": "#SIRA-DEV-01_46-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-1",
+        "num": "1",
+        "title": "The Token Burnout & Distillation Traps",
+        "anchor": "#SIRA-DEV-01_46-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-2",
+        "num": "2",
+        "title": "The Megabyte Context Re-Reading Trap",
+        "anchor": "#SIRA-DEV-01_46-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-3",
+        "num": "3",
+        "title": "The Static UI Dropdown & Hardcoded Model Trap",
+        "anchor": "#SIRA-DEV-01_46-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-4",
+        "num": "4",
+        "title": "The Stateless Ephemeral Chat & Missing Transcript Trap",
+        "anchor": "#SIRA-DEV-01_46-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-5",
+        "num": "5",
+        "title": "The Large Local Model Memory Collapse Trap",
+        "anchor": "#SIRA-DEV-01_46-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-6",
+        "num": "6",
+        "title": "The Unscrubbed Prompt Leak & Invisible Token Blindspot Traps",
+        "anchor": "#SIRA-DEV-01_46-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-2",
+        "num": "2",
+        "title": "Invariant Rules for Local Distillation & Token Economics",
+        "anchor": "#SIRA-DEV-01_46-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-3",
+        "num": "3",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-01_46-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-7",
+        "num": "7",
+        "title": "Why did hardcoding an `<option>` tag in `index.html` disappear when the page loaded?",
+        "anchor": "#SIRA-DEV-01_46-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-8",
+        "num": "8",
+        "title": "Does running the model locally require an expensive Nvidia graphics card?",
+        "anchor": "#SIRA-DEV-01_46-SEC-8"
+      },
+      {
+        "id": "SIRA-DEV-01_46-SEC-4",
+        "num": "4",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-01_46-SEC-4"
+      }
+    ],
+    "topics": [
+      "security",
+      "infrastructure",
+      "workflow",
+      "limitations",
+      "origin_story",
+      "changelog"
+    ],
+    "order_score": 460,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
     "slug": "01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.45: Problems Encountered: Visitor Cognitive Overwhelm & In-Place Edit Race Traps",
@@ -4579,6 +4720,132 @@
         "slug": "03_The_Forge_of_Sovereignty",
         "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH",
+    "category": "devlog",
+    "title": "Pillar 05.45: \"From Scratch\" Step-by-Step Creation Guide: Local Model Service & Token Telemetry Engine",
+    "summary": "This guide provides a step-by-step tutorial for building a complete offline local model execution, dynamic GGUF discovery, and token telemetry pipeline from scratch. You will write two core modules: `local_model_service....",
+    "word_count": 1022,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-ARCH-05_45",
+    "version": "v1.0",
+    "canonical_id": "SIRA-ARCH-05_45",
+    "versioned_id": "SIRA-ARCH-05_45@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-ARCH-05_45-SEC-1",
+        "num": "1",
+        "title": "Overview & Beginner Context",
+        "anchor": "#SIRA-ARCH-05_45-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-2",
+        "num": "2",
+        "title": "Environment Preparation & Prerequisites",
+        "anchor": "#SIRA-ARCH-05_45-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-3",
+        "num": "3",
+        "title": "Step 1: Write `core/local_model_service.py` Line by Line",
+        "anchor": "#SIRA-ARCH-05_45-SEC-3"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-4",
+        "num": "4",
+        "title": "Step 2: Write `core/token_telemetry.py` Line by Line",
+        "anchor": "#SIRA-ARCH-05_45-SEC-4"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-5",
+        "num": "5",
+        "title": "The \"Why Order Matters\" Sequencing Rationale",
+        "anchor": "#SIRA-ARCH-05_45-SEC-5"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-6",
+        "num": "6",
+        "title": "10-Second Verification Checklist",
+        "anchor": "#SIRA-ARCH-05_45-SEC-6"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-7",
+        "num": "7",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-ARCH-05_45-SEC-7"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-1",
+        "num": "1",
+        "title": "Why do we check `mtime` and `size` before opening the transcript file?",
+        "anchor": "#SIRA-ARCH-05_45-SEC-1"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-2",
+        "num": "2",
+        "title": "Can I run this script without administrative permissions?",
+        "anchor": "#SIRA-ARCH-05_45-SEC-2"
+      },
+      {
+        "id": "SIRA-ARCH-05_45-SEC-8",
+        "num": "8",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-ARCH-05_45-SEC-8"
+      }
+    ],
+    "topics": [
+      "security",
+      "infrastructure",
+      "changelog"
+    ],
+    "order_score": 450,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ],
     "publish_status": "draft",
@@ -5090,6 +5357,272 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "encrypt_me",
+        "project_label": "EncryptMe Multi-User Vault",
+        "category": "encrypt_me",
+        "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+        "title": "EncryptMe Cryptographic Architecture",
+        "relation": "Split-Key Entropy Slicing, PBKDF2HMAC & Shared File Vaults"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE",
+    "category": "devlog",
+    "title": "Pillar 02.42: Source Code Evidence: Local Model Service & Token Telemetry Architecture",
+    "summary": "This document provides forensic source code citations for the DevCore Local Model Token Optimization and Context Distillation architecture. It details dynamic GGUF model discovery, the offline Qwen inference engine, mult...",
+    "word_count": 946,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-02_42",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-02_42",
+    "versioned_id": "SIRA-DEV-02_42@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-02_42-SEC-1",
+        "num": "1",
+        "title": "Overview & Context",
+        "anchor": "#SIRA-DEV-02_42-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-1",
+        "num": "1",
+        "title": "Dynamic Local Model Discovery (`core/local_model_service.py` & `core/server.py`)",
+        "anchor": "#SIRA-DEV-02_42-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-2",
+        "num": "2",
+        "title": "Scanning Local GGUF Models (`discover_local_models`)",
+        "anchor": "#SIRA-DEV-02_42-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-2",
+        "num": "2",
+        "title": "Semantic Compression & Multi-Turn Execution (`core/local_model_service.py`)",
+        "anchor": "#SIRA-DEV-02_42-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-3",
+        "num": "3",
+        "title": "Semantic Context Compression Function (`compress_context`)",
+        "anchor": "#SIRA-DEV-02_42-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-4",
+        "num": "4",
+        "title": "Session Persistence & Local Agent Execution (`execute_local_agent_task`)",
+        "anchor": "#SIRA-DEV-02_42-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-3",
+        "num": "3",
+        "title": "Token Telemetry Engine & Raugus VFS (`core/token_telemetry.py`)",
+        "anchor": "#SIRA-DEV-02_42-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-5",
+        "num": "5",
+        "title": "Live Step Recording & Session Rollup",
+        "anchor": "#SIRA-DEV-02_42-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-4",
+        "num": "4",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-02_42-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-6",
+        "num": "6",
+        "title": "What does `loop.run_in_executor(None, query_local_model, ...)` do?",
+        "anchor": "#SIRA-DEV-02_42-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-7",
+        "num": "7",
+        "title": "Why do we track `cache_read_tokens` separately from `input_tokens`?",
+        "anchor": "#SIRA-DEV-02_42-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-02_42-SEC-5",
+        "num": "5",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-02_42-SEC-5"
+      }
+    ],
+    "topics": [
+      "infrastructure",
+      "changelog"
+    ],
+    "order_score": 420,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": true,
+    "clearance": "proprietary",
+    "base_sensitivity": 1,
+    "max_sensitivity": 4,
+    "rel_path": "devlog/02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE",
+    "category": "devlog",
+    "title": "Pillar 04.42: Solutions & Architecture: Local Model Token Optimization & Context Distillation Architecture",
+    "summary": "The Local Model Token Optimization and Context Distillation architecture introduces a hybrid edge-cloud AI execution plane. Heavy reasoning and code synthesis remain with frontier cloud models, while repetitive context s...",
+    "word_count": 966,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-04_42",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-04_42",
+    "versioned_id": "SIRA-DEV-04_42@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-04_42-SEC-1",
+        "num": "1",
+        "title": "Architectural Overview & Context",
+        "anchor": "#SIRA-DEV-04_42-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-2",
+        "num": "2",
+        "title": "The 4 Modular Components",
+        "anchor": "#SIRA-DEV-04_42-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-1",
+        "num": "1",
+        "title": "Component 1: Dynamic Model Discovery & Local Inference (`core/local_model_service.py`)",
+        "anchor": "#SIRA-DEV-04_42-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-2",
+        "num": "2",
+        "title": "Component 2: Token Telemetry Engine (`core/token_telemetry.py`)",
+        "anchor": "#SIRA-DEV-04_42-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-3",
+        "num": "3",
+        "title": "Component 3: Accessible Telemetry Dashboard (`sandbox/templates/telemetry.html`)",
+        "anchor": "#SIRA-DEV-04_42-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-4",
+        "num": "4",
+        "title": "Component 4: Raugus Resolver MCP Broker (`raugus-resolver`)",
+        "anchor": "#SIRA-DEV-04_42-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-3",
+        "num": "3",
+        "title": "The \"Why Order Matters\" Execution Pipeline",
+        "anchor": "#SIRA-DEV-04_42-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-4",
+        "num": "4",
+        "title": "Screen Reader & Accessibility Considerations",
+        "anchor": "#SIRA-DEV-04_42-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-5",
+        "num": "5",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-04_42-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-5",
+        "num": "5",
+        "title": "Why do we run the model with a 4-bit quantization instead of full 16-bit precision?",
+        "anchor": "#SIRA-DEV-04_42-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-6",
+        "num": "6",
+        "title": "What happens if the local model crashes or llama-cli is missing?",
+        "anchor": "#SIRA-DEV-04_42-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-04_42-SEC-6",
+        "num": "6",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-04_42-SEC-6"
+      }
+    ],
+    "topics": [
+      "security",
+      "changelog"
+    ],
+    "order_score": 420,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -6334,6 +6867,165 @@
         "slug": "USER_MANUAL",
         "title": "Siraugga Command Center User Manual & Interface Guide",
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS",
+    "category": "devlog",
+    "title": "Pillar 03.39: Diagnostic Tests: Local Model Inference & Token Telemetry Verification",
+    "summary": "This document records the empirical diagnostic test procedures and sanitized terminal outputs validating the Local Model Service (`local_model_service.py`), dynamic GGUF model discovery via `GET /api/models`, multi-turn...",
+    "word_count": 911,
+    "project": "siraugga",
+    "project_label": "Siraugga / DevCore Framework",
+    "project_code": "SIRA",
+    "collection_code": "DEV",
+    "doc_id": "SIRA-DEV-03_39",
+    "version": "v1.0",
+    "canonical_id": "SIRA-DEV-03_39",
+    "versioned_id": "SIRA-DEV-03_39@v1.0",
+    "sections": [
+      {
+        "id": "SIRA-DEV-03_39-SEC-1",
+        "num": "1",
+        "title": "Overview & Context",
+        "anchor": "#SIRA-DEV-03_39-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-1",
+        "num": "1",
+        "title": "Test 1: Direct Local Model Query & Dynamic Model Discovery",
+        "anchor": "#SIRA-DEV-03_39-SEC-1"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-2",
+        "num": "2",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_39-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-3",
+        "num": "3",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_39-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-2",
+        "num": "2",
+        "title": "Test 2: Offline Semantic Context Compression",
+        "anchor": "#SIRA-DEV-03_39-SEC-2"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-4",
+        "num": "4",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_39-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-5",
+        "num": "5",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_39-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-3",
+        "num": "3",
+        "title": "Test 3: Token Telemetry Engine Verification",
+        "anchor": "#SIRA-DEV-03_39-SEC-3"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-6",
+        "num": "6",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_39-SEC-6"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-7",
+        "num": "7",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_39-SEC-7"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-4",
+        "num": "4",
+        "title": "Test 4: Live Server Endpoints & MCP Verification",
+        "anchor": "#SIRA-DEV-03_39-SEC-4"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-8",
+        "num": "8",
+        "title": "What We Tested",
+        "anchor": "#SIRA-DEV-03_39-SEC-8"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-9",
+        "num": "9",
+        "title": "Exact Command Run",
+        "anchor": "#SIRA-DEV-03_39-SEC-9"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-5",
+        "num": "5",
+        "title": "Beginner Coder Q&A",
+        "anchor": "#SIRA-DEV-03_39-SEC-5"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-10",
+        "num": "10",
+        "title": "How did the test index 12,956 steps without crashing or causing high CPU load?",
+        "anchor": "#SIRA-DEV-03_39-SEC-10"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-11",
+        "num": "11",
+        "title": "Why does the prompt cache hit rate matter so much (95.32%)?",
+        "anchor": "#SIRA-DEV-03_39-SEC-11"
+      },
+      {
+        "id": "SIRA-DEV-03_39-SEC-6",
+        "num": "6",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#SIRA-DEV-03_39-SEC-6"
+      }
+    ],
+    "topics": [
+      "workflow",
+      "changelog"
+    ],
+    "order_score": 390,
+    "is_latest": false,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "devlog/03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS.md",
+    "cross_references": [
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "HOT_PATCH_ARCHITECTURE",
+        "title": "Siraugga Zero-Downtime Hot-Patch Architecture",
+        "relation": "Zero-Restart Bytecode Verification & In-Memory View Swapping"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
       }
     ],
     "publish_status": "draft",
@@ -34913,7 +35605,7 @@
     "category": "devlog",
     "title": "Master Documentation Index: Siraugga Autonomous Agent & Zero-Trust Command Center",
     "summary": "Welcome to the comprehensive, beginner-friendly technical documentation suite for **Siraugga**\u2014the accessible, event-driven, zero-trust autonomous development platform and web portal.",
-    "word_count": 3968,
+    "word_count": 4087,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -38392,7 +39084,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -38498,7 +39190,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -38619,7 +39311,7 @@
         "relation": "Tolk DLL Bridging, Accessible Speech Drivers & NVDA Hooks"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -38724,7 +39416,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -38813,7 +39505,7 @@
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -38902,7 +39594,7 @@
         "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -39077,7 +39769,7 @@
         "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -39256,7 +39948,7 @@
         "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
@@ -39436,7 +40128,7 @@
         "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
       }
     ],
-    "publish_status": "published",
+    "publish_status": "draft",
     "release_date": null
   },
   {
