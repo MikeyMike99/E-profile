@@ -108,7 +108,7 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "draft",
+    "publish_status": "published",
     "release_date": null
   },
   {
@@ -39009,21 +39009,21 @@
     "category": "manifesto",
     "title": "Chapter 1: ECHOES_OF_THE_WORLD (The True Origin)",
     "summary": "Every great technological ecosystem begins with some thing or another that could not be satisfied. For some, it is the pursuit of profit; for others, academic curiosity. But the foundation of my journey was forged in som...",
-    "word_count": 5231,
+    "word_count": 2396,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "MAN",
     "doc_id": "ECHO-MAN-01_ECHOES_IN_THE_V",
-    "version": "v1.6",
+    "version": "v1.7",
     "canonical_id": "ECHO-MAN-01_ECHOES_IN_THE_V",
-    "versioned_id": "ECHO-MAN-01_ECHOES_IN_THE_V@v1.6",
+    "versioned_id": "ECHO-MAN-01_ECHOES_IN_THE_V@v1.7",
     "sections": [
       {
-        "id": "ECHO-MAN-01-SEC-1",
+        "id": "ECHO-MAN-01_ECHOES_IN_THE_V-SEC-1",
         "num": "1",
         "title": "\ud83d\udd17 Technical Cross-References & Architectural DNA",
-        "anchor": "#ECHO-MAN-01-SEC-1"
+        "anchor": "#ECHO-MAN-01_ECHOES_IN_THE_V-SEC-1"
       }
     ],
     "topics": [
@@ -39091,53 +39091,67 @@
     "slug": "02_The_Echoes_Architecture",
     "category": "manifesto",
     "title": "Chapter 2: The Echoes Architecture (Building the Engine From Bare Metal)",
-    "summary": "When I look back at my earliest project folders, it wasn't some grand academic master plan. It was a chaotic workbench where I was literally fighting for every single inch of progress.",
-    "word_count": 956,
+    "summary": "I was stuck on pure `x, y, z` coordinates, and I quickly hit the absolute limit of that math. The breaking point came when I tried to actually manipulate the world\u2014when I tried to dig a hole and place a physical box. You...",
+    "word_count": 3220,
     "project": "echoes",
     "project_label": "Echoes of the World (Audio Game)",
     "project_code": "ECHO",
     "collection_code": "MAN",
     "doc_id": "ECHO-MAN-02_THE_ECHOES_ARCH",
-    "version": "v1.3",
+    "version": "v1.4",
     "canonical_id": "ECHO-MAN-02_THE_ECHOES_ARCH",
-    "versioned_id": "ECHO-MAN-02_THE_ECHOES_ARCH@v1.3",
+    "versioned_id": "ECHO-MAN-02_THE_ECHOES_ARCH@v1.4",
     "sections": [
       {
         "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-1",
         "num": "1",
-        "title": "The Raw Sandbox: PROGRAM and the DLL Breakthrough",
+        "title": "Breaking the Flat Void: 3D Bounding Boxes, Room Physics, and Collision Detection",
         "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-1"
       },
       {
         "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-2",
         "num": "2",
-        "title": "Fighting Interfaces: MAIN_MENU and Pygame States",
+        "title": "Distributed Experiments: Flask, WebSockets, and Cloud Hosting",
         "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-2"
       },
       {
         "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-3",
         "num": "3",
-        "title": "Writing Code That Writes Code: The TEST Experiment",
+        "title": "World Architecture: Layering, Nested Chunk Dictionaries, and Highest Surface Detection",
         "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-3"
       },
       {
         "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-4",
         "num": "4",
-        "title": "Bringing the Machine to Life: GAME",
+        "title": "Custom Audio Pipeline: Screen-Reader Conflict Avoidance and Sound Engineering",
         "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-4"
       },
       {
         "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-5",
         "num": "5",
-        "title": "Technical Cross-References & Realized Projects",
+        "title": "Security & State Locking: The Hein Wagner Academy Slot Machine",
         "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-5"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-6",
+        "num": "6",
+        "title": "Menu Dynamic Generation & AST Meta-Programming",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-6"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-7",
+        "num": "7",
+        "title": "Authoritative Server Engine, Gravity Optimization, and Entity Synchronization",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-7"
+      },
+      {
+        "id": "ECHO-MAN-02_THE_ECHOES_ARCH-SEC-8",
+        "num": "8",
+        "title": "Technical Cross-References & Realized Projects",
+        "anchor": "#ECHO-MAN-02_THE_ECHOES_ARCH-SEC-8"
       }
     ],
     "topics": [
-      "security",
-      "infrastructure",
-      "accessibility_ui",
-      "limitations",
       "origin_story"
     ],
     "order_score": 0,

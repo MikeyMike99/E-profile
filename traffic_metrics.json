@@ -1,21 +1,21 @@
 {
-    "total_views": 352,
+    "total_views": 384,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
         "280fff97ac23ecaf40e34b70bf03bc5d"
     ],
     "paths": {
-        "/docs/api/admin/schedule": 44,
-        "/docs/api/admin/save": 66,
-        "/docs/api/admin/create": 44,
-        "/docs/api/admin/delete": 44,
-        "/docs": 44,
-        "/docs/api/chapter/../../../../etc/passwd/test": 22,
-        "/docs/api/chapter/devlog/../../server": 22,
-        "/docs/../../etc/passwd": 22,
-        "/docs/devlog/../../server": 22,
+        "/docs/api/admin/schedule": 48,
+        "/docs/api/admin/save": 72,
+        "/docs/api/admin/create": 48,
+        "/docs/api/admin/delete": 48,
+        "/docs": 48,
+        "/docs/api/chapter/../../../../etc/passwd/test": 24,
+        "/docs/api/chapter/devlog/../../server": 24,
+        "/docs/../../etc/passwd": 24,
+        "/docs/devlog/../../server": 24,
         "/docs/eprofile/DEVLOG": 18,
-        "/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 4
+        "/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 6
     }
 }
