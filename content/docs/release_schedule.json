@@ -755,7 +755,7 @@
     "devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": {
       "status": "published",
       "release_date": null,
-      "updated_at": "2026-10-20T16:24:36.312869"
+      "updated_at": "2026-10-20T17:40:18.254984"
     },
     "devlog/04_27_POPIA_COMPLIANT_OFFLINE_BROKER_ARCHITECTURE": {
       "status": "draft",
@@ -1388,9 +1388,9 @@
       "updated_at": "2026-10-20T16:24:13.573207"
     },
     "manifesto/01_Echoes_in_the_Void": {
-      "status": "draft",
+      "status": "published",
       "release_date": null,
-      "updated_at": "2026-10-20T16:24:13.573207"
+      "updated_at": "2026-10-20T18:26:19.712914"
     },
     "manifesto/02_The_Echoes_Architecture": {
       "status": "draft",
@@ -1605,7 +1605,7 @@
     "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": {
       "status": "published",
       "release_date": null,
-      "updated_at": "2026-10-20T16:24:36.312869"
+      "updated_at": "2026-10-20T17:40:18.254984"
     },
     "CLASS_WORLD_ARCHITECTURE": {
       "status": "draft",
@@ -3133,9 +3133,9 @@
       "updated_at": "2026-10-20T16:24:13.573207"
     },
     "01_Echoes_in_the_Void": {
-      "status": "draft",
+      "status": "published",
       "release_date": null,
-      "updated_at": "2026-10-20T16:24:13.573207"
+      "updated_at": "2026-10-20T18:26:19.712914"
     },
     "02_The_Echoes_Architecture": {
       "status": "draft",

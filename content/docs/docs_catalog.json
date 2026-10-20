@@ -39393,9 +39393,9 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "draft",
+    "publish_status": "published",
     "release_date": null,
-    "is_released": false
+    "is_released": true
   },
   {
     "slug": "02_The_Echoes_Architecture",
