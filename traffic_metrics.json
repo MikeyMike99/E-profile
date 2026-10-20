@@ -1,5 +1,5 @@
 {
-    "total_views": 789,
+    "total_views": 827,
     "unique_visitors": [
         "4d12fbe8a0f5faad42c16500d80329b9",
         "207a08c0cd19e6e5d1a1038d3ffa1efd",
@@ -63,22 +63,28 @@
         "d5accda1867f2594ce979b9f3ed6572a",
         "2a07d775cc80a68bfaaf139c2ee6dc96",
         "a03bccc5537aacc7c8f20528ff5f4ce9",
-        "cb32debd289d6c37e7624a1340044c3f"
+        "cb32debd289d6c37e7624a1340044c3f",
+        "98e67d835f404c6ec4a67ad423eafae0",
+        "c9f718b4d25df1226a69f62aa9d267d4",
+        "8cd1c2504007d17e55b4280d37ef66eb",
+        "3427478f374f80b2a0b66bf67bb7d8c2",
+        "9fac84ad44ef1bc8443ea7eb1ce07e2e",
+        "3c991838461074e29cf603466d7af39c"
     ],
     "paths": {
-        "/": 269,
-        "/favicon.ico": 162,
+        "/": 283,
+        "/favicon.ico": 169,
         "/projects": 26,
         "/ai_agent": 20,
-        "/login": 53,
+        "/login": 56,
         "/ai_agent/": 12,
         "/ws": 123,
         "/ai_agent/api/chat": 2,
         "/ai_agent/api/stream": 1,
-        "/robots.txt": 47,
+        "/robots.txt": 52,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
-        "/docs": 20,
+        "/docs": 23,
         "/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": 1,
         "/logout": 9,
         "/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE": 1,
@@ -108,6 +114,11 @@
         "/docs/api/chapter/devlog/../../server": 4,
         "/docs/../../etc/passwd": 4,
         "/docs/devlog/../../server": 4,
-        "/docs/eprofile/DEVLOG": 4
+        "/docs/eprofile/DEVLOG": 5,
+        "/docs/devlog/02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE": 1,
+        "/docs/manifesto/00_Foreword": 1,
+        "/docs/manifesto/01_Echoes_in_the_Void": 1,
+        "/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH": 1,
+        "/docs/manifesto/02_The_Echoes_Architecture": 1
     }
 }
