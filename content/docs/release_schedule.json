@@ -1115,8 +1115,9 @@
       "release_date": null
     },
     "manifesto/02_The_Echoes_Architecture": {
-      "status": "draft",
-      "release_date": null
+      "status": "published",
+      "release_date": null,
+      "updated_at": "2026-10-20T19:41:19.801996"
     },
     "manifesto/03_The_Forge_of_Sovereignty": {
       "status": "draft",
@@ -2818,9 +2819,9 @@
       "updated_at": "2026-10-20T18:26:19.712914"
     },
     "02_The_Echoes_Architecture": {
-      "status": "draft",
+      "status": "published",
       "release_date": null,
-      "updated_at": "2026-10-20T16:24:13.573207"
+      "updated_at": "2026-10-20T19:41:19.801996"
     },
     "03_The_Forge_of_Sovereignty": {
       "status": "draft",

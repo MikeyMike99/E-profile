@@ -39204,8 +39204,9 @@
         "relation": "Screen Reader Navigation, Flip-Cards & Mid-Task Steering"
       }
     ],
-    "publish_status": "draft",
-    "release_date": null
+    "publish_status": "published",
+    "release_date": null,
+    "is_released": true
   },
   {
     "slug": "03_The_Forge_of_Sovereignty",
