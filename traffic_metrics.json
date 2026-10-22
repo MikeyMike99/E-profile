@@ -1,5 +1,5 @@
 {
-    "total_views": 1077,
+    "total_views": 1120,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -18,11 +18,11 @@
         "786b6e4cb44088442aed326a4915bca6"
     ],
     "paths": {
-        "/": 375,
-        "/favicon.ico": 238,
+        "/": 395,
+        "/favicon.ico": 252,
         "/projects": 26,
         "/ai_agent": 20,
-        "/login": 70,
+        "/login": 76,
         "/ai_agent/": 12,
         "/ws": 123,
         "/ai_agent/api/chat": 2,
@@ -32,7 +32,7 @@
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
         "/docs": 42,
         "/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": 1,
-        "/logout": 13,
+        "/logout": 14,
         "/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE": 1,
         "/docs/api/chapter/story/DEVLOG": 2,
         "/docs/api/chapter/eprofile/DEVLOG": 5,
@@ -75,6 +75,7 @@
         "/docs/manifesto/00_The_Forensic_Timeline": 1,
         "/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY": 1,
         "/docs/textbook/Chapter_01_Introduction_To_Zero_Trust": 1,
-        "/edit_profile": 1
+        "/edit_profile": 1,
+        "/change_password": 2
     }
 }
