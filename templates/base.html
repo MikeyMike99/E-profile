@@ -89,11 +89,8 @@
             padding: 80px 20px 40px;
             position: relative;
             z-index: 1;
-            /* Ensure halo renders below other UI */
 
-            /* Texture Logic strictly for Hero */
             background-image: linear-gradient(rgba(5, 7, 10, 0) 70%, var(--bg-deep) 100%),
-            /* Fades texture into black */
             url("{{ url_for('static', filename='img/texture.png') }}");
             background-size: cover;
             background-position: center;
@@ -108,14 +105,8 @@
             margin: 0 auto 15px;
             overflow: hidden;
             background: #000;
-            /* Solid base behind image */
             position: relative;
-
-            /* THE FIX: OVAL DARK HALO FOR CRISP EDGE */
-            /* Using a large, dark drop-shadow to create the halo/shadow layer */
             filter: drop-shadow(0 0 15px rgba(0, 0, 0, 1)) drop-shadow(0 0 5px rgba(0, 0, 0, 1));
-
-            /* Keeping the distinct accent glow separated */
             box-shadow: 0 0 25px var(--accent-glow);
         }
 
@@ -223,11 +214,17 @@
         }
 
         .nav-link.locked {
-            opacity: 0.5;
-            pointer-events: none;
+            opacity: 0.8;
             background: rgba(255, 255, 255, 0.02);
-            color: #666 !important;
-            border-color: #333;
+            color: var(--text-dim) !important;
+            border-color: rgba(255, 176, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .nav-link.locked:hover, .nav-link.locked:focus-visible {
+            border-color: var(--amber, #ffb000);
+            color: var(--text-bright) !important;
+            box-shadow: 0 0 10px rgba(255, 176, 0, 0.3);
         }
         
         .flash-container {
@@ -307,7 +304,7 @@
         {% for tab in config.TABS %}
             {% set show_tab = True %}
             {% if not is_admin and not is_employer %}
-                {% if tab not in ['home', 'docs'] and ('master:view_tabs' not in permissions or ('exclude:tab:' ~ tab) in permissions) %}
+                {% if tab not in ['home', 'docs', 'bio'] and ('master:view_tabs' not in permissions or ('exclude:tab:' ~ tab) in permissions) %}
                     {% set show_tab = False %}
                 {% endif %}
             {% endif %}
@@ -317,7 +314,7 @@
                 {{ tab | upper }}
             </a>
             {% else %}
-            <a href="#" class="nav-link locked" aria-disabled="true">
+            <a href="/{{ tab }}" class="nav-link locked {{ 'active' if active_tab == tab }}" aria-label="{{ tab | upper }} (Clearance Required)">
                 {{ tab | upper }} 🔒
             </a>
             {% endif %}
@@ -358,7 +355,6 @@
             const announcer = document.getElementById('global-announcer');
             if (announcer) {
                 announcer.textContent = message;
-                // Optional: clear after a bit to ensure repeated identical messages get read again
                 setTimeout(() => { if (announcer.textContent === message) announcer.textContent = ''; }, 3000);
             }
         }

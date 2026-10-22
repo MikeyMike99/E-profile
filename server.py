@@ -209,10 +209,20 @@ def dynamic_route(path):
         return redirect(url_for('dynamic_route', path='home'))
         
     perms = session.get('permissions', [])
-    if path not in ['home', 'docs'] and not session.get('admin', False) and not session.get('is_employer', False):
-        if f'view:tab:{path}' not in perms:
-            flash("ACCESS DENIED: You lack permissions to view this section.", "error")
-            return redirect(url_for('login'))
+    if path not in ['home', 'docs', 'bio'] and not session.get('admin', False) and not session.get('is_employer', False):
+        has_access = (
+            f'view:tab:{path}' in perms
+            or ('master:view_tabs' in perms and f'exclude:tab:{path}' not in perms)
+        )
+        if not has_access:
+            return render_template(
+                'clearance_required.html',
+                active_tab=path,
+                requested_tab=path,
+                is_admin=False,
+                is_employer=False,
+                permissions=perms
+            )
     
     # Retrieve content sections
     projects_list = get_projects_data() if path in ['projects', 'home'] else []
@@ -305,6 +315,7 @@ def login():
     if request.method == 'POST':
         action = request.form.get('action', 'login')
         token = request.form.get('token', '').strip()
+        next_url = request.form.get('next', '').strip()
 
         if not token:
             return render_template('login.html', error="TOKEN_REQUIRED", is_setup=is_setup)
@@ -358,6 +369,8 @@ def login():
                 
                 if is_admin:
                     return redirect(url_for('admin'))
+                elif next_url and next_url.startswith('/') and not next_url.startswith('//'):
+                    return redirect(next_url)
                 else:
                     return redirect(url_for('dynamic_route', path='home'))
             
