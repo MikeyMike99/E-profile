@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .clearance-shell {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 30px;
+    }
+
+    .clearance-banner {
+        background: rgba(255, 176, 0, 0.08);
+        border: 1px solid var(--amber, #ffb000);
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 30px;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .clearance-banner-icon {
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .clearance-banner-text h1 {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        color: var(--amber, #ffb000);
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
+    .clearance-banner-text p {
+        margin: 0;
+        color: var(--text-bright);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .module-preview-card {
+        background: rgba(13, 17, 23, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 30px;
+    }
+
+    .module-preview-card h2 {
+        margin-top: 0;
+        font-size: 1.15rem;
+        color: var(--accent);
+        font-family: monospace;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+    }
+
+    .module-preview-card ul {
+        padding-left: 20px;
+        color: var(--text-dim);
+        line-height: 1.7;
+    }
+
+    .module-preview-card li {
+        margin-bottom: 8px;
+    }
+
+    .clearance-auth-box {
+        background: rgba(25, 230, 255, 0.04);
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 30px;
+    }
+
+    .clearance-auth-box h2 {
+        margin-top: 0;
+        font-size: 1.15rem;
+        color: var(--text-bright);
+        font-family: monospace;
+    }
+
+    .clearance-auth-box p {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .auth-input-group {
+        position: relative;
+        flex: 1 1 280px;
+        display: flex;
+    }
+
+    .auth-input {
+        width: 100%;
+        background: #05070a;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 12px 50px 12px 16px;
+        color: var(--text-bright);
+        font-family: monospace;
+        font-size: 1rem;
+    }
+
+    .auth-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .auth-btn-eye {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        padding: 6px 10px;
+        font-size: 1rem;
+    }
+
+    .auth-btn-eye:focus-visible {
+        outline: 2px solid var(--accent);
+    }
+
+    .btn-unlock {
+        background: var(--accent);
+        color: #05070a;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-family: monospace;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-unlock:hover, .btn-unlock:focus-visible {
+        background: #00b8cc;
+        box-shadow: 0 0 15px var(--accent-glow);
+        outline: none;
+    }
+
+    .outreach-box {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 15px;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-bright);
+        text-decoration: none;
+        font-family: monospace;
+        font-size: 0.85rem;
+        transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-secondary:hover, .btn-secondary:focus-visible {
+        border-color: var(--accent);
+        background: rgba(25, 230, 255, 0.05);
+        outline: none;
+    }
+</style>
+
+<div class="clearance-shell" role="main" aria-labelledby="clearance-title">
+    <div class="clearance-banner" role="alert">
+        <span class="clearance-banner-icon" aria-hidden="true">🔒</span>
+        <div class="clearance-banner-text">
+            <h1 id="clearance-title">CLEARANCE_REQUIRED // {{ requested_tab | upper }}</h1>
+            <p>
+                This module resides within the protected <strong>Clearance Tier</strong> of this portfolio. To safeguard proprietary source code, ongoing vulnerability research, and credential verification artifacts, access is restricted to verified evaluators and invited employers.
+            </p>
+        </div>
+    </div>
+
+    <!-- Module Content Preview -->
+    <section class="module-preview-card" aria-labelledby="preview-heading">
+        <h2 id="preview-heading">MODULE PREVIEW // CONTENTS ARCHIVE</h2>
+        {% if requested_tab == 'projects' %}
+        <p style="color: var(--text-dim); margin-bottom: 12px;">The Projects vault includes interactive demonstrations, documentation, and source code for:</p>
+        <ul>
+            <li><strong>Echos Audio Workstation:</strong> A full-stack digital audio workstation engineered specifically for totally blind audio producers and sound engineers.</li>
+            <li><strong>Surgical Filesystem Automation Core:</strong> Custom zero-touch file manipulation, dynamic syntax validation, and process isolation tools.</li>
+            <li><strong>Precision Systems Calibrator:</strong> Microsecond-precision benchmarking and system optimization utilities.</li>
+            <li><strong>12+ Private Repositories:</strong> Python security scanners, network diagnostic harnesses, and automated accessibility auditing engines.</li>
+        </ul>
+        {% elif requested_tab == 'certifications' %}
+        <p style="color: var(--text-dim); margin-bottom: 12px;">The Credential Vault houses authenticated verification documents and badges for:</p>
+        <ul>
+            <li><strong>CompTIA:</strong> Security+, Network+, A+ accredited professional credentials.</li>
+            <li><strong>Cisco Networking Academy:</strong> Enterprise cybersecurity, routing, switching, and network defense verifications.</li>
+            <li><strong>IBM Security & Cloud:</strong> Enterprise security operations, identity management, and cloud architecture badges.</li>
+            <li><strong>Python Institute:</strong> Object-oriented design, systems programming, and algorithmic certification.</li>
+            <li><strong>Credly & LinkedIn Badges:</strong> Over 34 independently verified industry skills badges.</li>
+        </ul>
+        {% elif requested_tab == 'blog' %}
+        <p style="color: var(--text-dim); margin-bottom: 12px;">The Field Notes archive contains internal technical dispatches including:</p>
+        <ul>
+            <li><strong>Zero-Trust Architecture Teardowns:</strong> Real-world implementation notes on role-based authentication and token validation.</li>
+            <li><strong>Screen-Reader Engineering & WAI-ARIA Invariants:</strong> How to build complex web applications without visual bias or accessibility overlays.</li>
+            <li><strong>Live Security Audit Logs:</strong> DAST/SAST penetration testing findings and hot-patching deployment records.</li>
+        </ul>
+        {% else %}
+        <p style="color: var(--text-dim);">
+            Protected technical documentation, data models, and operational assets.
+        </p>
+        {% endif %}
+    </section>
+
+    <!-- Token Entry Box -->
+    <section class="clearance-auth-box" aria-labelledby="auth-heading">
+        <h2 id="auth-heading">AUTHENTICATE WITH CLEARANCE KEY</h2>
+        <p>
+            If you have an assigned evaluation PIN or access token, enter it below to immediately authorize your session and unlock this module:
+        </p>
+
+        <form action="/login" method="POST" class="auth-form">
+            <input type="hidden" name="action" value="login">
+            <input type="hidden" name="next" value="/{{ requested_tab }}">
+            <div class="auth-input-group">
+                <label for="clearance-pin" class="sr-only">Clearance Key or PIN</label>
+                <input type="password" id="clearance-pin" name="token" class="auth-input" placeholder="Enter PIN or Access Token..." required autocomplete="current-password">
+                <button type="button" id="clearance-eye-btn" class="auth-btn-eye" onclick="toggleClearancePin()" aria-label="Show clearance key" aria-pressed="false">
+                    👁️
+                </button>
+            </div>
+            <button type="submit" class="btn-unlock">Unlock {{ requested_tab | title }}</button>
+        </form>
+    </section>
+
+    <!-- Recruiter / Employer Outreach -->
+    <div class="outreach-box">
+        <div>
+            <span style="font-family: monospace; font-size: 0.85rem; color: var(--text-dim);">
+                Need a unique employer bypass link?
+            </span>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="https://linkedin.com/in/michael-robberts" target="_blank" rel="noopener noreferrer" class="btn-secondary" aria-label="Connect with Michael on LinkedIn (Opens in new tab)">
+                <span>💼</span> Connect & Request Link
+            </a>
+            <a href="/" class="btn-secondary">
+                <span>&larr;</span> Return to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleClearancePin() {
+        const input = document.getElementById('clearance-pin');
+        const btn = document.getElementById('clearance-eye-btn');
+        if (!input || !btn) return;
+
+        const isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+        btn.setAttribute('aria-label', isPassword ? 'Hide clearance key' : 'Show clearance key');
+        btn.textContent = isPassword ? '🙈' : '👁️';
+    }
+</script>
+{% endblock %}

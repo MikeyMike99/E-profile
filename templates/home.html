@@ -2,97 +2,412 @@
 
 {% block content %}
 <style>
-    /* Home Page Specific Styling targeting parsed markdown */
     .home-container {
         margin-bottom: 40px;
     }
     
     .home-container h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         color: var(--text-bright);
-        margin-bottom: 15px;
+        margin-bottom: 8px;
         text-transform: uppercase;
         letter-spacing: 2px;
         border-bottom: 2px solid var(--accent);
         padding-bottom: 10px;
     }
 
+    .home-container h3 {
+        font-size: 1.1rem;
+        color: var(--accent);
+        margin-top: 0;
+        margin-bottom: 25px;
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
     .home-container p {
-        font-size: 1.15rem;
-        line-height: 1.6;
+        font-size: 1.05rem;
+        line-height: 1.7;
         color: var(--text-dim);
-        margin-bottom: 30px;
-        max-width: 800px;
+        margin-bottom: 20px;
+    }
+
+    .home-container hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 35px 0;
     }
 
     .home-container strong {
-        color: var(--accent);
+        color: var(--text-bright);
     }
 
     .home-container h2 {
-        color: var(--contrast);
-        font-size: 1.2rem;
-        margin-top: 40px;
+        color: var(--text-bright);
+        font-size: 1.35rem;
+        margin-top: 35px;
         margin-bottom: 15px;
         display: flex;
         align-items: center;
         gap: 10px;
+        border-left: 3px solid var(--accent);
+        padding-left: 12px;
     }
 
-    .home-container ul {
-        list-style-type: none;
-        padding-left: 0;
-        margin-bottom: 20px;
+    .home-container ul, .home-container ol {
+        padding-left: 20px;
+        margin-bottom: 25px;
+        color: var(--text-dim);
     }
 
     .home-container li {
-        color: #666;
-        margin-bottom: 8px;
-    }
-    
-    .home-container li::before {
-        content: "> ";
-        color: var(--contrast);
+        margin-bottom: 10px;
+        line-height: 1.6;
     }
 
-    .home-container blockquote {
-        color: var(--amber, #ffb000);
-        font-weight: bold;
-        background: rgba(255, 176, 0, 0.1);
-        padding: 10px;
-        border-radius: 4px;
-        border-left: 2px solid var(--amber, #ffb000);
+    /* Clearance Access Portal */
+    .portal-panel {
+        background: rgba(13, 17, 23, 0.95);
+        border: 1px solid var(--accent);
+        border-radius: 10px;
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 0 25px rgba(25, 230, 255, 0.15);
+    }
+
+    .portal-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .portal-header h2 {
         margin: 0;
+        padding: 0;
+        border: none;
+        font-size: 1.25rem;
+        color: var(--accent);
+        letter-spacing: 1px;
+    }
+
+    .portal-desc {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .portal-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .token-input-wrapper {
+        position: relative;
+        flex: 1 1 280px;
+        display: flex;
+    }
+
+    .portal-input {
+        width: 100%;
+        background: #05070a;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 12px 50px 12px 16px;
+        color: var(--text-bright);
+        font-family: monospace;
+        font-size: 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .portal-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .btn-toggle-eye {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        padding: 6px 10px;
+        font-size: 1rem;
+        border-radius: 4px;
+    }
+
+    .btn-toggle-eye:focus-visible {
+        outline: 2px solid var(--accent);
+    }
+
+    .portal-submit-btn {
+        background: rgba(25, 230, 255, 0.15);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-family: monospace;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .portal-submit-btn:hover, .portal-submit-btn:focus-visible {
+        background: var(--accent);
+        color: #05070a;
+        box-shadow: 0 0 15px var(--accent-glow);
+        outline: none;
+    }
+
+    .portal-status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.75rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .badge-clearance-unlocked {
+        background: rgba(0, 255, 136, 0.15);
+        color: #00ff88;
+        border: 1px solid #00cc6a;
+    }
+
+    .badge-clearance-gated {
+        background: rgba(255, 176, 0, 0.15);
+        color: var(--amber, #ffb000);
+        border: 1px solid var(--amber, #ffb000);
+    }
+
+    /* Modules Discovery Grid */
+    .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .module-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .module-card:hover, .module-card:focus-visible {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        outline: none;
+    }
+
+    .module-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .module-card-title {
+        font-family: monospace;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-bright);
+        margin: 0;
+    }
+
+    .module-card-desc {
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .module-card-action {
+        font-family: monospace;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Social/Direct Outreach */
+    .outreach-section {
+        margin-top: 40px;
     }
 </style>
 
-<div class="home-container" role="main" aria-label="Home Landing Page">
+<div class="home-container" role="main" aria-label="Executive Overview & Architecture">
     {{ content | safe }}
 
-    <div class="social-grid" role="list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
-        <a href="https://linkedin.com/in/michael-robberts" class="social-card active" role="listitem" aria-label="LinkedIn profile (Active Link)" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(0, 243, 255, 0.05); border: 1px solid var(--accent); border-radius: 6px; text-decoration: none;">
-            <span class="social-icon" aria-hidden="true" style="font-size: 1.5rem;">💼</span>
-            <div>
-                <span class="social-name" style="color: var(--text-bright); font-weight: bold; font-family: monospace;">LinkedIn</span>
-                <span class="social-status" style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 4px;">ACTIVE // CONNECTION_OPEN</span>
-            </div>
-        </a>
-
-        <div class="social-card locked" role="listitem" aria-label="ProtonMail (Coming Soon)" style="opacity: 0.4; cursor: not-allowed; display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 6px;">
-            <span class="social-icon" aria-hidden="true" style="font-size: 1.5rem;">📧</span>
-            <div>
-                <span class="social-name" style="color: var(--text-bright); font-weight: bold; font-family: monospace;">ProtonMail</span>
-                <span class="social-status" style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 4px;">COMING SOON</span>
-            </div>
+    <!-- Clearance Gateway Card -->
+    <section class="portal-panel" aria-labelledby="portal-heading">
+        <div class="portal-header">
+            <span aria-hidden="true" style="font-size: 1.4rem;">🔑</span>
+            <h2 id="portal-heading">Clearance Authentication Gateway</h2>
+            {% if is_admin or is_employer or 'master:view_tabs' in permissions %}
+            <span class="portal-status-badge badge-clearance-unlocked" role="status">CLEARANCE // ACTIVE</span>
+            {% else %}
+            <span class="portal-status-badge badge-clearance-gated" role="status">GUEST TIER // GATED</span>
+            {% endif %}
         </div>
 
-        <div class="social-card locked" role="listitem" aria-label="YouTube (Coming Soon)" style="opacity: 0.4; cursor: not-allowed; display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 6px;">
-            <span class="social-icon" aria-hidden="true" style="font-size: 1.5rem;">▶️</span>
-            <div>
-                <span class="social-name" style="color: var(--text-bright); font-weight: bold; font-family: monospace;">YouTube</span>
-                <span class="social-status" style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 4px;">COMING SOON</span>
+        {% if is_admin or is_employer or 'master:view_tabs' in permissions %}
+        <p class="portal-desc">
+            Your session is currently authenticated with <strong>Clearance Level Access</strong>. You have unrestricted access to proprietary source repositories, live engine demonstrations, and verifiable digital credentials.
+        </p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <a href="/projects" class="portal-submit-btn" style="text-decoration: none; display: inline-block;">Explore Projects &rarr;</a>
+            <a href="/certifications" class="portal-submit-btn" style="text-decoration: none; display: inline-block; background: transparent;">View Certifications &rarr;</a>
+        </div>
+        {% else %}
+        <p class="portal-desc">
+            Employers, technical recruiters, and audit partners: If you possess an access key or authorization PIN, authenticate below. You may also activate your unique employer access link (<code>/access/&lt;unique-token&gt;</code>) to bypass password entry entirely.
+        </p>
+        <form action="/login" method="POST" class="portal-form">
+            <input type="hidden" name="action" value="login">
+            <div class="token-input-wrapper">
+                <label for="portal-token" class="sr-only">Clearance Token or PIN</label>
+                <input type="password" id="portal-token" name="token" class="portal-input" placeholder="Enter Clearance Key or PIN..." required autocomplete="current-password">
+                <button type="button" id="portal-eye-btn" class="btn-toggle-eye" onclick="togglePortalPinVisibility()" aria-label="Show clearance key as plain text" aria-pressed="false">
+                    👁️
+                </button>
+            </div>
+            <button type="submit" class="portal-submit-btn">Authenticate Clearance</button>
+        </form>
+        {% endif %}
+    </section>
+
+    <!-- Modules Discovery Grid -->
+    <section aria-labelledby="modules-directory-heading">
+        <h2 id="modules-directory-heading">Platform Modules & Data Streams</h2>
+        <div class="modules-grid" role="list">
+            <!-- Bio Module (Public) -->
+            <a href="/bio" class="module-card" role="listitem" aria-label="Biography and Mission. Public Tier.">
+                <div>
+                    <div class="module-card-header">
+                        <h3 class="module-card-title">BIO & MISSION</h3>
+                        <span class="portal-status-badge badge-clearance-unlocked">PUBLIC</span>
+                    </div>
+                    <p class="module-card-desc">
+                        Personal background, technical philosophy, and mission advocating for blind engineering capabilities.
+                    </p>
+                </div>
+                <div class="module-card-action">READ NARRATIVE &rarr;</div>
+            </a>
+
+            <!-- Documentation Module (Public) -->
+            <a href="/docs" class="module-card" role="listitem" aria-label="System Documentation. Public Tier.">
+                <div>
+                    <div class="module-card-header">
+                        <h3 class="module-card-title">DOCUMENTATION</h3>
+                        <span class="portal-status-badge badge-clearance-unlocked">PUBLIC</span>
+                    </div>
+                    <p class="module-card-desc">
+                        System design specifications, architecture runbooks, and central operational references.
+                    </p>
+                </div>
+                <div class="module-card-action">VIEW DOCS &rarr;</div>
+            </a>
+
+            <!-- Projects Module (Clearance Tier) -->
+            <a href="/projects" class="module-card" role="listitem" aria-label="Proprietary Projects. {% if is_admin or is_employer or 'view:tab:projects' in permissions %}Clearance active{% else %}Clearance required{% endif %}.">
+                <div>
+                    <div class="module-card-header">
+                        <h3 class="module-card-title">PROJECTS ARCHIVE</h3>
+                        {% if is_admin or is_employer or 'view:tab:projects' in permissions %}
+                        <span class="portal-status-badge badge-clearance-unlocked">UNLOCKED</span>
+                        {% else %}
+                        <span class="portal-status-badge badge-clearance-gated">CLEARANCE 🔒</span>
+                        {% endif %}
+                    </div>
+                    <p class="module-card-desc">
+                        Echos Audio Workstation engine, surgical file manipulators, and enterprise automation toolsets.
+                    </p>
+                </div>
+                <div class="module-card-action">
+                    {% if is_admin or is_employer or 'view:tab:projects' in permissions %}EXPLORE CODE &rarr;{% else %}CLEARANCE REQUIRED &rarr;{% endif %}
+                </div>
+            </a>
+
+            <!-- Certifications Module (Clearance Tier) -->
+            <a href="/certifications" class="module-card" role="listitem" aria-label="Verified Credential Vault. {% if is_admin or is_employer or 'view:tab:certifications' in permissions %}Clearance active{% else %}Clearance required{% endif %}.">
+                <div>
+                    <div class="module-card-header">
+                        <h3 class="module-card-title">CREDENTIAL VAULT</h3>
+                        {% if is_admin or is_employer or 'view:tab:certifications' in permissions %}
+                        <span class="portal-status-badge badge-clearance-unlocked">UNLOCKED</span>
+                        {% else %}
+                        <span class="portal-status-badge badge-clearance-gated">CLEARANCE 🔒</span>
+                        {% endif %}
+                    </div>
+                    <p class="module-card-desc">
+                        34+ verified industry accreditations and digital badges from CompTIA, Cisco, IBM, and Python Institute.
+                    </p>
+                </div>
+                <div class="module-card-action">
+                    {% if is_admin or is_employer or 'view:tab:certifications' in permissions %}VERIFY BADGES &rarr;{% else %}CLEARANCE REQUIRED &rarr;{% endif %}
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Communication & Direct Outreach -->
+    <section class="outreach-section" aria-labelledby="outreach-heading">
+        <h2 id="outreach-heading">Verified Communication Channels</h2>
+        <div class="social-grid" role="list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-top: 15px;">
+            <a href="https://linkedin.com/in/michael-robberts" class="social-card active" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="LinkedIn profile (Opens in a new tab)" style="display: flex; align-items: center; gap: 15px; padding: 18px; background: rgba(0, 243, 255, 0.05); border: 1px solid var(--accent); border-radius: 8px; text-decoration: none;">
+                <span class="social-icon" aria-hidden="true" style="font-size: 1.6rem;">💼</span>
+                <div>
+                    <span class="social-name" style="color: var(--text-bright); font-weight: bold; font-family: monospace; display: block;">LinkedIn &bull; Michael Robberts</span>
+                    <span class="social-status" style="font-size: 0.8rem; color: #00ff88; display: block; margin-top: 4px;">ACTIVE // CONNECT & REQUEST ACCESS</span>
+                </div>
+            </a>
+
+            <div class="social-card locked" role="listitem" aria-label="ProtonMail (Encrypted Inquiries - Coming Soon)" style="opacity: 0.5; display: flex; align-items: center; gap: 15px; padding: 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 8px;">
+                <span class="social-icon" aria-hidden="true" style="font-size: 1.6rem;">📧</span>
+                <div>
+                    <span class="social-name" style="color: var(--text-bright); font-weight: bold; font-family: monospace; display: block;">ProtonMail</span>
+                    <span class="social-status" style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-top: 4px;">ENCRYPTED CHANNEL // IN CONFIGURATION</span>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
+<script>
+    function togglePortalPinVisibility() {
+        const input = document.getElementById('portal-token');
+        const btn = document.getElementById('portal-eye-btn');
+        if (!input || !btn) return;
+
+        const isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+        btn.setAttribute('aria-label', isPassword ? 'Hide clearance key' : 'Show clearance key as plain text');
+        btn.textContent = isPassword ? '🙈' : '👁️';
+    }
+</script>
 {% endblock %}
