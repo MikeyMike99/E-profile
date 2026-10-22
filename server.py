@@ -695,16 +695,22 @@ def delete_profile():
     if not session.get('admin', False): 
         return jsonify({"error": "Unauthorized"}), 403
         
-    token_hash = request.form.get('token_hash', '')
+    token_hash = request.form.get('token_hash', '').strip()
     profiles = load_profiles()
     
-    if token_hash in profiles:
-        # Failsafe: Prevent the active system admin from deleting themselves
-        if profiles[token_hash].get('username') != session.get('username'):
-            del profiles[token_hash]
-            save_profiles(profiles)
-            flash("Profile successfully terminated.", "info")
-            
+    if not token_hash or token_hash not in profiles:
+        flash("Target profile not found for deletion.", "error")
+        return redirect(url_for('admin'))
+
+    target_name = profiles[token_hash].get('username', 'Unknown')
+    if target_name == session.get('username'):
+        flash("Safety rule enforced: You cannot terminate your own active administrator profile.", "error")
+        return redirect(url_for('admin'))
+
+    del profiles[token_hash]
+    save_profiles(profiles)
+    sys_log.info(f"Terminated profile: {target_name}")
+    flash(f"Profile {target_name} permanently terminated.", "info")
     return redirect(url_for('admin'))
 
 @app.route('/edit_profile', methods=['POST'])
@@ -712,11 +718,10 @@ def edit_profile():
     if not session.get('admin', False): 
         return jsonify({"error": "Unauthorized"}), 403
         
-    token_hash = request.form.get('token_hash', '')
+    token_hash = request.form.get('token_hash', '').strip()
     profiles = load_profiles()
     
     if token_hash in profiles:
-        # Update user configuration
         profiles[token_hash]['username'] = request.form.get('username', profiles[token_hash]['username']).strip()
         profiles[token_hash]['label'] = request.form.get('label', profiles[token_hash]['label']).strip()
         profiles[token_hash]['permissions'] = request.form.getlist('permissions')
@@ -734,20 +739,94 @@ def reset_pin():
     if not session.get('admin', False): 
         return jsonify({"error": "Unauthorized"}), 403
         
-    old_token_hash = request.form.get('token_hash', '')
+    old_token_hash = request.form.get('token_hash', '').strip()
     new_token = request.form.get('new_token', '').strip()
+    confirm_token = request.form.get('confirm_token', '').strip()
     profiles = load_profiles()
     
-    if old_token_hash in profiles and new_token:
-        # Migrate data to new hash
-        user_data = profiles.pop(old_token_hash)
-        new_token_hash = hash_token(new_token)
-        profiles[new_token_hash] = user_data
-        
-        save_profiles(profiles)
-        flash(f"PIN successfully reset for {user_data.get('username')}.", "success")
-        
+    if not old_token_hash or old_token_hash not in profiles:
+        flash("Target profile was not found.", "error")
+        return redirect(url_for('admin'))
+
+    if not new_token:
+        flash("New PIN / Access Token cannot be empty.", "error")
+        return redirect(url_for('admin'))
+
+    if len(new_token) < 4:
+        flash("New PIN / Access Token must be at least 4 characters long.", "error")
+        return redirect(url_for('admin'))
+
+    if confirm_token and new_token != confirm_token:
+        flash("New PIN and confirmation PIN do not match.", "error")
+        return redirect(url_for('admin'))
+
+    new_token_hash = hash_token(new_token)
+    if new_token_hash in profiles and new_token_hash != old_token_hash:
+        flash("This PIN / Token is already assigned to another profile. Choose a unique PIN.", "error")
+        return redirect(url_for('admin'))
+
+    user_data = profiles.pop(old_token_hash)
+    profiles[new_token_hash] = user_data
+    save_profiles(profiles)
+
+    target_name = user_data.get('username', 'User')
+    sys_log.info(f"Admin reset PIN for profile: {target_name}")
+    flash(f"PIN/Password successfully reset for {target_name}.", "success")
     return redirect(url_for('admin'))
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    if not session.get('username') or session.get('username') == 'Guest':
+        flash("Authentication required to access password settings.", "error")
+        return redirect(url_for('login'))
+        
+    username = session.get('username')
+    profiles = load_profiles()
+    
+    current_token_hash = None
+    for th, p in profiles.items():
+        if p.get('username') == username:
+            current_token_hash = th
+            break
+            
+    if not current_token_hash:
+        flash("Active profile not found in system database.", "error")
+        return redirect(url_for('dynamic_route', path='home'))
+        
+    if request.method == 'POST':
+        current_token = request.form.get('current_token', '').strip()
+        new_token = request.form.get('new_token', '').strip()
+        confirm_token = request.form.get('confirm_token', '').strip()
+        
+        if hash_token(current_token) != current_token_hash:
+            flash("Current PIN / Access Token is incorrect.", "error")
+            return render_template('change_password.html', target_user=username)
+            
+        if len(new_token) < 4:
+            flash("New PIN / Access Token must be at least 4 characters long.", "error")
+            return render_template('change_password.html', target_user=username)
+            
+        if new_token != confirm_token:
+            flash("New PIN and confirmation PIN do not match.", "error")
+            return render_template('change_password.html', target_user=username)
+            
+        new_token_hash = hash_token(new_token)
+        if new_token_hash in profiles and new_token_hash != current_token_hash:
+            flash("This PIN / Token is already assigned to another profile. Please choose a different PIN.", "error")
+            return render_template('change_password.html', target_user=username)
+            
+        user_data = profiles.pop(current_token_hash)
+        profiles[new_token_hash] = user_data
+        save_profiles(profiles)
+        
+        sys_log.info(f"Self-service password update for {username}")
+        flash("Your PIN / Access Token has been updated successfully.", "success")
+        
+        if session.get('admin', False):
+            return redirect(url_for('admin'))
+        return redirect(url_for('dynamic_route', path='home'))
+        
+    return render_template('change_password.html', target_user=username)
 
 @app.route('/admin_impersonate/<token_hash>', methods=['POST'])
 def admin_impersonate(token_hash):

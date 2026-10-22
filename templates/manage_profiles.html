@@ -342,6 +342,94 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
+
+        /* --- ACCESSIBLE MODAL DIALOGS --- */
+        .cyber-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .cyber-modal-backdrop.is-open {
+            display: flex;
+        }
+
+        .cyber-modal {
+            background: #0d121c;
+            border: 2px solid var(--cyan);
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.35);
+            width: 100%;
+            max-width: 520px;
+            padding: 25px;
+            position: relative;
+            z-index: 1001;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+        }
+
+        .cyber-modal.modal-danger {
+            border-color: #ff4d4d;
+            box-shadow: 0 0 25px rgba(255, 77, 77, 0.35);
+        }
+
+        .cyber-modal h3 {
+            margin-top: 0;
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cyber-modal .modal-desc {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .cyber-modal .form-group {
+            margin-bottom: 16px;
+        }
+
+        .cyber-modal label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .cyber-modal input[type="text"],
+        .cyber-modal input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--text-dim);
+            border-radius: 3px;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+        }
+
+        .cyber-modal input:focus {
+            outline: 2px solid var(--cyan);
+            border-color: var(--cyan);
+        }
     </style>
 </head>
 
@@ -354,6 +442,20 @@
             <h1 class="title">[SYS_ADMIN]</h1>
             <p class="subtitle">PROFILE_MANAGEMENT_NODE</p>
         </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages-container" role="region" aria-label="System Notifications" aria-live="polite" style="margin-bottom: 25px;">
+            {% for category, message in messages %}
+            <div class="flash-alert flash-{{ category }}" role="alert" style="padding: 12px 18px; margin-bottom: 10px; border-left: 4px solid {% if category == 'error' %}#ff4d4d{% elif category == 'success' %}#00ff88{% else %}var(--cyan){% endif %}; background: rgba(0,0,0,0.6); color: {% if category == 'error' %}#ff8080{% elif category == 'success' %}#66ffb2{% else %}var(--cyan){% endif %}; font-family: monospace; font-size: 0.9rem;">
+                <span style="font-weight: bold; margin-right: 8px;">[{{ category|upper }}]</span>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
 
         <div
             style="margin-bottom: 30px; background: rgba(0,0,0,0.4); padding: 20px; border: 1px solid rgba(255,255,255,0.1);">
@@ -414,16 +516,18 @@
 
                             <!-- RESET PASSWORD BUTTON -->
                             <button
-                                onclick="if(confirm('Are you sure you want to reset the PIN/Password for {{ data.username }}?')) { alert('Placeholder: Resetting password for {{ data.username }}...'); }"
+                                onclick="openResetPasswordModal('{{ hashed_token }}', '{{ data.username | clean_text }}')"
                                 class="cyber-btn"
+                                aria-haspopup="dialog"
                                 style="padding: 5px 15px; font-size: 0.8rem; border-color: var(--amber); color: var(--amber);">
                                 Reset Password
                             </button>
 
                             <!-- DELETE BUTTON -->
                             <button
-                                onclick="if(confirm('CRITICAL WARNING: Are you sure you want to permanently delete the profile for {{ data.username }}?')) { alert('Placeholder: Submitting delete request for {{ data.username }}...'); }"
+                                onclick="openDeleteProfileModal('{{ hashed_token }}', '{{ data.username | clean_text }}')"
                                 class="cyber-btn"
+                                aria-haspopup="dialog"
                                 style="padding: 5px 15px; font-size: 0.8rem; border-color: #ff4d4d; color: #ff4d4d;">
                                 Delete
                             </button>
@@ -828,6 +932,114 @@
         </footer>
     </main>
 
+    <!-- ACCESSIBLE RESET PASSWORD MODAL -->
+    <div id="reset-modal-backdrop" class="cyber-modal-backdrop" onclick="handleBackdropClick(event, 'reset-modal-backdrop')">
+        <div id="reset-password-dialog"
+             class="cyber-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="reset-modal-title"
+             aria-describedby="reset-modal-desc">
+            <h3 id="reset-modal-title" style="color: var(--amber);">
+                <span>[KEY_RESET]</span>
+                <span>RESET ACCESS TOKEN</span>
+            </h3>
+            <p id="reset-modal-desc" class="modal-desc">
+                Resetting authentication credentials for user: <strong id="reset-target-username" style="color: #fff;"></strong>. Enter a new PIN or password (minimum 4 characters).
+            </p>
+            <form id="reset-password-form" method="POST" action="{{ url_for('reset_pin') }}">
+                <input type="hidden" name="token_hash" id="reset-token-hash" value="">
+                
+                <div class="form-group">
+                    <label for="reset-new-token">NEW PIN / PASSWORD <span style="color:#ff4d4d;">*</span></label>
+                    <div>
+                        <input type="password" 
+                               id="reset-new-token" 
+                               name="new_token" 
+                               required 
+                               minlength="4" 
+                               autocomplete="new-password"
+                               placeholder="Enter at least 4 characters">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reset-confirm-token">CONFIRM NEW PIN / PASSWORD <span style="color:#ff4d4d;">*</span></label>
+                    <div>
+                        <input type="password" 
+                               id="reset-confirm-token" 
+                               name="confirm_token" 
+                               required 
+                               minlength="4" 
+                               autocomplete="new-password"
+                               placeholder="Re-enter to confirm">
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; margin-bottom: 20px;">
+                    <button type="button" 
+                            id="reset-toggle-visibility" 
+                            class="cyber-btn" 
+                            aria-pressed="false"
+                            onclick="togglePasswordVisibility('reset-new-token', 'reset-confirm-token', this)"
+                            style="padding: 4px 10px; font-size: 0.75rem; border-color: var(--cyan); color: var(--cyan); background: transparent;">
+                        Show Passwords
+                    </button>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" 
+                            class="cyber-btn" 
+                            onclick="closeModal('reset-modal-backdrop')"
+                            style="padding: 8px 16px; border-color: var(--text-dim); color: var(--text-dim);">
+                        Cancel (Esc)
+                    </button>
+                    <button type="submit" 
+                            class="cyber-btn" 
+                            style="padding: 8px 16px; border-color: var(--amber); color: var(--amber); background: rgba(255,176,32,0.1);">
+                        Confirm Reset PIN
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ACCESSIBLE DELETE PROFILE MODAL -->
+    <div id="delete-modal-backdrop" class="cyber-modal-backdrop" onclick="handleBackdropClick(event, 'delete-modal-backdrop')">
+        <div id="delete-profile-dialog"
+             class="cyber-modal modal-danger"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="delete-modal-title"
+             aria-describedby="delete-modal-desc">
+            <h3 id="delete-modal-title" style="color: #ff4d4d;">
+                <span>[CRITICAL_REVOKE]</span>
+                <span>DELETE IDENTITY</span>
+            </h3>
+            <p id="delete-modal-desc" class="modal-desc">
+                Warning: You are about to permanently purge the profile for <strong id="delete-target-username" style="color: #fff;"></strong>. This action is immediate and cannot be undone.
+            </p>
+            <form id="delete-profile-form" method="POST" action="{{ url_for('delete_profile') }}">
+                <input type="hidden" name="token_hash" id="delete-token-hash" value="">
+                
+                <div class="modal-actions">
+                    <button type="button" 
+                            class="cyber-btn" 
+                            onclick="closeModal('delete-modal-backdrop')"
+                            style="padding: 8px 16px; border-color: var(--text-dim); color: var(--text-dim);">
+                        Cancel (Esc)
+                    </button>
+                    <button type="submit" 
+                            class="cyber-btn" 
+                            style="padding: 8px 16px; border-color: #ff4d4d; color: #ff4d4d; background: rgba(255,77,77,0.1);">
+                        Permanently Delete Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <div id="aria-live-region" class="sr-only" aria-live="polite"></div>
     <script>
         function editProfile(tokenHash, username, label, isAdmin, isEmployer, reqClick, bypassEnabled, perms) {
@@ -923,6 +1135,97 @@
                 }, 2000);
             });
         }
+
+        let lastFocusedElement = null;
+
+        function openResetPasswordModal(tokenHash, username) {
+            lastFocusedElement = document.activeElement;
+            document.getElementById('reset-token-hash').value = tokenHash;
+            document.getElementById('reset-target-username').innerText = username;
+            document.getElementById('reset-new-token').value = '';
+            document.getElementById('reset-confirm-token').value = '';
+            
+            const backdrop = document.getElementById('reset-modal-backdrop');
+            backdrop.classList.add('is-open');
+            
+            setTimeout(() => {
+                document.getElementById('reset-new-token').focus();
+            }, 50);
+        }
+
+        function openDeleteProfileModal(tokenHash, username) {
+            lastFocusedElement = document.activeElement;
+            document.getElementById('delete-token-hash').value = tokenHash;
+            document.getElementById('delete-target-username').innerText = username;
+            
+            const backdrop = document.getElementById('delete-modal-backdrop');
+            backdrop.classList.add('is-open');
+            
+            setTimeout(() => {
+                const cancelBtn = backdrop.querySelector('.cyber-btn');
+                if (cancelBtn) cancelBtn.focus();
+            }, 50);
+        }
+
+        function closeModal(backdropId) {
+            const backdrop = document.getElementById(backdropId);
+            if (backdrop) {
+                backdrop.classList.remove('is-open');
+            }
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
+        }
+
+        function handleBackdropClick(event, backdropId) {
+            if (event.target.id === backdropId) {
+                closeModal(backdropId);
+            }
+        }
+
+        function togglePasswordVisibility(field1Id, field2Id, btn) {
+            const f1 = document.getElementById(field1Id);
+            const f2 = field2Id ? document.getElementById(field2Id) : null;
+            const isPassword = f1.type === 'password';
+            
+            f1.type = isPassword ? 'text' : 'password';
+            if (f2) f2.type = isPassword ? 'text' : 'password';
+            
+            btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+            btn.innerText = isPassword ? 'Hide Passwords' : 'Show Passwords';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            const openModal = document.querySelector('.cyber-modal-backdrop.is-open');
+            if (!openModal) return;
+
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeModal(openModal.id);
+                return;
+            }
+
+            if (e.key === 'Tab') {
+                const focusable = openModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusable.length === 0) return;
+                
+                const firstElement = focusable[0];
+                const lastElement = focusable[focusable.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        });
     </script>
 </body>
 
