@@ -541,6 +541,52 @@
                 <p style="color: gray; font-style: italic;">No active identities found.</p>
                 {% endif %}
             </div>
+
+            <!-- DEDICATED ADMIN PASSWORD RESET HUB -->
+            <div id="admin-password-reset-section" style="background: rgba(0,0,0,0.4); padding: 20px; border: 1px solid var(--amber); border-radius: 4px; margin-top: 25px;">
+                <h3 style="color: var(--amber); margin-top: 0; font-size: 0.95rem; border-bottom: 1px solid var(--amber); padding-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                    <span>[SECURITY_ADMIN]</span> RESET IDENTITY PASSWORD / PIN
+                </h3>
+                <p style="font-size: 0.78rem; color: var(--text-dim); margin: 8px 0 16px 0;">
+                    Administratively rotate access credentials for any registered user profile (minimum 4 characters).
+                </p>
+                <form id="admin-inline-reset-form" method="POST" action="{{ url_for('reset_pin') }}">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 14px; align-items: end;">
+                        <div>
+                            <label for="admin-reset-select" class="label-tab" style="color: var(--amber);">TARGET PROFILE <span style="color:#ff4d4d;">*</span></label>
+                            <select id="admin-reset-select" name="token_hash" class="cyber-input" style="padding: 11px; font-size: 0.85rem;" required>
+                                <option value="" disabled selected>-- Select Identity --</option>
+                                {% for th, p in profiles.items() %}
+                                <option value="{{ th }}">{{ p.username }} [{{ p.label }}]{% if p.is_admin %} (Admin){% endif %}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="admin-reset-new" class="label-tab" style="color: var(--amber);">NEW PIN / PASSWORD <span style="color:#ff4d4d;">*</span></label>
+                            <input type="password" id="admin-reset-new" name="new_token" class="cyber-input" style="padding: 11px; font-size: 0.85rem;" minlength="4" required placeholder="Min 4 characters">
+                        </div>
+                        <div>
+                            <label for="admin-reset-confirm" class="label-tab" style="color: var(--amber);">CONFIRM PIN <span style="color:#ff4d4d;">*</span></label>
+                            <input type="password" id="admin-reset-confirm" name="confirm_token" class="cyber-input" style="padding: 11px; font-size: 0.85rem;" minlength="4" required placeholder="Confirm new PIN">
+                        </div>
+                        <div>
+                            <button type="submit" class="cyber-btn" style="padding: 11px 22px; border-color: var(--amber); color: var(--amber); background: rgba(255,176,32,0.12); font-weight: bold; width: 100%; white-space: nowrap;">
+                                RESET PIN
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button type="button" 
+                                id="admin-reset-toggle-eye" 
+                                class="cyber-btn" 
+                                aria-pressed="false"
+                                onclick="togglePasswordVisibility('admin-reset-new', 'admin-reset-confirm', this)"
+                                style="padding: 3px 10px; font-size: 0.7rem; border-color: var(--cyan); color: var(--cyan); background: transparent;">
+                            Show Passwords
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
         <!-- GIT SYNC & INDEXING HUB -->
         <div style="border-top: 1px solid rgba(0, 229, 255, 0.2); padding-top: 20px; margin-bottom: 20px;">
@@ -657,6 +703,9 @@
                     <div class="field-group">
                         <label for="token" class="label-tab">ACCESS_TOKEN (PIN)</label>
                         <input type="password" id="token" name="token" class="cyber-input" required>
+                        <small id="token-help" style="display:block; font-size:0.68rem; color:var(--text-dim); margin-top:4px;">
+                            (Required for new profiles. In update mode, leave blank to keep current PIN or enter a new PIN to reset it.)
+                        </small>
                     </div>
 
 
@@ -1139,6 +1188,10 @@
         let lastFocusedElement = null;
 
         function openResetPasswordModal(tokenHash, username) {
+            const inlineSelect = document.getElementById('admin-reset-select');
+            if (inlineSelect) {
+                inlineSelect.value = tokenHash;
+            }
             lastFocusedElement = document.activeElement;
             document.getElementById('reset-token-hash').value = tokenHash;
             document.getElementById('reset-target-username').innerText = username;

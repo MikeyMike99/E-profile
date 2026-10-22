@@ -62,86 +62,24 @@ class TestPasswordResetWorkflows(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/login", response.headers.get("Location", ""))
 
-    def test_change_password_page_renders_for_authenticated_user(self):
+    def test_change_password_redirects_non_admin_to_login(self):
         with self.client.session_transaction() as sess:
             sess["username"] = "TestUser"
             sess["label"] = "Standard User"
             sess["admin"] = False
 
-        response = self.client.get("/change_password")
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"KEY_ROTATION", response.data)
-        self.assertIn(b"TestUser", response.data)
-
-    def test_change_password_rejects_wrong_current_token(self):
-        with self.client.session_transaction() as sess:
-            sess["username"] = "TestUser"
-            sess["label"] = "Standard User"
-            sess["admin"] = False
-
-        response = self.client.post(
-            "/change_password",
-            data={
-                "current_token": "wrong_secret",
-                "new_token": "new_secret_789",
-                "confirm_token": "new_secret_789",
-            },
-            follow_redirects=True,
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Current PIN / Access Token is incorrect", response.data)
-
-    def test_change_password_rejects_short_or_mismatched_token(self):
-        with self.client.session_transaction() as sess:
-            sess["username"] = "TestUser"
-            sess["label"] = "Standard User"
-            sess["admin"] = False
-
-        short_res = self.client.post(
-            "/change_password",
-            data={
-                "current_token": self.user_token,
-                "new_token": "123",
-                "confirm_token": "123",
-            },
-            follow_redirects=True,
-        )
-        self.assertIn(b"at least 4 characters long", short_res.data)
-
-        mismatch_res = self.client.post(
-            "/change_password",
-            data={
-                "current_token": self.user_token,
-                "new_token": "valid_token_1",
-                "confirm_token": "valid_token_2",
-            },
-            follow_redirects=True,
-        )
-        self.assertIn(b"do not match", mismatch_res.data)
-
-    def test_change_password_succeeds_and_updates_store(self):
-        with self.client.session_transaction() as sess:
-            sess["username"] = "TestUser"
-            sess["label"] = "Standard User"
-            sess["admin"] = False
-
-        new_pin = "brand_new_pass_999"
-        response = self.client.post(
-            "/change_password",
-            data={
-                "current_token": self.user_token,
-                "new_token": new_pin,
-                "confirm_token": new_pin,
-            },
-            follow_redirects=False,
-        )
+        response = self.client.get("/change_password", follow_redirects=False)
         self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.headers.get("Location", ""))
 
-        profiles = server.load_profiles()
-        new_hash = compute_token_hash(new_pin)
-        self.assertIn(new_hash, profiles)
-        self.assertNotIn(self.user_hash, profiles)
-        self.assertEqual(profiles[new_hash]["username"], "TestUser")
+    def test_change_password_redirects_admin_to_admin_panel(self):
+        with self.client.session_transaction() as sess:
+            sess["username"] = "TestAdmin"
+            sess["admin"] = True
+
+        response = self.client.get("/change_password", follow_redirects=False)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/admin", response.headers.get("Location", ""))
 
     def test_admin_reset_pin_unauthorized_for_standard_user(self):
         with self.client.session_transaction() as sess:
@@ -181,6 +119,53 @@ class TestPasswordResetWorkflows(unittest.TestCase):
         self.assertIn(new_hash, profiles)
         self.assertNotIn(self.user_hash, profiles)
         self.assertEqual(profiles[new_hash]["username"], "TestUser")
+
+    def test_admin_edit_profile_with_new_pin_resets_password(self):
+        with self.client.session_transaction() as sess:
+            sess["username"] = "TestAdmin"
+            sess["admin"] = True
+
+        updated_pin = "updated_user_pin_888"
+        response = self.client.post(
+            "/edit_profile",
+            data={
+                "token_hash": self.user_hash,
+                "username": "TestUserRenamed",
+                "label": "Updated Label",
+                "token": updated_pin,
+            },
+            follow_redirects=False,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/admin", response.headers.get("Location", ""))
+
+        profiles = server.load_profiles()
+        new_hash = compute_token_hash(updated_pin)
+        self.assertIn(new_hash, profiles)
+        self.assertNotIn(self.user_hash, profiles)
+        self.assertEqual(profiles[new_hash]["username"], "TestUserRenamed")
+        self.assertEqual(profiles[new_hash]["label"], "Updated Label")
+
+    def test_admin_edit_profile_without_pin_preserves_existing_password(self):
+        with self.client.session_transaction() as sess:
+            sess["username"] = "TestAdmin"
+            sess["admin"] = True
+
+        response = self.client.post(
+            "/edit_profile",
+            data={
+                "token_hash": self.user_hash,
+                "username": "TestUserRenamedOnly",
+                "label": "Standard User",
+                "token": "",
+            },
+            follow_redirects=False,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        profiles = server.load_profiles()
+        self.assertIn(self.user_hash, profiles)
+        self.assertEqual(profiles[self.user_hash]["username"], "TestUserRenamedOnly")
 
     def test_delete_profile_blocks_admin_self_deletion(self):
         with self.client.session_transaction() as sess:
