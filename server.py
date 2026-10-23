@@ -973,6 +973,65 @@ def audio_suite_handshake():
     })
 
 
+AUDIO_SUITE_FEEDBACK_FILE = config.CONTENT_DIR / "audio_suite_feedback.json"
+
+
+@app.route('/api/audio_suite/feedback', methods=['GET', 'POST'])
+def audio_suite_feedback():
+    """Collects and stores in-app bug reports and feature suggestions from Audio Playback Suite."""
+    if request.method == 'GET':
+        return jsonify({
+            'service': 'Audio Playback Suite Feedback Service',
+            'status': 'ONLINE',
+        })
+
+    data = request.get_json(silent=True) or {}
+    message = str(data.get('message', '')).strip()
+    if not message:
+        return jsonify({'error': 'Message content is required'}), 400
+
+    hwid = str(data.get('hwid', 'UNKNOWN')).strip()
+    feedback_type = str(data.get('type', 'bug')).strip().lower()
+    if feedback_type not in ('bug', 'suggestion', 'general'):
+        feedback_type = 'general'
+    subject = str(data.get('subject', 'Untitled Report')).strip()
+    app_version = str(data.get('app_version', '1.0.0')).strip()
+    server_now = int(time.time())
+
+    item = {
+        'id': str(uuid.uuid4())[:8],
+        'hwid': hwid,
+        'type': feedback_type,
+        'subject': subject,
+        'message': message,
+        'app_version': app_version,
+        'timestamp': server_now,
+        'formatted_time': datetime.fromtimestamp(server_now).strftime('%Y-%m-%d %H:%M:%S'),
+        'remote_addr': request.remote_addr or '',
+    }
+
+    feedback_list = []
+    if AUDIO_SUITE_FEEDBACK_FILE.exists():
+        try:
+            feedback_list = json.loads(AUDIO_SUITE_FEEDBACK_FILE.read_text(encoding='utf-8'))
+            if not isinstance(feedback_list, list):
+                feedback_list = []
+        except Exception as exc:
+            sys_log.warning(f"Audio suite feedback read error: {exc}")
+            feedback_list = []
+
+    feedback_list.append(item)
+
+    try:
+        AUDIO_SUITE_FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        AUDIO_SUITE_FEEDBACK_FILE.write_text(json.dumps(feedback_list, indent=2), encoding='utf-8')
+        sys_log.info(f"Received {feedback_type} feedback from HWID {hwid[:8]}...")
+        return jsonify({'success': True, 'id': item['id'], 'status': 'RECEIVED'})
+    except Exception as exc:
+        sys_log.error(f"Failed to persist audio suite feedback: {exc}")
+        return jsonify({'error': 'Failed to save feedback on server'}), 500
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('base.html', active_tab='error', content="<h2>404 - Page Not Found</h2>"), 404
