@@ -43,6 +43,31 @@ py -3.13 -c "import base64; b64_64 = base64.b64encode(open(r'accessible_output2\
 
 Below is how each section of `screenreader_speak.py` (screenreader_speak.py) works:
 
+### Part 0: Interactive Desktop Synchronization (Lines 15–35)
+```python
+def _synchronize_interactive_desktop():
+    try:
+        user32 = ctypes.windll.user32
+        kernel32 = ctypes.windll.kernel32
+        current_desktop = user32.GetThreadDesktop(kernel32.GetCurrentThreadId())
+        desktop_name_buffer = ctypes.create_unicode_buffer(256)
+        bytes_needed = ctypes.wintypes.DWORD()
+        if user32.GetUserObjectInformationW(current_desktop, 2, desktop_name_buffer, 256, ctypes.byref(bytes_needed)):
+            if desktop_name_buffer.value.lower() == "default":
+                return True
+            default_desktop = user32.OpenDesktopW("Default", 0, False, 0x01FF)
+            if default_desktop and user32.SetThreadDesktop(default_desktop):
+                return True
+    except Exception:
+        pass
+    return False
+
+_synchronize_interactive_desktop()
+```
+- **Purpose**: Binds the execution thread to the interactive Windows desktop `Default`. In automated testing or subagent sandbox environments, Windows spawns child processes under isolated desktop namespaces (e.g. `exebox-...`). `nvdaControllerClient64.dll` uses `ncalrpc` and queries `GetThreadDesktop` to bind to `NvdaCtlr.<desktop>`. If running in a sandbox desktop, the RPC endpoint doesn't exist, returning Win32 Error 1722 (`RPC_S_SERVER_UNAVAILABLE`) and causing NVDA detection to fail into SAPI 5.
+- **Mandatory Ordering Constraint**: `SetThreadDesktop` MUST be called *before* `import pythoncom`, `import pywintypes`, or Tkinter window creation. Windows kernel rejects desktop changes with Win32 Error 170 (`ERROR_BUSY`) once windows or COM hooks exist on the thread.
+- **Worker Thread Delegation Fallback**: If called from a thread that already owns windows or COM state, `screenreader_speak()` automatically delegates speech to a clean daemon worker thread that binds to `Default`.
+
 [//]: # (SECTION_ID: JOSH-PLAY-04_STEP_BY_STEP_SO-SEC-6)
 ### Part A: Pre-Import `pythoncom` and `pywintypes` (Lines 1–5)
 [//]: # (SECTION_ID: JOSH-PLAY-04-SEC-6)
@@ -124,12 +149,13 @@ except Exception:
 [//]: # (SECTION_ID: JOSH-PLAY-04_STEP_BY_STEP_SO-SEC-11)
 ### Part F: Why This Exact Top-to-Bottom Order Is Mandatory (Do Not Rearrange!)
 [//]: # (SECTION_ID: JOSH-PLAY-04-SEC-11)
-If you are writing or modifying `screenreader_speak.py` yourself, **never move `import accessible_output2.outputs.auto` to the top of the file**. Parts A through E must happen in this exact sequence:
-1. **Part A (`import pythoncom, pywintypes`)** must run on lines 1–5 so the Windows COM DLLs are registered in Python's `sys.modules` before `accessible_output2` ever tries to load JAWS or SAPI.
-2. **Part B (Locate or Extract DLLs)** must finish before Part C so the physical `nvdaControllerClient64.dll` file already exists on the hard drive.
+If you are writing or modifying `screenreader_speak.py` yourself, **never move `import accessible_output2.outputs.auto` to the top of the file**. Parts 0 through E must happen in this exact sequence:
+0. **Part 0 (`_synchronize_interactive_desktop`)** must run at the very top before any COM or GUI initialization, ensuring the thread is attached to `Default` to avoid Win32 Error 170 (`ERROR_BUSY`) and Win32 Error 1722 (`RPC_S_SERVER_UNAVAILABLE`).
+1. **Part A (`import pythoncom, pywintypes`)** must run immediately after Part 0 so Windows COM DLLs are registered before `accessible_output2` attempts to load JAWS or SAPI.
+2. **Part B (Locate or Extract DLLs)** must finish before Part C so the physical `nvdaControllerClient64.dll` file exists on disk.
 3. **Part C (`os.add_dll_directory` & `embedded_data_path`)** must run before `Auto()` so both Windows and `accessible_output2` know the exact folder address of the DLLs.
 4. **Part D (Wrap `Output.__init__`)** must run before `Auto()` creates the screen reader objects so any missing third-party DLL is safely caught as `OutputError`.
-5. **Part E (`import accessible_output2.outputs.auto` inside `_get_screenreader()`)** happens last—only after Parts A, B, C, and D have prepared the entire environment!
+5. **Part E (`import accessible_output2.outputs.auto` inside `_get_screenreader()`)** happens last—only after Parts 0, A, B, C, and D have prepared the entire environment!
 
 ---
 

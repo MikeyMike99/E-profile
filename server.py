@@ -2,6 +2,9 @@ import os
 import json
 import hashlib
 import uuid
+import time
+import math
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from flask import Flask, render_template, session, abort, request, redirect, url_for, jsonify, flash
@@ -863,6 +866,112 @@ def toggle_exclusion():
         return jsonify({"success": True, "state": state, "permission": perm_to_toggle})
         
     return jsonify({"error": "Profile not found"}), 404
+
+AUDIO_SUITE_LICENSES_FILE = config.CONTENT_DIR / "audio_suite_licenses.json"
+LATEST_AUDIO_SUITE_VERSION = "1.0.0"
+AUDIO_SUITE_DOWNLOAD_URL = "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance"
+AUDIO_SUITE_CHANGELOG = "Audio Playback Suite update featuring dual-layer hardware license hardening and automated cloud attestation."
+
+
+def is_newer_version(latest: str, current: str) -> bool:
+    """Evaluates semantic version strings to determine if an update is available."""
+    try:
+        def parse_ver(v):
+            return [int(x) for x in re.sub(r"[^0-9.]", "", v).split(".") if x]
+        return parse_ver(latest) > parse_ver(current)
+    except Exception:
+        return False
+
+
+@app.route('/api/audio_suite/handshake', methods=['GET', 'POST'])
+def audio_suite_handshake():
+    """Validates hardware trial attestation and provides application update metadata."""
+    if request.method == 'GET':
+        return jsonify({
+            'service': 'Audio Playback Suite Attestation & Update Service',
+            'status': 'ONLINE',
+            'latest_version': LATEST_AUDIO_SUITE_VERSION,
+            'download_url': AUDIO_SUITE_DOWNLOAD_URL,
+        })
+
+    data = request.get_json(silent=True) or {}
+    hwid = data.get('hwid')
+    if not hwid:
+        return jsonify({'error': 'Missing hardware identifier'}), 400
+
+    hwid = str(hwid).strip()
+    app_version = str(data.get('app_version', '1.0.0')).strip()
+    local_first_run = data.get('local_first_run')
+    if isinstance(local_first_run, (int, float)):
+        local_first_run = int(local_first_run)
+    else:
+        local_first_run = None
+
+    licenses = {}
+    if AUDIO_SUITE_LICENSES_FILE.exists():
+        try:
+            licenses = json.loads(AUDIO_SUITE_LICENSES_FILE.read_text(encoding='utf-8'))
+        except Exception as exc:
+            sys_log.warning(f"Audio suite license store read error: {exc}")
+            licenses = {}
+
+    server_now = int(time.time())
+    record = licenses.get(hwid)
+
+    if not record:
+        inception = local_first_run if local_first_run and 0 < local_first_run <= server_now else server_now
+        record = {
+            'hwid': hwid,
+            'first_run': inception,
+            'last_seen': server_now,
+            'duration_days': 14,
+            'app_version': app_version,
+            'remote_revoked': False,
+        }
+        licenses[hwid] = record
+    else:
+        server_first_run = record.get('first_run', server_now)
+        if local_first_run and 0 < local_first_run < server_first_run:
+            record['first_run'] = local_first_run
+        record['last_seen'] = server_now
+        record['app_version'] = app_version
+
+    first_run = record.get('first_run', server_now)
+    duration_days = record.get('duration_days', 14)
+    expires_at = first_run + (duration_days * 86400)
+    is_revoked = record.get('remote_revoked', False)
+
+    if is_revoked:
+        status = 'REVOKED'
+    elif server_now >= expires_at:
+        status = 'EXPIRED'
+    else:
+        status = 'ACTIVE'
+
+    record['status'] = status
+
+    try:
+        AUDIO_SUITE_LICENSES_FILE.parent.mkdir(parents=True, exist_ok=True)
+        AUDIO_SUITE_LICENSES_FILE.write_text(json.dumps(licenses, indent=2), encoding='utf-8')
+    except Exception as exc:
+        sys_log.error(f"Failed to persist audio suite licenses: {exc}")
+
+    update_available = is_newer_version(LATEST_AUDIO_SUITE_VERSION, app_version)
+    days_remaining = max(0, int(math.ceil((expires_at - server_now) / 86400))) if status == 'ACTIVE' else 0
+
+    return jsonify({
+        'status': status,
+        'hwid': hwid,
+        'server_time': server_now,
+        'first_run': first_run,
+        'expires_at': expires_at,
+        'days_remaining': days_remaining,
+        'update_available': update_available,
+        'latest_version': LATEST_AUDIO_SUITE_VERSION,
+        'download_url': AUDIO_SUITE_DOWNLOAD_URL,
+        'changelog': AUDIO_SUITE_CHANGELOG,
+    })
+
 
 @app.errorhandler(404)
 def page_not_found(e):
