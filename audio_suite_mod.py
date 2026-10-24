@@ -38,9 +38,9 @@ DEFAULT_RELEASE_DATA = {
     "stage_status": "PUBLISHED",
     "release_overview": "JOSHY is a high-performance Windows audio playback system engineered specifically for blind and visually impaired users. It delivers zero-latency keyboard-driven media playback, rich acoustic earcons, deep Spotify desktop integration, and native screen-reader bridges for NVDA, JAWS, and Windows Narrator without requiring visual interaction.",
     "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and direct Git distribution.",
-    "download_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
-    "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
-    "git_web_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+    "download_url": "https://github.com/MikeyMike99/JOSHY-downloads",
+    "git_repo_url": "https://github.com/MikeyMike99/JOSHY-downloads.git",
+    "git_web_url": "https://github.com/MikeyMike99/JOSHY-downloads",
     "git_branch": "main",
     "scheduled_releases": [
         {
@@ -65,7 +65,7 @@ DEFAULT_RELEASE_DATA = {
             "size_formatted": "50.6 MB",
             "sha256": "68c828fd53640f44c02cf24ab26988ea41c532442e0d2fb2a22e71af55d5582b",
             "download_url": "/downloads/get/installer",
-            "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+            "external_url": "https://github.com/MikeyMike99/JOSHY-downloads/releases/tag/v1.0.0",
             "downloads_count": 0,
         },
         "portable": {
@@ -79,7 +79,7 @@ DEFAULT_RELEASE_DATA = {
             "size_formatted": "142.1 MB",
             "sha256": "b729f11f228f1a1c3fe07b7e4d03bff6a8a97766a73636878044476349a1429b",
             "download_url": "/downloads/get/portable",
-            "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+            "external_url": "https://github.com/MikeyMike99/JOSHY-downloads/releases/tag/v1.0.0",
             "downloads_count": 0,
         },
         "git_source": {
@@ -93,8 +93,8 @@ DEFAULT_RELEASE_DATA = {
             "size_formatted": "Git Tree",
             "sha256": "Git Commit HEAD",
             "download_url": "/downloads/get/git_source",
-            "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
-            "git_clone_cmd": "git clone https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
+            "external_url": "https://github.com/MikeyMike99/JOSHY-downloads",
+            "git_clone_cmd": "git clone https://github.com/MikeyMike99/JOSHY-downloads.git",
             "downloads_count": 0,
         },
     },
@@ -550,7 +550,7 @@ def download_package(package_id):
             client_ip=request.remote_addr or "127.0.0.1",
             user_agent=request.user_agent.string if request.user_agent else "Unknown",
         )
-        git_repo = releases.get("git_repo_url") or releases.get("download_url") or "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance"
+        git_repo = releases.get("git_repo_url") or releases.get("download_url") or "https://github.com/MikeyMike99/JOSHY-downloads"
         git_branch = releases.get("git_branch", "main")
         clean_base = git_repo.rstrip("/").removesuffix(".git")
         archive_zip_url = f"{clean_base}/archive/refs/heads/{git_branch}.zip"

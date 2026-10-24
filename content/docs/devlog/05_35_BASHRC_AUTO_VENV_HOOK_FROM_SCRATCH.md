@@ -23,7 +23,7 @@ This guide teaches you how to write the `_auto_venv_hook` and directory-aware sh
 alp() {
     if [ -f "$HOME/alp-env/bin/activate" ]; then
         source "$HOME/alp-env/bin/activate"
-        cd "$HOME/alp-env/nomvula_agri_finance" 2>/dev/null || cd "$HOME/alp-env" 2>/dev/null
+        cd "$HOME/alp-env" 2>/dev/null
         echo "ALP environment activated in $PWD"
     fi
 }

@@ -878,7 +878,7 @@ def toggle_exclusion():
 
 AUDIO_SUITE_LICENSES_FILE = config.CONTENT_DIR / "audio_suite_licenses.json"
 LATEST_AUDIO_SUITE_VERSION = "1.0.0"
-AUDIO_SUITE_DOWNLOAD_URL = "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance"
+AUDIO_SUITE_DOWNLOAD_URL = "https://github.com/MikeyMike99/JOSHY-downloads"
 AUDIO_SUITE_CHANGELOG = "Audio Playback Suite update featuring dual-layer hardware license hardening and automated cloud attestation."
 
 
