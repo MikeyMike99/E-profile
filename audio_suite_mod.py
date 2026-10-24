@@ -34,9 +34,23 @@ DEFAULT_RELEASE_DATA = {
     "version": "1.0.0",
     "release_title": "JOSHY Audio Playback Suite v1.0.0 (Accessible Edition)",
     "release_date": "2026-10-24",
+    "scheduled_date": "2026-10-24 12:00",
     "stage_status": "PUBLISHED",
-    "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and automated cloud attestation.",
+    "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and direct Git distribution.",
     "download_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+    "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
+    "git_web_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+    "git_branch": "main",
+    "scheduled_releases": [
+        {
+            "id": "sched-1-1-0",
+            "version": "1.1.0",
+            "title": "JOSHY Audio Playback Suite v1.1.0 (Spatial Audio & Cloud Attestation)",
+            "scheduled_date": "2026-11-01 12:00",
+            "status": "SCHEDULED",
+            "notes": "Spatial acoustics, high-resolution FLAC streaming, and cross-device bookmarking.",
+        }
+    ],
     "packages": {
         "installer": {
             "id": "installer",
@@ -64,6 +78,21 @@ DEFAULT_RELEASE_DATA = {
             "sha256": "b729f11f228f1a1c3fe07b7e4d03bff6a8a97766a73636878044476349a1429b",
             "download_url": "/downloads/get/portable",
             "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+            "downloads_count": 0,
+        },
+        "git_source": {
+            "id": "git_source",
+            "title": "Direct Git Repository & Source Code",
+            "filename": "source-code.zip",
+            "recommended": False,
+            "badge": "DIRECT GIT DOWNLOAD & CLI CLONE",
+            "target_audience": "Developers, auditors, and power users who prefer pulling directly from Git or building from source.",
+            "size_bytes": 0,
+            "size_formatted": "Git Tree",
+            "sha256": "Git Commit HEAD",
+            "download_url": "/downloads/get/git_source",
+            "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+            "git_clone_cmd": "git clone https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
             "downloads_count": 0,
         },
     },
@@ -165,6 +194,32 @@ def format_file_size(size_bytes: int) -> str:
     return f"{val:.1f} {units[i]}"
 
 
+def is_release_publicly_visible(release_data: dict) -> bool:
+    """Determines if a release is publicly accessible based on stage status and scheduled dates."""
+    stage_status = str(release_data.get("stage_status", "PUBLISHED")).strip().upper()
+    if stage_status == "PUBLISHED":
+        return True
+    if stage_status == "SCHEDULED":
+        scheduled_date = str(release_data.get("scheduled_date") or release_data.get("release_date") or "").strip()
+        if not scheduled_date:
+            return False
+        try:
+            clean_str = scheduled_date.replace("T", " ")
+            if len(clean_str) == 10:
+                sched_dt = datetime.strptime(clean_str, "%Y-%m-%d")
+            elif len(clean_str) == 16:
+                sched_dt = datetime.strptime(clean_str, "%Y-%m-%d %H:%M")
+            elif len(clean_str) == 19:
+                sched_dt = datetime.strptime(clean_str, "%Y-%m-%d %H:%M:%S")
+            else:
+                sched_dt = datetime.fromisoformat(clean_str)
+            return datetime.now() >= sched_dt
+        except Exception:
+            now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+            return now_str >= scheduled_date
+    return False
+
+
 def get_releases_data() -> dict:
     if not RELEASES_FILE.exists():
         RELEASES_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -174,6 +229,27 @@ def get_releases_data() -> dict:
         data = json.loads(RELEASES_FILE.read_text(encoding="utf-8"))
         if not isinstance(data, dict) or "packages" not in data:
             return DEFAULT_RELEASE_DATA.copy()
+
+        # Seamless schema normalization
+        if "git_repo_url" not in data:
+            data["git_repo_url"] = DEFAULT_RELEASE_DATA["git_repo_url"]
+        if "git_web_url" not in data:
+            data["git_web_url"] = DEFAULT_RELEASE_DATA["git_web_url"]
+        if "git_branch" not in data:
+            data["git_branch"] = DEFAULT_RELEASE_DATA["git_branch"]
+        if "scheduled_date" not in data:
+            data["scheduled_date"] = data.get("release_date", "2026-10-24")
+        if "scheduled_releases" not in data:
+            data["scheduled_releases"] = DEFAULT_RELEASE_DATA.get("scheduled_releases", [])
+
+        packages = data.setdefault("packages", {})
+        if "git_source" not in packages:
+            git_pkg = DEFAULT_RELEASE_DATA["packages"]["git_source"].copy()
+            git_pkg["external_url"] = data.get("git_web_url", data.get("download_url", git_pkg["external_url"]))
+            git_pkg["git_clone_cmd"] = f"git clone {data.get('git_repo_url', git_pkg['git_clone_cmd'].replace('git clone ', ''))}"
+            packages["git_source"] = git_pkg
+            save_releases_data(data)
+
         return data
     except Exception:
         return DEFAULT_RELEASE_DATA.copy()
@@ -369,25 +445,36 @@ def get_feedback_summary() -> list:
         return []
 
 
+def is_admin_session() -> bool:
+    return bool(session.get("admin", False) or session.get("is_admin", False))
+
+
 def render_downloads_page():
     releases = get_releases_data()
     downloads_log = get_downloads_log()
+    is_admin = is_admin_session()
+    is_released = is_release_publicly_visible(releases)
 
     packages_list = list(releases.get("packages", {}).values())
     for pkg in packages_list:
         pkg_id = pkg.get("id")
         pkg["downloads_count"] = downloads_log.get("packages", {}).get(pkg_id, 0)
-        local_path = DIST_DIR / pkg.get("filename", "")
-        pkg["local_available"] = local_path.exists()
+        filename = pkg.get("filename", "")
+        local_path = DIST_DIR / filename if filename else None
+        pkg["local_available"] = local_path.exists() if (local_path and local_path.is_file()) else False
+
+    scheduled_releases = releases.get("scheduled_releases", [])
 
     return render_template(
         "downloads.html",
         active_tab="downloads",
         releases=releases,
         packages=packages_list,
+        scheduled_releases=scheduled_releases,
         system_invariants=SYSTEM_INVARIANTS,
         hotkeys=HOTKEYS_REFERENCE,
-        is_admin=session.get("admin", False),
+        is_admin=is_admin,
+        is_released=is_released,
         is_employer=session.get("is_employer", False),
         permissions=session.get("permissions", []),
         dist_exists=DIST_DIR.exists(),
@@ -427,7 +514,7 @@ def render_usage_page():
         feedback_list=feedback_list,
         total_feedback=len(feedback_list),
         releases=releases,
-        is_admin=session.get("admin", False),
+        is_admin=is_admin_session(),
         is_employer=session.get("is_employer", False),
         permissions=session.get("permissions", []),
     )
@@ -450,6 +537,28 @@ def usage_view():
 def download_package(package_id):
     releases = get_releases_data()
     packages = releases.get("packages", {})
+    is_admin = is_admin_session()
+    is_released = is_release_publicly_visible(releases)
+
+    if package_id in ("git_source", "git"):
+        record_download_event(
+            package_id="git_source",
+            client_ip=request.remote_addr or "127.0.0.1",
+            user_agent=request.user_agent.string if request.user_agent else "Unknown",
+        )
+        git_repo = releases.get("git_repo_url") or releases.get("download_url") or "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance"
+        git_branch = releases.get("git_branch", "main")
+        clean_base = git_repo.rstrip("/").removesuffix(".git")
+        archive_zip_url = f"{clean_base}/archive/refs/heads/{git_branch}.zip"
+        return redirect(archive_zip_url)
+
+    if not is_released and not is_admin:
+        scheduled_target = releases.get("scheduled_date") or releases.get("release_date") or "a future date"
+        flash(
+            f"Release v{releases.get('version', '')} is currently scheduled for rollout on {scheduled_target}. Direct binary downloads are not yet publicly available.",
+            "warning",
+        )
+        return redirect(url_for("audio_suite.downloads_view"))
 
     if package_id not in packages:
         flash(f"Package identifier '{package_id}' not found.", "error")
@@ -492,7 +601,7 @@ def download_package(package_id):
 
 @audio_suite_bp.route("/api/downloads/stage/update", methods=["POST"])
 def stage_update_release():
-    if not session.get("admin", False):
+    if not is_admin_session():
         return jsonify({"error": "Administrative clearance required."}), 403
 
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -504,12 +613,28 @@ def stage_update_release():
         releases["release_title"] = str(data["release_title"]).strip()
     if "stage_status" in data and str(data["stage_status"]).strip():
         status = str(data["stage_status"]).strip().upper()
-        if status in ("PUBLISHED", "STAGED", "DRAFT"):
+        if status in ("PUBLISHED", "SCHEDULED", "STAGED", "DRAFT"):
             releases["stage_status"] = status
+    if "scheduled_date" in data:
+        releases["scheduled_date"] = str(data["scheduled_date"]).strip()
+    if "release_date" in data and str(data["release_date"]).strip():
+        releases["release_date"] = str(data["release_date"]).strip()
     if "download_url" in data and str(data["download_url"]).strip():
         releases["download_url"] = str(data["download_url"]).strip()
+    if "git_repo_url" in data and str(data["git_repo_url"]).strip():
+        releases["git_repo_url"] = str(data["git_repo_url"]).strip()
+    if "git_web_url" in data and str(data["git_web_url"]).strip():
+        releases["git_web_url"] = str(data["git_web_url"]).strip()
+    if "git_branch" in data and str(data["git_branch"]).strip():
+        releases["git_branch"] = str(data["git_branch"]).strip()
     if "changelog" in data and str(data["changelog"]).strip():
         releases["changelog"] = str(data["changelog"]).strip()
+
+    packages = releases.setdefault("packages", {})
+    if "git_source" in packages:
+        git_pkg = packages["git_source"]
+        git_pkg["external_url"] = releases.get("git_web_url") or releases.get("download_url")
+        git_pkg["git_clone_cmd"] = f"git clone {releases.get('git_repo_url', git_pkg['external_url'])}"
 
     save_releases_data(releases)
     return jsonify({
@@ -519,9 +644,90 @@ def stage_update_release():
     })
 
 
+@audio_suite_bp.route("/api/downloads/schedule/add", methods=["POST"])
+def schedule_add_release():
+    if not is_admin_session():
+        return jsonify({"error": "Administrative clearance required."}), 403
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    version = str(data.get("version", "")).strip()
+    title = str(data.get("title", "")).strip()
+    scheduled_date = str(data.get("scheduled_date", "")).strip()
+    notes = str(data.get("notes", "")).strip()
+
+    if not version or not scheduled_date:
+        return jsonify({"error": "Version and scheduled date are required."}), 400
+
+    releases = get_releases_data()
+    scheduled_list = releases.setdefault("scheduled_releases", [])
+
+    entry_id = f"sched-{version.replace('.', '-')}-{int(time.time())}"
+    new_entry = {
+        "id": entry_id,
+        "version": version,
+        "title": title or f"JOSHY v{version}",
+        "scheduled_date": scheduled_date,
+        "status": "SCHEDULED",
+        "notes": notes,
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    scheduled_list.append(new_entry)
+    save_releases_data(releases)
+
+    return jsonify({
+        "success": True,
+        "message": f"Release v{version} added to scheduled rollout for {scheduled_date}.",
+        "scheduled_entry": new_entry,
+        "scheduled_releases": scheduled_list,
+    })
+
+
+@audio_suite_bp.route("/api/downloads/schedule/delete", methods=["POST"])
+def schedule_delete_release():
+    if not is_admin_session():
+        return jsonify({"error": "Administrative clearance required."}), 403
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    entry_id = str(data.get("id", "")).strip()
+    if not entry_id:
+        return jsonify({"error": "Scheduled entry ID is required."}), 400
+
+    releases = get_releases_data()
+    scheduled_list = releases.get("scheduled_releases", [])
+    new_list = [item for item in scheduled_list if item.get("id") != entry_id]
+    releases["scheduled_releases"] = new_list
+    save_releases_data(releases)
+
+    return jsonify({
+        "success": True,
+        "message": "Scheduled release entry removed.",
+        "deleted_id": entry_id,
+        "scheduled_releases": new_list,
+    })
+
+
+@audio_suite_bp.route("/api/downloads/schedule/publish_now", methods=["POST"])
+def schedule_publish_now():
+    if not is_admin_session():
+        return jsonify({"error": "Administrative clearance required."}), 403
+
+    releases = get_releases_data()
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    releases["stage_status"] = "PUBLISHED"
+    releases["release_date"] = today_str
+    releases["scheduled_date"] = today_str
+
+    save_releases_data(releases)
+    return jsonify({
+        "success": True,
+        "message": f"Release v{releases.get('version', '')} published immediately to all visitors.",
+        "releases": releases,
+    })
+
+
 @audio_suite_bp.route("/api/downloads/stage/sync_dist", methods=["POST"])
 def stage_sync_dist():
-    if not session.get("admin", False):
+    if not is_admin_session():
         return jsonify({"error": "Administrative clearance required."}), 403
 
     result = sync_dist_binaries_on_disk()
@@ -530,7 +736,7 @@ def stage_sync_dist():
 
 @audio_suite_bp.route("/api/audio_suite/admin/toggle_revoke", methods=["POST"])
 def toggle_license_revoke():
-    if not session.get("admin", False):
+    if not is_admin_session():
         return jsonify({"error": "Administrative clearance required."}), 403
 
     data = request.get_json(silent=True) or {}
@@ -579,7 +785,7 @@ def toggle_license_revoke():
 
 @audio_suite_bp.route("/api/audio_suite/admin/extend_license", methods=["POST"])
 def extend_license_duration():
-    if not session.get("admin", False):
+    if not is_admin_session():
         return jsonify({"error": "Administrative clearance required."}), 403
 
     data = request.get_json(silent=True) or {}
@@ -622,7 +828,7 @@ def extend_license_duration():
 
 @audio_suite_bp.route("/api/audio_suite/admin/delete_feedback", methods=["POST"])
 def delete_feedback_item():
-    if not session.get("admin", False):
+    if not is_admin_session():
         return jsonify({"error": "Administrative clearance required."}), 403
 
     data = request.get_json(silent=True) or {}

@@ -2,9 +2,23 @@
   "version": "1.0.0",
   "release_title": "JOSHY Audio Playback Suite v1.0.0 (Accessible Edition)",
   "release_date": "2026-10-24",
+  "scheduled_date": "2026-10-24",
   "stage_status": "PUBLISHED",
-  "changelog": "New accessible shortcuts and telemetry verification.",
+  "changelog": "High-performance accessible Windows audio playback and Spotify controller with acoustic earcons, NVDA/JAWS screen-reader bridges, and direct Git distribution.",
   "download_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+  "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
+  "git_web_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+  "git_branch": "main",
+  "scheduled_releases": [
+    {
+      "id": "sched-1-1-0",
+      "version": "1.1.0",
+      "title": "JOSHY Audio Playback Suite v1.1.0 (Spatial Audio & Cloud Attestation)",
+      "scheduled_date": "2026-11-01 12:00",
+      "status": "SCHEDULED",
+      "notes": "Spatial acoustics, high-resolution FLAC streaming, and cross-device bookmarking."
+    }
+  ],
   "packages": {
     "installer": {
       "id": "installer",
@@ -35,6 +49,22 @@
       "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
       "downloads_count": 0,
       "last_synced": "2026-10-24 09:28:36"
+    },
+    "git_source": {
+      "id": "git_source",
+      "title": "Direct Git Repository & Source Code",
+      "filename": "source-code.zip",
+      "recommended": false,
+      "badge": "DIRECT GIT DOWNLOAD & CLI CLONE",
+      "target_audience": "Developers, auditors, and power users who prefer pulling directly from Git or building from source.",
+      "size_bytes": 0,
+      "size_formatted": "Git Tree",
+      "sha256": "Git Commit HEAD",
+      "download_url": "/downloads/get/git_source",
+      "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+      "git_clone_cmd": "git clone https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
+      "downloads_count": 2,
+      "last_synced": "2026-10-24 10:45:00"
     }
   }
 }

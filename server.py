@@ -896,9 +896,11 @@ def is_newer_version(latest: str, current: str) -> bool:
 def audio_suite_handshake():
     """Validates hardware trial attestation and provides application update metadata."""
     releases = {}
+    active_is_released = True
     try:
-        from audio_suite_mod import get_releases_data
+        from audio_suite_mod import get_releases_data, is_release_publicly_visible
         releases = get_releases_data()
+        active_is_released = is_release_publicly_visible(releases)
     except Exception:
         pass
     active_version = releases.get('version', LATEST_AUDIO_SUITE_VERSION)
@@ -975,7 +977,7 @@ def audio_suite_handshake():
     except Exception as exc:
         sys_log.error(f"Failed to persist audio suite licenses: {exc}")
 
-    update_available = is_newer_version(active_version, app_version)
+    update_available = is_newer_version(active_version, app_version) if active_is_released else False
     days_remaining = max(0, int(math.ceil((expires_at - server_now) / 86400))) if status == 'ACTIVE' else 0
 
     return jsonify({

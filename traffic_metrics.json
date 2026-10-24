@@ -1,5 +1,5 @@
 {
-    "total_views": 1271,
+    "total_views": 1315,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -20,11 +20,11 @@
         "2398cf1e4c232c798faeb22f6f546db1"
     ],
     "paths": {
-        "/": 427,
+        "/": 431,
         "/favicon.ico": 267,
-        "/projects": 41,
+        "/projects": 51,
         "/ai_agent": 20,
-        "/login": 78,
+        "/login": 82,
         "/ai_agent/": 12,
         "/ws": 123,
         "/ai_agent/api/chat": 2,
@@ -32,7 +32,7 @@
         "/robots.txt": 58,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
-        "/docs": 50,
+        "/docs": 52,
         "/docs/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE": 1,
         "/logout": 13,
         "/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE": 1,
@@ -81,13 +81,14 @@
         "/reset_pin": 4,
         "/change_password": 6,
         "/delete_profile": 4,
-        "/access/employer-uuid-002": 4,
-        "/certifications": 12,
-        "/blog": 4,
-        "/bio": 4,
-        "/downloads/get/installer": 2,
-        "/downloads": 2,
+        "/access/employer-uuid-002": 6,
+        "/certifications": 18,
+        "/blog": 6,
+        "/bio": 6,
+        "/downloads/get/installer": 4,
+        "/downloads": 10,
         "/telemetry": 2,
-        "/usage": 2
+        "/usage": 2,
+        "/downloads/get/git_source": 2
     }
 }
