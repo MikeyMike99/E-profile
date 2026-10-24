@@ -10,17 +10,7 @@
   "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
   "git_web_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
   "git_branch": "main",
-  "scheduled_releases": [
-    {
-      "id": "sched-1-1-0",
-      "version": "1.1.0",
-      "title": "JOSHY Audio Playback Suite v1.1.0 (Spatial Audio & Cloud Attestation)",
-      "scheduled_date": "2026-11-01 12:00",
-      "status": "SCHEDULED",
-      "overview": "Spatial audio processing, hardware attestation, and lossless audio streaming for accessible gaming and audio engineering setups.",
-      "notes": "Spatial acoustics, high-resolution FLAC streaming, and cross-device bookmarking."
-    }
-  ],
+  "scheduled_releases": [],
   "packages": {
     "installer": {
       "id": "installer",
