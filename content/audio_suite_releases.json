@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "release_title": "JOSHY Audio Playback Suite v1.0.0 (Accessible Edition)",
+  "release_date": "2026-10-24",
+  "scheduled_date": "2026-10-24 12:00",
+  "stage_status": "PUBLISHED",
+  "release_overview": "JOSHY is a high-performance Windows audio playback system engineered specifically for blind and visually impaired users. It delivers zero-latency keyboard-driven media playback, rich acoustic earcons, deep Spotify desktop integration, and native screen-reader bridges for NVDA, JAWS, and Windows Narrator without requiring visual interaction.",
+  "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and direct Git distribution.",
+  "download_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+  "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
+  "git_web_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+  "git_branch": "main",
+  "scheduled_releases": [
+    {
+      "id": "sched-1-1-0",
+      "version": "1.1.0",
+      "title": "JOSHY Audio Playback Suite v1.1.0 (Spatial Audio & Cloud Attestation)",
+      "scheduled_date": "2026-11-01 12:00",
+      "status": "SCHEDULED",
+      "overview": "Spatial audio processing, hardware attestation, and lossless audio streaming for accessible gaming and audio engineering setups.",
+      "notes": "Spatial acoustics, high-resolution FLAC streaming, and cross-device bookmarking."
+    }
+  ],
+  "packages": {
+    "installer": {
+      "id": "installer",
+      "title": "JOSHY Windows Installer",
+      "filename": "JOSHY-Setup.exe",
+      "recommended": true,
+      "badge": "RECOMMENDED FOR SCREEN READERS",
+      "target_audience": "Blind and visually impaired users with NVDA, JAWS, or Windows Narrator. Installs desktop & start menu shortcuts and handles automatic extraction.",
+      "size_bytes": 53098377,
+      "size_formatted": "50.6 MB",
+      "sha256": "a32f8576a6ff264aced2a77e350b7511e37728c1e76ab28909e20ac210a9c5a0",
+      "download_url": "/downloads/get/installer",
+      "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+      "downloads_count": 2,
+      "last_synced": "2026-10-24 09:29:07"
+    },
+    "portable": {
+      "id": "portable",
+      "title": "JOSHY Standalone Portable Executable",
+      "filename": "JOSHY.exe",
+      "recommended": false,
+      "badge": "PORTABLE SINGLE BINARY",
+      "target_audience": "Single-binary native C machine-code executable. Runs instantly from USB or disk without administrative rights or installation.",
+      "size_bytes": 149004288,
+      "size_formatted": "142.1 MB",
+      "sha256": "571b0a304d15dd7a7931a635e840fae0fe8a001b1c3f13706460307bb5f31310",
+      "download_url": "/downloads/get/portable",
+      "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+      "downloads_count": 0,
+      "last_synced": "2026-10-24 09:28:36"
+    },
+    "git_source": {
+      "id": "git_source",
+      "title": "Direct Git Repository & Source Code",
+      "filename": "source-code.zip",
+      "recommended": false,
+      "badge": "DIRECT GIT DOWNLOAD & CLI CLONE",
+      "target_audience": "Developers, auditors, and power users who prefer pulling directly from Git or building from source.",
+      "size_bytes": 0,
+      "size_formatted": "Git Tree",
+      "sha256": "Git Commit HEAD",
+      "download_url": "/downloads/get/git_source",
+      "external_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
+      "git_clone_cmd": "git clone https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
+      "downloads_count": 2,
+      "last_synced": "2026-10-24 10:45:00"
+    }
+  }
+}

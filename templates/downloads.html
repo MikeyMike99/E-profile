@@ -1,0 +1,1094 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .suite-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .suite-header-block {
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 20px;
+        position: relative;
+    }
+
+    .suite-title {
+        font-size: 2rem;
+        color: var(--text-bright);
+        letter-spacing: 2px;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+    }
+
+    .suite-subhead {
+        font-family: monospace;
+        color: var(--accent);
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+        margin: 0 0 12px 0;
+    }
+
+    .suite-badge-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .status-badge {
+        font-family: monospace;
+        font-size: 0.72rem;
+        padding: 4px 10px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .badge-published {
+        background: rgba(0, 255, 136, 0.15);
+        border: 1px solid #00ff88;
+        color: #00ff88;
+    }
+
+    .badge-scheduled {
+        background: rgba(255, 176, 0, 0.18);
+        border: 1px solid #ffb000;
+        color: #ffb000;
+    }
+
+    .badge-staged {
+        background: rgba(255, 176, 0, 0.15);
+        border: 1px solid #ffb000;
+        color: #ffb000;
+    }
+
+    .badge-draft {
+        background: rgba(255, 77, 77, 0.15);
+        border: 1px solid #ff4d4d;
+        color: #ff7878;
+    }
+
+    .badge-info {
+        background: rgba(25, 230, 255, 0.12);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+    }
+
+    /* Skip navigation */
+    .skip-nav-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+
+    .skip-nav-link {
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        border: 1px solid var(--border);
+    }
+
+    .skip-nav-link:focus, .skip-nav-link:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    /* Scheduled holding box for non-admins */
+    .scheduled-release-holding-card {
+        background: rgba(13, 17, 23, 0.95);
+        border: 1px solid var(--amber, #ffb000);
+        border-radius: 10px;
+        padding: 30px 24px;
+        text-align: center;
+        box-shadow: 0 0 25px rgba(255, 176, 0, 0.15);
+    }
+
+    .admin-notice-bar {
+        background: rgba(255, 176, 0, 0.12);
+        border: 1px solid var(--amber, #ffb000);
+        color: var(--amber, #ffb000);
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 0.82rem;
+        line-height: 1.5;
+    }
+
+    /* Cards */
+    .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 15px;
+    }
+
+    .package-card {
+        background: rgba(5, 7, 10, 0.85);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .package-card.recommended {
+        border-color: var(--accent);
+        box-shadow: 0 0 20px rgba(25, 230, 255, 0.15);
+    }
+
+    .package-card.git-card {
+        border-color: #a78bfa;
+        box-shadow: 0 0 20px rgba(167, 139, 250, 0.12);
+    }
+
+    .package-card:hover, .package-card:focus-within {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .package-card.git-card:hover, .package-card.git-card:focus-within {
+        border-color: #c084fc;
+    }
+
+    .pkg-top {
+        margin-bottom: 20px;
+    }
+
+    .pkg-badge {
+        font-family: monospace;
+        font-size: 0.68rem;
+        color: var(--accent);
+        background: rgba(25, 230, 255, 0.1);
+        border: 1px solid var(--accent);
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .pkg-badge-git {
+        color: #c084fc;
+        background: rgba(192, 132, 252, 0.1);
+        border-color: #c084fc;
+    }
+
+    .pkg-title {
+        font-size: 1.25rem;
+        color: var(--text-bright);
+        margin: 0 0 10px 0;
+        font-weight: 600;
+    }
+
+    .pkg-desc {
+        font-size: 0.88rem;
+        line-height: 1.5;
+        color: var(--text-dim);
+        margin: 0 0 16px 0;
+    }
+
+    .pkg-meta-list {
+        font-family: monospace;
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        list-style: none;
+        padding: 0;
+        margin: 0 0 15px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .pkg-meta-item strong {
+        color: var(--text-bright);
+    }
+
+    .hash-box {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 16px;
+        font-family: monospace;
+        font-size: 0.7rem;
+        word-break: break-all;
+    }
+
+    .git-command-box {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 16px;
+        font-family: monospace;
+        font-size: 0.75rem;
+        word-break: break-all;
+    }
+
+    .hash-label {
+        color: var(--accent);
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+
+    .git-label {
+        color: #c084fc;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+
+    .btn-copy-hash {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        padding: 2px 8px;
+        font-size: 0.65rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-copy-hash:hover, .btn-copy-hash:focus-visible {
+        color: var(--accent);
+        border-color: var(--accent);
+        outline: 2px solid var(--accent);
+    }
+
+    .btn-download-primary {
+        background: rgba(25, 230, 255, 0.15);
+        color: var(--accent) !important;
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 14px 20px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-download-primary:hover, .btn-download-primary:focus-visible {
+        background: var(--accent);
+        color: #000 !important;
+        box-shadow: 0 0 20px var(--accent-glow);
+        outline: 3px solid #fff;
+    }
+
+    .btn-download-git {
+        background: rgba(192, 132, 252, 0.15);
+        color: #c084fc !important;
+        border: 1px solid #a78bfa;
+    }
+
+    .btn-download-git:hover, .btn-download-git:focus-visible {
+        background: #a78bfa;
+        color: #000 !important;
+        box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+        outline: 3px solid #fff;
+    }
+
+    .btn-download-locked {
+        background: rgba(255, 255, 255, 0.04);
+        color: #888;
+        border: 1px dashed #555;
+        border-radius: 8px;
+        padding: 14px 20px;
+        font-family: monospace;
+        font-size: 0.82rem;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: not-allowed;
+    }
+
+    /* Admin Staging Console */
+    .admin-staging-panel {
+        background: rgba(13, 17, 23, 0.95);
+        border: 1px solid var(--amber, #ffb000);
+        border-radius: 10px;
+        padding: 24px;
+        box-shadow: 0 0 25px rgba(255, 176, 0, 0.15);
+    }
+
+    .admin-staging-panel h2 {
+        color: var(--amber, #ffb000);
+        margin: 0 0 16px 0;
+        font-size: 1.25rem;
+        font-family: monospace;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .staging-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-group label {
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .form-input {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid var(--border);
+        color: var(--text-bright);
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.85rem;
+    }
+
+    .form-input:focus {
+        border-color: var(--amber, #ffb000);
+        outline: 2px solid var(--amber, #ffb000);
+    }
+
+    .btn-amber {
+        background: rgba(255, 176, 0, 0.15);
+        border: 1px solid var(--amber, #ffb000);
+        color: var(--amber, #ffb000);
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-amber:hover, .btn-amber:focus-visible {
+        background: var(--amber, #ffb000);
+        color: #000;
+        outline: 2px solid #fff;
+    }
+
+    .btn-cyan {
+        background: rgba(25, 230, 255, 0.15);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-cyan:hover, .btn-cyan:focus-visible {
+        background: var(--accent);
+        color: #000;
+        outline: 2px solid #fff;
+    }
+
+    .btn-danger {
+        background: rgba(255, 77, 77, 0.15);
+        border: 1px solid #ff4d4d;
+        color: #ff7878;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.72rem;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-danger:hover, .btn-danger:focus-visible {
+        background: #ff4d4d;
+        color: #000;
+    }
+
+    /* Tables */
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: rgba(5, 7, 10, 0.7);
+    }
+
+    .cyber-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        text-align: left;
+    }
+
+    .cyber-table th {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--accent);
+        font-family: monospace;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+
+    .cyber-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-dim);
+    }
+
+    .cyber-table tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text-bright);
+    }
+
+    .kbd-shortcut {
+        background: #111827;
+        border: 1px solid #374151;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-family: monospace;
+        color: #67e8f9;
+        font-size: 0.8rem;
+    }
+</style>
+
+<div class="suite-shell">
+    <div id="downloads-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+    <nav class="skip-nav-container" aria-label="Quick Jump Shortcuts">
+        {% if releases.release_overview and (is_released or is_admin) %}
+        <a href="#overview-section" class="skip-nav-link">Skip to Product Overview</a>
+        {% endif %}
+        <a href="#packages-section" class="skip-nav-link">Skip to Download Packages</a>
+        <a href="#git-section" class="skip-nav-link">Skip to Direct Git Distribution</a>
+        <a href="#requirements-section" class="skip-nav-link">Skip to System Requirements</a>
+        <a href="#hotkeys-section" class="skip-nav-link">Skip to Keyboard Shortcuts</a>
+        {% if is_admin %}
+        <a href="#staging-section" class="skip-nav-link">Skip to Staging Manager</a>
+        <a href="#schedule-queue-section" class="skip-nav-link">Skip to Scheduled Rollout Queue</a>
+        {% endif %}
+    </nav>
+
+    <header class="suite-header-block">
+        <h1 class="suite-title">ACCESSIBLE AUDIO PLAYBACK SUITE (JOSHY)</h1>
+        <p class="suite-subhead">> STAGING, OFFICIAL DISTRIBUTION & NATIVE ACCESSIBILITY REPOSITORY</p>
+        <div class="suite-badge-row">
+            <span class="status-badge badge-{{ releases.stage_status.lower() }}">STAGE: {{ releases.stage_status }}</span>
+            <span class="status-badge badge-info">BUILD: v{{ releases.version }}</span>
+            <span class="status-badge badge-info">ARCH: x64 WINDOWS</span>
+            {% if releases.stage_status == 'SCHEDULED' %}
+            <span class="status-badge badge-scheduled">ROLLOUT: {{ releases.scheduled_date }}</span>
+            {% else %}
+            <span class="status-badge badge-info">RELEASE: {{ releases.release_date }}</span>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if is_admin and not is_released %}
+    <div class="admin-notice-bar" role="alert">
+        <strong>⚡ ADMIN CLEARANCE ACTIVE:</strong> This release is currently in <code>{{ releases.stage_status }}</code> state (Scheduled for {{ releases.scheduled_date or releases.release_date }}). Regular visitors see the scheduled holding state; download binaries are unlocked for administrators for validation.
+    </div>
+    {% endif %}
+
+    {% if not is_admin and not is_released %}
+    <section class="scheduled-release-holding-card" role="region" aria-labelledby="holding-banner-title">
+        <div style="font-size: 2.6rem; margin-bottom: 8px;">🕒</div>
+        <h2 id="holding-banner-title" style="color: var(--amber, #ffb000); font-family: monospace; font-size: 1.4rem; margin: 0 0 10px 0; text-transform: uppercase;">
+            Release v{{ releases.version }} Scheduled for Planned Rollout
+        </h2>
+        <div class="suite-badge-row" style="justify-content: center; margin-bottom: 18px;">
+            <span class="status-badge badge-scheduled">AUTOMATED ROLLOUT: {{ releases.scheduled_date or releases.release_date }}</span>
+            <span class="status-badge badge-info">VERSION: v{{ releases.version }}</span>
+        </div>
+
+        {% if releases.release_overview %}
+        <div class="scheduled-overview-box" style="background: rgba(0, 229, 255, 0.05); border: 1px solid var(--accent); border-radius: 8px; padding: 18px 22px; max-width: 720px; margin: 0 auto 18px auto; text-align: left;">
+            <strong style="color: var(--accent); font-family: monospace; font-size: 0.82rem; display: block; margin-bottom: 8px; letter-spacing: 0.05em;">📦 PRODUCT OVERVIEW & RELEASE MESSAGE:</strong>
+            <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.6; margin: 0; white-space: pre-line;">{{ releases.release_overview }}</p>
+        </div>
+        {% else %}
+        <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.6; max-width: 680px; margin: 0 auto 16px auto;">
+            To ensure zero-downtime stability, rigorous screen-reader certification across NVDA, JAWS, and Narrator, and verified binary integrity, compiled Windows releases are deployed on an engineering schedule. Public downloads will unlock automatically on <strong>{{ releases.scheduled_date or releases.release_date }}</strong>.
+        </p>
+        {% endif %}
+
+        {% if releases.changelog %}
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; max-width: 720px; margin: 0 auto 20px auto; text-align: left;">
+            <strong style="color: var(--accent); font-family: monospace; font-size: 0.8rem; display: block; margin-bottom: 6px;">UPCOMING RELEASE HIGHLIGHTS & CHANGELOG:</strong>
+            <p style="color: var(--text-dim); font-size: 0.85rem; margin: 0; line-height: 1.5;">{{ releases.changelog }}</p>
+        </div>
+        {% endif %}
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin: 0;">
+            Need immediate access to the source code? Developers and reviewers can <a href="#git-section" style="color: #c084fc; text-decoration: underline;">download directly from Git</a> below.
+        </p>
+    </section>
+    {% endif %}
+
+    {% if is_admin %}
+    <section id="staging-section" class="admin-staging-panel" aria-labelledby="staging-heading">
+        <h2 id="staging-heading">⚡ ADMIN STAGING, RELEASE SCHEDULER & GIT CONTROLLER</h2>
+        <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0; margin-bottom: 16px;">
+            Schedule releases, control visibility for non-admin visitors, configure direct Git repository endpoints, and synchronize computed SHA-256 hashes from the local <code style="color: var(--amber);">Audio_pllayback_suite/dist</code> build directory.
+        </p>
+
+        <form id="staging-form" onsubmit="saveStagedRelease(event)">
+            <div class="staging-form-grid">
+                <div class="form-group">
+                    <label for="stage-version">Release Version</label>
+                    <input type="text" id="stage-version" class="form-input" value="{{ releases.version }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="stage-title">Release Title</label>
+                    <input type="text" id="stage-title" class="form-input" value="{{ releases.release_title }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="stage-status">Release Visibility & Status</label>
+                    <select id="stage-status" class="form-input">
+                        <option value="PUBLISHED" {% if releases.stage_status == 'PUBLISHED' %}selected{% endif %}>PUBLISHED (Live for All Visitors)</option>
+                        <option value="SCHEDULED" {% if releases.stage_status == 'SCHEDULED' %}selected{% endif %}>SCHEDULED (Automated Release on Target Date)</option>
+                        <option value="STAGED" {% if releases.stage_status == 'STAGED' %}selected{% endif %}>STAGED (Testing Clearance Only)</option>
+                        <option value="DRAFT" {% if releases.stage_status == 'DRAFT' %}selected{% endif %}>DRAFT (Internal Prototype)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stage-scheduled-date">Scheduled Release Date & Time</label>
+                    <input type="text" id="stage-scheduled-date" class="form-input" value="{{ releases.scheduled_date or releases.release_date }}" placeholder="YYYY-MM-DD HH:MM">
+                </div>
+                <div class="form-group">
+                    <label for="stage-git-repo">Git Repository URL (Clone Target)</label>
+                    <input type="url" id="stage-git-repo" class="form-input" value="{{ releases.git_repo_url }}">
+                </div>
+                <div class="form-group">
+                    <label for="stage-git-web">Git Web View URL</label>
+                    <input type="url" id="stage-git-web" class="form-input" value="{{ releases.git_web_url or releases.download_url }}">
+                </div>
+                <div class="form-group">
+                    <label for="stage-git-branch">Git Branch</label>
+                    <input type="text" id="stage-git-branch" class="form-input" value="{{ releases.git_branch or 'main' }}">
+                </div>
+                <div class="form-group">
+                    <label for="stage-url">External Cloud / Mirror URL</label>
+                    <input type="url" id="stage-url" class="form-input" value="{{ releases.download_url }}">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="stage-overview">Product Overview & Release Announcement Message</label>
+                <textarea id="stage-overview" class="form-input" rows="3" placeholder="Provide an overview of the product, key benefits, target audience, and release announcement message...">{{ releases.release_overview or '' }}</textarea>
+                <p style="color: var(--text-dim); font-size: 0.78rem; margin: 4px 0 0 0;">
+                    When scheduled, this overview is displayed directly in the scheduled holding card and screen reader announcement. When published, it introduces the product above package downloads.
+                </p>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="stage-changelog">Changelog & Accessibility Notes</label>
+                <textarea id="stage-changelog" class="form-input" rows="3">{{ releases.changelog }}</textarea>
+            </div>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button type="submit" class="btn-amber" id="btn-save-staging">SAVE STAGED RELEASE</button>
+                <button type="button" class="btn-amber" style="background: rgba(0, 255, 136, 0.15); border-color: #00ff88; color: #00ff88;" onclick="publishReleaseImmediately()">FORCE PUBLISH NOW</button>
+                <button type="button" class="btn-cyan" id="btn-sync-dist" onclick="syncDistBinaries()">SYNC & RE-HASH LOCAL DIST FOLDER</button>
+            </div>
+        </form>
+    </section>
+
+    <section id="schedule-queue-section" class="admin-staging-panel" style="border-color: #60a5fa;" aria-labelledby="queue-heading">
+        <h2 id="queue-heading" style="color: #60a5fa;">🗓️ UPCOMING RELEASES SCHEDULE QUEUE</h2>
+        <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0; margin-bottom: 16px;">
+            Plan roadmap milestones in advance with dedicated product overviews and release messages. Scheduled releases unlock systematically so visitors are never overwhelmed with untested binaries all at once.
+        </p>
+
+        {% if scheduled_releases %}
+        <div class="table-container" style="margin-bottom: 20px;">
+            <table class="cyber-table">
+                <caption class="sr-only">Scheduled Upcoming Releases Queue</caption>
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 12%;">VERSION</th>
+                        <th scope="col" style="width: 22%;">TITLE</th>
+                        <th scope="col" style="width: 18%;">TARGET ROLLOUT</th>
+                        <th scope="col" style="width: 32%;">PRODUCT OVERVIEW & NOTES</th>
+                        <th scope="col" style="width: 16%;">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in scheduled_releases %}
+                    <tr>
+                        <th scope="row" style="color: #60a5fa; font-family: monospace;">v{{ item.version }}</th>
+                        <td style="color: var(--text-bright);"><strong>{{ item.title }}</strong></td>
+                        <td><span class="status-badge badge-scheduled">{{ item.scheduled_date }}</span></td>
+                        <td>
+                            {% if item.overview %}
+                            <div style="color: var(--text-bright); font-size: 0.88rem; margin-bottom: 4px; line-height: 1.4;">{{ item.overview }}</div>
+                            {% endif %}
+                            {% if item.notes %}
+                            <div style="color: var(--text-dim); font-size: 0.8rem; font-style: italic;">Note: {{ item.notes }}</div>
+                            {% endif %}
+                            {% if not item.overview and not item.notes %}
+                            <span style="color: var(--text-dim); font-size: 0.8rem;">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <button type="button" class="btn-cyan" style="font-size: 0.72rem; padding: 4px 8px;" onclick="promoteScheduledItem('{{ item.id }}', '{{ item.version }}')" aria-label="Stage scheduled milestone v{{ item.version }}">STAGE</button>
+                                <button type="button" class="btn-danger" style="font-size: 0.72rem; padding: 4px 8px;" onclick="deleteScheduledItem('{{ item.id }}')" aria-label="Delete scheduled release v{{ item.version }}">DELETE</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="color: var(--text-dim); font-style: italic; margin-bottom: 20px;">No additional future releases currently queued in schedule.</p>
+        {% endif %}
+
+        <form id="add-schedule-form" onsubmit="addScheduledRelease(event)">
+            <h3 style="color: var(--text-bright); font-size: 0.95rem; font-family: monospace; margin: 0 0 12px 0;">+ QUEUE NEW SCHEDULED MILESTONE</h3>
+            <div class="staging-form-grid">
+                <div class="form-group">
+                    <label for="sched-version">Target Version</label>
+                    <input type="text" id="sched-version" class="form-input" placeholder="e.g. 1.1.0" required>
+                </div>
+                <div class="form-group">
+                    <label for="sched-title">Milestone Title</label>
+                    <input type="text" id="sched-title" class="form-input" placeholder="e.g. Spatial Audio & FLAC Support" required>
+                </div>
+                <div class="form-group">
+                    <label for="sched-date">Scheduled Date & Time</label>
+                    <input type="text" id="sched-date" class="form-input" placeholder="YYYY-MM-DD HH:MM" required>
+                </div>
+                <div class="form-group">
+                    <label for="sched-notes">Engineering Notes</label>
+                    <input type="text" id="sched-notes" class="form-input" placeholder="Key deliverables or test focus">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 12px; margin-bottom: 16px;">
+                <label for="sched-overview">Release Message & Product Overview</label>
+                <textarea id="sched-overview" class="form-input" rows="2" placeholder="Summary of the product overview, accessibility features, or public release announcement message..."></textarea>
+            </div>
+            <button type="submit" class="btn-cyan" style="font-size: 0.75rem;">+ ADD TO SCHEDULED ROLLOUT</button>
+        </form>
+    </section>
+    {% endif %}
+
+    {% if releases.release_overview and (is_released or is_admin) %}
+    <section id="overview-section" class="suite-overview-section" aria-labelledby="product-overview-heading" style="background: rgba(13, 17, 23, 0.7); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 20px 24px; margin-bottom: 30px;">
+        <h2 id="product-overview-heading" style="color: var(--accent); font-size: 1.15rem; font-family: monospace; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
+            <span>📦</span> PRODUCT OVERVIEW & RELEASE ANNOUNCEMENT
+        </h2>
+        <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.7; margin: 0; white-space: pre-line;">{{ releases.release_overview }}</p>
+        {% if releases.changelog %}
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);">
+            <strong style="color: #60a5fa; font-family: monospace; font-size: 0.8rem; display: block; margin-bottom: 4px;">KEY RELEASE HIGHLIGHTS & CHANGELOG:</strong>
+            <p style="color: var(--text-dim); font-size: 0.85rem; line-height: 1.5; margin: 0;">{{ releases.changelog }}</p>
+        </div>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <section id="packages-section" aria-labelledby="packages-heading">
+        <h2 id="packages-heading" style="color: var(--text-bright); font-size: 1.35rem; margin-bottom: 8px;">
+            OFFICIAL APPLICATION PACKAGES
+        </h2>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 15px 0;">
+            Select the appropriate distribution for your Windows environment. All binaries are compiled with native C optimization and embedded screen reader bridges.
+        </p>
+
+        <div class="packages-grid">
+            {% for pkg in packages %}
+            {% if pkg.id != 'git_source' %}
+            <article class="package-card {% if pkg.recommended %}recommended{% endif %}" aria-labelledby="title-{{ pkg.id }}">
+                <div class="pkg-top">
+                    {% if pkg.badge %}
+                    <span class="pkg-badge">{{ pkg.badge }}</span>
+                    {% endif %}
+                    <h3 class="pkg-title" id="title-{{ pkg.id }}">{{ pkg.title }}</h3>
+                    <p class="pkg-desc">{{ pkg.target_audience }}</p>
+
+                    <ul class="pkg-meta-list">
+                        <li class="pkg-meta-item"><strong>Binary File:</strong> {{ pkg.filename }}</li>
+                        <li class="pkg-meta-item"><strong>File Size:</strong> {{ pkg.size_formatted }}</li>
+                        <li class="pkg-meta-item"><strong>Delivery:</strong> {% if pkg.local_available %}<span style="color: #00ff88;">Local Fast Stream Ready</span>{% else %}<span style="color: var(--accent);">Cloud Mirror Ready</span>{% endif %}</li>
+                    </ul>
+
+                    <div class="hash-box">
+                        <div class="hash-label">
+                            <span>SHA-256 CHECKSUM</span>
+                            <button type="button" class="btn-copy-hash" onclick="copyChecksum('{{ pkg.sha256 }}', '{{ pkg.title }}')" aria-label="Copy SHA-256 for {{ pkg.title }}">
+                                COPY HASH
+                            </button>
+                        </div>
+                        <span id="hash-{{ pkg.id }}" style="color: var(--text-bright);">{{ pkg.sha256 }}</span>
+                    </div>
+                </div>
+
+                <div>
+                    {% if is_released or is_admin %}
+                    <a href="{{ pkg.download_url }}" class="btn-download-primary" aria-label="Download {{ pkg.title }} ({{ pkg.size_formatted }}) - {{ pkg.filename }}">
+                        DOWNLOAD {{ pkg.filename }}
+                    </a>
+                    {% else %}
+                    <div class="btn-download-locked" aria-label="{{ pkg.title }} locked until scheduled rollout">
+                        🔒 UNLOCKS ON {{ releases.scheduled_date or releases.release_date }}
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="git-section" aria-labelledby="git-heading">
+        <h2 id="git-heading" style="color: #c084fc; font-size: 1.35rem; margin-bottom: 8px;">
+            ALTERNATIVE: DOWNLOAD DIRECTLY FROM GIT
+        </h2>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 15px 0;">
+            For developers, accessibility auditors, and open-source contributors who prefer building from source, tracking revisions, or bypassing standalone binary installers.
+        </p>
+
+        <div class="packages-grid">
+            <article class="package-card git-card" aria-labelledby="title-git-source">
+                <div class="pkg-top">
+                    <span class="pkg-badge pkg-badge-git">DIRECT GIT & SOURCE ACCESS</span>
+                    <h3 class="pkg-title" id="title-git-source">Git Source Repository & CLI Clone</h3>
+                    <p class="pkg-desc">
+                        Full source tree repository. Clone directly via the Git command line or download the complete source code archive as a standard compressed ZIP.
+                    </p>
+
+                    <ul class="pkg-meta-list">
+                        <li class="pkg-meta-item"><strong>Repository:</strong> {{ releases.git_repo_url }}</li>
+                        <li class="pkg-meta-item"><strong>Active Branch:</strong> <span style="color: #c084fc;">{{ releases.git_branch or 'main' }}</span></li>
+                        <li class="pkg-meta-item"><strong>Distribution:</strong> <span style="color: #00ff88;">Always Accessible (Open Source)</span></li>
+                    </ul>
+
+                    <div class="git-command-box">
+                        <div class="git-label">
+                            <span>GIT CLONE COMMAND</span>
+                            <button type="button" class="btn-copy-hash" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.4);" onclick="copyCloneCommand('git clone {{ releases.git_repo_url }}')" aria-label="Copy Git Clone Command">
+                                COPY CLONE COMMAND
+                            </button>
+                        </div>
+                        <code id="clone-cmd-text" style="color: var(--text-bright); display: block; padding-top: 4px;">git clone {{ releases.git_repo_url }}</code>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="/downloads/get/git_source" class="btn-download-primary btn-download-git" aria-label="Download Full Source Code ZIP from Git">
+                        📥 DOWNLOAD SOURCE (.ZIP FROM GIT)
+                    </a>
+                    <a href="{{ releases.git_web_url or releases.download_url }}" target="_blank" rel="noopener noreferrer" class="btn-download-primary" style="background: transparent; border-color: var(--border); color: var(--text-dim) !important; font-size: 0.78rem; padding: 10px;" aria-label="Explore Repository on GitHub (opens new window)">
+                        🌐 EXPLORE GIT REPOSITORY
+                    </a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section id="requirements-section" aria-labelledby="reqs-heading">
+        <h2 id="reqs-heading" style="color: var(--text-bright); font-size: 1.35rem; margin-bottom: 8px;">
+            SYSTEM REQUIREMENTS & ARCHITECTURAL INVARIANTS
+        </h2>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 15px 0;">
+            High-integrity design invariants engineered specifically for non-visual computing environments.
+        </p>
+
+        <div class="table-container">
+            <table class="cyber-table">
+                <caption class="sr-only">Technical Requirements for Audio Playback Suite</caption>
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 25%;">SUBSYSTEM</th>
+                        <th scope="col" style="width: 35%;">SPECIFICATION</th>
+                        <th scope="col" style="width: 40%;">ARCHITECTURAL GUARANTEE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inv in system_invariants %}
+                    <tr>
+                        <th scope="row" style="color: var(--text-bright); font-family: monospace;">{{ inv.name }}</th>
+                        <td style="color: var(--accent);">{{ inv.spec }}</td>
+                        <td>{{ inv.details }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="hotkeys-section" aria-labelledby="hotkeys-heading">
+        <h2 id="hotkeys-heading" style="color: var(--text-bright); font-size: 1.35rem; margin-bottom: 8px;">
+            KEYBOARD NAVIGATION & ACCESSIBILITY SHORTCUTS
+        </h2>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 15px 0;">
+            Native keystrokes mapped for blind and visually impaired navigators. Operable entirely without a mouse.
+        </p>
+
+        <div class="table-container">
+            <table class="cyber-table">
+                <caption class="sr-only">Keystroke Shortcuts for Accessible Audio Playback Suite</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">ACTION</th>
+                        <th scope="col">PRIMARY SHORTCUT</th>
+                        <th scope="col">GLOBAL HOTKEY</th>
+                        <th scope="col">AUDIO & TACTILE FEEDBACK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hk in hotkeys %}
+                    <tr>
+                        <th scope="row" style="color: var(--text-bright); font-family: monospace;">{{ hk.action }}</th>
+                        <td><span class="kbd-shortcut">{{ hk.shortcut }}</span></td>
+                        <td>{% if hk.global_fallback != 'None' %}<span class="kbd-shortcut">{{ hk.global_fallback }}</span>{% else %}<span style="color: #6b7280;">N/A</span>{% endif %}</td>
+                        <td>{{ hk.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<script>
+    function announce(msg) {
+        const el = document.getElementById('downloads-announcer');
+        if (el) {
+            el.textContent = '';
+            setTimeout(() => { el.textContent = msg; }, 50);
+        }
+    }
+
+    function copyChecksum(hash, title) {
+        navigator.clipboard.writeText(hash).then(() => {
+            announce(`Copied SHA-256 hash for ${title} to clipboard.`);
+        }).catch(() => {
+            announce(`Unable to copy checksum automatically.`);
+        });
+    }
+
+    function copyCloneCommand(cmd) {
+        navigator.clipboard.writeText(cmd).then(() => {
+            announce("Copied Git clone command to clipboard: " + cmd);
+        }).catch(() => {
+            announce("Unable to copy clone command automatically.");
+        });
+    }
+
+    {% if is_admin %}
+    async function saveStagedRelease(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn-save-staging');
+        const orig = btn.innerText;
+        btn.innerText = "SAVING...";
+        btn.disabled = true;
+
+        const payload = {
+            version: document.getElementById('stage-version').value,
+            release_title: document.getElementById('stage-title').value,
+            stage_status: document.getElementById('stage-status').value,
+            scheduled_date: document.getElementById('stage-scheduled-date').value,
+            download_url: document.getElementById('stage-url').value,
+            git_repo_url: document.getElementById('stage-git-repo').value,
+            git_web_url: document.getElementById('stage-git-web').value,
+            git_branch: document.getElementById('stage-git-branch').value,
+            release_overview: document.getElementById('stage-overview').value,
+            changelog: document.getElementById('stage-changelog').value,
+        };
+
+        try {
+            const resp = await fetch('/api/downloads/stage/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                btn.innerText = "SAVED!";
+                btn.style.color = "#00ff88";
+                announce("Staged release updated successfully.");
+                setTimeout(() => { location.reload(); }, 1000);
+            } else {
+                btn.innerText = "ERROR";
+                btn.style.color = "#ff4d4d";
+                announce("Error saving staged release: " + (data.error || "Unknown"));
+            }
+        } catch (err) {
+            btn.innerText = "FAILED";
+            announce("Network connection failure while saving staged release.");
+        } finally {
+            setTimeout(() => {
+                btn.innerText = orig;
+                btn.disabled = false;
+                btn.style.color = "";
+            }, 3000);
+        }
+    }
+
+    async function publishReleaseImmediately() {
+        if (!confirm("Are you sure you want to FORCE PUBLISH this release immediately to all visitors?")) {
+            return;
+        }
+        announce("Publishing release to all visitors immediately...");
+        try {
+            const resp = await fetch('/api/downloads/schedule/publish_now', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce("Release published successfully to all visitors.");
+                setTimeout(() => { location.reload(); }, 1000);
+            } else {
+                announce("Error publishing release: " + (data.error || "Unknown error"));
+            }
+        } catch (err) {
+            announce("Network connection failure while publishing release.");
+        }
+    }
+
+    async function addScheduledRelease(e) {
+        e.preventDefault();
+        const payload = {
+            version: document.getElementById('sched-version').value,
+            title: document.getElementById('sched-title').value,
+            scheduled_date: document.getElementById('sched-date').value,
+            overview: document.getElementById('sched-overview').value,
+            notes: document.getElementById('sched-notes').value,
+        };
+
+        try {
+            const resp = await fetch('/api/downloads/schedule/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce("Added milestone to scheduled rollout queue.");
+                setTimeout(() => { location.reload(); }, 1000);
+            } else {
+                announce("Failed to add milestone: " + (data.error || "Unknown error"));
+            }
+        } catch (err) {
+            announce("Network connection failure adding scheduled milestone.");
+        }
+    }
+
+    async function deleteScheduledItem(id) {
+        if (!confirm("Remove this release from the scheduled queue?")) {
+            return;
+        }
+        try {
+            const resp = await fetch('/api/downloads/schedule/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce("Scheduled release milestone removed.");
+                setTimeout(() => { location.reload(); }, 800);
+            } else {
+                announce("Failed to delete milestone: " + (data.error || "Unknown error"));
+            }
+        } catch (err) {
+            announce("Network connection failure removing scheduled milestone.");
+        }
+    }
+
+    async function promoteScheduledItem(id, version) {
+        if (!confirm("Stage milestone v" + version + " as the active scheduled release?")) {
+            return;
+        }
+        announce("Promoting milestone v" + version + " to active scheduled release...");
+        try {
+            const resp = await fetch('/api/downloads/schedule/promote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce("Milestone v" + version + " promoted to active scheduled release.");
+                setTimeout(() => { location.reload(); }, 800);
+            } else {
+                announce("Promotion failed: " + (data.error || "Unknown error"));
+            }
+        } catch (err) {
+            announce("Network connection failure during milestone promotion.");
+        }
+    }
+
+    async function syncDistBinaries() {
+        const btn = document.getElementById('btn-sync-dist');
+        const orig = btn.innerText;
+        btn.innerText = "SCANNING & HASHING...";
+        btn.disabled = true;
+        announce("Scanning Audio Playback Suite dist directory and calculating cryptographic SHA-256 checksums.");
+
+        try {
+            const resp = await fetch('/api/downloads/stage/sync_dist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                btn.innerText = "HASHES SYNCED!";
+                btn.style.color = "#00ff88";
+                announce("Binary hashes and file sizes synchronized successfully.");
+                setTimeout(() => { location.reload(); }, 1200);
+            } else {
+                btn.innerText = "SYNC FAILED";
+                announce("Scan error: " + (data.error || "Dist directory not found"));
+            }
+        } catch (err) {
+            btn.innerText = "FAILED";
+            announce("Network connection failure while syncing dist binaries.");
+        } finally {
+            setTimeout(() => {
+                btn.innerText = orig;
+                btn.disabled = false;
+                btn.style.color = "";
+            }, 3000);
+        }
+    }
+    {% endif %}
+</script>
+{% endblock %}

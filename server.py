@@ -54,6 +54,9 @@ app.register_blueprint(sync_bp, url_prefix='/api')
 app.register_blueprint(echos_bp)
 app.register_blueprint(docs_bp)
 
+from audio_suite_mod import audio_suite_bp
+app.register_blueprint(audio_suite_bp)
+
 # --- AI AGENT PLUGIN (DISABLED PENDING UPDATE) ---
 # import sys
 # import os
@@ -212,7 +215,7 @@ def dynamic_route(path):
         return redirect(url_for('dynamic_route', path='home'))
         
     perms = session.get('permissions', [])
-    if path not in ['home', 'docs', 'bio'] and not session.get('admin', False) and not session.get('is_employer', False):
+    if path not in ['home', 'docs', 'bio', 'downloads', 'usage'] and not session.get('admin', False) and not session.get('is_employer', False):
         has_access = (
             f'view:tab:{path}' in perms
             or ('master:view_tabs' in perms and f'exclude:tab:{path}' not in perms)
@@ -251,6 +254,12 @@ def dynamic_route(path):
         template = 'home.html'
     elif path == 'bio':
         template = 'bio.html'
+    elif path == 'downloads':
+        from audio_suite_mod import render_downloads_page
+        return render_downloads_page()
+    elif path in ['usage', 'telemetry']:
+        from audio_suite_mod import render_usage_page
+        return render_usage_page()
     else:
         template = 'base.html'
 
@@ -886,12 +895,24 @@ def is_newer_version(latest: str, current: str) -> bool:
 @app.route('/api/audio_suite/handshake', methods=['GET', 'POST'])
 def audio_suite_handshake():
     """Validates hardware trial attestation and provides application update metadata."""
+    releases = {}
+    active_is_released = True
+    try:
+        from audio_suite_mod import get_releases_data, is_release_publicly_visible
+        releases = get_releases_data()
+        active_is_released = is_release_publicly_visible(releases)
+    except Exception:
+        pass
+    active_version = releases.get('version', LATEST_AUDIO_SUITE_VERSION)
+    active_download_url = releases.get('download_url', AUDIO_SUITE_DOWNLOAD_URL)
+    active_changelog = releases.get('changelog', AUDIO_SUITE_CHANGELOG)
+
     if request.method == 'GET':
         return jsonify({
             'service': 'Audio Playback Suite Attestation & Update Service',
             'status': 'ONLINE',
-            'latest_version': LATEST_AUDIO_SUITE_VERSION,
-            'download_url': AUDIO_SUITE_DOWNLOAD_URL,
+            'latest_version': active_version,
+            'download_url': active_download_url,
         })
 
     data = request.get_json(silent=True) or {}
@@ -956,7 +977,7 @@ def audio_suite_handshake():
     except Exception as exc:
         sys_log.error(f"Failed to persist audio suite licenses: {exc}")
 
-    update_available = is_newer_version(LATEST_AUDIO_SUITE_VERSION, app_version)
+    update_available = is_newer_version(active_version, app_version) if active_is_released else False
     days_remaining = max(0, int(math.ceil((expires_at - server_now) / 86400))) if status == 'ACTIVE' else 0
 
     return jsonify({
@@ -967,10 +988,69 @@ def audio_suite_handshake():
         'expires_at': expires_at,
         'days_remaining': days_remaining,
         'update_available': update_available,
-        'latest_version': LATEST_AUDIO_SUITE_VERSION,
-        'download_url': AUDIO_SUITE_DOWNLOAD_URL,
-        'changelog': AUDIO_SUITE_CHANGELOG,
+        'latest_version': active_version,
+        'download_url': active_download_url,
+        'changelog': active_changelog,
     })
+
+
+AUDIO_SUITE_FEEDBACK_FILE = config.CONTENT_DIR / "audio_suite_feedback.json"
+
+
+@app.route('/api/audio_suite/feedback', methods=['GET', 'POST'])
+def audio_suite_feedback():
+    """Collects and stores in-app bug reports and feature suggestions from Audio Playback Suite."""
+    if request.method == 'GET':
+        return jsonify({
+            'service': 'Audio Playback Suite Feedback Service',
+            'status': 'ONLINE',
+        })
+
+    data = request.get_json(silent=True) or {}
+    message = str(data.get('message', '')).strip()
+    if not message:
+        return jsonify({'error': 'Message content is required'}), 400
+
+    hwid = str(data.get('hwid', 'UNKNOWN')).strip()
+    feedback_type = str(data.get('type', 'bug')).strip().lower()
+    if feedback_type not in ('bug', 'suggestion', 'general'):
+        feedback_type = 'general'
+    subject = str(data.get('subject', 'Untitled Report')).strip()
+    app_version = str(data.get('app_version', '1.0.0')).strip()
+    server_now = int(time.time())
+
+    item = {
+        'id': str(uuid.uuid4())[:8],
+        'hwid': hwid,
+        'type': feedback_type,
+        'subject': subject,
+        'message': message,
+        'app_version': app_version,
+        'timestamp': server_now,
+        'formatted_time': datetime.fromtimestamp(server_now).strftime('%Y-%m-%d %H:%M:%S'),
+        'remote_addr': request.remote_addr or '',
+    }
+
+    feedback_list = []
+    if AUDIO_SUITE_FEEDBACK_FILE.exists():
+        try:
+            feedback_list = json.loads(AUDIO_SUITE_FEEDBACK_FILE.read_text(encoding='utf-8'))
+            if not isinstance(feedback_list, list):
+                feedback_list = []
+        except Exception as exc:
+            sys_log.warning(f"Audio suite feedback read error: {exc}")
+            feedback_list = []
+
+    feedback_list.append(item)
+
+    try:
+        AUDIO_SUITE_FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        AUDIO_SUITE_FEEDBACK_FILE.write_text(json.dumps(feedback_list, indent=2), encoding='utf-8')
+        sys_log.info(f"Received {feedback_type} feedback from HWID {hwid[:8]}...")
+        return jsonify({'success': True, 'id': item['id'], 'status': 'RECEIVED'})
+    except Exception as exc:
+        sys_log.error(f"Failed to persist audio suite feedback: {exc}")
+        return jsonify({'error': 'Failed to save feedback on server'}), 500
 
 
 @app.errorhandler(404)
