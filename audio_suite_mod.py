@@ -36,6 +36,7 @@ DEFAULT_RELEASE_DATA = {
     "release_date": "2026-10-24",
     "scheduled_date": "2026-10-24 12:00",
     "stage_status": "PUBLISHED",
+    "release_overview": "JOSHY is a high-performance Windows audio playback system engineered specifically for blind and visually impaired users. It delivers zero-latency keyboard-driven media playback, rich acoustic earcons, deep Spotify desktop integration, and native screen-reader bridges for NVDA, JAWS, and Windows Narrator without requiring visual interaction.",
     "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and direct Git distribution.",
     "download_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
     "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
@@ -48,6 +49,7 @@ DEFAULT_RELEASE_DATA = {
             "title": "JOSHY Audio Playback Suite v1.1.0 (Spatial Audio & Cloud Attestation)",
             "scheduled_date": "2026-11-01 12:00",
             "status": "SCHEDULED",
+            "overview": "Spatial audio processing, hardware attestation, and lossless audio streaming for accessible gaming and audio engineering setups.",
             "notes": "Spatial acoustics, high-resolution FLAC streaming, and cross-device bookmarking.",
         }
     ],
@@ -231,6 +233,8 @@ def get_releases_data() -> dict:
             return DEFAULT_RELEASE_DATA.copy()
 
         # Seamless schema normalization
+        if "release_overview" not in data:
+            data["release_overview"] = data.get("release_message", DEFAULT_RELEASE_DATA.get("release_overview", ""))
         if "git_repo_url" not in data:
             data["git_repo_url"] = DEFAULT_RELEASE_DATA["git_repo_url"]
         if "git_web_url" not in data:
@@ -629,6 +633,10 @@ def stage_update_release():
         releases["git_branch"] = str(data["git_branch"]).strip()
     if "changelog" in data and str(data["changelog"]).strip():
         releases["changelog"] = str(data["changelog"]).strip()
+    if "release_overview" in data:
+        releases["release_overview"] = str(data["release_overview"]).strip()
+    elif "release_message" in data:
+        releases["release_overview"] = str(data["release_message"]).strip()
 
     packages = releases.setdefault("packages", {})
     if "git_source" in packages:
@@ -654,6 +662,7 @@ def schedule_add_release():
     title = str(data.get("title", "")).strip()
     scheduled_date = str(data.get("scheduled_date", "")).strip()
     notes = str(data.get("notes", "")).strip()
+    overview = str(data.get("overview") or data.get("release_overview") or data.get("release_message") or "").strip()
 
     if not version or not scheduled_date:
         return jsonify({"error": "Version and scheduled date are required."}), 400
@@ -669,6 +678,7 @@ def schedule_add_release():
         "scheduled_date": scheduled_date,
         "status": "SCHEDULED",
         "notes": notes,
+        "overview": overview,
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
     scheduled_list.append(new_entry)
@@ -703,6 +713,40 @@ def schedule_delete_release():
         "message": "Scheduled release entry removed.",
         "deleted_id": entry_id,
         "scheduled_releases": new_list,
+    })
+
+
+@audio_suite_bp.route("/api/downloads/schedule/promote", methods=["POST"])
+def schedule_promote_release():
+    """Stages a queued scheduled milestone as the active scheduled release."""
+    if not is_admin_session():
+        return jsonify({"error": "Administrative clearance required."}), 403
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    entry_id = str(data.get("id", "")).strip()
+    if not entry_id:
+        return jsonify({"error": "Scheduled entry ID is required."}), 400
+
+    releases = get_releases_data()
+    scheduled_list = releases.get("scheduled_releases", [])
+    target = next((item for item in scheduled_list if item.get("id") == entry_id), None)
+    if not target:
+        return jsonify({"error": "Scheduled release milestone not found."}), 404
+
+    releases["version"] = target.get("version", releases.get("version"))
+    releases["release_title"] = target.get("title", releases.get("release_title"))
+    releases["scheduled_date"] = target.get("scheduled_date", releases.get("scheduled_date"))
+    releases["stage_status"] = "SCHEDULED"
+    if target.get("overview"):
+        releases["release_overview"] = target["overview"]
+    if target.get("notes"):
+        releases["changelog"] = target["notes"]
+
+    save_releases_data(releases)
+    return jsonify({
+        "success": True,
+        "message": f"Milestone v{releases.get('version')} promoted to active scheduled release.",
+        "releases": releases,
     })
 
 

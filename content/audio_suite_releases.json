@@ -2,9 +2,10 @@
   "version": "1.0.0",
   "release_title": "JOSHY Audio Playback Suite v1.0.0 (Accessible Edition)",
   "release_date": "2026-10-24",
-  "scheduled_date": "2026-10-24",
+  "scheduled_date": "2026-10-24 12:00",
   "stage_status": "PUBLISHED",
-  "changelog": "High-performance accessible Windows audio playback and Spotify controller with acoustic earcons, NVDA/JAWS screen-reader bridges, and direct Git distribution.",
+  "release_overview": "JOSHY is a high-performance Windows audio playback system engineered specifically for blind and visually impaired users. It delivers zero-latency keyboard-driven media playback, rich acoustic earcons, deep Spotify desktop integration, and native screen-reader bridges for NVDA, JAWS, and Windows Narrator without requiring visual interaction.",
+  "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and direct Git distribution.",
   "download_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
   "git_repo_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance.git",
   "git_web_url": "https://github.com/Hein-Wagner-Academy-Cyber-Sentinel/nomvula_agri_finance",
@@ -16,6 +17,7 @@
       "title": "JOSHY Audio Playback Suite v1.1.0 (Spatial Audio & Cloud Attestation)",
       "scheduled_date": "2026-11-01 12:00",
       "status": "SCHEDULED",
+      "overview": "Spatial audio processing, hardware attestation, and lossless audio streaming for accessible gaming and audio engineering setups.",
       "notes": "Spatial acoustics, high-resolution FLAC streaming, and cross-device bookmarking."
     }
   ],

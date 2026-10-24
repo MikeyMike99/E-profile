@@ -490,6 +490,9 @@
     <div id="downloads-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
 
     <nav class="skip-nav-container" aria-label="Quick Jump Shortcuts">
+        {% if releases.release_overview and (is_released or is_admin) %}
+        <a href="#overview-section" class="skip-nav-link">Skip to Product Overview</a>
+        {% endif %}
         <a href="#packages-section" class="skip-nav-link">Skip to Download Packages</a>
         <a href="#git-section" class="skip-nav-link">Skip to Direct Git Distribution</a>
         <a href="#requirements-section" class="skip-nav-link">Skip to System Requirements</a>
@@ -527,16 +530,25 @@
         <h2 id="holding-banner-title" style="color: var(--amber, #ffb000); font-family: monospace; font-size: 1.4rem; margin: 0 0 10px 0; text-transform: uppercase;">
             Release v{{ releases.version }} Scheduled for Planned Rollout
         </h2>
-        <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.6; max-width: 680px; margin: 0 auto 16px auto;">
-            To ensure zero-downtime stability, rigorous screen-reader certification across NVDA, JAWS, and Narrator, and verified binary integrity, compiled Windows releases are deployed on an engineering schedule. Public downloads will unlock automatically on <strong>{{ releases.scheduled_date or releases.release_date }}</strong>.
-        </p>
         <div class="suite-badge-row" style="justify-content: center; margin-bottom: 18px;">
             <span class="status-badge badge-scheduled">AUTOMATED ROLLOUT: {{ releases.scheduled_date or releases.release_date }}</span>
             <span class="status-badge badge-info">VERSION: v{{ releases.version }}</span>
         </div>
+
+        {% if releases.release_overview %}
+        <div class="scheduled-overview-box" style="background: rgba(0, 229, 255, 0.05); border: 1px solid var(--accent); border-radius: 8px; padding: 18px 22px; max-width: 720px; margin: 0 auto 18px auto; text-align: left;">
+            <strong style="color: var(--accent); font-family: monospace; font-size: 0.82rem; display: block; margin-bottom: 8px; letter-spacing: 0.05em;">📦 PRODUCT OVERVIEW & RELEASE MESSAGE:</strong>
+            <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.6; margin: 0; white-space: pre-line;">{{ releases.release_overview }}</p>
+        </div>
+        {% else %}
+        <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.6; max-width: 680px; margin: 0 auto 16px auto;">
+            To ensure zero-downtime stability, rigorous screen-reader certification across NVDA, JAWS, and Narrator, and verified binary integrity, compiled Windows releases are deployed on an engineering schedule. Public downloads will unlock automatically on <strong>{{ releases.scheduled_date or releases.release_date }}</strong>.
+        </p>
+        {% endif %}
+
         {% if releases.changelog %}
-        <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; max-width: 680px; margin: 0 auto 20px auto; text-align: left;">
-            <strong style="color: var(--accent); font-family: monospace; font-size: 0.8rem; display: block; margin-bottom: 6px;">UPCOMING RELEASE HIGHLIGHTS:</strong>
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; max-width: 720px; margin: 0 auto 20px auto; text-align: left;">
+            <strong style="color: var(--accent); font-family: monospace; font-size: 0.8rem; display: block; margin-bottom: 6px;">UPCOMING RELEASE HIGHLIGHTS & CHANGELOG:</strong>
             <p style="color: var(--text-dim); font-size: 0.85rem; margin: 0; line-height: 1.5;">{{ releases.changelog }}</p>
         </div>
         {% endif %}
@@ -594,6 +606,14 @@
                 </div>
             </div>
 
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="stage-overview">Product Overview & Release Announcement Message</label>
+                <textarea id="stage-overview" class="form-input" rows="3" placeholder="Provide an overview of the product, key benefits, target audience, and release announcement message...">{{ releases.release_overview or '' }}</textarea>
+                <p style="color: var(--text-dim); font-size: 0.78rem; margin: 4px 0 0 0;">
+                    When scheduled, this overview is displayed directly in the scheduled holding card and screen reader announcement. When published, it introduces the product above package downloads.
+                </p>
+            </div>
+
             <div class="form-group" style="margin-bottom: 20px;">
                 <label for="stage-changelog">Changelog & Accessibility Notes</label>
                 <textarea id="stage-changelog" class="form-input" rows="3">{{ releases.changelog }}</textarea>
@@ -610,7 +630,7 @@
     <section id="schedule-queue-section" class="admin-staging-panel" style="border-color: #60a5fa;" aria-labelledby="queue-heading">
         <h2 id="queue-heading" style="color: #60a5fa;">🗓️ UPCOMING RELEASES SCHEDULE QUEUE</h2>
         <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0; margin-bottom: 16px;">
-            Plan roadmap milestones in advance. Scheduled releases unlock systematically so visitors are never overwhelmed with untested binaries all at once.
+            Plan roadmap milestones in advance with dedicated product overviews and release messages. Scheduled releases unlock systematically so visitors are never overwhelmed with untested binaries all at once.
         </p>
 
         {% if scheduled_releases %}
@@ -619,22 +639,35 @@
                 <caption class="sr-only">Scheduled Upcoming Releases Queue</caption>
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 15%;">VERSION</th>
-                        <th scope="col" style="width: 30%;">TITLE</th>
-                        <th scope="col" style="width: 20%;">TARGET ROLLOUT</th>
-                        <th scope="col" style="width: 25%;">NOTES</th>
-                        <th scope="col" style="width: 10%;">ACTION</th>
+                        <th scope="col" style="width: 12%;">VERSION</th>
+                        <th scope="col" style="width: 22%;">TITLE</th>
+                        <th scope="col" style="width: 18%;">TARGET ROLLOUT</th>
+                        <th scope="col" style="width: 32%;">PRODUCT OVERVIEW & NOTES</th>
+                        <th scope="col" style="width: 16%;">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in scheduled_releases %}
                     <tr>
                         <th scope="row" style="color: #60a5fa; font-family: monospace;">v{{ item.version }}</th>
-                        <td style="color: var(--text-bright);">{{ item.title }}</td>
+                        <td style="color: var(--text-bright);"><strong>{{ item.title }}</strong></td>
                         <td><span class="status-badge badge-scheduled">{{ item.scheduled_date }}</span></td>
-                        <td>{{ item.notes }}</td>
                         <td>
-                            <button type="button" class="btn-danger" onclick="deleteScheduledItem('{{ item.id }}')" aria-label="Delete scheduled release v{{ item.version }}">DELETE</button>
+                            {% if item.overview %}
+                            <div style="color: var(--text-bright); font-size: 0.88rem; margin-bottom: 4px; line-height: 1.4;">{{ item.overview }}</div>
+                            {% endif %}
+                            {% if item.notes %}
+                            <div style="color: var(--text-dim); font-size: 0.8rem; font-style: italic;">Note: {{ item.notes }}</div>
+                            {% endif %}
+                            {% if not item.overview and not item.notes %}
+                            <span style="color: var(--text-dim); font-size: 0.8rem;">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <button type="button" class="btn-cyan" style="font-size: 0.72rem; padding: 4px 8px;" onclick="promoteScheduledItem('{{ item.id }}', '{{ item.version }}')" aria-label="Stage scheduled milestone v{{ item.version }}">STAGE</button>
+                                <button type="button" class="btn-danger" style="font-size: 0.72rem; padding: 4px 8px;" onclick="deleteScheduledItem('{{ item.id }}')" aria-label="Delete scheduled release v{{ item.version }}">DELETE</button>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -665,8 +698,27 @@
                     <input type="text" id="sched-notes" class="form-input" placeholder="Key deliverables or test focus">
                 </div>
             </div>
+            <div class="form-group" style="margin-top: 12px; margin-bottom: 16px;">
+                <label for="sched-overview">Release Message & Product Overview</label>
+                <textarea id="sched-overview" class="form-input" rows="2" placeholder="Summary of the product overview, accessibility features, or public release announcement message..."></textarea>
+            </div>
             <button type="submit" class="btn-cyan" style="font-size: 0.75rem;">+ ADD TO SCHEDULED ROLLOUT</button>
         </form>
+    </section>
+    {% endif %}
+
+    {% if releases.release_overview and (is_released or is_admin) %}
+    <section id="overview-section" class="suite-overview-section" aria-labelledby="product-overview-heading" style="background: rgba(13, 17, 23, 0.7); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 20px 24px; margin-bottom: 30px;">
+        <h2 id="product-overview-heading" style="color: var(--accent); font-size: 1.15rem; font-family: monospace; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
+            <span>📦</span> PRODUCT OVERVIEW & RELEASE ANNOUNCEMENT
+        </h2>
+        <p style="color: var(--text-bright); font-size: 0.95rem; line-height: 1.7; margin: 0; white-space: pre-line;">{{ releases.release_overview }}</p>
+        {% if releases.changelog %}
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);">
+            <strong style="color: #60a5fa; font-family: monospace; font-size: 0.8rem; display: block; margin-bottom: 4px;">KEY RELEASE HIGHLIGHTS & CHANGELOG:</strong>
+            <p style="color: var(--text-dim); font-size: 0.85rem; line-height: 1.5; margin: 0;">{{ releases.changelog }}</p>
+        </div>
+        {% endif %}
     </section>
     {% endif %}
 
@@ -876,6 +928,7 @@
             git_repo_url: document.getElementById('stage-git-repo').value,
             git_web_url: document.getElementById('stage-git-web').value,
             git_branch: document.getElementById('stage-git-branch').value,
+            release_overview: document.getElementById('stage-overview').value,
             changelog: document.getElementById('stage-changelog').value,
         };
 
@@ -936,6 +989,7 @@
             version: document.getElementById('sched-version').value,
             title: document.getElementById('sched-title').value,
             scheduled_date: document.getElementById('sched-date').value,
+            overview: document.getElementById('sched-overview').value,
             notes: document.getElementById('sched-notes').value,
         };
 
@@ -976,6 +1030,29 @@
             }
         } catch (err) {
             announce("Network connection failure removing scheduled milestone.");
+        }
+    }
+
+    async function promoteScheduledItem(id, version) {
+        if (!confirm("Stage milestone v" + version + " as the active scheduled release?")) {
+            return;
+        }
+        announce("Promoting milestone v" + version + " to active scheduled release...");
+        try {
+            const resp = await fetch('/api/downloads/schedule/promote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce("Milestone v" + version + " promoted to active scheduled release.");
+                setTimeout(() => { location.reload(); }, 800);
+            } else {
+                announce("Promotion failed: " + (data.error || "Unknown error"));
+            }
+        } catch (err) {
+            announce("Network connection failure during milestone promotion.");
         }
     }
 
