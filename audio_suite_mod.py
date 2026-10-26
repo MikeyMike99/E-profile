@@ -850,14 +850,15 @@ def extend_license_duration():
         return jsonify({"error": f"No license found for HWID '{hwid}'."}), 404
 
     record = licenses[hwid]
-    record["duration_days"] = record.get("duration_days", 14) + max(1, days)
-    record["remote_revoked"] = False
-
     server_now = int(time.time())
     first_run = record.get("first_run", server_now)
-    expires_at = first_run + (record["duration_days"] * 86400)
+    current_expires = first_run + (record.get("duration_days", 14) * 86400)
+    base_time = max(server_now, current_expires)
+    new_expires = base_time + (max(1, days) * 86400)
 
-    record["status"] = "ACTIVE" if server_now < expires_at else "EXPIRED"
+    record["duration_days"] = int(math.ceil((new_expires - first_run) / 86400))
+    record["remote_revoked"] = False
+    record["status"] = "ACTIVE"
     LICENSES_FILE.parent.mkdir(parents=True, exist_ok=True)
     LICENSES_FILE.write_text(json.dumps(licenses, indent=2), encoding="utf-8")
 
@@ -865,7 +866,7 @@ def extend_license_duration():
         "success": True,
         "hwid": hwid,
         "duration_days": record["duration_days"],
-        "status": record["status"],
+        "status": "ACTIVE",
         "message": f"Extended trial for {hwid[:8]}... to {record['duration_days']} total days.",
     })
 
