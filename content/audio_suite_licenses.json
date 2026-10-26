@@ -2,20 +2,20 @@
   "test-hwid-check-1234": {
     "hwid": "test-hwid-check-1234",
     "first_run": 1792781983,
-    "last_seen": 1792781983,
+    "last_seen": 1793009637,
     "duration_days": 14,
     "app_version": "1.0.0",
-    "remote_revoked": true,
-    "status": "REVOKED"
+    "remote_revoked": false,
+    "status": "ACTIVE"
   },
   "1be18627022a5e68b080fec4390f2863": {
     "hwid": "1be18627022a5e68b080fec4390f2863",
     "first_run": 1792777257,
-    "last_seen": 1793005426,
+    "last_seen": 1793015039,
     "duration_days": 14,
     "app_version": "1.0.0",
-    "remote_revoked": true,
-    "status": "REVOKED"
+    "remote_revoked": false,
+    "status": "ACTIVE"
   },
   "958fd3c4921e8cb925961be1acb9813b": {
     "hwid": "958fd3c4921e8cb925961be1acb9813b",
