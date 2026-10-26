@@ -5,13 +5,31 @@
     "last_seen": 1792781983,
     "duration_days": 14,
     "app_version": "1.0.0",
-    "remote_revoked": false,
-    "status": "ACTIVE"
+    "remote_revoked": true,
+    "status": "REVOKED"
   },
   "1be18627022a5e68b080fec4390f2863": {
     "hwid": "1be18627022a5e68b080fec4390f2863",
     "first_run": 1792777257,
-    "last_seen": 1792823962,
+    "last_seen": 1793005426,
+    "duration_days": 14,
+    "app_version": "1.0.0",
+    "remote_revoked": true,
+    "status": "REVOKED"
+  },
+  "958fd3c4921e8cb925961be1acb9813b": {
+    "hwid": "958fd3c4921e8cb925961be1acb9813b",
+    "first_run": 1792871550,
+    "last_seen": 1792871552,
+    "duration_days": 28,
+    "app_version": "1.0.0",
+    "remote_revoked": false,
+    "status": "ACTIVE"
+  },
+  "0123456789abcdef0123456789abcdef": {
+    "hwid": "0123456789abcdef0123456789abcdef",
+    "first_run": 1793002239,
+    "last_seen": 1793002355,
     "duration_days": 14,
     "app_version": "1.0.0",
     "remote_revoked": false,

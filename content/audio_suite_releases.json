@@ -24,7 +24,7 @@
       "sha256": "a32f8576a6ff264aced2a77e350b7511e37728c1e76ab28909e20ac210a9c5a0",
       "download_url": "/downloads/get/installer",
       "external_url": "https://github.com/MikeyMike99/JOSHY-downloads/releases/tag/v1.0.0",
-      "downloads_count": 2,
+      "downloads_count": 4,
       "last_synced": "2026-10-24 09:29:07"
     },
     "portable": {
@@ -39,7 +39,7 @@
       "sha256": "571b0a304d15dd7a7931a635e840fae0fe8a001b1c3f13706460307bb5f31310",
       "download_url": "/downloads/get/portable",
       "external_url": "https://github.com/MikeyMike99/JOSHY-downloads/releases/tag/v1.0.0",
-      "downloads_count": 0,
+      "downloads_count": 1,
       "last_synced": "2026-10-24 09:28:36"
     },
     "git_source": {
@@ -55,7 +55,7 @@
       "download_url": "/downloads/get/git_source",
       "external_url": "https://github.com/MikeyMike99/JOSHY-downloads",
       "git_clone_cmd": "git clone https://github.com/MikeyMike99/JOSHY-downloads.git",
-      "downloads_count": 2,
+      "downloads_count": 4,
       "last_synced": "2026-10-24 10:45:00"
     }
   }

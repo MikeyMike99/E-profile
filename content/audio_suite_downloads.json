@@ -1,11 +1,56 @@
 {
-  "total_downloads": 8,
+  "total_downloads": 13,
   "packages": {
-    "installer": 5,
-    "portable": 1,
-    "git_source": 2
+    "installer": 7,
+    "portable": 2,
+    "git_source": 4
   },
   "events": [
+    {
+      "timestamp": 1792871470,
+      "formatted_time": "2026-10-24 19:51:10",
+      "package_id": "installer",
+      "filename": "JOSHY-Setup.exe",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1792867749,
+      "formatted_time": "2026-10-24 18:49:09",
+      "package_id": "portable",
+      "filename": "JOSHY.exe",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1792867690,
+      "formatted_time": "2026-10-24 18:48:10",
+      "package_id": "installer",
+      "filename": "JOSHY-Setup.exe",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1792867481,
+      "formatted_time": "2026-10-24 18:44:41",
+      "package_id": "git_source",
+      "filename": "source-code.zip",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1792867470,
+      "formatted_time": "2026-10-24 18:44:30",
+      "package_id": "git_source",
+      "filename": "source-code.zip",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
     {
       "timestamp": 1792832326,
       "formatted_time": "2026-10-24 10:58:46",
