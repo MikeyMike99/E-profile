@@ -13,3 +13,4 @@ proposed_renames.json
 *.log
 .local/
 content/docs/.archive/
+cache/

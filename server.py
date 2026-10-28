@@ -57,18 +57,20 @@ app.register_blueprint(docs_bp)
 from audio_suite_mod import audio_suite_bp
 app.register_blueprint(audio_suite_bp)
 
-# --- AI AGENT PLUGIN (DISABLED PENDING UPDATE) ---
-# import sys
-# import os
-# ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
-# if ai_path not in sys.path:
-#     sys.path.append(ai_path)
-#     
-# try:
-#     from ai_plugin import ai_bp
-#     app.register_blueprint(ai_bp, url_prefix='/ai_agent')
-# except Exception as e:
-#     app.logger.error(f"Failed to load AI Blueprint: {e}")
+from hub_mod import hub_bp
+app.register_blueprint(hub_bp)
+# --- AI AGENT PLUGIN ---
+import sys
+import os
+ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
+if ai_path not in sys.path:
+    sys.path.append(ai_path)
+
+try:
+    from ai_plugin import ai_bp
+    app.register_blueprint(ai_bp, url_prefix='/ai_agent')
+except Exception as e:
+    app.logger.error(f"Failed to load AI Blueprint: {e}")
 
 class SystemLogger:
     def __init__(self):
