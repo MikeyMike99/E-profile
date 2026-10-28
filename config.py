@@ -20,6 +20,16 @@ class Config:
     USER_KEY = os.environ.get("USER_KEY", "USER")
     EMPLOYER_KEY = os.environ.get("EMPLOYER_KEY", "SECURE_EMPLOYER_KEY_HERE")
 
+    # --- Email Service Configuration ---
+    MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "local")  # 'local', 'smtp'
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "True").lower() in ("true", "1")
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "notifications@eprofile.local")
+    MAILBOX_FILE = ROOT_DIR / "cache" / "mailbox.json"
+
     # --- UI & Theme Configuration ---
     THEME = {
         "bg_color": "#0a0a0b",

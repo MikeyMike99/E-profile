@@ -365,7 +365,9 @@ def git_sync():
         # --- PYTHONANYWHERE SERVER ENVIRONMENT ---
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
         
-        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '-X', 'ours'])
+        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
+        run_git_cmd(['checkout', '--ours', 'content/projects/engines/antigravity_agent'])
+        run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['submodule', 'sync'])
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git'])
         run_git_cmd(['submodule', 'update', '--init', '--recursive'])

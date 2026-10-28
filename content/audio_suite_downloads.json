@@ -1,11 +1,20 @@
 {
-  "total_downloads": 16,
+  "total_downloads": 17,
   "packages": {
     "installer": 9,
-    "portable": 2,
+    "portable": 3,
     "git_source": 5
   },
   "events": [
+    {
+      "timestamp": 1793215817,
+      "formatted_time": "2026-10-28 19:30:17",
+      "package_id": "portable",
+      "filename": "JOSHY.exe",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
     {
       "timestamp": 1793202861,
       "formatted_time": "2026-10-28 15:54:21",

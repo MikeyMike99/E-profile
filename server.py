@@ -1056,15 +1056,209 @@ def audio_suite_feedback():
         AUDIO_SUITE_FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
         AUDIO_SUITE_FEEDBACK_FILE.write_text(json.dumps(feedback_list, indent=2), encoding='utf-8')
         sys_log.info(f"Received {feedback_type} feedback from HWID {hwid[:8]}...")
+        # Automated alert to Admin via Hybrid Email Engine
+        try:
+            from email_engine import send_email, build_email_template
+            email_body = f"<p><strong>Type:</strong> {feedback_type.upper()}</p><p><strong>HWID:</strong> {hwid}</p><p><strong>Subject:</strong> {subject}</p><p><strong>Message:</strong></p><blockquote style='background:#1a1a24;padding:12px;border-left:3px solid #00f3ff;'>{message}</blockquote>"
+            html_msg = build_email_template(f"Audio Suite Alert: {subject}", email_body)
+            send_email(
+                to_address="admin@eprofile.local",
+                subject=f"[Audio Suite Feedback] {subject}",
+                html_content=html_msg
+            )
+        except Exception as mail_err:
+            sys_log.warning(f"Could not dispatch email alert for feedback: {mail_err}")
         return jsonify({'success': True, 'id': item['id'], 'status': 'RECEIVED'})
     except Exception as exc:
         sys_log.error(f"Failed to persist audio suite feedback: {exc}")
         return jsonify({'error': 'Failed to save feedback on server'}), 500
 
 
+# --- EMAIL ENGINE & ADMIN MAILBOX ROUTES ---
+@app.route('/admin/mailbox', methods=['GET'])
+def admin_mailbox():
+    if not session.get('admin', False):
+        flash("Admin authentication required to access the Mailbox.", "error")
+        return redirect(url_for('login'))
+
+    from email_engine import load_local_mailbox
+    emails = load_local_mailbox(limit=100)
+    has_google_json = (config.ROOT_DIR / ".google_credentials.json").exists()
+    return render_template(
+        'admin_mailbox.html',
+        emails=emails,
+        mail_backend=config.MAIL_BACKEND,
+        mail_server=config.MAIL_SERVER,
+        mail_port=config.MAIL_PORT,
+        mail_username=config.MAIL_USERNAME,
+        mail_use_tls=config.MAIL_USE_TLS,
+        default_sender=config.MAIL_DEFAULT_SENDER,
+        has_google_json=has_google_json
+    )
+
+
+@app.route('/admin/mailbox/save_settings', methods=['POST'])
+def admin_save_mailbox_settings():
+    if not session.get('admin', False):
+        flash("Unauthorized", "error")
+        return redirect(url_for('login'))
+
+    backend = request.form.get('backend', 'local').strip().lower()
+    server_host = request.form.get('server', '').strip()
+    port_str = request.form.get('port', '587').strip()
+    use_tls = request.form.get('use_tls') in ('1', 'True', 'true', 'on')
+    username = request.form.get('username', '').strip()
+    password = request.form.get('password', '').strip()
+    default_sender = request.form.get('default_sender', '').strip()
+
+    try:
+        server_port = int(port_str)
+    except ValueError:
+        server_port = 587
+
+    # Retain existing password if unchanged
+    if not password and config.MAIL_PASSWORD and backend == 'smtp':
+        password = config.MAIL_PASSWORD
+
+    from email_engine import apply_gateway_settings, test_smtp_connection
+    success, msg = apply_gateway_settings(
+        backend=backend,
+        server_host=server_host,
+        server_port=server_port,
+        use_tls=use_tls,
+        username=username,
+        password=password,
+        default_sender=default_sender
+    )
+
+    if success:
+        sys_log.info(f"Admin updated email credentials for backend '{backend}'")
+        if backend == 'smtp':
+            conn_ok, conn_msg = test_smtp_connection()
+            if conn_ok:
+                flash(f"Settings saved! Gateway verified: {conn_msg}", "success")
+            else:
+                flash(f"Settings saved, but gateway warning: {conn_msg}", "error")
+        else:
+            flash("Settings saved! Email engine running in Local Mock Mode.", "success")
+    else:
+        flash(f"Error saving settings: {msg}", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/admin/mailbox/upload_google_json', methods=['POST'])
+def admin_upload_google_json():
+    if not session.get('admin', False):
+        flash("Unauthorized", "error")
+        return redirect(url_for('login'))
+
+    raw_json = request.form.get('google_json', '').strip()
+    uploaded_file = request.files.get('google_json_file')
+
+    if uploaded_file and uploaded_file.filename:
+        try:
+            raw_json = uploaded_file.read().decode('utf-8')
+        except Exception as e:
+            flash(f"Failed to read uploaded file: {e}", "error")
+            return redirect(url_for('admin_mailbox'))
+
+    if not raw_json:
+        flash("Please paste Google JSON content or select a JSON file.", "error")
+        return redirect(url_for('admin_mailbox'))
+
+    from email_engine import apply_google_service_json
+    success, msg, meta = apply_google_service_json(raw_json)
+    if success:
+        sys_log.info(f"Admin saved Google credentials JSON: {meta.get('client_email')}")
+        flash(f"{msg}", "success")
+    else:
+        flash(f"Failed to process Google JSON: {msg}", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+
+@app.route('/admin/mailbox/send_test', methods=['POST'])
+def admin_send_test_email():
+    if not session.get('admin', False):
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    to_address = request.form.get('to_address', '').strip()
+    subject = request.form.get('subject', '').strip()
+    message = request.form.get('message', '').strip()
+    action_url = request.form.get('action_url', '').strip() or None
+
+    if not to_address or not subject or not message:
+        flash("All fields (Recipient, Subject, Message) are required.", "error")
+        return redirect(url_for('admin_mailbox'))
+
+    from email_engine import send_email, build_email_template
+    formatted_body = f"<p>{message}</p>"
+    html_msg = build_email_template(
+        title=subject,
+        body_html=formatted_body,
+        action_url=action_url,
+        action_label="Review Action" if action_url else None
+    )
+
+    success, msg, record = send_email(to_address=to_address, subject=subject, html_content=html_msg)
+    if success:
+        flash(f"Test dispatch succeeded: {msg}", "success")
+        sys_log.info(f"Admin transmitted test email to {to_address} via {record.get('backend')}")
+    else:
+        flash(f"Test dispatch failed: {msg}", "error")
+        sys_log.error(f"Failed email transmission to {to_address}: {msg}")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/admin/mailbox/clear', methods=['POST'])
+def admin_clear_mailbox():
+    if not session.get('admin', False):
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    from email_engine import clear_local_mailbox
+    if clear_local_mailbox():
+        flash("Local mailbox cache cleared successfully.", "success")
+        sys_log.info("Admin purged local mailbox cache.")
+    else:
+        flash("Failed to clear local mailbox cache.", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/admin/mailbox/test_connection', methods=['POST'])
+def admin_test_smtp_connection():
+    if not session.get('admin', False):
+        flash("Admin authentication required.", "error")
+        return redirect(url_for('login'))
+
+    from email_engine import test_smtp_connection
+    success, msg = test_smtp_connection()
+    if success:
+        flash(f"Gateway Attestation: {msg}", "success")
+    else:
+        flash(f"Gateway Attestation Warning: {msg}", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/api/admin/mailbox/<email_id>', methods=['GET'])
+def api_admin_get_email(email_id):
+    if not session.get('admin', False):
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    from email_engine import get_email_by_id
+    item = get_email_by_id(email_id)
+    if not item:
+        return jsonify({'error': 'Email not found'}), 404
+    return jsonify(item)
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('base.html', active_tab='error', content="<h2>404 - Page Not Found</h2>"), 404
+
 
 if __name__ == '__main__':
     # Only run the local development server if NOT on PythonAnywhere
