@@ -1,5 +1,5 @@
 {
-    "total_views": 1602,
+    "total_views": 1627,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -50,12 +50,12 @@
         "ca957c69d305c583a856fe23bfcfa033"
     ],
     "paths": {
-        "/": 569,
-        "/favicon.ico": 367,
-        "/projects": 45,
-        "/ai_agent": 29,
-        "/login": 103,
-        "/ai_agent/": 27,
+        "/": 574,
+        "/favicon.ico": 371,
+        "/projects": 53,
+        "/ai_agent": 31,
+        "/login": 106,
+        "/ai_agent/": 29,
         "/ws": 123,
         "/ai_agent/api/chat": 3,
         "/ai_agent/api/stream": 9,
@@ -115,7 +115,7 @@
         "/certifications": 20,
         "/blog": 8,
         "/bio": 7,
-        "/downloads/get/installer": 7,
+        "/downloads/get/installer": 8,
         "/downloads": 32,
         "/telemetry": 2,
         "/usage": 23,
