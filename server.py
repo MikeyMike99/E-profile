@@ -59,6 +59,9 @@ app.register_blueprint(audio_suite_bp)
 
 from hub_mod import hub_bp
 app.register_blueprint(hub_bp)
+
+from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
+app.register_blueprint(diagnostics_bp)
 # --- AI AGENT PLUGIN ---
 import sys
 import os
@@ -462,6 +465,7 @@ def admin():
         except: pass
 
     analytics_data = get_analytics()
+    diagnostics_data = get_system_diagnostic_summary()
 
     return render_template('manage_profiles.html', 
         profiles=profiles,
@@ -475,6 +479,7 @@ def admin():
         system_logs=sys_log.logs,
         quarantined_files=quarantined_files,
         analytics_data=analytics_data,
+        diagnostics_data=diagnostics_data,
         is_admin=session.get('admin', False)
     )
 
