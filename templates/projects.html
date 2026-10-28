@@ -18,6 +18,7 @@
         <ul class="global-tools" style="display: flex; list-style: none; padding: 0; margin: 0; gap: 10px;">
             <li><button onclick="openExplorer('root')" class="tool-pill">GLOBAL_FILES</button></li>
             <li><button onclick="openSurgery('root')" class="tool-pill heart-btn">SYSTEM_HEART</button></li>
+            <li><button onclick="openAgent('root')" class="tool-pill agent-link">AGENT</button></li>
             <li><button onclick="autoSortByStatus()" class="tool-pill">AUTO_SORT_STATUS</button></li>
             <li><button onclick="syncGit()" class="tool-pill" style="border-color: #00ff88; color: #00ff88;">GIT_SYNC</button></li>
         </ul>
@@ -87,7 +88,7 @@
                         {{ project.label }}
                     </a>
                     {% elif project.name == 'antigravity_agent' %}
-                    <a href="/ai_agent/login" target="_blank" rel="noopener noreferrer" class="btn-launch-pill status-{{ project.status }}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation();" aria-label="Test Demo for Antigravity Agent">
+                    <a href="/ai_agent/login?demo=1" target="_blank" rel="noopener noreferrer" class="btn-launch-pill status-{{ project.status }}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation();" aria-label="Test Demo for Antigravity Agent">
                         <span class="btn-icon" aria-hidden="true">{{ project.icon }}</span>
                         Test Demo
                     </a>
@@ -127,6 +128,8 @@
                     <li><button onclick="openExplorer('{{ project.name }}')" class="tool-pill">FILES</button></li>
                     <li><button onclick="openSurgery('{{ project.name }}')"
                             class="tool-pill surgery-link">SURGERY</button></li>
+                    <li><button onclick="openAgent('{{ project.name }}')"
+                            class="tool-pill agent-link">AGENT</button></li>
                     <li><button onclick="deleteProject('{{ project.name }}')"
                             class="tool-pill delete-link">DELETE</button></li>
                 </ul>
