@@ -1,11 +1,29 @@
 {
-  "total_downloads": 13,
+  "total_downloads": 15,
   "packages": {
-    "installer": 7,
+    "installer": 8,
     "portable": 2,
-    "git_source": 4
+    "git_source": 5
   },
   "events": [
+    {
+      "timestamp": 1793159845,
+      "formatted_time": "2026-10-28 03:57:25",
+      "package_id": "git_source",
+      "filename": "source-code.zip",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1793120005,
+      "formatted_time": "2026-10-27 16:53:25",
+      "package_id": "installer",
+      "filename": "JOSHY-Setup.exe",
+      "version": "1.0.0",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown"
+    },
     {
       "timestamp": 1792871470,
       "formatted_time": "2026-10-24 19:51:10",
