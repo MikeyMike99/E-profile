@@ -1,5 +1,5 @@
 {
-    "total_views": 1530,
+    "total_views": 1564,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -51,12 +51,12 @@
         "8df29f82c1cda5f6795d68e8b110af4a"
     ],
     "paths": {
-        "/": 534,
-        "/favicon.ico": 341,
-        "/projects": 42,
+        "/": 548,
+        "/favicon.ico": 353,
+        "/projects": 44,
         "/ai_agent": 28,
-        "/login": 106,
-        "/ai_agent/": 26,
+        "/login": 110,
+        "/ai_agent/": 27,
         "/ws": 123,
         "/ai_agent/api/chat": 3,
         "/ai_agent/api/stream": 9,
@@ -123,7 +123,7 @@
         "/downloads/get/git_source": 5,
         "/downloads/get/portable": 1,
         "/docs/manifesto/02_The_Echoes_Architecture.md": 3,
-        "/hub": 5,
+        "/hub": 6,
         "/ai_agent/api/projects": 2,
         "/ai_agent/api/conversations": 1,
         "/ai_agent/):": 1,
