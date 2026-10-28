@@ -17,6 +17,7 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import server
 from config import Config
@@ -29,13 +30,24 @@ class TestEmailEngine(unittest.TestCase):
         self.temp_dir = tempfile.mkdtemp()
         self.test_mailbox_file = Path(self.temp_dir) / "test_mailbox.json"
 
-        # Mock config mailbox file
+        # Mock config mailbox file and email config
         self.orig_mailbox_file = Config.MAILBOX_FILE
         self.orig_backend = Config.MAIL_BACKEND
+        self.orig_server = Config.MAIL_SERVER
+        self.orig_port = Config.MAIL_PORT
+        self.orig_use_tls = Config.MAIL_USE_TLS
+        self.orig_username = Config.MAIL_USERNAME
+        self.orig_password = Config.MAIL_PASSWORD
+        self.orig_sender = Config.MAIL_DEFAULT_SENDER
+
         Config.MAILBOX_FILE = self.test_mailbox_file
         email_engine.config.MAILBOX_FILE = self.test_mailbox_file
         Config.MAIL_BACKEND = "local"
         email_engine.config.MAIL_BACKEND = "local"
+
+        # Prevent tests from mutating physical .env file
+        self.env_patcher = patch.object(email_engine, 'update_env_file', return_value=True)
+        self.mock_update_env = self.env_patcher.start()
 
         # Set up Flask test client
         server.app.config["TESTING"] = True
@@ -43,10 +55,23 @@ class TestEmailEngine(unittest.TestCase):
         self.client = server.app.test_client()
 
     def tearDown(self):
+        self.env_patcher.stop()
         Config.MAILBOX_FILE = self.orig_mailbox_file
         email_engine.config.MAILBOX_FILE = self.orig_mailbox_file
         Config.MAIL_BACKEND = self.orig_backend
         email_engine.config.MAIL_BACKEND = self.orig_backend
+        Config.MAIL_SERVER = self.orig_server
+        email_engine.config.MAIL_SERVER = self.orig_server
+        Config.MAIL_PORT = self.orig_port
+        email_engine.config.MAIL_PORT = self.orig_port
+        Config.MAIL_USE_TLS = self.orig_use_tls
+        email_engine.config.MAIL_USE_TLS = self.orig_use_tls
+        Config.MAIL_USERNAME = self.orig_username
+        email_engine.config.MAIL_USERNAME = self.orig_username
+        Config.MAIL_PASSWORD = self.orig_password
+        email_engine.config.MAIL_PASSWORD = self.orig_password
+        Config.MAIL_DEFAULT_SENDER = self.orig_sender
+        email_engine.config.MAIL_DEFAULT_SENDER = self.orig_sender
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_local_send_email(self):
@@ -151,6 +176,16 @@ class TestEmailEngine(unittest.TestCase):
         res = self.client.post("/api/audio_suite/feedback", json=feedback_payload)
         self.assertEqual(res.status_code, 200)
 
+        # Clean up test feedback from disk
+        feedback_file = Config.ROOT_DIR / "content" / "audio_suite_feedback.json"
+        if feedback_file.exists():
+            try:
+                data = json.loads(feedback_file.read_text(encoding="utf-8"))
+                cleaned = [f for f in data if f.get("hwid") != "HWID-TEST-12345678"]
+                feedback_file.write_text(json.dumps(cleaned, indent=2), encoding="utf-8")
+            except Exception:
+                pass
+
         # Verify an email alert was captured in local mailbox
         items = email_engine.load_local_mailbox()
         feedback_emails = [e for e in items if "Audio glitch on track jump" in e.get("subject", "")]
@@ -207,6 +242,27 @@ class TestEmailEngine(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertIn(b"Settings saved", res.data)
+
+    @patch("smtplib.SMTP_SSL")
+    def test_smtp_ssl_port_465(self, mock_smtp_ssl):
+        """Verify that port 465 triggers SMTP_SSL rather than standard SMTP."""
+        mock_instance = mock_smtp_ssl.return_value
+        Config.MAIL_BACKEND = "smtp"
+        email_engine.config.MAIL_BACKEND = "smtp"
+        Config.MAIL_PORT = 465
+        email_engine.config.MAIL_PORT = 465
+        Config.MAIL_SERVER = "smtp.custom-ssl.net"
+        email_engine.config.MAIL_SERVER = "smtp.custom-ssl.net"
+
+        success, msg, record = email_engine.send_email(
+            to_address="target@domain.org",
+            subject="SSL Test",
+            html_content="<p>SSL Test</p>"
+        )
+        self.assertTrue(success)
+        mock_smtp_ssl.assert_called_once_with("smtp.custom-ssl.net", 465, timeout=10)
+        mock_instance.sendmail.assert_called_once()
+        mock_instance.quit.assert_called_once()
 
 
 if __name__ == "__main__":

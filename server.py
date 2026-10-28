@@ -57,8 +57,8 @@ app.register_blueprint(docs_bp)
 from audio_suite_mod import audio_suite_bp
 app.register_blueprint(audio_suite_bp)
 
-from hub_mod import hub_bp
-app.register_blueprint(hub_bp)
+from newsletter_mod import newsletter_bp
+app.register_blueprint(newsletter_bp)
 
 from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
 app.register_blueprint(diagnostics_bp)
@@ -220,7 +220,7 @@ def dynamic_route(path):
         return redirect(url_for('dynamic_route', path='home'))
         
     perms = session.get('permissions', [])
-    if path not in ['home', 'docs', 'bio', 'downloads', 'usage'] and not session.get('admin', False) and not session.get('is_employer', False):
+    if path not in ['home', 'newsletter', 'docs', 'bio', 'downloads', 'usage'] and not session.get('admin', False) and not session.get('is_employer', False):
         has_access = (
             f'view:tab:{path}' in perms
             or ('master:view_tabs' in perms and f'exclude:tab:{path}' not in perms)

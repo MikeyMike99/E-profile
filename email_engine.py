@@ -206,16 +206,20 @@ def send_email(
             msg.attach(part2)
 
             server_host = config.MAIL_SERVER
-            server_port = config.MAIL_PORT
+            server_port = int(config.MAIL_PORT)
             use_tls = config.MAIL_USE_TLS
             username = config.MAIL_USERNAME
             password = config.MAIL_PASSWORD
 
-            server = smtplib.SMTP(server_host, server_port, timeout=10)
-            server.ehlo()
-            if use_tls:
-                server.starttls()
+            if server_port == 465:
+                server = smtplib.SMTP_SSL(server_host, server_port, timeout=10)
                 server.ehlo()
+            else:
+                server = smtplib.SMTP(server_host, server_port, timeout=10)
+                server.ehlo()
+                if use_tls:
+                    server.starttls()
+                    server.ehlo()
 
             if username and password:
                 server.login(username, password)
@@ -249,15 +253,20 @@ def test_smtp_connection() -> Tuple[bool, str]:
         return True, "Email Engine is configured in 'local' mock mode. Real external connections are bypassed."
 
     try:
-        server = smtplib.SMTP(config.MAIL_SERVER, config.MAIL_PORT, timeout=8)
-        server.ehlo()
-        if config.MAIL_USE_TLS:
-            server.starttls()
+        port = int(config.MAIL_PORT)
+        if port == 465:
+            server = smtplib.SMTP_SSL(config.MAIL_SERVER, port, timeout=8)
             server.ehlo()
+        else:
+            server = smtplib.SMTP(config.MAIL_SERVER, port, timeout=8)
+            server.ehlo()
+            if config.MAIL_USE_TLS:
+                server.starttls()
+                server.ehlo()
         if config.MAIL_USERNAME and config.MAIL_PASSWORD:
             server.login(config.MAIL_USERNAME, config.MAIL_PASSWORD)
         server.quit()
-        return True, f"Successfully connected to {config.MAIL_SERVER}:{config.MAIL_PORT} and authenticated."
+        return True, f"Successfully connected to {config.MAIL_SERVER}:{port} and authenticated."
     except Exception as e:
         return False, f"Connection failed: {e}"
 
