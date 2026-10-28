@@ -1,5 +1,5 @@
 {
-    "total_views": 1398,
+    "total_views": 1434,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -42,18 +42,21 @@
         "01d25fa231aa667bd028459e7dd51656",
         "48b1127ea8931d501ae850aeb2e84855",
         "5cbff893b77474f486caf63acfad58df",
-        "d01be10751407e46ead2bcf799982ad2"
+        "d01be10751407e46ead2bcf799982ad2",
+        "ad664c459c207d964dd12c6f801f21c9",
+        "a512a0dd6b94e5a79b8aa2f66f242802",
+        "895058b3a32ec37fc552f6bfc510143c"
     ],
     "paths": {
-        "/": 500,
-        "/favicon.ico": 312,
-        "/projects": 29,
-        "/ai_agent": 21,
-        "/login": 94,
-        "/ai_agent/": 13,
+        "/": 508,
+        "/favicon.ico": 318,
+        "/projects": 31,
+        "/ai_agent": 23,
+        "/login": 95,
+        "/ai_agent/": 18,
         "/ws": 123,
-        "/ai_agent/api/chat": 2,
-        "/ai_agent/api/stream": 1,
+        "/ai_agent/api/chat": 3,
+        "/ai_agent/api/stream": 8,
         "/robots.txt": 71,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
@@ -117,6 +120,8 @@
         "/downloads/get/git_source": 5,
         "/downloads/get/portable": 1,
         "/docs/manifesto/02_The_Echoes_Architecture.md": 3,
-        "/hub": 3
+        "/hub": 4,
+        "/ai_agent/api/projects": 2,
+        "/ai_agent/api/conversations": 1
     }
 }
