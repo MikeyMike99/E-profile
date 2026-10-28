@@ -1,3 +1,4 @@
+from typing import Optional
 """Cyber Intelligence Hub & On-Demand Beginner Doc Suite Blueprint.
 
 Enforces the Transient Disk Cache Architecture:
