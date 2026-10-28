@@ -222,12 +222,14 @@ function closeAndSave() {
 /**
  * 7. EXECUTE: Two-way Git Sync
  */
-async function executeGitSync() {
-    updateConsole("INITIATING_GIT_SYNC...");
+async function executeGitSync(branch = null) {
+    updateConsole(branch ? `INITIATING_GIT_SYNC (${branch})...` : "INITIATING_GIT_SYNC...");
     try {
+        const reqBody = branch ? JSON.stringify({ branch: branch }) : JSON.stringify({});
         const response = await fetch(`/api/projects/explorer_logic/git_sync`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            body: reqBody
         });
         
         const result = await response.json();

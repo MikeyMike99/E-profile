@@ -111,6 +111,8 @@ def get_projects_data():
                 preview = first_line.lstrip('#').strip()
 
         status, label, icon = "active", "LAUNCH_DEMO", "🔓"
+        if d.name == "antigravity_agent":
+            label = "TEST_DEMO"
 
         if not (is_admin or is_employer):
             if (d / "maintenance.txt").exists(): status, label, icon = "maintenance", "UNDER_MAINTENANCE", "🛠️"

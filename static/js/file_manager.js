@@ -92,18 +92,64 @@ async function toggleUnroll(folderName) {
 }
 
 // --- 2. THE TERMINAL HUD ---
-window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 't') {
-        const term = document.getElementById('terminal-overlay');
-        const input = document.getElementById('terminal-input');
-        const isHidden = term.style.display === 'none' || term.style.display === '';
+let commandHistory = [];
+let historyIndex = -1;
 
-        if (isHidden) {
-            term.style.display = 'flex';
-            input.focus();
-            document.getElementById('terminal-prompt').innerText = `${activeContext || 'root'}>`;
-        } else {
-            term.style.display = 'none';
+function announceToScreenReader(message) {
+    let announcer = document.getElementById('sr-announcer');
+    if (!announcer) {
+        announcer = document.createElement('div');
+        announcer.id = 'sr-announcer';
+        announcer.className = 'sr-only';
+        announcer.setAttribute('aria-live', 'assertive');
+        announcer.setAttribute('aria-atomic', 'true');
+        document.body.appendChild(announcer);
+    }
+    announcer.textContent = '';
+    setTimeout(() => {
+        announcer.textContent = message;
+    }, 50);
+}
+
+function toggleTerminal() {
+    const term = document.getElementById('terminal-overlay');
+    const input = document.getElementById('terminal-input');
+    if (!term) return;
+
+    const computedDisplay = window.getComputedStyle ? window.getComputedStyle(term).display : term.style.display;
+    const isHidden = computedDisplay === 'none' || term.style.display === 'none' || term.style.display === '';
+
+    if (isHidden) {
+        term.style.display = 'flex';
+        const promptEl = document.getElementById('terminal-prompt');
+        if (promptEl) promptEl.innerText = `${activeContext || 'root'}>`;
+        if (input) {
+            setTimeout(() => {
+                input.focus();
+                input.select();
+            }, 60);
+        }
+        announceToScreenReader("CLI Terminal opened. Type a command, or press Escape to close.");
+    } else {
+        term.style.display = 'none';
+        announceToScreenReader("CLI Terminal closed.");
+    }
+}
+
+window.addEventListener('keydown', (e) => {
+    const isT = (e.key && e.key.toLowerCase() === 't') || e.code === 'KeyT';
+    const isCtrlAltT = (e.ctrlKey || e.metaKey) && e.altKey && isT;
+    const isAltT = e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && isT;
+
+    if (isCtrlAltT || isAltT) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleTerminal();
+    } else if (e.key === 'Escape') {
+        const term = document.getElementById('terminal-overlay');
+        if (term && (term.style.display === 'flex' || (window.getComputedStyle && window.getComputedStyle(term).display === 'flex'))) {
+            e.preventDefault();
+            toggleTerminal();
         }
     }
 });
@@ -114,8 +160,25 @@ function setupTerminalInput() {
     input.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter' && input.value.trim() !== '') {
             const cmd = input.value.trim();
+            commandHistory.push(cmd);
+            historyIndex = commandHistory.length;
             input.value = '';
+            announceToScreenReader("Executing: " + cmd);
             await executeCommand(cmd);
+        } else if (e.key === 'ArrowUp') {
+            if (commandHistory.length > 0 && historyIndex > 0) {
+                historyIndex--;
+                input.value = commandHistory[historyIndex];
+                setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
+            }
+        } else if (e.key === 'ArrowDown') {
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                input.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = commandHistory.length;
+                input.value = '';
+            }
         }
     });
 }
@@ -123,6 +186,26 @@ function setupTerminalInput() {
 async function executeCommand(cmd) {
     const project = document.body.getAttribute('data-project');
     const out = document.getElementById('terminal-output');
+    
+    if (cmd.toLowerCase() === 'clear') {
+        if (out) out.innerHTML = '';
+        return;
+    }
+    if (cmd.toLowerCase() === 'exit') {
+        toggleTerminal();
+        return;
+    }
+
+    let runningIndicator = null;
+    if (out) {
+        out.innerHTML += `<div style="color:#888;">> ${cmd}</div>`;
+        runningIndicator = document.createElement('div');
+        runningIndicator.style.color = '#ffb700';
+        runningIndicator.textContent = cmd.startsWith('agy') ? '⏳ Running agy CLI agent...' : '⏳ Executing...';
+        out.appendChild(runningIndicator);
+        out.scrollTop = out.scrollHeight;
+    }
+
     try {
         const res = await fetch('/api/projects/explorer_logic/terminal', {
             method: 'POST',
@@ -130,17 +213,29 @@ async function executeCommand(cmd) {
             body: JSON.stringify({ command: cmd, project: project, path: activeContext })
         });
         const data = await res.json();
-        if (out) {
-            out.innerHTML += `<div style="color:#888;">> ${cmd}</div><div>${data.output}</div>`;
-            out.scrollTop = out.scrollHeight;
+        if (runningIndicator && runningIndicator.parentNode) {
+            runningIndicator.remove();
         }
-        if (!cmd.startsWith('cat')) loadFolders();
+        if (out) {
+            const resultDiv = document.createElement('div');
+            resultDiv.textContent = data.output || '';
+            if (data.returncode !== undefined && data.returncode !== 0) {
+                resultDiv.style.color = '#ff5555';
+            }
+            out.appendChild(resultDiv);
+            out.scrollTop = out.scrollHeight;
+            const preview = (data.output || '').trim().slice(0, 120);
+            announceToScreenReader("Command finished. " + (preview || "No output."));
+        }
+        if (!cmd.startsWith('cat') && !cmd.startsWith('agy')) loadFolders();
     } catch (e) {
-        if (out) out.innerHTML += `<div style="color:red;">!! OS_BRIDGE_FAULT !!</div>`;
+        if (runningIndicator && runningIndicator.parentNode) {
+            runningIndicator.remove();
+        }
+        if (out) out.innerHTML += `<div style="color:red;">!! OS_BRIDGE_FAULT: ${e.message} !!</div>`;
+        announceToScreenReader("Error executing command: " + e.message);
     }
 }
-
-/**
  * FIXED BRIDGE: Opens the Surgery interface in a NEW TAB
  */
 function openSurgery(path) {

@@ -13,3 +13,10 @@ proposed_renames.json
 *.log
 .local/
 content/docs/.archive/
+cache/
+
+# Credentials, secrets, and local tokens
+.google_credentials.json
+*credentials*.json
+.gemini/
+.cache/

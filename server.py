@@ -2,6 +2,9 @@ import os
 import json
 import hashlib
 import uuid
+import time
+import math
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from flask import Flask, render_template, session, abort, request, redirect, url_for, jsonify, flash
@@ -51,18 +54,26 @@ app.register_blueprint(sync_bp, url_prefix='/api')
 app.register_blueprint(echos_bp)
 app.register_blueprint(docs_bp)
 
-# --- AI AGENT PLUGIN (DISABLED PENDING UPDATE) ---
-# import sys
-# import os
-# ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
-# if ai_path not in sys.path:
-#     sys.path.append(ai_path)
-#     
-# try:
-#     from ai_plugin import ai_bp
-#     app.register_blueprint(ai_bp, url_prefix='/ai_agent')
-# except Exception as e:
-#     app.logger.error(f"Failed to load AI Blueprint: {e}")
+from audio_suite_mod import audio_suite_bp
+app.register_blueprint(audio_suite_bp)
+
+from hub_mod import hub_bp
+app.register_blueprint(hub_bp)
+
+from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
+app.register_blueprint(diagnostics_bp)
+# --- AI AGENT PLUGIN ---
+import sys
+import os
+ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
+if ai_path not in sys.path:
+    sys.path.append(ai_path)
+
+try:
+    from ai_plugin import ai_bp
+    app.register_blueprint(ai_bp, url_prefix='/ai_agent')
+except Exception as e:
+    app.logger.error(f"Failed to load AI Blueprint: {e}")
 
 class SystemLogger:
     def __init__(self):
@@ -209,10 +220,20 @@ def dynamic_route(path):
         return redirect(url_for('dynamic_route', path='home'))
         
     perms = session.get('permissions', [])
-    if path not in ['home', 'docs'] and not session.get('admin', False) and not session.get('is_employer', False):
-        if f'view:tab:{path}' not in perms:
-            flash("ACCESS DENIED: You lack permissions to view this section.", "error")
-            return redirect(url_for('login'))
+    if path not in ['home', 'docs', 'bio', 'downloads', 'usage'] and not session.get('admin', False) and not session.get('is_employer', False):
+        has_access = (
+            f'view:tab:{path}' in perms
+            or ('master:view_tabs' in perms and f'exclude:tab:{path}' not in perms)
+        )
+        if not has_access:
+            return render_template(
+                'clearance_required.html',
+                active_tab=path,
+                requested_tab=path,
+                is_admin=False,
+                is_employer=False,
+                permissions=perms
+            )
     
     # Retrieve content sections
     projects_list = get_projects_data() if path in ['projects', 'home'] else []
@@ -238,6 +259,12 @@ def dynamic_route(path):
         template = 'home.html'
     elif path == 'bio':
         template = 'bio.html'
+    elif path == 'downloads':
+        from audio_suite_mod import render_downloads_page
+        return render_downloads_page()
+    elif path in ['usage', 'telemetry']:
+        from audio_suite_mod import render_usage_page
+        return render_usage_page()
     else:
         template = 'base.html'
 
@@ -305,6 +332,7 @@ def login():
     if request.method == 'POST':
         action = request.form.get('action', 'login')
         token = request.form.get('token', '').strip()
+        next_url = request.form.get('next', '').strip()
 
         if not token:
             return render_template('login.html', error="TOKEN_REQUIRED", is_setup=is_setup)
@@ -358,6 +386,8 @@ def login():
                 
                 if is_admin:
                     return redirect(url_for('admin'))
+                elif next_url and next_url.startswith('/') and not next_url.startswith('//'):
+                    return redirect(next_url)
                 else:
                     return redirect(url_for('dynamic_route', path='home'))
             
@@ -435,6 +465,7 @@ def admin():
         except: pass
 
     analytics_data = get_analytics()
+    diagnostics_data = get_system_diagnostic_summary()
 
     return render_template('manage_profiles.html', 
         profiles=profiles,
@@ -448,6 +479,7 @@ def admin():
         system_logs=sys_log.logs,
         quarantined_files=quarantined_files,
         analytics_data=analytics_data,
+        diagnostics_data=diagnostics_data,
         is_admin=session.get('admin', False)
     )
 
@@ -695,16 +727,22 @@ def delete_profile():
     if not session.get('admin', False): 
         return jsonify({"error": "Unauthorized"}), 403
         
-    token_hash = request.form.get('token_hash', '')
+    token_hash = request.form.get('token_hash', '').strip()
     profiles = load_profiles()
     
-    if token_hash in profiles:
-        # Failsafe: Prevent the active system admin from deleting themselves
-        if profiles[token_hash].get('username') != session.get('username'):
-            del profiles[token_hash]
-            save_profiles(profiles)
-            flash("Profile successfully terminated.", "info")
-            
+    if not token_hash or token_hash not in profiles:
+        flash("Target profile not found for deletion.", "error")
+        return redirect(url_for('admin'))
+
+    target_name = profiles[token_hash].get('username', 'Unknown')
+    if target_name == session.get('username'):
+        flash("Safety rule enforced: You cannot terminate your own active administrator profile.", "error")
+        return redirect(url_for('admin'))
+
+    del profiles[token_hash]
+    save_profiles(profiles)
+    sys_log.info(f"Terminated profile: {target_name}")
+    flash(f"Profile {target_name} permanently terminated.", "info")
     return redirect(url_for('admin'))
 
 @app.route('/edit_profile', methods=['POST'])
@@ -712,21 +750,39 @@ def edit_profile():
     if not session.get('admin', False): 
         return jsonify({"error": "Unauthorized"}), 403
         
-    token_hash = request.form.get('token_hash', '')
+    token_hash = request.form.get('token_hash', '').strip()
     profiles = load_profiles()
     
-    if token_hash in profiles:
-        # Update user configuration
-        profiles[token_hash]['username'] = request.form.get('username', profiles[token_hash]['username']).strip()
-        profiles[token_hash]['label'] = request.form.get('label', profiles[token_hash]['label']).strip()
-        profiles[token_hash]['permissions'] = request.form.getlist('permissions')
-        profiles[token_hash]['is_admin'] = request.form.get('is_admin') == 'on'
-        profiles[token_hash]['is_employer'] = request.form.get('is_employer') == 'on'
-        profiles[token_hash]['bypass_enabled'] = request.form.get('bypass_enabled') == 'on'
+    if token_hash not in profiles:
+        flash("Target profile was not found.", "error")
+        return redirect(url_for('admin'))
+
+    target_profile = profiles[token_hash]
+    target_profile['username'] = request.form.get('username', target_profile.get('username', '')).strip()
+    target_profile['label'] = request.form.get('label', target_profile.get('label', '')).strip()
+    target_profile['permissions'] = request.form.getlist('permissions')
+    target_profile['is_admin'] = request.form.get('is_admin') == 'on'
+    target_profile['is_employer'] = request.form.get('is_employer') == 'on'
+    target_profile['bypass_enabled'] = request.form.get('bypass_enabled') == 'on'
+    
+    new_token = request.form.get('token', '').strip()
+    if new_token:
+        if len(new_token) < 4:
+            flash("New PIN / Access Token must be at least 4 characters long.", "error")
+            return redirect(url_for('admin'))
+        new_token_hash = hash_token(new_token)
+        if new_token_hash in profiles and new_token_hash != token_hash:
+            flash("This PIN / Token is already assigned to another profile. Choose a unique PIN.", "error")
+            return redirect(url_for('admin'))
+        profiles.pop(token_hash)
+        profiles[new_token_hash] = target_profile
+        sys_log.info(f"Admin updated identity & reset credentials for: {target_profile['username']}")
+        flash(f"Profile {target_profile['username']} and PIN updated successfully.", "success")
+    else:
+        sys_log.info(f"Admin updated identity: {target_profile['username']}")
+        flash(f"Profile {target_profile['username']} updated successfully.", "success")
         
-        save_profiles(profiles)
-        flash("Profile identity and permissions updated.", "success")
-        
+    save_profiles(profiles)
     return redirect(url_for('admin'))
 
 @app.route('/reset_pin', methods=['POST'])
@@ -734,19 +790,47 @@ def reset_pin():
     if not session.get('admin', False): 
         return jsonify({"error": "Unauthorized"}), 403
         
-    old_token_hash = request.form.get('token_hash', '')
+    old_token_hash = request.form.get('token_hash', '').strip()
     new_token = request.form.get('new_token', '').strip()
+    confirm_token = request.form.get('confirm_token', '').strip()
     profiles = load_profiles()
     
-    if old_token_hash in profiles and new_token:
-        # Migrate data to new hash
-        user_data = profiles.pop(old_token_hash)
-        new_token_hash = hash_token(new_token)
-        profiles[new_token_hash] = user_data
-        
-        save_profiles(profiles)
-        flash(f"PIN successfully reset for {user_data.get('username')}.", "success")
-        
+    if not old_token_hash or old_token_hash not in profiles:
+        flash("Target profile was not found.", "error")
+        return redirect(url_for('admin'))
+
+    if not new_token:
+        flash("New PIN / Access Token cannot be empty.", "error")
+        return redirect(url_for('admin'))
+
+    if len(new_token) < 4:
+        flash("New PIN / Access Token must be at least 4 characters long.", "error")
+        return redirect(url_for('admin'))
+
+    if confirm_token and new_token != confirm_token:
+        flash("New PIN and confirmation PIN do not match.", "error")
+        return redirect(url_for('admin'))
+
+    new_token_hash = hash_token(new_token)
+    if new_token_hash in profiles and new_token_hash != old_token_hash:
+        flash("This PIN / Token is already assigned to another profile. Choose a unique PIN.", "error")
+        return redirect(url_for('admin'))
+
+    user_data = profiles.pop(old_token_hash)
+    profiles[new_token_hash] = user_data
+    save_profiles(profiles)
+
+    target_name = user_data.get('username', 'User')
+    sys_log.info(f"Admin reset PIN for profile: {target_name}")
+    flash(f"PIN/Password successfully reset for {target_name}.", "success")
+    return redirect(url_for('admin'))
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    if not session.get('admin', False):
+        flash("Password and PIN resets are restricted to the Admin Panel.", "error")
+        return redirect(url_for('login'))
+    flash("Password and credential resets are managed directly within the Admin Panel.", "info")
     return redirect(url_for('admin'))
 
 @app.route('/admin_impersonate/<token_hash>', methods=['POST'])
@@ -799,9 +883,385 @@ def toggle_exclusion():
         
     return jsonify({"error": "Profile not found"}), 404
 
+AUDIO_SUITE_LICENSES_FILE = config.CONTENT_DIR / "audio_suite_licenses.json"
+LATEST_AUDIO_SUITE_VERSION = "1.0.0"
+AUDIO_SUITE_DOWNLOAD_URL = "https://github.com/MikeyMike99/JOSHY-downloads"
+AUDIO_SUITE_CHANGELOG = "Audio Playback Suite update featuring dual-layer hardware license hardening and automated cloud attestation."
+
+
+def is_newer_version(latest: str, current: str) -> bool:
+    """Evaluates semantic version strings to determine if an update is available."""
+    try:
+        def parse_ver(v):
+            return [int(x) for x in re.sub(r"[^0-9.]", "", v).split(".") if x]
+        return parse_ver(latest) > parse_ver(current)
+    except Exception:
+        return False
+
+
+@app.route('/api/audio_suite/handshake', methods=['GET', 'POST'])
+def audio_suite_handshake():
+    """Validates hardware trial attestation and provides application update metadata."""
+    releases = {}
+    active_is_released = True
+    try:
+        from audio_suite_mod import get_releases_data, is_release_publicly_visible
+        releases = get_releases_data()
+        active_is_released = is_release_publicly_visible(releases)
+    except Exception:
+        pass
+    active_version = releases.get('version', LATEST_AUDIO_SUITE_VERSION)
+    active_download_url = releases.get('download_url', AUDIO_SUITE_DOWNLOAD_URL)
+    active_changelog = releases.get('changelog', AUDIO_SUITE_CHANGELOG)
+
+    if request.method == 'GET':
+        return jsonify({
+            'service': 'Audio Playback Suite Attestation & Update Service',
+            'status': 'ONLINE',
+            'latest_version': active_version,
+            'download_url': active_download_url,
+        })
+
+    data = request.get_json(silent=True) or {}
+    hwid = data.get('hwid')
+    if not hwid:
+        return jsonify({'error': 'Missing hardware identifier'}), 400
+
+    hwid = str(hwid).strip()
+    app_version = str(data.get('app_version', '1.0.0')).strip()
+    local_first_run = data.get('local_first_run')
+    if isinstance(local_first_run, (int, float)):
+        local_first_run = int(local_first_run)
+    else:
+        local_first_run = None
+
+    licenses = {}
+    if AUDIO_SUITE_LICENSES_FILE.exists():
+        try:
+            licenses = json.loads(AUDIO_SUITE_LICENSES_FILE.read_text(encoding='utf-8'))
+        except Exception as exc:
+            sys_log.warning(f"Audio suite license store read error: {exc}")
+            licenses = {}
+
+    server_now = int(time.time())
+    record = licenses.get(hwid)
+
+    if not record:
+        inception = local_first_run if local_first_run and 0 < local_first_run <= server_now else server_now
+        record = {
+            'hwid': hwid,
+            'first_run': inception,
+            'last_seen': server_now,
+            'duration_days': 14,
+            'app_version': app_version,
+            'remote_revoked': False,
+        }
+        licenses[hwid] = record
+    else:
+        server_first_run = record.get('first_run', server_now)
+        if local_first_run and 0 < local_first_run < server_first_run:
+            record['first_run'] = local_first_run
+        record['last_seen'] = server_now
+        record['app_version'] = app_version
+
+    first_run = record.get('first_run', server_now)
+    duration_days = record.get('duration_days', 14)
+    expires_at = first_run + (duration_days * 86400)
+    is_revoked = record.get('remote_revoked', False)
+
+    if is_revoked:
+        status = 'REVOKED'
+    elif server_now >= expires_at:
+        status = 'EXPIRED'
+    else:
+        status = 'ACTIVE'
+
+    record['status'] = status
+
+    try:
+        AUDIO_SUITE_LICENSES_FILE.parent.mkdir(parents=True, exist_ok=True)
+        AUDIO_SUITE_LICENSES_FILE.write_text(json.dumps(licenses, indent=2), encoding='utf-8')
+    except Exception as exc:
+        sys_log.error(f"Failed to persist audio suite licenses: {exc}")
+
+    update_available = is_newer_version(active_version, app_version) if active_is_released else False
+    days_remaining = max(0, int(math.ceil((expires_at - server_now) / 86400))) if status == 'ACTIVE' else 0
+
+    return jsonify({
+        'status': status,
+        'hwid': hwid,
+        'server_time': server_now,
+        'first_run': first_run,
+        'expires_at': expires_at,
+        'duration_days': duration_days,
+        'days_remaining': days_remaining,
+        'remote_revoked': is_revoked,
+        'update_available': update_available,
+        'latest_version': active_version,
+        'download_url': active_download_url,
+        'changelog': active_changelog,
+    })
+
+
+AUDIO_SUITE_FEEDBACK_FILE = config.CONTENT_DIR / "audio_suite_feedback.json"
+
+
+@app.route('/api/audio_suite/feedback', methods=['GET', 'POST'])
+def audio_suite_feedback():
+    """Collects and stores in-app bug reports and feature suggestions from Audio Playback Suite."""
+    if request.method == 'GET':
+        return jsonify({
+            'service': 'Audio Playback Suite Feedback Service',
+            'status': 'ONLINE',
+        })
+
+    data = request.get_json(silent=True) or {}
+    message = str(data.get('message', '')).strip()
+    if not message:
+        return jsonify({'error': 'Message content is required'}), 400
+
+    hwid = str(data.get('hwid', 'UNKNOWN')).strip()
+    feedback_type = str(data.get('type', 'bug')).strip().lower()
+    if feedback_type not in ('bug', 'suggestion', 'general'):
+        feedback_type = 'general'
+    subject = str(data.get('subject', 'Untitled Report')).strip()
+    app_version = str(data.get('app_version', '1.0.0')).strip()
+    server_now = int(time.time())
+
+    item = {
+        'id': str(uuid.uuid4())[:8],
+        'hwid': hwid,
+        'type': feedback_type,
+        'subject': subject,
+        'message': message,
+        'app_version': app_version,
+        'timestamp': server_now,
+        'formatted_time': datetime.fromtimestamp(server_now).strftime('%Y-%m-%d %H:%M:%S'),
+        'remote_addr': request.remote_addr or '',
+    }
+
+    feedback_list = []
+    if AUDIO_SUITE_FEEDBACK_FILE.exists():
+        try:
+            feedback_list = json.loads(AUDIO_SUITE_FEEDBACK_FILE.read_text(encoding='utf-8'))
+            if not isinstance(feedback_list, list):
+                feedback_list = []
+        except Exception as exc:
+            sys_log.warning(f"Audio suite feedback read error: {exc}")
+            feedback_list = []
+
+    feedback_list.append(item)
+
+    try:
+        AUDIO_SUITE_FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        AUDIO_SUITE_FEEDBACK_FILE.write_text(json.dumps(feedback_list, indent=2), encoding='utf-8')
+        sys_log.info(f"Received {feedback_type} feedback from HWID {hwid[:8]}...")
+
+        # Automated alert to Admin via Hybrid Email Engine
+        try:
+            from email_engine import send_email, build_email_template
+            email_body = f"<p><strong>Type:</strong> {feedback_type.upper()}</p><p><strong>HWID:</strong> {hwid}</p><p><strong>Subject:</strong> {subject}</p><p><strong>Message:</strong></p><blockquote style='background:#1a1a24;padding:12px;border-left:3px solid #00f3ff;'>{message}</blockquote>"
+            html_msg = build_email_template(f"Audio Suite Alert: {subject}", email_body)
+            send_email(
+                to_address="admin@eprofile.local",
+                subject=f"[Audio Suite Feedback] {subject}",
+                html_content=html_msg
+            )
+        except Exception as mail_err:
+            sys_log.warning(f"Could not dispatch email alert for feedback: {mail_err}")
+
+        return jsonify({'success': True, 'id': item['id'], 'status': 'RECEIVED'})
+    except Exception as exc:
+        sys_log.error(f"Failed to persist audio suite feedback: {exc}")
+        return jsonify({'error': 'Failed to save feedback on server'}), 500
+
+
+# --- EMAIL ENGINE & ADMIN MAILBOX ROUTES ---
+@app.route('/admin/mailbox', methods=['GET'])
+def admin_mailbox():
+    if not session.get('admin', False):
+        flash("Admin authentication required to access the Mailbox.", "error")
+        return redirect(url_for('login'))
+
+    from email_engine import load_local_mailbox
+    emails = load_local_mailbox(limit=100)
+    has_google_json = (config.ROOT_DIR / ".google_credentials.json").exists()
+    return render_template(
+        'admin_mailbox.html',
+        emails=emails,
+        mail_backend=config.MAIL_BACKEND,
+        mail_server=config.MAIL_SERVER,
+        mail_port=config.MAIL_PORT,
+        mail_username=config.MAIL_USERNAME,
+        mail_use_tls=config.MAIL_USE_TLS,
+        default_sender=config.MAIL_DEFAULT_SENDER,
+        has_google_json=has_google_json
+    )
+
+
+@app.route('/admin/mailbox/save_settings', methods=['POST'])
+def admin_save_mailbox_settings():
+    if not session.get('admin', False):
+        flash("Unauthorized", "error")
+        return redirect(url_for('login'))
+
+    backend = request.form.get('backend', 'local').strip().lower()
+    server_host = request.form.get('server', '').strip()
+    port_str = request.form.get('port', '587').strip()
+    use_tls = request.form.get('use_tls') in ('1', 'True', 'true', 'on')
+    username = request.form.get('username', '').strip()
+    password = request.form.get('password', '').strip()
+    default_sender = request.form.get('default_sender', '').strip()
+
+    try:
+        server_port = int(port_str)
+    except ValueError:
+        server_port = 587
+
+    # Retain existing password if unchanged
+    if not password and config.MAIL_PASSWORD and backend == 'smtp':
+        password = config.MAIL_PASSWORD
+
+    from email_engine import apply_gateway_settings, test_smtp_connection
+    success, msg = apply_gateway_settings(
+        backend=backend,
+        server_host=server_host,
+        server_port=server_port,
+        use_tls=use_tls,
+        username=username,
+        password=password,
+        default_sender=default_sender
+    )
+
+    if success:
+        sys_log.info(f"Admin updated email credentials for backend '{backend}'")
+        if backend == 'smtp':
+            conn_ok, conn_msg = test_smtp_connection()
+            if conn_ok:
+                flash(f"Settings saved! Gateway verified: {conn_msg}", "success")
+            else:
+                flash(f"Settings saved, but gateway warning: {conn_msg}", "error")
+        else:
+            flash("Settings saved! Email engine running in Local Mock Mode.", "success")
+    else:
+        flash(f"Error saving settings: {msg}", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/admin/mailbox/upload_google_json', methods=['POST'])
+def admin_upload_google_json():
+    if not session.get('admin', False):
+        flash("Unauthorized", "error")
+        return redirect(url_for('login'))
+
+    raw_json = request.form.get('google_json', '').strip()
+    uploaded_file = request.files.get('google_json_file')
+
+    if uploaded_file and uploaded_file.filename:
+        try:
+            raw_json = uploaded_file.read().decode('utf-8')
+        except Exception as e:
+            flash(f"Failed to read uploaded file: {e}", "error")
+            return redirect(url_for('admin_mailbox'))
+
+    if not raw_json:
+        flash("Please paste Google JSON content or select a JSON file.", "error")
+        return redirect(url_for('admin_mailbox'))
+
+    from email_engine import apply_google_service_json
+    success, msg, meta = apply_google_service_json(raw_json)
+    if success:
+        sys_log.info(f"Admin saved Google credentials JSON: {meta.get('client_email')}")
+        flash(f"{msg}", "success")
+    else:
+        flash(f"Failed to process Google JSON: {msg}", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+
+@app.route('/admin/mailbox/send_test', methods=['POST'])
+def admin_send_test_email():
+    if not session.get('admin', False):
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    to_address = request.form.get('to_address', '').strip()
+    subject = request.form.get('subject', '').strip()
+    message = request.form.get('message', '').strip()
+    action_url = request.form.get('action_url', '').strip() or None
+
+    if not to_address or not subject or not message:
+        flash("All fields (Recipient, Subject, Message) are required.", "error")
+        return redirect(url_for('admin_mailbox'))
+
+    from email_engine import send_email, build_email_template
+    formatted_body = f"<p>{message}</p>"
+    html_msg = build_email_template(
+        title=subject,
+        body_html=formatted_body,
+        action_url=action_url,
+        action_label="Review Action" if action_url else None
+    )
+
+    success, msg, record = send_email(to_address=to_address, subject=subject, html_content=html_msg)
+    if success:
+        flash(f"Test dispatch succeeded: {msg}", "success")
+        sys_log.info(f"Admin transmitted test email to {to_address} via {record.get('backend')}")
+    else:
+        flash(f"Test dispatch failed: {msg}", "error")
+        sys_log.error(f"Failed email transmission to {to_address}: {msg}")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/admin/mailbox/clear', methods=['POST'])
+def admin_clear_mailbox():
+    if not session.get('admin', False):
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    from email_engine import clear_local_mailbox
+    if clear_local_mailbox():
+        flash("Local mailbox cache cleared successfully.", "success")
+        sys_log.info("Admin purged local mailbox cache.")
+    else:
+        flash("Failed to clear local mailbox cache.", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/admin/mailbox/test_connection', methods=['POST'])
+def admin_test_smtp_connection():
+    if not session.get('admin', False):
+        flash("Admin authentication required.", "error")
+        return redirect(url_for('login'))
+
+    from email_engine import test_smtp_connection
+    success, msg = test_smtp_connection()
+    if success:
+        flash(f"Gateway Attestation: {msg}", "success")
+    else:
+        flash(f"Gateway Attestation Warning: {msg}", "error")
+
+    return redirect(url_for('admin_mailbox'))
+
+
+@app.route('/api/admin/mailbox/<email_id>', methods=['GET'])
+def api_admin_get_email(email_id):
+    if not session.get('admin', False):
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    from email_engine import get_email_by_id
+    item = get_email_by_id(email_id)
+    if not item:
+        return jsonify({'error': 'Email not found'}), 404
+    return jsonify(item)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('base.html', active_tab='error', content="<h2>404 - Page Not Found</h2>"), 404
+
 
 if __name__ == '__main__':
     # Only run the local development server if NOT on PythonAnywhere

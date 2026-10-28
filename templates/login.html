@@ -260,6 +260,18 @@
             <p class="subtitle">{% if is_setup %}CREATE ADMIN PROFILE{% else %}AWAITING ENCRYPTION KEY…{% endif %}</p>
         </header>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div role="region" aria-label="System Notifications" aria-live="polite" style="margin-bottom: 20px;">
+            {% for category, message in messages %}
+            <div role="alert" style="padding: 10px 14px; margin-bottom: 8px; border-left: 3px solid {% if category == 'error' %}#ff4d4d{% elif category == 'success' %}#00ff88{% else %}var(--cyan){% endif %}; background: rgba(0,0,0,0.6); color: {% if category == 'error' %}#ff8080{% elif category == 'success' %}#66ffb2{% else %}var(--cyan){% endif %}; font-size: 0.8rem; font-family: var(--font-mono);">
+                <strong style="margin-right: 6px;">[{{ category|upper }}]</strong> {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
         <form action="/login" method="POST">
             {% if error %}
             <div style="color: var(--magenta); font-size: 0.8rem; text-align: center; margin-bottom: 20px; font-weight: bold; letter-spacing: 0.1em;">[{{ error }}]</div>
@@ -283,11 +295,35 @@
 
             <div class="field-group">
                 <label for="token" class="label-tab">{% if is_setup %}NEW_ADMIN_TOKEN{% else %}ACCESS_TOKEN{% endif %}</label>
-                <input type="password" id="token" name="token" class="cyber-input" required {% if not is_setup %}autofocus{% endif %}>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input type="password" id="token" name="token" class="cyber-input" style="padding-right: 70px;" required {% if not is_setup %}autofocus{% endif %}>
+                    <button type="button" 
+                            id="toggle-token-btn" 
+                            aria-label="Toggle token visibility" 
+                            aria-pressed="false"
+                            onclick="toggleLoginToken()"
+                            style="position: absolute; right: 10px; background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.4); color: var(--cyan); padding: 5px 8px; font-size: 0.7rem; font-family: var(--font-mono); cursor: pointer; border-radius: 2px;">
+                        SHOW
+                    </button>
+                </div>
             </div>
             <span class="micro-meta">KEY_LENGTH: 256-BIT • RATE_LIMIT: ENABLED</span>
 
             <button type="submit" class="btn-auth">{% if is_setup %}PROVISION_IDENTITY{% else %}AUTH_LINK{% endif %}</button>
+            
+            <details class="recovery-details" style="margin-top: 24px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); border-radius: 4px; padding: 10px 14px; font-size: 0.75rem; color: var(--text-dim);">
+                <summary style="cursor: pointer; color: var(--amber); font-weight: bold; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                    <span>NEED RECOVERY ASSISTANCE?</span>
+                    <span aria-hidden="true" style="font-size: 0.9rem;">[+]</span>
+                </summary>
+                <div style="margin-top: 10px; line-height: 1.5;">
+                    <p style="margin: 0 0 8px 0;">If you lost or forgot your access token / PIN:</p>
+                    <ul style="margin: 0; padding-left: 18px;">
+                        <li><strong>User Profiles:</strong> Contact your system administrator to initiate a secure reset via the admin console.</li>
+                        <li><strong>Administrator Recovery:</strong> Run the host terminal CLI recovery script: <code style="color: var(--cyan); background: rgba(0,0,0,0.5); padding: 2px 4px;">py scripts/reset_admin.py</code>.</li>
+                    </ul>
+                </div>
+            </details>
         </form>
 
         <footer class="status-row">
@@ -302,6 +338,16 @@
         </footer>
     </main>
 
+    <script>
+    function toggleLoginToken() {
+        const input = document.getElementById('token');
+        const btn = document.getElementById('toggle-token-btn');
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+        btn.innerText = isPassword ? 'HIDE' : 'SHOW';
+    }
+    </script>
 </body>
 
 </html>

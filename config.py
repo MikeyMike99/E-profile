@@ -14,13 +14,21 @@ class Config:
     
     # 2. Centralized Documentation Sources (Zero-Touch Discovery)
     CENTRAL_DOCS_DIR = Path(os.environ.get("CENTRAL_DOCS_DIR", "/mnt/c/Users/michael/Documents/Central_Docs"))
-    DEVCORE_DOCS_DIR = Path(os.environ.get("DEVCORE_DOCS_DIR", "/mnt/c/Users/michael/Documents/DevCore/docs"))
-    AUDIO_DOCS_DIR = Path(os.environ.get("AUDIO_DOCS_DIR", "/mnt/c/Users/michael/Documents/Audio_pllayback_suite/docs"))
     
     # 2. Handshake Security Keys (Loaded from ENV for security)
     ADMIN_KEY = os.environ.get("ADMIN_KEY", "SECURE_ADMIN_KEY_HERE")
     USER_KEY = os.environ.get("USER_KEY", "USER")
     EMPLOYER_KEY = os.environ.get("EMPLOYER_KEY", "SECURE_EMPLOYER_KEY_HERE")
+
+    # --- Email Service Configuration ---
+    MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "local")  # 'local', 'smtp'
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "True").lower() in ("true", "1")
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "notifications@eprofile.local")
+    MAILBOX_FILE = ROOT_DIR / "cache" / "mailbox.json"
 
     # --- UI & Theme Configuration ---
     THEME = {
@@ -32,8 +40,7 @@ class Config:
     }
 
     # --- Dynamic Navigation Tabs ---
-    TABS = ["home", "docs", "bio", "blog", "projects", "certifications"]
-
+    TABS = ["home", "hub", "docs", "bio", "blog", "projects", "certifications", "downloads", "usage"]
     @classmethod
     def get_all_required_paths(cls):
         return [

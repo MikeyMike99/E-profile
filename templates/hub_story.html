@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="story-reader-container" id="main-content" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <!-- Accessibility Live Region -->
+    <div id="story-live-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <div style="margin-bottom: 20px;">
+        <a href="/hub" style="color: #19e6ff; text-decoration: none; font-family: monospace; font-size: 0.9rem;">
+            ← Return to Cyber Intelligence Hub Feed
+        </a>
+    </div>
+
+    <!-- Header Section -->
+    <header class="story-header" style="background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 25px; margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                {% set score = story.score|default(80) %}
+                {% set threat_level = story.threat_level|default('HIGH') %}
+                <span style="font-family: monospace; font-size: 0.85rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: {% if score >= 90 %}rgba(255, 77, 77, 0.2){% elif score >= 75 %}rgba(255, 170, 0, 0.2){% else %}rgba(25, 230, 255, 0.2){% endif %}; color: {% if score >= 90 %}#ff7878{% elif score >= 75 %}#ffc04d{% else %}#19e6ff{% endif %}; border: 1px solid currentColor;">
+                    SCORE {{ score }}/100 · {{ threat_level }}
+                </span>
+                {% for tag in story.tags %}
+                <span style="font-family: monospace; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.08); color: #fff;">
+                    {{ tag }}
+                </span>
+                {% endfor %}
+            </div>
+            
+            <!-- Cache Status Badge -->
+            <div style="background: {% if is_instant_cache %}rgba(0, 255, 136, 0.1){% else %}rgba(25, 230, 255, 0.1){% endif %}; border: 1px solid {% if is_instant_cache %}#00ff88{% else %}#19e6ff{% endif %}; border-radius: 6px; padding: 6px 14px; font-family: monospace; font-size: 0.85rem; color: {% if is_instant_cache %}#00ff88{% else %}#19e6ff{% endif %};">
+                {{ cache_badge }}
+            </div>
+        </div>
+
+        <h2 style="font-size: 1.9rem; margin: 0 0 10px 0; color: #fff; line-height: 1.3;">
+            {{ story.title }}
+        </h2>
+        <p style="color: rgba(234, 242, 255, 0.7); font-size: 1.05rem; margin: 0 0 15px 0;">
+            {{ story.subtitle }}
+        </p>
+
+        <div style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.5); font-family: monospace; display: flex; gap: 20px; flex-wrap: wrap;">
+            <span>Source: {{ story.primary_source_name }}</span>
+            <span>Date: {{ story.created_at }}</span>
+            <span>Cached On: {{ story.cached_at }}</span>
+            {% if story.primary_source_url %}
+            <a href="{{ story.primary_source_url }}" target="_blank" rel="noopener noreferrer" style="color: #19e6ff; text-decoration: underline;">
+                Verified Upstream Reference ↗
+            </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav aria-label="Dossier Sections" style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; overflow-x: auto;">
+            <!-- Mode 1: 6 Perspectives -->
+            <button onclick="switchTab('lens-plain')" id="tab-lens-plain" class="dossier-tab active" style="padding: 10px 16px; background: rgba(25, 230, 255, 0.15); border: 1px solid #19e6ff; border-radius: 6px; color: #fff; font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                📖 Plain Story
+            </button>
+            <button onclick="switchTab('lens-tech')" id="tab-lens-tech" class="dossier-tab" style="padding: 10px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: rgba(234, 242, 255, 0.7); font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                💻 Technical View
+            </button>
+            <button onclick="switchTab('lens-biz')" id="tab-lens-biz" class="dossier-tab" style="padding: 10px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: rgba(234, 242, 255, 0.7); font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                💼 Business Side
+            </button>
+            <button onclick="switchTab('lens-client')" id="tab-lens-client" class="dossier-tab" style="padding: 10px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: rgba(234, 242, 255, 0.7); font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                👤 Client Side
+            </button>
+            <button onclick="switchTab('lens-world')" id="tab-lens-world" class="dossier-tab" style="padding: 10px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: rgba(234, 242, 255, 0.7); font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                🌍 World Side
+            </button>
+            <button onclick="switchTab('lens-timeline')" id="tab-lens-timeline" class="dossier-tab" style="padding: 10px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: rgba(234, 242, 255, 0.7); font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                ⏳ Timeline
+            </button>
+            <!-- Mode 2: 6 Pillars Suite -->
+            <button onclick="switchTab('doc-suite')" id="tab-doc-suite" class="dossier-tab" style="padding: 10px 16px; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.4); border-radius: 6px; color: #00ff88; font-family: monospace; font-size: 0.85rem; cursor: pointer;">
+                📚 Modular Beginner Doc Suite (6 Pillars)
+            </button>
+        </div>
+    </nav>
+
+    <!-- CONTENT PANES -->
+    <div class="story-content-pane">
+        <!-- Lens 1: Plain Story -->
+        <section id="pane-lens-plain" class="story-pane" style="background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <h3 style="color: #19e6ff; font-size: 1.4rem; margin-top: 0;">{{ story_obj.plain_story.headline }}</h3>
+            <blockquote style="border-left: 3px solid #ffaa00; margin: 15px 0; padding: 10px 18px; background: rgba(255, 170, 0, 0.08); color: #ffc04d; font-style: italic;">
+                "{{ story_obj.plain_story.hook }}"
+            </blockquote>
+            <div style="color: rgba(234, 242, 255, 0.9); line-height: 1.7; font-size: 1.05rem; white-space: pre-line; margin-bottom: 25px;">
+                {{ story_obj.plain_story.narrative }}
+            </div>
+            <div style="background: rgba(0, 255, 136, 0.08); border-left: 3px solid #00ff88; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <h4 style="color: #00ff88; margin: 0 0 6px 0; font-size: 1rem;">The Everyday Analogy</h4>
+                <p style="margin: 0; color: #fff;">{{ story_obj.plain_story.analogy }}</p>
+            </div>
+            <div style="background: rgba(255, 77, 77, 0.08); border-left: 3px solid #ff4d4d; padding: 15px; border-radius: 4px;">
+                <h4 style="color: #ff7878; margin: 0 0 6px 0; font-size: 1rem;">Key Takeaway</h4>
+                <p style="margin: 0; color: #fff;">{{ story_obj.plain_story.key_takeaway }}</p>
+            </div>
+        </section>
+
+        <!-- Lens 2: Technical View -->
+        <section id="pane-lens-tech" class="story-pane" style="display: none; background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <h3 style="color: #19e6ff; font-size: 1.4rem; margin-top: 0;">Technical Deep-Dive</h3>
+            <div style="margin-bottom: 20px;">
+                <p><strong>Root Cause:</strong> {{ story_obj.technical.root_cause }}</p>
+                <p><strong>Attack Vector:</strong> {{ story_obj.technical.attack_vector }}</p>
+            </div>
+            <h4 style="color: #19e6ff;">Affected Systems & Platforms</h4>
+            <ul style="color: rgba(234, 242, 255, 0.9); line-height: 1.6;">
+                {% for item in story_obj.technical.affected_systems %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <h4 style="color: #19e6ff;">Exploit Mechanics</h4>
+            <p style="color: rgba(234, 242, 255, 0.9); line-height: 1.6;">{{ story_obj.technical.exploit_mechanics }}</p>
+
+            <h4 style="color: #19e6ff;">Indicators of Compromise (IOCs)</h4>
+            <div style="overflow-x: auto; margin-bottom: 25px;">
+                <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.2); text-align: left; color: #19e6ff;">
+                            <th style="padding: 8px;">Type</th>
+                            <th style="padding: 8px;">Indicator / Value</th>
+                            <th style="padding: 8px;">Forensic Context</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ioc in story_obj.technical.iocs %}
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <td style="padding: 8px; color: #ffaa00;">{{ ioc.type }}</td>
+                            <td style="padding: 8px; color: #fff;">{{ ioc.indicator }}</td>
+                            <td style="padding: 8px; color: rgba(234, 242, 255, 0.7);">{{ ioc.context }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="color: #00ff88;">Prioritized Remediation Steps</h4>
+            <ol style="color: rgba(234, 242, 255, 0.9); line-height: 1.7;">
+                {% for step in story_obj.technical.defense_steps %}
+                <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </section>
+
+        <!-- Lens 3: Business Side -->
+        <section id="pane-lens-biz" class="story-pane" style="display: none; background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <h3 style="color: #19e6ff; font-size: 1.4rem; margin-top: 0;">Business Impact & Boardroom Analysis</h3>
+            <p><strong>Financial Exposure:</strong> {{ story_obj.business.financial_exposure }}</p>
+            <p><strong>Downtime Cost:</strong> {{ story_obj.business.downtime_cost }}</p>
+            <p><strong>Reputational Blast Radius:</strong> {{ story_obj.business.reputational_blast_radius }}</p>
+            <h4 style="color: #19e6ff;">Regulatory & Compliance Risks</h4>
+            <ul style="color: rgba(234, 242, 255, 0.9); line-height: 1.6;">
+                {% for reg in story_obj.business.regulatory_risks %}
+                <li>{{ reg }}</li>
+                {% endfor %}
+            </ul>
+            <h4 style="color: #00ff88;">Boardroom Action Items</h4>
+            <ul style="color: rgba(234, 242, 255, 0.9); line-height: 1.6;">
+                {% for act in story_obj.business.boardroom_actions %}
+                <li>{{ act }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Lens 4: Client Side -->
+        <section id="pane-lens-client" class="story-pane" style="display: none; background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <h3 style="color: #19e6ff; font-size: 1.4rem; margin-top: 0;">Client & Consumer Perspective</h3>
+            <p><strong>Consumer Impact:</strong> {{ story_obj.client.consumer_impact }}</p>
+            <p><strong>What It Feels Like:</strong> {{ story_obj.client.what_it_feels_like }}</p>
+            <h4 style="color: #19e6ff;">User Action Checklist</h4>
+            <ul style="color: rgba(234, 242, 255, 0.9); line-height: 1.6;">
+                {% for item in story_obj.client.user_action_checklist %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Lens 5: World Side -->
+        <section id="pane-lens-world" class="story-pane" style="display: none; background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <h3 style="color: #19e6ff; font-size: 1.4rem; margin-top: 0;">Geopolitical & Global Scope</h3>
+            <p><strong>Threat Actor / Attribution:</strong> {{ story_obj.world.threat_actor }}</p>
+            <p><strong>Geopolitical Context:</strong> {{ story_obj.world.geopolitical_context }}</p>
+            <p><strong>Critical Infrastructure Risk:</strong> {{ story_obj.world.critical_infrastructure_risk }}</p>
+            <p><strong>Global Takeaway:</strong> {{ story_obj.world.global_takeaway }}</p>
+        </section>
+
+        <!-- Lens 6: Timeline -->
+        <section id="pane-lens-timeline" class="story-pane" style="display: none; background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <h3 style="color: #19e6ff; font-size: 1.4rem; margin-top: 0;">Forensic Origin & Milestone Timeline</h3>
+            <p style="color: rgba(234, 242, 255, 0.8);">{{ story_obj.origin_timeline.origin_story }}</p>
+            <div style="border-left: 2px solid #19e6ff; padding-left: 20px; margin: 25px 0 25px 10px;">
+                {% for ms in story_obj.origin_timeline.milestones %}
+                <div style="position: relative; margin-bottom: 25px;">
+                    <div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #19e6ff;"></div>
+                    <span style="font-family: monospace; font-size: 0.8rem; color: #ffaa00;">{{ ms.timestamp }} [{{ ms.significance }}]</span>
+                    <h4 style="margin: 4px 0 6px 0; color: #fff;">{{ ms.title }}</h4>
+                    <p style="margin: 0; color: rgba(234, 242, 255, 0.8); font-size: 0.95rem;">{{ ms.detail }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <p><strong>Current Status:</strong> {{ story_obj.origin_timeline.current_status }}</p>
+        </section>
+
+        <!-- Mode 2: Modular Beginner Doc Suite (6 Pillars) -->
+        <section id="pane-doc-suite" class="story-pane" style="display: none; background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 30px;">
+            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 25px;">
+                <h3 style="color: #00ff88; font-size: 1.5rem; margin: 0 0 8px 0;">
+                    📚 Modular Beginner Documentation Suite
+                </h3>
+                <p style="color: rgba(234, 242, 255, 0.7); margin: 0; font-size: 0.95rem;">
+                    Full 6-Pillar technical curriculum generated in compliance with the <code>beginner-doc-suite</code> architectural standard.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                {% for pkey, pval in rendered_pillars.items() %}
+                <button onclick="switchPillar('{{ pkey }}')" id="btn-{{ pkey }}" class="pillar-tab {% if loop.first %}active-pillar{% endif %}"
+                        style="padding: 8px 14px; background: {% if loop.first %}rgba(0, 255, 136, 0.15){% else %}rgba(255, 255, 255, 0.05){% endif %}; border: 1px solid {% if loop.first %}#00ff88{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 4px; color: {% if loop.first %}#00ff88{% else %}rgba(234, 242, 255, 0.8){% endif %}; font-family: monospace; font-size: 0.8rem; cursor: pointer;">
+                    {{ pval.title }}
+                </button>
+                {% endfor %}
+            </div>
+
+            {% for pkey, pval in rendered_pillars.items() %}
+            <article id="content-{{ pkey }}" class="pillar-content" style="{% if not loop.first %}display: none;{% endif %} line-height: 1.7; color: rgba(234, 242, 255, 0.9);">
+                <div class="markdown-body">
+                    {{ pval.html|safe }}
+                </div>
+            </article>
+            {% endfor %}
+        </section>
+    </div>
+</main>
+
+<style>
+.dossier-tab:hover {
+    background: rgba(25, 230, 255, 0.1) !important;
+    color: #fff !important;
+}
+.pillar-tab:hover {
+    border-color: #00ff88 !important;
+    color: #00ff88 !important;
+}
+.markdown-body h2 {
+    color: #19e6ff;
+    border-bottom: 1px solid rgba(25, 230, 255, 0.2);
+    padding-bottom: 8px;
+    margin-top: 25px;
+    font-size: 1.4rem;
+}
+.markdown-body h3 {
+    color: #fff;
+    margin-top: 20px;
+    font-size: 1.15rem;
+}
+.markdown-body pre {
+    background: #05070a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    color: #00ff88;
+    font-family: monospace;
+}
+.markdown-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+.markdown-body th, .markdown-body td {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    text-align: left;
+}
+.markdown-body th {
+    background: rgba(25, 230, 255, 0.08);
+    color: #19e6ff;
+}
+.markdown-body blockquote {
+    border-left: 3px solid #ffaa00;
+    margin: 15px 0;
+    padding: 10px 18px;
+    background: rgba(255, 170, 0, 0.08);
+    color: #ffc04d;
+}
+</style>
+
+<script>
+function switchTab(tabId) {
+    // Hide all panes
+    document.querySelectorAll('.story-pane').forEach(p => p.style.display = 'none');
+    
+    // Deactivate all tab buttons
+    document.querySelectorAll('.dossier-tab').forEach(b => {
+        b.style.background = 'rgba(255, 255, 255, 0.05)';
+        b.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        b.style.color = 'rgba(234, 242, 255, 0.7)';
+    });
+
+    // Show target pane
+    const targetPane = document.getElementById('pane-' + tabId);
+    if (targetPane) {
+        targetPane.style.display = 'block';
+    }
+
+    // Highlight target button
+    const targetBtn = document.getElementById('tab-' + tabId);
+    if (targetBtn) {
+        if (tabId === 'doc-suite') {
+            targetBtn.style.background = 'rgba(0, 255, 136, 0.2)';
+            targetBtn.style.borderColor = '#00ff88';
+            targetBtn.style.color = '#00ff88';
+        } else {
+            targetBtn.style.background = 'rgba(25, 230, 255, 0.2)';
+            targetBtn.style.borderColor = '#19e6ff';
+            targetBtn.style.color = '#fff';
+        }
+    }
+
+    const announcer = document.getElementById('story-live-announcer');
+    if (announcer && targetBtn) {
+        announcer.textContent = `Switched to ${targetBtn.textContent.trim()}`;
+    }
+}
+
+function switchPillar(pillarKey) {
+    document.querySelectorAll('.pillar-content').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.pillar-tab').forEach(b => {
+        b.style.background = 'rgba(255, 255, 255, 0.05)';
+        b.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        b.style.color = 'rgba(234, 242, 255, 0.8)';
+    });
+
+    const targetContent = document.getElementById('content-' + pillarKey);
+    if (targetContent) {
+        targetContent.style.display = 'block';
+    }
+
+    const targetBtn = document.getElementById('btn-' + pillarKey);
+    if (targetBtn) {
+        targetBtn.style.background = 'rgba(0, 255, 136, 0.15)';
+        targetBtn.style.borderColor = '#00ff88';
+        targetBtn.style.color = '#00ff88';
+    }
+
+    const announcer = document.getElementById('story-live-announcer');
+    if (announcer && targetBtn) {
+        announcer.textContent = `Viewing ${targetBtn.textContent.trim()}`;
+    }
+}
+</script>
+{% endblock %}

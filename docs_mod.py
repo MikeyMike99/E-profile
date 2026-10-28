@@ -17,8 +17,6 @@ CATALOG_PATH = DOCS_DIR / "docs_catalog.json"
 RELEASE_SCHEDULE_PATH = DOCS_DIR / "release_schedule.json"
 CENTRAL_DOCS_DIR = getattr(config, 'CENTRAL_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Central_Docs"))
 CENTRAL_RELEASE_SCHEDULE_PATH = CENTRAL_DOCS_DIR / "release_schedule.json"
-DEVCORE_DOCS_DIR = getattr(config, 'DEVCORE_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/DevCore/docs"))
-AUDIO_DOCS_DIR = getattr(config, 'AUDIO_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Audio_pllayback_suite/docs"))
 
 COLLECTIONS = {
     "devlog": {

@@ -1,0 +1,611 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .telemetry-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .telemetry-header-block {
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 20px;
+    }
+
+    .telemetry-title {
+        font-size: 2rem;
+        color: var(--text-bright);
+        letter-spacing: 2px;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+    }
+
+    .telemetry-subhead {
+        font-family: monospace;
+        color: var(--accent);
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+        margin: 0;
+    }
+
+    /* Skip nav */
+    .skip-nav-container {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+
+    .skip-nav-link {
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        border: 1px solid var(--border);
+    }
+
+    .skip-nav-link:focus, .skip-nav-link:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        outline: 2px solid var(--accent);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+
+    .kpi-card {
+        background: rgba(5, 7, 10, 0.85);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .kpi-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .kpi-label {
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .kpi-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-bright);
+        margin-bottom: 4px;
+    }
+
+    .kpi-sub {
+        font-size: 0.75rem;
+        font-family: monospace;
+        color: var(--accent);
+    }
+
+    /* Tables & Panels */
+    .section-title {
+        color: var(--text-bright);
+        font-size: 1.35rem;
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-desc {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        margin: 0 0 16px 0;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: rgba(5, 7, 10, 0.7);
+    }
+
+    .cyber-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        text-align: left;
+    }
+
+    .cyber-table th {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--accent);
+        font-family: monospace;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+
+    .cyber-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-dim);
+        vertical-align: middle;
+    }
+
+    .cyber-table tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text-bright);
+    }
+
+    /* Status Badges */
+    .status-pill {
+        display: inline-block;
+        font-family: monospace;
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-active {
+        background: rgba(0, 255, 136, 0.15);
+        border: 1px solid #00ff88;
+        color: #00ff88;
+    }
+
+    .status-expired {
+        background: rgba(255, 176, 0, 0.15);
+        border: 1px solid #ffb000;
+        color: #ffb000;
+    }
+
+    .status-revoked {
+        background: rgba(255, 77, 77, 0.15);
+        border: 1px solid #ff4d4d;
+        color: #ff7878;
+    }
+
+    /* Feedback Cards */
+    .feedback-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .feedback-card {
+        background: rgba(5, 7, 10, 0.85);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 6px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .feedback-card.bug {
+        border-left-color: #ff4d4d;
+    }
+
+    .feedback-card.suggestion {
+        border-left-color: #00ff88;
+    }
+
+    .feedback-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-family: monospace;
+        font-size: 0.75rem;
+    }
+
+    .feedback-subject {
+        font-size: 1.05rem;
+        color: var(--text-bright);
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .feedback-message {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text-dim);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 10px 14px;
+        border-radius: 4px;
+        margin: 0;
+    }
+
+    /* Actions */
+    .action-btn-mini {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .action-btn-mini:hover, .action-btn-mini:focus-visible {
+        border-color: var(--accent);
+        color: var(--accent);
+        outline: 2px solid var(--accent);
+    }
+
+    .action-btn-danger {
+        border-color: rgba(255, 77, 77, 0.4);
+        color: #ff7878;
+    }
+
+    .action-btn-danger:hover, .action-btn-danger:focus-visible {
+        background: rgba(255, 77, 77, 0.2);
+        border-color: #ff4d4d;
+        color: #fff;
+    }
+
+    .action-btn-success {
+        border-color: rgba(0, 255, 136, 0.4);
+        color: #00ff88;
+    }
+
+    .action-btn-success:hover, .action-btn-success:focus-visible {
+        background: rgba(0, 255, 136, 0.2);
+        border-color: #00ff88;
+        color: #fff;
+    }
+
+    /* Filter Box */
+    .filter-search-box {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid var(--border);
+        color: var(--text-bright);
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .filter-search-box:focus {
+        border-color: var(--accent);
+        outline: 2px solid var(--accent);
+    }
+</style>
+
+<div class="telemetry-shell">
+    <div id="telemetry-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+    <nav class="skip-nav-container" aria-label="Quick Jump Shortcuts">
+        <a href="#kpi-section" class="skip-nav-link">Skip to Key Metrics</a>
+        <a href="#downloads-section" class="skip-nav-link">Skip to Download Distribution</a>
+        <a href="#fleet-section" class="skip-nav-link">Skip to Hardware Fleet</a>
+        <a href="#feedback-section" class="skip-nav-link">Skip to User Feedback</a>
+    </nav>
+
+    <header class="telemetry-header-block">
+        <h1 class="telemetry-title">AUDIO PLAYBACK SUITE // USAGE & TELEMETRY REVIEW</h1>
+        <p class="telemetry-subhead">> LIVE FLEET ATTESTATION, DOWNLOAD ANALYTICS & BUG TELEMETRY</p>
+    </header>
+
+    <section id="kpi-section" aria-labelledby="kpi-heading">
+        <h2 id="kpi-heading" class="sr-only">Executive Key Metrics</h2>
+        <div class="kpi-grid">
+            <article class="kpi-card" aria-label="Total Package Downloads: {{ total_downloads }}">
+                <div class="kpi-label">TOTAL DOWNLOADS</div>
+                <div class="kpi-value" style="color: var(--accent);">{{ total_downloads }}</div>
+                <div class="kpi-sub">All Windows Packages</div>
+            </article>
+
+            <article class="kpi-card" aria-label="Active Hardware Trials: {{ summary.active_trials }}">
+                <div class="kpi-label">ACTIVE TRIALS</div>
+                <div class="kpi-value" style="color: #00ff88;">{{ summary.active_trials }}</div>
+                <div class="kpi-sub">Non-Revoked Handshakes</div>
+            </article>
+
+            <article class="kpi-card" aria-label="Registered Machine HWIDs: {{ summary.total_devices }}">
+                <div class="kpi-label">UNIQUE MACHINES</div>
+                <div class="kpi-value" style="color: #ffb000;">{{ summary.total_devices }}</div>
+                <div class="kpi-sub">Hardware Identifiers</div>
+            </article>
+
+            <article class="kpi-card" aria-label="Feedback Submissions: {{ total_feedback }}">
+                <div class="kpi-label">IN-APP REPORTS</div>
+                <div class="kpi-value" style="color: #67e8f9;">{{ total_feedback }}</div>
+                <div class="kpi-sub">Bugs & Suggestions</div>
+            </article>
+        </div>
+    </section>
+
+    <section id="downloads-section" aria-labelledby="dl-breakdown-heading">
+        <h2 id="dl-breakdown-heading" class="section-title">DOWNLOAD ANALYTICS & DISTRIBUTION</h2>
+        <p class="section-desc">Real-time breakdown of binary package downloads across all user distribution channels.</p>
+
+        <div class="table-container">
+            <table class="cyber-table">
+                <caption class="sr-only">Download Counts by Package</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">PACKAGE TITLE</th>
+                        <th scope="col">FILENAME</th>
+                        <th scope="col">FILE SIZE</th>
+                        <th scope="col">TOTAL DOWNLOADS</th>
+                        <th scope="col">DISTRIBUTION RATIO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pkg in package_breakdown %}
+                    <tr>
+                        <th scope="row" style="color: var(--text-bright); font-family: monospace;">{{ pkg.title }}</th>
+                        <td><code style="color: var(--accent);">{{ pkg.filename }}</code></td>
+                        <td>{{ pkg.size }}</td>
+                        <td style="font-weight: bold; color: var(--text-bright);">{{ pkg.count }}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="background: rgba(255,255,255,0.1); width: 100px; height: 8px; border-radius: 4px; overflow: hidden;" role="progressbar" aria-valuenow="{{ pkg.percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                    <div style="background: var(--accent); width: {{ pkg.percentage }}%; height: 100%;"></div>
+                                </div>
+                                <span style="font-family: monospace; font-size: 0.75rem;">{{ pkg.percentage }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if recent_downloads %}
+        <div style="margin-top: 20px;">
+            <h3 style="color: var(--text-bright); font-size: 1.1rem; margin-bottom: 10px;">RECENT DOWNLOAD EVENTS (LAST 25)</h3>
+            <div class="table-container">
+                <table class="cyber-table">
+                    <caption class="sr-only">Recent Application Download Events</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">TIMESTAMP</th>
+                            <th scope="col">PACKAGE</th>
+                            <th scope="col">VERSION</th>
+                            <th scope="col">CLIENT HASH</th>
+                            <th scope="col">USER-AGENT DETAILS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ev in recent_downloads %}
+                        <tr>
+                            <td style="font-family: monospace; font-size: 0.75rem;">{{ ev.formatted_time }}</td>
+                            <td style="color: var(--accent); font-family: monospace;">{{ ev.filename }}</td>
+                            <td>v{{ ev.version }}</td>
+                            <td><code style="color: #ffb000;">{{ ev.client_hash }}</code></td>
+                            <td style="font-size: 0.75rem; color: var(--text-dim);">{{ ev.user_agent }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <section id="fleet-section" aria-labelledby="fleet-heading">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <div>
+                <h2 id="fleet-heading" class="section-title">HARDWARE ATTESTATION FLEET (14-DAY TRIAL MONITOR)</h2>
+                <p class="section-desc" style="margin: 0;">Machine identifiers bound via quad-store synchronization and cloud handshake attestation.</p>
+            </div>
+            <div>
+                <input type="text" id="fleet-search" class="filter-search-box" placeholder="FILTER HWID OR STATUS..." onkeyup="filterFleetTable()" aria-label="Filter machines by HWID or status">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="cyber-table" id="fleet-table">
+                <caption class="sr-only">Fleet Hardware Identifiers and Trial Attestation Status</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">HARDWARE ID</th>
+                        <th scope="col">APP VER</th>
+                        <th scope="col">FIRST RUN (INCEPTION)</th>
+                        <th scope="col">LAST HANDSHAKE</th>
+                        <th scope="col">TRIAL EXPIRES</th>
+                        <th scope="col">REMAINING</th>
+                        <th scope="col">STATUS</th>
+                        {% if is_admin %}
+                        <th scope="col">REMOTE ADMIN CONTROLS</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lic in licenses %}
+                    <tr class="fleet-row" data-hwid="{{ lic.hwid }}" data-status="{{ lic.status }}">
+                        <th scope="row" style="font-family: monospace;">
+                            <span title="{{ lic.hwid }}" style="color: var(--text-bright);">{{ lic.hwid_short }}</span>
+                            <button type="button" class="action-btn-mini" onclick="copyHwid('{{ lic.hwid }}')" aria-label="Copy full HWID for {{ lic.hwid_short }}">COPY</button>
+                        </th>
+                        <td>v{{ lic.app_version }}</td>
+                        <td style="font-family: monospace; font-size: 0.75rem;">{{ lic.first_run_formatted }}</td>
+                        <td style="font-family: monospace; font-size: 0.75rem;">{{ lic.last_seen_formatted }}</td>
+                        <td style="font-family: monospace; font-size: 0.75rem;">{{ lic.expires_at_formatted }}</td>
+                        <td style="font-family: monospace; font-weight: bold;">{{ lic.days_remaining }} days</td>
+                        <td>
+                            <span class="status-pill status-{{ lic.status.lower() }}" id="status-badge-{{ lic.hwid }}">{{ lic.status }}</span>
+                        </td>
+                        {% if is_admin %}
+                        <td>
+                            <div style="display: flex; gap: 6px;">
+                                {% if lic.status == 'REVOKED' %}
+                                <button type="button" class="action-btn-mini action-btn-success" onclick="toggleRevoke('{{ lic.hwid }}')" aria-label="Reinstate license for {{ lic.hwid_short }}">REINSTATE</button>
+                                {% else %}
+                                <button type="button" class="action-btn-mini action-btn-danger" onclick="toggleRevoke('{{ lic.hwid }}')" aria-label="Revoke license for {{ lic.hwid_short }}">REVOKE</button>
+                                {% endif %}
+                                <button type="button" class="action-btn-mini" onclick="extendLicense('{{ lic.hwid }}')" aria-label="Extend trial 14 days for {{ lic.hwid_short }}">+14 DAYS</button>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="{% if is_admin %}8{% else %}7{% endif %}" style="text-align: center; color: var(--text-dim); padding: 30px;">
+                            No hardware attestation records logged yet. Handshake events will appear automatically when desktop clients connect.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="feedback-section" aria-labelledby="feedback-heading">
+        <h2 id="feedback-heading" class="section-title">IN-APP USER FEEDBACK & AUDIBLE BUG REPORTS</h2>
+        <p class="section-desc">Diagnostic reports and feature suggestions transmitted directly from desktop client instances.</p>
+
+        {% if feedback_list %}
+        <div class="feedback-grid">
+            {% for item in feedback_list %}
+            <article class="feedback-card {{ item.type }}" id="feedback-item-{{ item.id }}" aria-labelledby="fb-subj-{{ item.id }}">
+                <div class="feedback-meta">
+                    <div>
+                        <span class="status-pill status-{% if item.type == 'bug' %}revoked{% elif item.type == 'suggestion' %}active{% else %}expired{% endif %}">
+                            {{ item.type | upper }}
+                        </span>
+                        <span style="color: var(--text-dim); margin-left: 8px;">SUBMITTED: {{ item.formatted_time }}</span>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-dim);">CLIENT: v{{ item.app_version }} (HWID: {{ item.hwid[:8] }}...)</span>
+                        {% if is_admin %}
+                        <button type="button" class="action-btn-mini action-btn-danger" style="margin-left: 8px;" onclick="deleteFeedback('{{ item.id }}')" aria-label="Delete report {{ item.subject }}">DELETE</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <h3 class="feedback-subject" id="fb-subj-{{ item.id }}">{{ item.subject }}</h3>
+                <p class="feedback-message">{{ item.message }}</p>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="background: rgba(5, 7, 10, 0.7); border: 1px solid var(--border); border-radius: 8px; padding: 30px; text-align: center; color: var(--text-dim);">
+            No user feedback or bug reports submitted yet.
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+    function announce(msg) {
+        const el = document.getElementById('telemetry-announcer');
+        if (el) {
+            el.textContent = '';
+            setTimeout(() => { el.textContent = msg; }, 50);
+        }
+    }
+
+    function copyHwid(hwid) {
+        navigator.clipboard.writeText(hwid).then(() => {
+            announce(`Hardware ID copied to clipboard.`);
+        });
+    }
+
+    function filterFleetTable() {
+        const query = document.getElementById('fleet-search').value.toLowerCase();
+        const rows = document.querySelectorAll('.fleet-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const hwid = (row.getAttribute('data-hwid') || '').toLowerCase();
+            const status = (row.getAttribute('data-status') || '').toLowerCase();
+            if (hwid.includes(query) || status.includes(query)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        announce(`Filtering fleet: ${visibleCount} matching devices found.`);
+    }
+
+    {% if is_admin %}
+    async function toggleRevoke(hwid) {
+        if (!confirm(`Are you sure you want to toggle revocation status for HWID ${hwid}?`)) {
+            return;
+        }
+
+        announce(`Transmitting license revocation request for hardware identifier.`);
+        try {
+            const resp = await fetch('/api/audio_suite/admin/toggle_revoke', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ hwid: hwid })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce(data.message);
+                setTimeout(() => { location.reload(); }, 1000);
+            } else {
+                announce("Error updating revocation: " + (data.error || "Unknown"));
+            }
+        } catch (err) {
+            announce("Network connection failure while updating license.");
+        }
+    }
+
+    async function extendLicense(hwid) {
+        announce(`Transmitting trial extension request for hardware identifier.`);
+        try {
+            const resp = await fetch('/api/audio_suite/admin/extend_license', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ hwid: hwid, days: 14 })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                announce(data.message);
+                setTimeout(() => { location.reload(); }, 1000);
+            } else {
+                announce("Error extending trial: " + (data.error || "Unknown"));
+            }
+        } catch (err) {
+            announce("Network connection failure while extending trial.");
+        }
+    }
+
+    async function deleteFeedback(id) {
+        if (!confirm("Delete this in-app feedback report?")) return;
+
+        try {
+            const resp = await fetch('/api/audio_suite/admin/delete_feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                const item = document.getElementById(`feedback-item-${id}`);
+                if (item) item.remove();
+                announce("Feedback item successfully removed.");
+            }
+        } catch (err) {
+            announce("Network failure while deleting feedback item.");
+        }
+    }
+    {% endif %}
+</script>
+{% endblock %}

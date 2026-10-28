@@ -221,3 +221,10 @@ function openExplorer(name) {
     const url = `/api/projects/explorer/${target}`;
     window.open(url, '_blank');
 }
+
+function openAgent(name) {
+    const cleanName = String(name).trim();
+    const target = (cleanName === 'root' || cleanName === 'SYSTEM_CORE') ? 'root' : cleanName;
+    const url = `/ai_agent/?mode=root&project=${encodeURIComponent(target)}`;
+    window.open(url, '_blank');
+}
