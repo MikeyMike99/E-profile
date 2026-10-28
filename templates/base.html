@@ -304,7 +304,7 @@
         {% for tab in config.TABS %}
             {% set show_tab = True %}
             {% if not is_admin and not is_employer %}
-                {% if tab not in ['home', 'docs', 'bio', 'downloads', 'usage'] and ('master:view_tabs' not in permissions or ('exclude:tab:' ~ tab) in permissions) %}
+                {% if tab not in ['home', 'hub', 'docs', 'bio', 'downloads', 'usage'] and ('master:view_tabs' not in permissions or ('exclude:tab:' ~ tab) in permissions) %}
                     {% set show_tab = False %}
                 {% endif %}
             {% endif %}

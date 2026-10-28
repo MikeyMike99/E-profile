@@ -57,6 +57,8 @@ app.register_blueprint(docs_bp)
 from audio_suite_mod import audio_suite_bp
 app.register_blueprint(audio_suite_bp)
 
+from hub_mod import hub_bp
+app.register_blueprint(hub_bp)
 # --- AI AGENT PLUGIN (DISABLED PENDING UPDATE) ---
 # import sys
 # import os
