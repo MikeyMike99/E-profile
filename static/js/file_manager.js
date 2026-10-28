@@ -92,17 +92,34 @@ async function toggleUnroll(folderName) {
 }
 
 // --- 2. THE TERMINAL HUD ---
+let commandHistory = [];
+let historyIndex = -1;
+
+function toggleTerminal() {
+    const term = document.getElementById('terminal-overlay');
+    const input = document.getElementById('terminal-input');
+    if (!term) return;
+    const isHidden = term.style.display === 'none' || term.style.display === '';
+
+    if (isHidden) {
+        term.style.display = 'flex';
+        if (input) {
+            input.focus();
+            const promptEl = document.getElementById('terminal-prompt');
+            if (promptEl) promptEl.innerText = `${activeContext || 'root'}>`;
+        }
+    } else {
+        term.style.display = 'none';
+    }
+}
+
 window.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 't') {
+        e.preventDefault();
+        toggleTerminal();
+    } else if (e.key === 'Escape') {
         const term = document.getElementById('terminal-overlay');
-        const input = document.getElementById('terminal-input');
-        const isHidden = term.style.display === 'none' || term.style.display === '';
-
-        if (isHidden) {
-            term.style.display = 'flex';
-            input.focus();
-            document.getElementById('terminal-prompt').innerText = `${activeContext || 'root'}>`;
-        } else {
+        if (term && term.style.display === 'flex') {
             term.style.display = 'none';
         }
     }
@@ -114,8 +131,24 @@ function setupTerminalInput() {
     input.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter' && input.value.trim() !== '') {
             const cmd = input.value.trim();
+            commandHistory.push(cmd);
+            historyIndex = commandHistory.length;
             input.value = '';
             await executeCommand(cmd);
+        } else if (e.key === 'ArrowUp') {
+            if (commandHistory.length > 0 && historyIndex > 0) {
+                historyIndex--;
+                input.value = commandHistory[historyIndex];
+                setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
+            }
+        } else if (e.key === 'ArrowDown') {
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                input.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = commandHistory.length;
+                input.value = '';
+            }
         }
     });
 }
@@ -123,6 +156,27 @@ function setupTerminalInput() {
 async function executeCommand(cmd) {
     const project = document.body.getAttribute('data-project');
     const out = document.getElementById('terminal-output');
+    
+    if (cmd.toLowerCase() === 'clear') {
+        if (out) out.innerHTML = '';
+        return;
+    }
+    if (cmd.toLowerCase() === 'exit') {
+        const term = document.getElementById('terminal-overlay');
+        if (term) term.style.display = 'none';
+        return;
+    }
+
+    let runningIndicator = null;
+    if (out) {
+        out.innerHTML += `<div style="color:#888;">> ${cmd}</div>`;
+        runningIndicator = document.createElement('div');
+        runningIndicator.style.color = '#ffb700';
+        runningIndicator.textContent = cmd.startsWith('agy') ? '⏳ Running agy CLI agent...' : '⏳ Executing...';
+        out.appendChild(runningIndicator);
+        out.scrollTop = out.scrollHeight;
+    }
+
     try {
         const res = await fetch('/api/projects/explorer_logic/terminal', {
             method: 'POST',
@@ -130,16 +184,26 @@ async function executeCommand(cmd) {
             body: JSON.stringify({ command: cmd, project: project, path: activeContext })
         });
         const data = await res.json();
+        if (runningIndicator && runningIndicator.parentNode) {
+            runningIndicator.remove();
+        }
         if (out) {
-            out.innerHTML += `<div style="color:#888;">> ${cmd}</div><div>${data.output}</div>`;
+            const resultDiv = document.createElement('div');
+            resultDiv.textContent = data.output || '';
+            if (data.returncode !== undefined && data.returncode !== 0) {
+                resultDiv.style.color = '#ff5555';
+            }
+            out.appendChild(resultDiv);
             out.scrollTop = out.scrollHeight;
         }
-        if (!cmd.startsWith('cat')) loadFolders();
+        if (!cmd.startsWith('cat') && !cmd.startsWith('agy')) loadFolders();
     } catch (e) {
-        if (out) out.innerHTML += `<div style="color:red;">!! OS_BRIDGE_FAULT !!</div>`;
+        if (runningIndicator && runningIndicator.parentNode) {
+            runningIndicator.remove();
+        }
+        if (out) out.innerHTML += `<div style="color:red;">!! OS_BRIDGE_FAULT: ${e.message} !!</div>`;
     }
 }
-
 /**
  * FIXED BRIDGE: Opens the Surgery interface in a NEW TAB
  */

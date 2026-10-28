@@ -284,7 +284,7 @@
     <a href="/logout" class="hero-logout">LOG_OUT</a>
     {% endif %}
     {% if is_admin %}
-    <button id="btn-sync" onclick="syncGit()" class="hero-sync">GIT_SYNC</button>
+    <button id="btn-sync" onclick="syncGit(event)" class="hero-sync" title="Sync current branch (Shift+Click to specify branch)">GIT_SYNC</button>
     {% endif %}
 
     {% if session.get('impersonator_token') %}
@@ -359,19 +359,28 @@
             }
         }
 
-        async function syncGit() {
+        async function syncGit(event) {
             const btn = document.getElementById('btn-sync');
             if (!btn) return;
+            
+            let targetBranch = null;
+            if (event && event.shiftKey) {
+                targetBranch = prompt("Enter Git branch to sync with:", "main");
+                if (!targetBranch) return;
+            }
+
             const originalText = btn.innerText;
-            btn.innerText = "SYNCING...";
+            btn.innerText = targetBranch ? `SYNCING (${targetBranch})...` : "SYNCING...";
             btn.style.color = "#00f3ff";
             
             announceToScreenReader("Syncing with GitHub. Please wait.");
             
             try {
+                const reqBody = targetBranch ? JSON.stringify({ branch: targetBranch.trim() }) : JSON.stringify({});
                 const response = await fetch('/api/projects/explorer_logic/git_sync', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    body: reqBody
                 });
                 const data = await response.json();
                 

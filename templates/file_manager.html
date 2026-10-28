@@ -15,7 +15,7 @@
             <span class="label">SYSTEM_PATH:</span>
             <strong id="current-path-display">/{{ project_name }}</strong>
         </div>
-        <div class="system-status">
+        <div class="system-status" onclick="toggleTerminal()" onkeydown="if(event.key==='Enter'||event.key===' ')toggleTerminal()" style="cursor: pointer;" title="Toggle CLI Terminal (CTRL+ALT+T)" role="button" tabindex="0" aria-label="Toggle CLI Terminal">
             <span class="pulse-icon"></span>
             <span class="hint">CTRL+ALT+T // CLI_ACCESS</span>
         </div>
