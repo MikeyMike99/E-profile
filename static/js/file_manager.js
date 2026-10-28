@@ -95,32 +95,61 @@ async function toggleUnroll(folderName) {
 let commandHistory = [];
 let historyIndex = -1;
 
+function announceToScreenReader(message) {
+    let announcer = document.getElementById('sr-announcer');
+    if (!announcer) {
+        announcer = document.createElement('div');
+        announcer.id = 'sr-announcer';
+        announcer.className = 'sr-only';
+        announcer.setAttribute('aria-live', 'assertive');
+        announcer.setAttribute('aria-atomic', 'true');
+        document.body.appendChild(announcer);
+    }
+    announcer.textContent = '';
+    setTimeout(() => {
+        announcer.textContent = message;
+    }, 50);
+}
+
 function toggleTerminal() {
     const term = document.getElementById('terminal-overlay');
     const input = document.getElementById('terminal-input');
     if (!term) return;
-    const isHidden = term.style.display === 'none' || term.style.display === '';
+
+    const computedDisplay = window.getComputedStyle ? window.getComputedStyle(term).display : term.style.display;
+    const isHidden = computedDisplay === 'none' || term.style.display === 'none' || term.style.display === '';
 
     if (isHidden) {
         term.style.display = 'flex';
+        const promptEl = document.getElementById('terminal-prompt');
+        if (promptEl) promptEl.innerText = `${activeContext || 'root'}>`;
         if (input) {
-            input.focus();
-            const promptEl = document.getElementById('terminal-prompt');
-            if (promptEl) promptEl.innerText = `${activeContext || 'root'}>`;
+            setTimeout(() => {
+                input.focus();
+                input.select();
+            }, 60);
         }
+        announceToScreenReader("CLI Terminal opened. Type a command, or press Escape to close.");
     } else {
         term.style.display = 'none';
+        announceToScreenReader("CLI Terminal closed.");
     }
 }
 
 window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 't') {
+    const isT = (e.key && e.key.toLowerCase() === 't') || e.code === 'KeyT';
+    const isCtrlAltT = (e.ctrlKey || e.metaKey) && e.altKey && isT;
+    const isAltT = e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && isT;
+
+    if (isCtrlAltT || isAltT) {
         e.preventDefault();
+        e.stopPropagation();
         toggleTerminal();
     } else if (e.key === 'Escape') {
         const term = document.getElementById('terminal-overlay');
-        if (term && term.style.display === 'flex') {
-            term.style.display = 'none';
+        if (term && (term.style.display === 'flex' || (window.getComputedStyle && window.getComputedStyle(term).display === 'flex'))) {
+            e.preventDefault();
+            toggleTerminal();
         }
     }
 });
@@ -134,6 +163,7 @@ function setupTerminalInput() {
             commandHistory.push(cmd);
             historyIndex = commandHistory.length;
             input.value = '';
+            announceToScreenReader("Executing: " + cmd);
             await executeCommand(cmd);
         } else if (e.key === 'ArrowUp') {
             if (commandHistory.length > 0 && historyIndex > 0) {
@@ -162,8 +192,7 @@ async function executeCommand(cmd) {
         return;
     }
     if (cmd.toLowerCase() === 'exit') {
-        const term = document.getElementById('terminal-overlay');
-        if (term) term.style.display = 'none';
+        toggleTerminal();
         return;
     }
 
@@ -195,6 +224,8 @@ async function executeCommand(cmd) {
             }
             out.appendChild(resultDiv);
             out.scrollTop = out.scrollHeight;
+            const preview = (data.output || '').trim().slice(0, 120);
+            announceToScreenReader("Command finished. " + (preview || "No output."));
         }
         if (!cmd.startsWith('cat') && !cmd.startsWith('agy')) loadFolders();
     } catch (e) {
@@ -202,9 +233,9 @@ async function executeCommand(cmd) {
             runningIndicator.remove();
         }
         if (out) out.innerHTML += `<div style="color:red;">!! OS_BRIDGE_FAULT: ${e.message} !!</div>`;
+        announceToScreenReader("Error executing command: " + e.message);
     }
 }
-/**
  * FIXED BRIDGE: Opens the Surgery interface in a NEW TAB
  */
 function openSurgery(path) {
