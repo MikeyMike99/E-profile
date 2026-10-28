@@ -189,6 +189,35 @@
             box-shadow: 0 0 20px rgba(255, 45, 141, 0.2);
         }
 
+        .cyber-btn {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            border-radius: 2px;
+        }
+
+        .cyber-btn:hover {
+            background: rgba(0, 229, 255, 0.12);
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+        }
+
+        .cyber-btn:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
         /* --- TABLE --- */
         .cyber-table {
             width: 100%;
@@ -455,11 +484,16 @@
         </div>
         {% endif %}
         {% endwith %}
+        <!-- ADMIN DASHBOARD SUB-NAVIGATION TABS -->
+        <nav class="admin-tab-nav" aria-label="Admin Navigation Tabs" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px;">
+            <a href="#section-identities" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem;">[ IDENTITIES ]</a>
+            <a href="#section-server-diagnostics" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--magenta); color: var(--magenta); font-weight: bold; background: rgba(255, 45, 141, 0.12);">[ SERVER STORAGE & PACKAGES ]</a>
+            <a href="#section-git-sync" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--amber); color: var(--amber);">[ GIT SYNC ]</a>
+            <a href="#section-analytics" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--cyan); color: var(--cyan);">[ ANALYTICS ]</a>
+        </nav>
 
-
-        <div
+        <div id="section-identities"
             style="margin-bottom: 30px; background: rgba(0,0,0,0.4); padding: 20px; border: 1px solid rgba(255,255,255,0.1);">
-            <h2 style="font-size:1rem; color:var(--cyan); margin-top:0;">MANAGE_PROFILES</h2>
             <!-- Admin User List Section -->
             <div class="user-profiles-list" style="margin-bottom: 20px;">
                 <h3 style="color: var(--cyan); border-bottom: 1px solid var(--cyan); padding-bottom: 5px;">ACTIVE
@@ -588,8 +622,221 @@
                 </form>
             </div>
         </div>
+        <!-- PYTHONANYWHERE SERVER DIAGNOSTICS & STORAGE HUB -->
+        <section id="section-server-diagnostics" aria-labelledby="server-diag-title" style="border-top: 1px solid rgba(255, 45, 141, 0.4); background: rgba(0,0,0,0.4); padding: 24px; border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 4px; margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid rgba(0,229,255,0.2); padding-bottom: 12px;">
+                <div>
+                    <h2 id="server-diag-title" class="subtitle" style="margin: 0; font-size: 1.05rem; color: var(--magenta); letter-spacing: 0.15em; font-weight: bold;">
+                        [PYTHONANYWHERE] SERVER_STORAGE & INSTALLED_PACKAGES
+                    </h2>
+                    <span style="font-size: 0.72rem; color: var(--text-dim);">Live filesystem quota, home space consumption, AGY presence, and pip package catalog</span>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="button" onclick="refreshDiagnostics()" class="cyber-btn" id="btn-refresh-diag" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--cyan); color: var(--cyan);">
+                        ↻ Re-Scan Server
+                    </button>
+                    <button type="button" onclick="purgePipCache()" class="cyber-btn" id="btn-purge-pip" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--amber); color: var(--amber);">
+                        🧹 Purge Pip Cache
+                    </button>
+                </div>
+            </div>
+
+            <!-- STATUS TILES ROW -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <!-- DISK QUOTA & USAGE CARD -->
+                <fieldset style="background: rgba(0,0,0,0.5); padding: 16px; border: 1px solid var(--cyan); border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.75rem; color: var(--cyan); font-weight: bold; padding: 0 6px;">DISK STORAGE QUOTA</legend>
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
+                            <span style="color: var(--text-dim);">Usage Ratio:</span>
+                            <span style="font-weight: bold; color: {% if diagnostics_data.storage.disk_pct > 80 %}#ff4d4d{% elif diagnostics_data.storage.disk_pct > 65 %}var(--amber){% else %}#00ff88{% endif %}; font-family: var(--font-mono);">
+                                {{ diagnostics_data.storage.disk_used_mb }} MB / {{ diagnostics_data.storage.disk_total_mb }} MB ({{ diagnostics_data.storage.disk_pct }}%)
+                            </span>
+                        </div>
+                        <!-- Progress bar -->
+                        <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;" role="progressbar" aria-valuenow="{{ diagnostics_data.storage.disk_pct }}" aria-valuemin="0" aria-valuemax="100">
+                            <div style="width: {{ diagnostics_data.storage.disk_pct }}%; height: 100%; background: {% if diagnostics_data.storage.disk_pct > 80 %}#ff4d4d{% elif diagnostics_data.storage.disk_pct > 65 %}var(--amber){% else %}var(--cyan){% endif %}; transition: width 0.3s ease;"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-dim); margin-top: 6px;">
+                        <span>Free Quota: <strong style="color: var(--text-main);">{{ diagnostics_data.storage.disk_free_mb }} MB</strong></span>
+                        <span>Home Files: <strong style="color: var(--cyan);">{{ diagnostics_data.storage.home_consumed_mb }} MB</strong></span>
+                    </div>
+                </fieldset>
+
+                <!-- AGY CLI STATUS CARD -->
+                <fieldset style="background: rgba(0,0,0,0.5); padding: 16px; border: 1px solid {% if diagnostics_data.agy.installed %}#00ff88{% else %}var(--amber){% endif %}; border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.75rem; color: {% if diagnostics_data.agy.installed %}#00ff88{% else %}var(--amber){% endif %}; font-weight: bold; padding: 0 6px;">ANTIGRAVITY CLI (agy)</legend>
+                    <div style="margin-bottom: 6px;">
+                        {% if diagnostics_data.agy.installed %}
+                        <span style="display: inline-block; padding: 3px 8px; background: rgba(0,255,136,0.15); border: 1px solid #00ff88; color: #00ff88; font-size: 0.72rem; font-weight: bold; border-radius: 2px;">
+                            [ INSTALLED ]
+                        </span>
+                        <div style="font-size: 0.75rem; margin-top: 6px; word-break: break-all;">
+                            <span style="color: var(--text-dim);">Binary:</span> <code style="color: var(--cyan);">{{ diagnostics_data.agy.binary_path }}</code>
+                        </div>
+                        <div style="font-size: 0.75rem; margin-top: 4px;">
+                            <span style="color: var(--text-dim);">Version:</span> <strong style="color: var(--text-main);">{{ diagnostics_data.agy.version or 'Active' }}</strong>
+                        </div>
+                        {% else %}
+                        <span style="display: inline-block; padding: 3px 8px; background: rgba(255,176,32,0.15); border: 1px solid var(--amber); color: var(--amber); font-size: 0.72rem; font-weight: bold; border-radius: 2px;">
+                            [ NOT INSTALLED ]
+                        </span>
+                        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 6px;">
+                            'agy' binary is not present in PATH or ~/.local/bin/agy.
+                        </div>
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <!-- PYTHON RUNTIME CARD -->
+                <fieldset style="background: rgba(0,0,0,0.5); padding: 16px; border: 1px solid var(--magenta); border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.75rem; color: var(--magenta); font-weight: bold; padding: 0 6px;">PYTHON RUNTIME</legend>
+                    <div style="font-size: 0.75rem; line-height: 1.6;">
+                        <div><span style="color: var(--text-dim);">Version:</span> <strong style="color: var(--text-main);">Python {{ diagnostics_data.system.python_version }}</strong></div>
+                        <div style="word-break: break-all;"><span style="color: var(--text-dim);">Interpreter:</span> <code style="font-size: 0.68rem; color: var(--cyan);">{{ diagnostics_data.system.python_executable }}</code></div>
+                        <div><span style="color: var(--text-dim);">Environment:</span> <span style="font-weight: bold; color: {% if diagnostics_data.system.is_virtualenv %}#00ff88{% else %}var(--amber){% endif %};">{% if diagnostics_data.system.is_virtualenv %}VIRTUALENV ACTIVE{% else %}HOST PYTHON{% endif %}</span></div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- SPACE BREAKDOWN: DIRECTORIES & LARGEST FILES -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                <!-- TOP DIRECTORIES -->
+                <fieldset style="background: rgba(0,0,0,0.4); padding: 16px; border: 1px solid var(--amber); border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.75rem; color: var(--amber); font-weight: bold; padding: 0 6px;">
+                        SPACE CONSUMPTION: TOP DIRECTORIES (~/)
+                    </legend>
+                    <p style="font-size: 0.72rem; color: var(--text-dim); margin: 0 0 10px 0;">
+                        Top folders consuming disk quota inside user home directory.
+                    </p>
+
+                    <!-- Cache Quick Summary -->
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 3px; font-size: 0.72rem;">
+                        <span>pip cache: <strong style="color: var(--amber);">{{ diagnostics_data.storage.cache_breakdown.pip_cache_mb }} MB</strong></span>
+                        <span>•</span>
+                        <span>virtualenvs: <strong style="color: var(--cyan);">{{ diagnostics_data.storage.cache_breakdown.virtualenvs_mb }} MB</strong></span>
+                        <span>•</span>
+                        <span>git repo: <strong style="color: var(--text-main);">{{ diagnostics_data.storage.cache_breakdown.git_repo_mb }} MB</strong></span>
+                    </div>
+
+                    <div style="max-height: 220px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; color: var(--text-dim);">
+                                    <th style="padding: 4px 6px;">FOLDER</th>
+                                    <th style="padding: 4px 6px; text-align: right;">SIZE (MB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in diagnostics_data.storage.top_directories %}
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding: 4px 6px; color: {% if d.size_mb > 50 %}var(--amber){% else %}var(--cyan){% endif %}; font-family: var(--font-mono);">
+                                        📁 {{ d.name }}
+                                    </td>
+                                    <td style="padding: 4px 6px; text-align: right; font-weight: bold;">
+                                        {{ d.size_mb }} MB
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="2" style="padding: 8px; text-align: center; color: var(--text-dim);">No directory entries found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <!-- LARGEST FILES -->
+                <fieldset style="background: rgba(0,0,0,0.4); padding: 16px; border: 1px solid var(--cyan); border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.75rem; color: var(--cyan); font-weight: bold; padding: 0 6px;">
+                        LARGEST INDIVIDUAL FILES (> 1 MB)
+                    </legend>
+                    <p style="font-size: 0.72rem; color: var(--text-dim); margin: 0 0 10px 0;">
+                        Identifies residual archives, wheel caches, or database files.
+                    </p>
+
+                    <div style="max-height: 260px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.72rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; color: var(--text-dim);">
+                                    <th style="padding: 4px 6px;">FILE / PATH</th>
+                                    <th style="padding: 4px 6px; text-align: right;">SIZE (MB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for f in diagnostics_data.storage.largest_files %}
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding: 4px 6px; word-break: break-all;" title="{{ f.rel_path }}">
+                                        <span style="color: var(--text-main); font-weight: bold;">{{ f.name }}</span><br>
+                                        <span style="font-size: 0.65rem; color: var(--text-dim);">~/{{ f.rel_path }}</span>
+                                    </td>
+                                    <td style="padding: 4px 6px; text-align: right; color: var(--amber); font-weight: bold; white-space: nowrap;">
+                                        {{ f.size_mb }} MB
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="2" style="padding: 8px; text-align: center; color: var(--text-dim);">No files over 1 MB detected.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- INSTALLED PYTHON PACKAGES -->
+            <fieldset style="background: rgba(0,0,0,0.4); padding: 16px; border: 1px solid var(--cyan); border-radius: 4px; margin: 0;">
+                <legend style="font-size: 0.75rem; color: var(--cyan); font-weight: bold; padding: 0 6px;">
+                    INSTALLED PYTHON PACKAGES (pip list: <span id="pkg-count-badge">{{ diagnostics_data.packages.count }}</span> packages)
+                </legend>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <input type="text" id="diag-pkg-filter" oninput="filterPackages()" placeholder="Search installed packages (e.g. 'antigravity', 'flask', 'requests')..." 
+                               class="cyber-input" style="padding: 8px 12px; font-size: 0.8rem; width: 100%;">
+                    </div>
+                    <span id="diag-pkg-filter-count" style="font-size: 0.75rem; color: var(--text-dim); white-space: nowrap;">
+                        Showing {{ diagnostics_data.packages.count }} of {{ diagnostics_data.packages.count }}
+                    </span>
+                </div>
+
+                <div style="max-height: 280px; overflow-y: auto;">
+                    <table id="diag-pkg-table" style="width: 100%; border-collapse: collapse; font-size: 0.75rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(0,229,255,0.3); text-align: left; color: var(--cyan);">
+                                <th style="padding: 6px 8px; width: 28%;">PACKAGE NAME</th>
+                                <th style="padding: 6px 8px; width: 18%;">VERSION</th>
+                                <th style="padding: 6px 8px;">DESCRIPTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pkg in diagnostics_data.packages.pkg_list %}
+                            <tr class="pkg-row" data-pkg-name="{{ pkg.name | lower }}" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 5px 8px; font-weight: bold; color: {% if 'antigravity' in pkg.name.lower() %}#00ff88{% else %}var(--text-main){% endif %};">
+                                    {{ pkg.name }}
+                                    {% if 'antigravity' in pkg.name.lower() %}
+                                    <span style="font-size: 0.65rem; color: #00ff88; margin-left: 4px;">[AGENT_CORE]</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 5px 8px; color: var(--cyan); font-family: var(--font-mono);">
+                                    {{ pkg.version }}
+                                </td>
+                                <td style="padding: 5px 8px; color: var(--text-dim); font-size: 0.7rem;">
+                                    {{ pkg.summary or 'No summary recorded' }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </section>
+
         <!-- GIT SYNC & INDEXING HUB -->
-        <div style="border-top: 1px solid rgba(0, 229, 255, 0.2); padding-top: 20px; margin-bottom: 20px;">
+        <div id="section-git-sync" style="border-top: 1px solid rgba(0, 229, 255, 0.2); padding-top: 20px; margin-bottom: 20px;">
             <p class="subtitle" style="text-align: center; margin-bottom: 20px;">GIT_SYNC_HUB & DISK_INDEXER</p>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -1279,6 +1526,76 @@
                 }
             }
         });
+
+        function filterPackages() {
+            const input = document.getElementById('diag-pkg-filter').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.pkg-row');
+            let visible = 0;
+            rows.forEach(row => {
+                const name = row.getAttribute('data-pkg-name') || '';
+                if (!input || name.includes(input)) {
+                    row.style.display = '';
+                    visible++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            const badge = document.getElementById('diag-pkg-filter-count');
+            if (badge) {
+                badge.textContent = `Showing ${visible} of ${rows.length}`;
+            }
+        }
+
+        async function refreshDiagnostics() {
+            const btn = document.getElementById('btn-refresh-diag');
+            if (btn) {
+                btn.textContent = 'Scanning...';
+                btn.disabled = true;
+            }
+            try {
+                const res = await fetch('/admin/api/diagnostics?refresh=1');
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to refresh diagnostics: ' + res.statusText);
+                }
+            } catch (e) {
+                alert('Network error while refreshing diagnostics: ' + e);
+            } finally {
+                if (btn) {
+                    btn.textContent = '↻ Re-Scan Server';
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        async function purgePipCache() {
+            if (!confirm('Are you sure you want to purge ~/.cache/pip? This will safely delete temporary pip wheel downloads to reclaim disk space.')) {
+                return;
+            }
+            const btn = document.getElementById('btn-purge-pip');
+            if (btn) {
+                btn.textContent = 'Purging...';
+                btn.disabled = true;
+            }
+            try {
+                const res = await fetch('/admin/api/purge_pip_cache', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert('Error purging cache: ' + data.message);
+                }
+            } catch (e) {
+                alert('Request failed: ' + e);
+            } finally {
+                if (btn) {
+                    btn.textContent = '🧹 Purge Pip Cache';
+                    btn.disabled = false;
+                }
+            }
+        }
     </script>
 </body>
 
