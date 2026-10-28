@@ -15,9 +15,9 @@
             <span class="label">SYSTEM_PATH:</span>
             <strong id="current-path-display">/{{ project_name }}</strong>
         </div>
-        <div class="system-status" onclick="toggleTerminal()" onkeydown="if(event.key==='Enter'||event.key===' ')toggleTerminal()" style="cursor: pointer;" title="Toggle CLI Terminal (CTRL+ALT+T)" role="button" tabindex="0" aria-label="Toggle CLI Terminal">
+        <div class="system-status" onclick="toggleTerminal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTerminal();}" style="cursor: pointer;" title="Toggle CLI Terminal (CTRL+ALT+T or ALT+T)" role="button" tabindex="0" aria-label="Toggle CLI Terminal (Shortcut: Ctrl+Alt+T or Alt+T)" aria-keyshortcuts="Control+Alt+T Alt+T">
             <span class="pulse-icon"></span>
-            <span class="hint">CTRL+ALT+T // CLI_ACCESS</span>
+            <span class="hint">CTRL+ALT+T or ALT+T // CLI_ACCESS</span>
         </div>
     </header>
 
@@ -25,13 +25,16 @@
         <div class="loading-state">INITIALIZING_FS_STREAM...</div>
     </main>
 
-    <div id="terminal-overlay">
-        <div id="terminal-output"></div>
+    <div id="terminal-overlay" role="region" aria-label="Interactive CLI Terminal">
+        <div id="terminal-output" aria-live="polite" aria-atomic="false"></div>
         <div class="terminal-input-row">
-            <span id="terminal-prompt">root@architect:~$</span>
-            <input type="text" id="terminal-input" spellcheck="false" autocomplete="off">
+            <label for="terminal-input" id="terminal-prompt" class="terminal-prompt-label">root@architect:~$</label>
+            <input type="text" id="terminal-input" spellcheck="false" autocomplete="off" aria-label="Terminal command input" aria-describedby="terminal-prompt">
         </div>
     </div>
+
+    <!-- Screen Reader Live Announcer -->
+    <div id="sr-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
 
     <footer class="footer">
         <div class="auth-info">

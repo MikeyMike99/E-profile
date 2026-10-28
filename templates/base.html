@@ -405,6 +405,18 @@
                 btn.style.color = "";
             }, 3000);
         }
+
+        // Global Shortcut for Workstation CLI Terminal (Ctrl+Alt+T or Alt+T)
+        window.addEventListener('keydown', function(e) {
+            const isT = (e.key && e.key.toLowerCase() === 't') || e.code === 'KeyT';
+            const isCtrlAltT = (e.ctrlKey || e.metaKey) && e.altKey && isT;
+            const isAltT = e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && isT;
+            if (isCtrlAltT || isAltT) {
+                e.preventDefault();
+                announceToScreenReader("Teleporting to CLI Terminal Workstation...");
+                window.location.href = '/api/projects/explorer/root/';
+            }
+        });
     </script>
     {% endif %}
 
