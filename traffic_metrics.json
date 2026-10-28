@@ -1,5 +1,5 @@
 {
-    "total_views": 1459,
+    "total_views": 1484,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -45,18 +45,19 @@
         "d01be10751407e46ead2bcf799982ad2",
         "ad664c459c207d964dd12c6f801f21c9",
         "a512a0dd6b94e5a79b8aa2f66f242802",
-        "895058b3a32ec37fc552f6bfc510143c"
+        "895058b3a32ec37fc552f6bfc510143c",
+        "bda754a54903b85a541ee773c5e7fa33"
     ],
     "paths": {
-        "/": 514,
-        "/favicon.ico": 324,
-        "/projects": 34,
-        "/ai_agent": 25,
-        "/login": 100,
-        "/ai_agent/": 21,
+        "/": 518,
+        "/favicon.ico": 327,
+        "/projects": 35,
+        "/ai_agent": 26,
+        "/login": 103,
+        "/ai_agent/": 24,
         "/ws": 123,
         "/ai_agent/api/chat": 3,
-        "/ai_agent/api/stream": 8,
+        "/ai_agent/api/stream": 9,
         "/robots.txt": 71,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
@@ -102,7 +103,7 @@
         "/docs/echoes/CLASS_WORLD_ARCHITECTURE": 2,
         "/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 10,
         "/docs/echoes/MENU_CONFIG": 2,
-        "/docs/manifesto/00_The_Forensic_Timeline": 1,
+        "/docs/manifesto/00_The_Forensic_Timeline": 2,
         "/docs/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY": 1,
         "/docs/textbook/Chapter_01_Introduction_To_Zero_Trust": 1,
         "/edit_profile": 5,
@@ -122,6 +123,10 @@
         "/docs/manifesto/02_The_Echoes_Architecture.md": 3,
         "/hub": 4,
         "/ai_agent/api/projects": 2,
-        "/ai_agent/api/conversations": 1
+        "/ai_agent/api/conversations": 1,
+        "/ai_agent/):": 1,
+        "/ai_agent/api/auth_check": 5,
+        "/ai_agent/login": 1,
+        "/access/005333e6-42b3-438c-b1fc-5bbc309d2ccf": 1
     }
 }
