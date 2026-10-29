@@ -209,8 +209,8 @@ def inject_system():
 @app.route('/', defaults={'path': 'home'})
 @app.route('/<path:path>')
 def dynamic_route(path):
-    # CRITICAL: Prevents this route from stealing API calls meant for Surgery/Explorer
-    if path.startswith('api'):
+    # CRITICAL: Prevents this route from stealing API or AI Agent calls
+    if path.startswith('api') or path.startswith('ai_agent'):
         abort(404)
 
     if path not in config.TABS: 

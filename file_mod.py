@@ -322,18 +322,15 @@ def git_sync():
 
     if os.name != 'nt':
         shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
-        shutil.rmtree(target / ".git" / "modules", ignore_errors=True)
-        submod_worktree = target / "content" / "projects" / "engines" / "antigravity_agent"
-        if submod_worktree.is_dir():
-            for child in submod_worktree.iterdir():
-                if child.is_dir():
-                    shutil.rmtree(child, ignore_errors=True)
-                else:
-                    child.unlink(missing_ok=True)
+        pack_dir = target / ".git" / "objects" / "pack"
+        if pack_dir.is_dir():
+            for tmp_pack in pack_dir.glob("tmp_*"):
+                tmp_pack.unlink(missing_ok=True)
+        (target / ".git" / "gc.log").unlink(missing_ok=True)
 
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
-    subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'all'], cwd=str(target))
+    subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'], cwd=str(target))
 
     run_git_cmd(['add', '.'])
     run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
@@ -357,8 +354,15 @@ def git_sync():
 
     else:
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
-        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'all'])
         run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
+        run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
+        run_git_cmd(['submodule', 'sync'])
+        submod_url = f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git' if token else 'https://github.com/MikeyMike99/DevCore.git'
+        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', submod_url])
+        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
+        run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
+        run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
+        run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
 
         if local_branch == 'master' and target_branch == 'main':
             run_git_cmd(['push', authenticated_url, 'master:main'])

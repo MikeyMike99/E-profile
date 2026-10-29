@@ -108,6 +108,8 @@ class SecurityAuditor:
                 self.audit_stage_5_inplace_editing()
             if not self.stage_filter or self.stage_filter == 6:
                 self.audit_stage_6_sync_persistence()
+            if not self.stage_filter or self.stage_filter == 7:
+                self.audit_stage_7_agent_and_demo_routing()
         finally:
             self.cleanup_canaries()
 
@@ -429,6 +431,128 @@ class SecurityAuditor:
         self.record("Stage 6", "SYNC-02", "Central Docs synchronization script compiles without AST syntax errors", script_ok, f"Script path: {sync_script}")
 
     # =========================================================================
+    # STAGE 7: SIRAUGGA AGENT BUTTON vs TEST DEMO ROUTING & SUBMODULE INTEGRITY
+    # =========================================================================
+    def audit_stage_7_agent_and_demo_routing(self):
+        if not self.json_output:
+            print("\n\033[94m--- STAGE 7: Siraugga Agent Button vs Test Demo Routing & Submodule Integrity ---\033[0m")
+
+        submod_plugin = EPROFILE_ROOT / "content" / "projects" / "engines" / "antigravity_agent" / "ai_plugin.py"
+        file_mod_src = (EPROFILE_ROOT / "file_mod.py").read_text(encoding="utf-8", errors="ignore")
+        post_sync_src = (EPROFILE_ROOT / "post_sync.py").read_text(encoding="utf-8", errors="ignore")
+        submod_preserved = (
+            submod_plugin.exists()
+            and "ai" in app.blueprints
+            and "submodule', 'update'" in file_mod_src
+            and '"deinit"' not in post_sync_src
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-01",
+            "Siraugga submodule ai_plugin.py exists, Blueprint is mounted, and sync scripts preserve submodule",
+            submod_preserved,
+            f"submod_plugin={submod_plugin.exists()}, ai_bp={'ai' in app.blueprints}",
+        )
+
+        with self.client.session_transaction() as sess:
+            sess.clear()
+            sess["admin"] = True
+            sess["is_admin"] = True
+            sess["username"] = "admin"
+
+        r_agent = self.client.get("/ai_agent/?mode=root&project=root", follow_redirects=False)
+        html_agent = r_agent.get_data(as_text=True)
+        with self.client.session_transaction() as sess:
+            scope_after_agent = sess.get("agent_token_scope")
+            auth_after_agent = sess.get("agent_authenticated")
+
+        agent_btn_ok = (
+            r_agent.status_code == 200
+            and scope_after_agent == "root"
+            and auth_after_agent is True
+            and "Siraugga Command Center" in html_agent
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-02",
+            "Admin AGENT button (/ai_agent/?mode=root&project=root) launches Siraugga Command Center in root scope (HTTP 200, never redirects to Home)",
+            agent_btn_ok,
+            f"HTTP {r_agent.status_code}, scope={scope_after_agent}, location={r_agent.headers.get('Location')}",
+        )
+
+        r_demo = self.client.get("/ai_agent/login?demo=1", follow_redirects=False)
+        html_demo = r_demo.get_data(as_text=True)
+        with self.client.session_transaction() as sess:
+            scope_after_demo = sess.get("agent_token_scope")
+            auth_after_demo = sess.get("agent_authenticated")
+
+        demo_btn_ok = (
+            r_demo.status_code == 200
+            and scope_after_demo == "demo"
+            and not auth_after_demo
+            and "Siraugga Command Center" not in html_demo
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-03",
+            "Test Demo button (/ai_agent/login?demo=1) isolates demo scope and renders Demo authentication page (distinct from AGENT button)",
+            demo_btn_ok,
+            f"HTTP {r_demo.status_code}, scope={scope_after_demo}, auth={auth_after_demo}",
+        )
+
+        r_switch = self.client.get("/ai_agent/?mode=root&project=antigravity_agent", follow_redirects=False)
+        html_switch = r_switch.get_data(as_text=True)
+        with self.client.session_transaction() as sess:
+            scope_after_switch = sess.get("agent_token_scope")
+            auth_after_switch = sess.get("agent_authenticated")
+
+        switch_ok = (
+            r_switch.status_code == 200
+            and scope_after_switch == "root"
+            and auth_after_switch is True
+            and "Siraugga Command Center" in html_switch
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-04",
+            "Clicking AGENT button after Test Demo immediately restores root scope and loads Siraugga Command Center",
+            switch_ok,
+            f"HTTP {r_switch.status_code}, scope={scope_after_switch}",
+        )
+
+        with self.client.session_transaction() as sess:
+            sess.clear()
+
+        r_unauth = self.client.get("/ai_agent/?mode=root&project=root", follow_redirects=False)
+        unauth_loc = r_unauth.headers.get("Location", "")
+        unauth_ok = r_unauth.status_code in (301, 302) and "/ai_agent/login" in unauth_loc and "/home" not in unauth_loc
+        self.record(
+            "Stage 7",
+            "AGENT-05",
+            "Unauthenticated visitor hitting AGENT route is redirected to /ai_agent/login (never to /home)",
+            unauth_ok,
+            f"HTTP {r_unauth.status_code}, Location={unauth_loc}",
+        )
+
+        projects_tpl = (EPROFILE_ROOT / "templates" / "projects.html").read_text(encoding="utf-8", errors="ignore")
+        projects_js = (EPROFILE_ROOT / "static" / "js" / "projects.js").read_text(encoding="utf-8", errors="ignore")
+        server_src = (EPROFILE_ROOT / "server.py").read_text(encoding="utf-8", errors="ignore")
+        ui_contract_ok = (
+            "openAgent('root')" in projects_tpl
+            and "openAgent('{{ project.name }}')" in projects_tpl
+            and 'href="/ai_agent/login?demo=1"' in projects_tpl
+            and "/ai_agent/?mode=root&project=" in projects_js
+            and "path.startswith('ai_agent')" in server_src
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-06",
+            "UI templates & server router enforce distinct AGENT (?mode=root) vs Test Demo (/login?demo=1) bindings and block Home fallback redirects",
+            ui_contract_ok,
+            "Verified projects.html, projects.js, and server.py dynamic_route guard",
+        )
+
+    # =========================================================================
     # CLEANUP HOOK (Clean Workspace Protocol)
     # =========================================================================
     def cleanup_canaries(self):
@@ -469,7 +593,7 @@ class SecurityAuditor:
 def main():
     parser = argparse.ArgumentParser(description="E-Profile & Documentation Vault Security Audit Suite")
     parser.add_argument("--verbose", "-v", action="store_true", help="Print detailed diagnostic lines for all checks")
-    parser.add_argument("--stage", "-s", type=int, choices=[1, 2, 3, 4, 5, 6], help="Run a specific audit stage (1-6)")
+    parser.add_argument("--stage", "-s", type=int, choices=[1, 2, 3, 4, 5, 6, 7], help="Run a specific audit stage (1-7)")
     parser.add_argument("--json", "-j", action="store_true", help="Output audit results in machine-readable JSON format")
     args = parser.parse_args()
 
