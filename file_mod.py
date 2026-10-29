@@ -320,19 +320,24 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 3. Pre-clean pip cache on server to prevent disk quota exhaustion before git operations
     if os.name != 'nt':
         shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
+        shutil.rmtree(target / ".git" / "modules", ignore_errors=True)
+        submod_worktree = target / "content" / "projects" / "engines" / "antigravity_agent"
+        if submod_worktree.is_dir():
+            for child in submod_worktree.iterdir():
+                if child.is_dir():
+                    shutil.rmtree(child, ignore_errors=True)
+                else:
+                    child.unlink(missing_ok=True)
 
-    # 4. Ensure git identity
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
+    subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'all'], cwd=str(target))
 
-    # Commit any local uncommitted work first so branch switching or pulling doesn't conflict
     run_git_cmd(['add', '.'])
     run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
 
-    # 4. Enforce single-branch ('main') checkout and prune legacy branches
     if local_branch != 'main':
         run_git_cmd(['checkout', '-B', 'main'])
         if local_branch == 'clean-main':
@@ -340,33 +345,21 @@ def git_sync():
             run_git_cmd(['push', authenticated_url, '--delete', 'clean-main'])
         local_branch = 'main'
 
-    # 5. Environment-Specific Logic
     is_windows = (os.name == 'nt')
 
     if is_windows:
-        # --- LOCAL WINDOWS ENVIRONMENT ---
         output_log += f"[System] Local Windows environment detected (Branch: {target_branch})...\n"
-        
-        # Merge strategy to prevent conflict markers locally
-        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '-X', 'ours'])
+        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--no-recurse-submodules', '-X', 'ours'])
         if local_branch == target_branch:
             run_git_cmd(['push', authenticated_url, target_branch])
         else:
             run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
 
     else:
-        # --- PYTHONANYWHERE SERVER ENVIRONMENT ---
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
-        
+        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'all'])
         run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
-        run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
-        run_git_cmd(['submodule', 'sync'])
-        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git'])
-        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
-        run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
-        run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
-        run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
-        
+
         if local_branch == 'master' and target_branch == 'main':
             run_git_cmd(['push', authenticated_url, 'master:main'])
         elif local_branch == target_branch:
