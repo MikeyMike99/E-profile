@@ -1,47 +1,26 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
 
 def main():
     root = Path(__file__).resolve().parent
-    token = ""
-    token_file = root / "gethub_token.txt"
-    if token_file.exists():
-        token = token_file.read_text(encoding="utf-8").strip()
-    if not token:
-        token = os.environ.get("GITHUB_TOKEN", "").strip()
+    py_bin = shutil.which("python3") or "python3"
 
-    auth_eprofile = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
-    auth_devcore = f"https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git" if token else "https://github.com/MikeyMike99/DevCore.git"
-
-    res = subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-        cwd=str(root),
-        capture_output=True,
-        text=True
-    )
-    current_branch = res.stdout.strip() if res.returncode == 0 else "main"
-
-    subprocess.run(["git", "-c", "credential.helper=", "submodule", "sync"], cwd=str(root))
-    subprocess.run(
-        ["git", "-c", "credential.helper=", "config", "submodule.content/projects/engines/antigravity_agent.url", auth_devcore],
-        cwd=str(root)
-    )
-    subprocess.run(
-        ["git", "-c", "credential.helper=", "submodule", "update", "--init", "--remote", "--force"],
-        cwd=str(root)
-    )
-    print("[post_sync] Verified DevCore submodule on 'main'.")
-
-    if current_branch != "main":
-        subprocess.run(["git", "-c", "credential.helper=", "checkout", "-B", "main"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "add", "content/projects/engines/antigravity_agent"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "commit", "-m", "Auto-sync DevCore submodule (main)"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "push", auth_eprofile, "main"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "branch", "-D", "clean-main"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "push", auth_eprofile, "--delete", "clean-main"], cwd=str(root))
-        print("[post_sync] Switched server to single branch 'main', pushed to GitHub, and pruned 'clean-main'.")
+    if os.name != "nt":
+        shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
+        subprocess.run(
+            [
+                py_bin, "-m", "pip", "uninstall", "-y",
+                "spacy", "presidio-analyzer", "presidio-anonymizer",
+                "thinc", "blis", "spacy-legacy", "spacy-loggers"
+            ],
+            cwd=str(root),
+            capture_output=True,
+            text=True
+        )
+        print("[post_sync] Cleaned pip cache and pruned unused heavy NLP packages.")
 
 
 if __name__ == "__main__":

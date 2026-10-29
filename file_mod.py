@@ -320,7 +320,11 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 3. Ensure git identity
+    # 3. Pre-clean pip cache on server to prevent disk quota exhaustion before git operations
+    if os.name != 'nt':
+        shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
+
+    # 4. Ensure git identity
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
 
@@ -374,7 +378,8 @@ def git_sync():
         import sys
         py_bin = shutil.which('python3') or (sys.executable if not Path(sys.executable).name.lower().startswith('uwsgi') else 'python3')
         try:
-            pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
+            pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '--no-cache-dir', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
+            shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
             output_log += "[System] pip requirements verified.\n"
             
             post_sync_script = target / "post_sync.py"

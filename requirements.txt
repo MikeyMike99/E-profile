@@ -5,8 +5,4 @@ python-dotenv==1.0.1
 libcst==1.4.0
 requests
 watchdog
-presidio-analyzer
-presidio-anonymizer
-spacy
-flask-socketio  
- 
+flask-socketio
