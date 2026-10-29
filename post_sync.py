@@ -23,12 +23,6 @@ def main():
     )
     current_branch = res.stdout.strip() if res.returncode == 0 else "main"
 
-    if current_branch != "main":
-        subprocess.run(["git", "-c", "credential.helper=", "checkout", "-B", "main"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "branch", "-D", "clean-main"], cwd=str(root))
-        subprocess.run(["git", "-c", "credential.helper=", "push", auth_eprofile, "--delete", "clean-main"], cwd=str(root))
-        print("[post_sync] Switched server to single branch 'main' and pruned 'clean-main'.")
-
     subprocess.run(["git", "-c", "credential.helper=", "submodule", "sync"], cwd=str(root))
     subprocess.run(
         ["git", "-c", "credential.helper=", "config", "submodule.content/projects/engines/antigravity_agent.url", auth_devcore],
@@ -39,6 +33,15 @@ def main():
         cwd=str(root)
     )
     print("[post_sync] Verified DevCore submodule on 'main'.")
+
+    if current_branch != "main":
+        subprocess.run(["git", "-c", "credential.helper=", "checkout", "-B", "main"], cwd=str(root))
+        subprocess.run(["git", "-c", "credential.helper=", "add", "content/projects/engines/antigravity_agent"], cwd=str(root))
+        subprocess.run(["git", "-c", "credential.helper=", "commit", "-m", "Auto-sync DevCore submodule (main)"], cwd=str(root))
+        subprocess.run(["git", "-c", "credential.helper=", "push", auth_eprofile, "main"], cwd=str(root))
+        subprocess.run(["git", "-c", "credential.helper=", "branch", "-D", "clean-main"], cwd=str(root))
+        subprocess.run(["git", "-c", "credential.helper=", "push", auth_eprofile, "--delete", "clean-main"], cwd=str(root))
+        print("[post_sync] Switched server to single branch 'main', pushed to GitHub, and pruned 'clean-main'.")
 
 
 if __name__ == "__main__":
