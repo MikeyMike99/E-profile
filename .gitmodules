@@ -2,3 +2,4 @@
 	path = content/projects/engines/antigravity_agent
 	url = https://github.com/MikeyMike99/DevCore.git
 	branch = main
+	ignore = dirty
