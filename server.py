@@ -62,12 +62,13 @@ app.register_blueprint(newsletter_bp)
 
 from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
 app.register_blueprint(diagnostics_bp)
-# --- AI AGENT PLUGIN ---
 import sys
 import os
-ai_path = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
+_central_devcore = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'DevCore'))
+_submod_devcore = os.path.join(os.path.dirname(__file__), 'content', 'projects', 'engines', 'antigravity_agent')
+ai_path = _central_devcore if os.path.exists(os.path.join(_central_devcore, 'ai_plugin.py')) else _submod_devcore
 if ai_path not in sys.path:
-    sys.path.append(ai_path)
+    sys.path.insert(0, ai_path)
 
 try:
     from ai_plugin import ai_bp
