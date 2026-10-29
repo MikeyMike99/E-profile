@@ -243,6 +243,61 @@ class TestEmailEngine(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn(b"Settings saved", res.data)
 
+    def test_admin_save_settings_ajax(self):
+        """Verify POST /admin/mailbox/save_settings returns JSON for AJAX without reloading."""
+        with self.client.session_transaction() as sess:
+            sess["admin"] = True
+
+        res = self.client.post("/admin/mailbox/save_settings", json={
+            "backend": "local",
+            "server": "smtp.gmail.com",
+            "port": 587,
+            "use_tls": True,
+            "username": "admin@gmail.com",
+            "password": "abcd efgh ijkl mnop",
+            "default_sender": "admin@gmail.com"
+        }, headers={"X-Requested-With": "XMLHttpRequest"})
+
+        self.assertEqual(res.status_code, 200)
+        data = res.get_json()
+        self.assertTrue(data["success"])
+        self.assertEqual(data["backend"], "local")
+        self.assertEqual(email_engine.config.MAIL_PASSWORD, "abcdefghijklmnop")
+
+    def test_admin_send_test_ajax(self):
+        """Verify POST /admin/mailbox/send_test returns JSON for AJAX."""
+        with self.client.session_transaction() as sess:
+            sess["admin"] = True
+
+        res = self.client.post("/admin/mailbox/send_test", json={
+            "to_address": "tester@example.com",
+            "subject": "AJAX Verification",
+            "message": "Testing zero reload email dispatch.",
+            "action_url": "http://localhost:5000/admin"
+        }, headers={"X-Requested-With": "XMLHttpRequest"})
+
+        self.assertEqual(res.status_code, 200)
+        data = res.get_json()
+        self.assertTrue(data["success"])
+        self.assertIn("record", data)
+        self.assertEqual(data["record"]["to"], "tester@example.com")
+
+    def test_google_app_password_space_stripping(self):
+        """Verify spaces are stripped from 16-character Google App Passwords."""
+        success, msg = email_engine.apply_gateway_settings(
+            backend="smtp",
+            server_host="smtp.gmail.com",
+            server_port=587,
+            use_tls=True,
+            username="testuser@gmail.com",
+            password="abcd efgh ijkl mnop",
+            default_sender="notifications@eprofile.local"
+        )
+        self.assertTrue(success)
+        self.assertEqual(email_engine.config.MAIL_PASSWORD, "abcdefghijklmnop")
+        # Ensure default sender was synchronized to real email instead of eprofile.local
+        self.assertEqual(email_engine.config.MAIL_DEFAULT_SENDER, "testuser@gmail.com")
+
     @patch("smtplib.SMTP_SSL")
     def test_smtp_ssl_port_465(self, mock_smtp_ssl):
         """Verify that port 465 triggers SMTP_SSL rather than standard SMTP."""

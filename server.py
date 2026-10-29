@@ -1091,6 +1091,7 @@ def admin_mailbox():
         mail_server=config.MAIL_SERVER,
         mail_port=config.MAIL_PORT,
         mail_username=config.MAIL_USERNAME,
+        mail_password=config.MAIL_PASSWORD,
         mail_use_tls=config.MAIL_USE_TLS,
         default_sender=config.MAIL_DEFAULT_SENDER,
         has_google_json=has_google_json
@@ -1099,24 +1100,29 @@ def admin_mailbox():
 
 @app.route('/admin/mailbox/save_settings', methods=['POST'])
 def admin_save_mailbox_settings():
+    is_ajax = request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest' or 'application/json' in request.headers.get('Accept', '')
     if not session.get('admin', False):
+        if is_ajax:
+            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
         flash("Unauthorized", "error")
         return redirect(url_for('login'))
 
-    backend = request.form.get('backend', 'local').strip().lower()
-    server_host = request.form.get('server', '').strip()
-    port_str = request.form.get('port', '587').strip()
-    use_tls = request.form.get('use_tls') in ('1', 'True', 'true', 'on')
-    username = request.form.get('username', '').strip()
-    password = request.form.get('password', '').strip()
-    default_sender = request.form.get('default_sender', '').strip()
+    data = request.get_json(silent=True) or request.form
+    backend = data.get('backend', 'local').strip().lower()
+    server_host = data.get('server', '').strip()
+    port_str = str(data.get('port', '587')).strip()
+    use_tls_val = data.get('use_tls')
+    use_tls = use_tls_val in (True, '1', 'True', 'true', 'on')
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
+    default_sender = data.get('default_sender', '').strip()
 
     try:
         server_port = int(port_str)
     except ValueError:
         server_port = 587
 
-    # Retain existing password if unchanged
+    # Retain existing password if unchanged and field empty
     if not password and config.MAIL_PASSWORD and backend == 'smtp':
         password = config.MAIL_PASSWORD
 
@@ -1131,18 +1137,37 @@ def admin_save_mailbox_settings():
         default_sender=default_sender
     )
 
+    conn_ok = True
+    conn_msg = ""
     if success:
         sys_log.info(f"Admin updated email credentials for backend '{backend}'")
         if backend == 'smtp':
             conn_ok, conn_msg = test_smtp_connection()
-            if conn_ok:
-                flash(f"Settings saved! Gateway verified: {conn_msg}", "success")
-            else:
-                flash(f"Settings saved, but gateway warning: {conn_msg}", "error")
+            status_text = f"Settings saved! Gateway verified: {conn_msg}" if conn_ok else f"Settings saved, but gateway warning: {conn_msg}"
         else:
-            flash("Settings saved! Email engine running in Local Mock Mode.", "success")
+            status_text = "Settings saved! Email engine running in Local Mock Mode."
+
+        if is_ajax:
+            return jsonify({
+                'success': True,
+                'message': status_text,
+                'conn_ok': conn_ok,
+                'conn_msg': conn_msg,
+                'backend': backend,
+                'server': server_host,
+                'port': server_port,
+                'username': username,
+                'default_sender': default_sender,
+                'has_password': bool(password)
+            })
+        else:
+            flash(status_text, "success" if conn_ok else "error")
     else:
-        flash(f"Error saving settings: {msg}", "error")
+        err_text = f"Error saving settings: {msg}"
+        if is_ajax:
+            return jsonify({'success': False, 'message': err_text}), 400
+        else:
+            flash(err_text, "error")
 
     return redirect(url_for('admin_mailbox'))
 
@@ -1178,19 +1203,26 @@ def admin_upload_google_json():
     return redirect(url_for('admin_mailbox'))
 
 
-
 @app.route('/admin/mailbox/send_test', methods=['POST'])
 def admin_send_test_email():
+    is_ajax = request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest' or 'application/json' in request.headers.get('Accept', '')
     if not session.get('admin', False):
-        return jsonify({'error': 'Unauthorized'}), 403
+        if is_ajax:
+            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        flash("Unauthorized", "error")
+        return redirect(url_for('login'))
 
-    to_address = request.form.get('to_address', '').strip()
-    subject = request.form.get('subject', '').strip()
-    message = request.form.get('message', '').strip()
-    action_url = request.form.get('action_url', '').strip() or None
+    data = request.get_json(silent=True) or request.form
+    to_address = data.get('to_address', '').strip()
+    subject = data.get('subject', '').strip()
+    message = data.get('message', '').strip()
+    action_url = data.get('action_url', '').strip() or None
 
     if not to_address or not subject or not message:
-        flash("All fields (Recipient, Subject, Message) are required.", "error")
+        err_msg = "All fields (Recipient, Subject, Message) are required."
+        if is_ajax:
+            return jsonify({'success': False, 'message': err_msg}), 400
+        flash(err_msg, "error")
         return redirect(url_for('admin_mailbox'))
 
     from email_engine import send_email, build_email_template
@@ -1204,25 +1236,36 @@ def admin_send_test_email():
 
     success, msg, record = send_email(to_address=to_address, subject=subject, html_content=html_msg)
     if success:
-        flash(f"Test dispatch succeeded: {msg}", "success")
         sys_log.info(f"Admin transmitted test email to {to_address} via {record.get('backend')}")
+        if is_ajax:
+            return jsonify({'success': True, 'message': f"Test dispatch succeeded: {msg}", 'record': record})
+        flash(f"Test dispatch succeeded: {msg}", "success")
     else:
-        flash(f"Test dispatch failed: {msg}", "error")
         sys_log.error(f"Failed email transmission to {to_address}: {msg}")
+        if is_ajax:
+            return jsonify({'success': False, 'message': f"Test dispatch failed: {msg}", 'record': record}), 400
+        flash(f"Test dispatch failed: {msg}", "error")
 
     return redirect(url_for('admin_mailbox'))
 
 
 @app.route('/admin/mailbox/clear', methods=['POST'])
 def admin_clear_mailbox():
+    is_ajax = request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest' or 'application/json' in request.headers.get('Accept', '')
     if not session.get('admin', False):
-        return jsonify({'error': 'Unauthorized'}), 403
+        if is_ajax:
+            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        return redirect(url_for('login'))
 
     from email_engine import clear_local_mailbox
     if clear_local_mailbox():
-        flash("Local mailbox cache cleared successfully.", "success")
         sys_log.info("Admin purged local mailbox cache.")
+        if is_ajax:
+            return jsonify({'success': True, 'message': "Local mailbox cache cleared successfully."})
+        flash("Local mailbox cache cleared successfully.", "success")
     else:
+        if is_ajax:
+            return jsonify({'success': False, 'message': "Failed to clear local mailbox cache."}), 500
         flash("Failed to clear local mailbox cache.", "error")
 
     return redirect(url_for('admin_mailbox'))
@@ -1230,12 +1273,18 @@ def admin_clear_mailbox():
 
 @app.route('/admin/mailbox/test_connection', methods=['POST'])
 def admin_test_smtp_connection():
+    is_ajax = request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest' or 'application/json' in request.headers.get('Accept', '')
     if not session.get('admin', False):
+        if is_ajax:
+            return jsonify({'success': False, 'message': 'Admin authentication required.'}), 403
         flash("Admin authentication required.", "error")
         return redirect(url_for('login'))
 
     from email_engine import test_smtp_connection
     success, msg = test_smtp_connection()
+    if is_ajax:
+        return jsonify({'success': success, 'message': msg})
+
     if success:
         flash(f"Gateway Attestation: {msg}", "success")
     else:

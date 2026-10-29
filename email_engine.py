@@ -195,6 +195,10 @@ def send_email(
 
     elif backend == "smtp":
         try:
+            # Fallback sender to authenticated username if sender is local mock or empty
+            if ("eprofile.local" in (sender or "") or not sender) and config.MAIL_USERNAME:
+                sender = config.MAIL_USERNAME.strip()
+
             msg = MIMEMultipart("alternative")
             msg["Subject"] = subject
             msg["From"] = sender
@@ -208,8 +212,14 @@ def send_email(
             server_host = config.MAIL_SERVER
             server_port = int(config.MAIL_PORT)
             use_tls = config.MAIL_USE_TLS
-            username = config.MAIL_USERNAME
-            password = config.MAIL_PASSWORD
+            username = config.MAIL_USERNAME.strip() if config.MAIL_USERNAME else ""
+            
+            # Google App Passwords have spaces when copied from Google security settings; clean them
+            raw_password = config.MAIL_PASSWORD or ""
+            if "gmail" in server_host.lower():
+                password = raw_password.replace(" ", "").strip()
+            else:
+                password = raw_password.strip()
 
             if server_port == 465:
                 server = smtplib.SMTP_SSL(server_host, server_port, timeout=10)
@@ -217,7 +227,7 @@ def send_email(
             else:
                 server = smtplib.SMTP(server_host, server_port, timeout=10)
                 server.ehlo()
-                if use_tls:
+                if use_tls or server_port == 587 or "gmail" in server_host.lower():
                     server.starttls()
                     server.ehlo()
 
@@ -232,6 +242,24 @@ def send_email(
             _append_to_local_mailbox(record)
             return True, f"Email delivered via SMTP ({server_host}).", record
 
+        except smtplib.SMTPAuthenticationError as e:
+            error_msg = f"SMTP Authentication Failed (535): Username or App Password rejected by {config.MAIL_SERVER}. Check credentials."
+            record["status"] = "FAILED"
+            record["error"] = error_msg
+            _append_to_local_mailbox(record)
+            return False, error_msg, record
+        except smtplib.SMTPSenderRefused as e:
+            error_msg = f"Sender Refused: The sender address '{sender}' is rejected by SMTP server: {e.smtp_error}"
+            record["status"] = "FAILED"
+            record["error"] = error_msg
+            _append_to_local_mailbox(record)
+            return False, error_msg, record
+        except smtplib.SMTPRecipientsRefused as e:
+            error_msg = f"Recipient Refused: The destination address '{to_address}' was rejected. Ensure recipient exists."
+            record["status"] = "FAILED"
+            record["error"] = error_msg
+            _append_to_local_mailbox(record)
+            return False, error_msg, record
         except Exception as e:
             error_msg = f"SMTP Transmission Failed: {e}"
             record["status"] = "FAILED"
@@ -254,19 +282,32 @@ def test_smtp_connection() -> Tuple[bool, str]:
 
     try:
         port = int(config.MAIL_PORT)
+        server_host = config.MAIL_SERVER
+        username = config.MAIL_USERNAME.strip() if config.MAIL_USERNAME else ""
+        raw_password = config.MAIL_PASSWORD or ""
+        if "gmail" in server_host.lower():
+            password = raw_password.replace(" ", "").strip()
+        else:
+            password = raw_password.strip()
+        use_tls = config.MAIL_USE_TLS
+
         if port == 465:
-            server = smtplib.SMTP_SSL(config.MAIL_SERVER, port, timeout=8)
+            server = smtplib.SMTP_SSL(server_host, port, timeout=10)
             server.ehlo()
         else:
-            server = smtplib.SMTP(config.MAIL_SERVER, port, timeout=8)
+            server = smtplib.SMTP(server_host, port, timeout=10)
             server.ehlo()
-            if config.MAIL_USE_TLS:
+            if use_tls or port == 587 or "gmail" in server_host.lower():
                 server.starttls()
                 server.ehlo()
-        if config.MAIL_USERNAME and config.MAIL_PASSWORD:
-            server.login(config.MAIL_USERNAME, config.MAIL_PASSWORD)
+        if username and password:
+            server.login(username, password)
         server.quit()
-        return True, f"Successfully connected to {config.MAIL_SERVER}:{port} and authenticated."
+        return True, f"Successfully connected to {server_host}:{port} and authenticated as '{username}'."
+    except smtplib.SMTPAuthenticationError:
+        return False, f"Authentication Failed (535): Invalid username or Google App Password. Ensure 2-Step Verification is enabled and use a 16-character App Password."
+    except smtplib.SMTPConnectError as e:
+        return False, f"Connection Failed: Could not connect to {config.MAIL_SERVER}:{config.MAIL_PORT}. Network or port issue."
     except Exception as e:
         return False, f"Connection failed: {e}"
 
@@ -316,14 +357,26 @@ def apply_gateway_settings(
     default_sender: str
 ) -> Tuple[bool, str]:
     """Applies new gateway settings both in-memory and persistently in .env."""
+    username = (username or "").strip()
+    raw_password = password or ""
+    if "gmail" in server_host.lower():
+        clean_password = raw_password.replace(" ", "").strip()
+    else:
+        clean_password = raw_password.strip()
+
+    # Automatically set default sender to username if user is using SMTP and default sender is mock/empty
+    if backend == "smtp" and username:
+        if not default_sender or "eprofile.local" in default_sender:
+            default_sender = username
+
     key_values = {
         "MAIL_BACKEND": backend,
-        "MAIL_SERVER": server_host,
+        "MAIL_SERVER": server_host.strip(),
         "MAIL_PORT": str(server_port),
         "MAIL_USE_TLS": "True" if use_tls else "False",
         "MAIL_USERNAME": username,
-        "MAIL_PASSWORD": password,
-        "MAIL_DEFAULT_SENDER": default_sender,
+        "MAIL_PASSWORD": clean_password,
+        "MAIL_DEFAULT_SENDER": default_sender.strip(),
     }
 
     # 1. Update .env file
@@ -335,23 +388,25 @@ def apply_gateway_settings(
 
     # 3. Update runtime Config
     config.MAIL_BACKEND = backend
-    config.MAIL_SERVER = server_host
+    config.MAIL_SERVER = server_host.strip()
     config.MAIL_PORT = int(server_port)
     config.MAIL_USE_TLS = use_tls
     config.MAIL_USERNAME = username
-    config.MAIL_PASSWORD = password
-    config.MAIL_DEFAULT_SENDER = default_sender
+    config.MAIL_PASSWORD = clean_password
+    config.MAIL_DEFAULT_SENDER = default_sender.strip()
 
     Config.MAIL_BACKEND = backend
-    Config.MAIL_SERVER = server_host
+    Config.MAIL_SERVER = server_host.strip()
     Config.MAIL_PORT = int(server_port)
     Config.MAIL_USE_TLS = use_tls
     Config.MAIL_USERNAME = username
-    Config.MAIL_PASSWORD = password
-    Config.MAIL_DEFAULT_SENDER = default_sender
+    Config.MAIL_PASSWORD = clean_password
+    Config.MAIL_DEFAULT_SENDER = default_sender.strip()
 
     if not file_saved:
         return False, "Failed to persist credentials to .env (applied in-memory only)."
+
+    return True, "Email gateway credentials successfully updated and active!"
 
     return True, "Email gateway credentials successfully updated and active!"
 
