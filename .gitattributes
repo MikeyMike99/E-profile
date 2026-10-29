@@ -1,0 +1,11 @@
+* text=auto eol=lf
+.bashrc text eol=lf
+.profile text eol=lf
+.bash_history text eol=lf
+.vimrc text eol=lf
+.gitconfig text eol=lf
+.pythonstartup.py text eol=lf
+.virtualenvs/* text eol=lf
+.ssh/* text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
