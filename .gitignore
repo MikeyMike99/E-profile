@@ -14,7 +14,6 @@ proposed_renames.json
 .local/
 content/docs/.archive/
 cache/
-
 # Credentials, secrets, and local tokens
 .google_credentials.json
 *credentials*.json

@@ -1,20 +1,11 @@
 {
-  "total_downloads": 18,
+  "total_downloads": 17,
   "packages": {
     "installer": 9,
     "portable": 3,
-    "git_source": 6
+    "git_source": 5
   },
   "events": [
-    {
-      "timestamp": 1793239477,
-      "formatted_time": "2026-10-29 02:04:37",
-      "package_id": "git_source",
-      "filename": "source-code.zip",
-      "version": "1.0.0",
-      "client_hash": "e392bbeb",
-      "user_agent": "Unknown"
-    },
     {
       "timestamp": 1793215817,
       "formatted_time": "2026-10-28 19:30:17",

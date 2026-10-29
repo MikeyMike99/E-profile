@@ -273,12 +273,8 @@ def git_sync():
 
     local_branch = get_current_branch()
 
-    # Determine remote target branch
-    if requested_branch:
-        target_branch = requested_branch
-    else:
-        # Default: if on 'master' (typical on older PythonAnywhere clones), map to 'main'; otherwise use local branch
-        target_branch = 'main' if local_branch == 'master' else local_branch
+    # Single-branch architecture: always enforce 'main'
+    target_branch = 'main'
 
     # 2. Load token
     token = ""
@@ -332,20 +328,13 @@ def git_sync():
     run_git_cmd(['add', '.'])
     run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
 
-    # 4. Optional branch checkout if requested and different from local branch
-    should_switch = data.get('checkout', data.get('switch', True))
-    if requested_branch and should_switch and target_branch != local_branch and local_branch != 'master':
-        check_b = subprocess.run(
-            ['git', 'show-ref', '--verify', f'refs/heads/{target_branch}'],
-            cwd=str(target),
-            capture_output=True
-        )
-        if check_b.returncode == 0:
-            run_git_cmd(['checkout', target_branch])
-        else:
-            run_git_cmd(['fetch', authenticated_url, f'{target_branch}:{target_branch}'])
-            run_git_cmd(['checkout', target_branch])
-        local_branch = get_current_branch()
+    # 4. Enforce single-branch ('main') checkout and prune legacy branches
+    if local_branch != 'main':
+        run_git_cmd(['checkout', '-B', 'main'])
+        if local_branch == 'clean-main':
+            run_git_cmd(['branch', '-D', 'clean-main'])
+            run_git_cmd(['push', authenticated_url, '--delete', 'clean-main'])
+        local_branch = 'main'
 
     # 5. Environment-Specific Logic
     is_windows = (os.name == 'nt')
@@ -366,11 +355,12 @@ def git_sync():
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
         
         run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
-        run_git_cmd(['checkout', '--ours', 'content/projects/engines/antigravity_agent'])
-        run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
+        run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['submodule', 'sync'])
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git'])
-        run_git_cmd(['submodule', 'update', '--init', '--recursive'])
+        run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
+        run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
+        run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
         
         if local_branch == 'master' and target_branch == 'main':
             run_git_cmd(['push', authenticated_url, 'master:main'])

@@ -2,12 +2,14 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+ROOT_DIR = Path(__file__).resolve().parent
+
 # Load environment variables from .env file if present
-load_dotenv()
+load_dotenv(ROOT_DIR / ".env")
 
 class Config:
     # 1. Base Paths
-    ROOT_DIR = Path(__file__).resolve().parent
+    ROOT_DIR = ROOT_DIR
     CONTENT_DIR = ROOT_DIR / "content"
     STATIC_DIR = ROOT_DIR / "static"
     TEMPLATES_DIR = ROOT_DIR / "templates"
@@ -40,7 +42,7 @@ class Config:
     }
 
     # --- Dynamic Navigation Tabs ---
-    TABS = ["home", "hub", "docs", "bio", "blog", "projects", "certifications", "downloads", "usage"]
+    TABS = ["home", "newsletter", "docs", "bio", "blog", "projects", "certifications", "downloads", "usage"]
     @classmethod
     def get_all_required_paths(cls):
         return [
