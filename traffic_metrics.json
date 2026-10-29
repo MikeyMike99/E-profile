@@ -1,5 +1,5 @@
 {
-    "total_views": 6091,
+    "total_views": 16090,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -58,15 +58,15 @@
         "5ddccc1d9ab4932aa75245c444762167"
     ],
     "paths": {
-        "/": 659,
-        "/favicon.ico": 439,
+        "/": 663,
+        "/favicon.ico": 443,
         "/projects": 76,
         "/ai_agent": 34,
         "/login": 110,
-        "/ai_agent/": 50,
+        "/ai_agent/": 53,
         "/ws": 123,
-        "/ai_agent/api/chat": 28,
-        "/ai_agent/api/stream": 4109,
+        "/ai_agent/api/chat": 31,
+        "/ai_agent/api/stream": 14082,
         "/robots.txt": 75,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
@@ -131,16 +131,17 @@
         "/downloads/get/portable": 2,
         "/docs/manifesto/02_The_Echoes_Architecture.md": 3,
         "/hub": 5,
-        "/ai_agent/api/projects": 17,
-        "/ai_agent/api/conversations": 17,
+        "/ai_agent/api/projects": 20,
+        "/ai_agent/api/conversations": 21,
         "/ai_agent/):": 1,
-        "/ai_agent/api/auth_check": 30,
-        "/ai_agent/login": 18,
+        "/ai_agent/api/auth_check": 32,
+        "/ai_agent/login": 19,
         "/access/005333e6-42b3-438c-b1fc-5bbc309d2ccf": 1,
         "/access/74f5b9f5-3060-4b9e-9121-ceb658bad7eb": 1,
         "/sync": 1,
-        "/ai_agent/api/auth_submit": 15,
+        "/ai_agent/api/auth_submit": 16,
         "/ai_agent/api/auth_demo": 1,
-        "/ai_agent/api/auth_status": 1
+        "/ai_agent/api/auth_status": 1,
+        "/ai_agent/api/conversations/cbef76a6-7ad5-4748-8114-fd1381b59580": 1
     }
 }
