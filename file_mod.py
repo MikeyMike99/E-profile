@@ -358,6 +358,7 @@ def git_sync():
         run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['submodule', 'sync'])
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git'])
+        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
         run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
         run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
@@ -369,19 +370,19 @@ def git_sync():
         else:
             run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
         
-        # --- AUTO-INSTALL DEPENDENCIES & POST-SYNC HOOKS ---
         output_log += "[System] Auto-installing updated dependencies...\n"
         import sys
+        py_bin = shutil.which('python3') or (sys.executable if not Path(sys.executable).name.lower().startswith('uwsgi') else 'python3')
         try:
-            pip_p = subprocess.run([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
+            pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
             output_log += "[System] pip requirements verified.\n"
             
-            # Generic Post-Sync Hook for future integrations
             post_sync_script = target / "post_sync.py"
             if post_sync_script.exists():
                 output_log += "[System] Executing post_sync.py hook...\n"
-                hook_p = subprocess.run([sys.executable, str(post_sync_script)], cwd=str(target), capture_output=True, text=True)
-                output_log += hook_p.stdout + "\n"
+                hook_p = subprocess.run([py_bin, str(post_sync_script)], cwd=str(target), capture_output=True, text=True)
+                if hook_p.stdout:
+                    output_log += hook_p.stdout + "\n"
                 if hook_p.stderr:
                     output_log += hook_p.stderr + "\n"
         except Exception as e:
