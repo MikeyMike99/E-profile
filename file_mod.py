@@ -290,8 +290,68 @@ def git_sync():
 
     authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
 
+    def purge_git_locks():
+        for base in [target / ".git", Path.home() / ".git"]:
+            if base.is_dir():
+                for lock_file in base.rglob("*.lock"):
+                    try:
+                        lock_file.unlink(missing_ok=True)
+                    except Exception:
+                        pass
+
+    def emergency_quota_relief():
+        if os.name == 'nt':
+            return
+        home = Path.home()
+        shutil.rmtree(home / ".cache", ignore_errors=True)
+        shutil.rmtree(home / ".npm", ignore_errors=True)
+        shutil.rmtree(home / ".local" / "share" / "Trash", ignore_errors=True)
+
+        for base in [target / ".git", home / ".git"]:
+            if base.is_dir():
+                pack_dir = base / "objects" / "pack"
+                if pack_dir.is_dir():
+                    for tmp_pack in pack_dir.glob("tmp_*"):
+                        tmp_pack.unlink(missing_ok=True)
+                (base / "gc.log").unlink(missing_ok=True)
+                obj_dir = base / "objects"
+                if obj_dir.is_dir():
+                    for obj in obj_dir.glob("*/*"):
+                        try:
+                            if obj.is_file() and obj.stat().st_size == 0:
+                                obj.unlink(missing_ok=True)
+                        except Exception:
+                            pass
+        purge_git_locks()
+
+        for log_dir in [target / "logs", home / "logs", target]:
+            if log_dir.is_dir():
+                for lf in log_dir.glob("*.log"):
+                    try:
+                        if lf.is_file() and lf.stat().st_size > 2 * 1024 * 1024:
+                            tail = lf.read_text(encoding="utf-8", errors="replace")[-50000:]
+                            lf.write_text("[TRUNCATED DUE TO DISK QUOTA]\n" + tail, encoding="utf-8")
+                    except Exception:
+                        pass
+
+        py_bin = shutil.which('python3') or sys.executable
+        try:
+            subprocess.run(
+                [
+                    py_bin, "-m", "pip", "uninstall", "-y",
+                    "spacy", "presidio-analyzer", "presidio-anonymizer",
+                    "thinc", "blis", "spacy-legacy", "spacy-loggers"
+                ],
+                cwd=str(target),
+                capture_output=True,
+                timeout=15
+            )
+        except Exception:
+            pass
+
     def run_git_cmd(args):
         nonlocal output_log
+        purge_git_locks()
         try:
             exe_path = shutil.which('git') or 'git'
             full_cmd = [exe_path, '-c', 'credential.helper='] + args
@@ -314,32 +374,16 @@ def git_sync():
             
             if stdout: output_log += stdout + "\n"
             if stderr: output_log += stderr + "\n"
+            if process.returncode != 0:
+                purge_git_locks()
             return process.returncode == 0
         except Exception as e:
+            purge_git_locks()
             err_msg = str(e).replace(token, '***') if token and token in str(e) else str(e)
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    if os.name != 'nt':
-        shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
-        pack_dir = target / ".git" / "objects" / "pack"
-        if pack_dir.is_dir():
-            for tmp_pack in pack_dir.glob("tmp_*"):
-                tmp_pack.unlink(missing_ok=True)
-        (target / ".git" / "gc.log").unlink(missing_ok=True)
-
-        for lock_file in (target / ".git").rglob("*.lock"):
-            try:
-                lock_file.unlink(missing_ok=True)
-            except Exception:
-                pass
-        submod_dir = target / "content" / "projects" / "engines" / "antigravity_agent"
-        if (submod_dir / ".git").is_dir():
-            for lock_file in (submod_dir / ".git").rglob("*.lock"):
-                try:
-                    lock_file.unlink(missing_ok=True)
-                except Exception:
-                    pass
+    emergency_quota_relief()
 
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
@@ -394,34 +438,46 @@ def git_sync():
 
     else:
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
-        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
+        emergency_quota_relief()
+        pull_ok = run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
+        if not pull_ok:
+            output_log += "[System] Pull encountered conflicts or corrupt objects. Purging corrupt objects & retrying...\n"
+            emergency_quota_relief()
+            run_git_cmd(['fetch', authenticated_url, target_branch, '--prune'])
+            run_git_cmd(['merge', f'origin/{target_branch}', '--no-edit', '-m', f'Auto-merge {target_branch} updates', '-X', 'ours'])
+
         run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['submodule', 'sync'])
         submod_url = f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git' if token else 'https://github.com/MikeyMike99/DevCore.git'
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', submod_url])
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
-        for lock_file in (target / ".git").rglob("*.lock"):
-            try:
-                lock_file.unlink(missing_ok=True)
-            except Exception:
-                pass
+        purge_git_locks()
         run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
         run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
 
+        push_ok = False
         if local_branch == 'master' and target_branch == 'main':
-            run_git_cmd(['push', authenticated_url, 'master:main'])
+            push_ok = run_git_cmd(['push', authenticated_url, 'master:main'])
         elif local_branch == target_branch:
-            run_git_cmd(['push', authenticated_url, target_branch])
+            push_ok = run_git_cmd(['push', authenticated_url, target_branch])
         else:
-            run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
+            push_ok = run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
+
+        if not push_ok:
+            output_log += "[System] Push rejected (non-fast-forward). Syncing remote changes before push retry...\n"
+            emergency_quota_relief()
+            run_git_cmd(['fetch', authenticated_url, target_branch])
+            run_git_cmd(['merge', f'origin/{target_branch}', '--no-edit', '-m', f'Auto-merge origin/{target_branch} into local', '-X', 'ours'])
+            purge_git_locks()
+            run_git_cmd(['push', authenticated_url, target_branch])
         
         output_log += "[System] Auto-installing updated dependencies...\n"
         import sys
         py_bin = shutil.which('python3') or (sys.executable if not Path(sys.executable).name.lower().startswith('uwsgi') else 'python3')
         try:
             pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '--no-cache-dir', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
-            shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
+            shutil.rmtree(Path.home() / ".cache", ignore_errors=True)
             output_log += "[System] pip requirements verified.\n"
             
             post_sync_script = target / "post_sync.py"
@@ -435,7 +491,6 @@ def git_sync():
         except Exception as e:
             output_log += f"[ERROR] Failed to auto-install dependencies or run hooks: {e}\n"
             
-        # Reload WSGI server
         output_log += "\n[System] Sync complete. Attempting to reload PythonAnywhere server...\n"
         try:
             wsgi_dir = Path("/var/www/")
