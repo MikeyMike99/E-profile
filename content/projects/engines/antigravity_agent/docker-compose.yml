@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  antigravity-agent:
+    build: .
+    image: antigravity-zero-trust:latest
+    command: ["python", "core/server.py"]
+    ports:
+      - "5000:5000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PATH=/home/agentuser/.local/bin:/usr/local/bin:/usr/bin:/bin
+    volumes:
+      # Mount the DevCore source code for zero-restart hot-reloading
+      - ./:/app
+      # Mount the Antigravity Brain Database to preserve memory and context
+      - ~/.gemini:/home/agentuser/.gemini
+      # Mount the agy binaries
+      - ~/.local/bin:/home/agentuser/.local/bin
+      # Mount the actual Windows workspace so agy can edit code
+      - /mnt/c:/mnt/c
+    tmpfs:
+      - /app/.agent_scratch:rw,noexec,nosuid,size=256m
+    # Commented out read-only so the mounted app can write local cache if needed
+    # read_only: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - agent-net
+    restart: unless-stopped
+
+networks:
+  agent-net:
+    driver: bridge

@@ -1,0 +1,166 @@
+{
+    "title": "Siraugga Command Center (Dynamic)",
+    "welcome_message": "Zero-Trust Architecture Active",
+    "modal": {
+        "title": "Confirmation Required",
+        "btn_cancel": "Cancel",
+        "btn_confirm": "Confirm"
+    },
+    "nav": {
+        "aria_label": "Quick Actions",
+        "btn1": {
+            "text": "Create Sandbox Environment",
+            "prompt": "Create a new Sandbox Environment",
+            "sr_text": "Shortcut: Alt plus S. Injects prompt into chat input."
+        },
+        "btn2": {
+            "text": "Analyze System Logs",
+            "prompt": "Analyze system logs for the last 24 hours",
+            "sr_text": "Shortcut: Alt plus L. Injects prompt into chat input."
+        },
+        "btn3": {
+            "text": "Jump to Chat Input",
+            "sr_text": "Shortcut: Alt plus C. Moves focus to text area."
+        }
+    },
+    "chat_input": {
+        "label_sr": "Enter instructions for Siraugga",
+        "placeholder": "Enter instructions (e.g. modify file, test feature, refactor code)... Press Enter to execute.",
+        "helper_text": "Enter to run \u2022 Shift+Enter for newline",
+        "btn_aria_label": "Execute prompt",
+        "btn_text": "Execute"
+    },
+    "header": {
+        "model_label": "Model:",
+        "model_aria": "Select AI Model",
+        "models": [
+            {
+                "value": "Gemini 4 Argon (Medium)",
+                "text": "Gemini 4 Argon (Medium)"
+            },
+            {
+                "value": "Gemini 4 Argon (High)",
+                "text": "Gemini 4 Argon (High)"
+            },
+            {
+                "value": "Gemini 4 Argon (Low)",
+                "text": "Gemini 4 Argon (Low)"
+            },
+            {
+                "value": "Gemini 3.8 Flash (High)",
+                "text": "Gemini 3.8 Flash (High)"
+            },
+            {
+                "value": "Gemini 3.8 Flash (Medium)",
+                "text": "Gemini 3.8 Flash (Medium)"
+            },
+            {
+                "value": "Gemini 3.8 Flash (Low)",
+                "text": "Gemini 3.8 Flash (Low)"
+            },
+            {
+                "value": "Claude Opus 5.5 (Low)",
+                "text": "Claude Opus 5.5 (Low)"
+            },
+            {
+                "value": "Claude Opus 5.5 (Medium)",
+                "text": "Claude Opus 5.5 (Medium)"
+            },
+            {
+                "value": "Claude Opus 5.5 (High)",
+                "text": "Claude Opus 5.5 (High)"
+            },
+            {
+                "value": "Claude Sonnet 5.5 (Low)",
+                "text": "Claude Sonnet 5.5 (Low)"
+            },
+            {
+                "value": "Claude Sonnet 5.5 (Medium)",
+                "text": "Claude Sonnet 5.5 (Medium)"
+            },
+            {
+                "value": "Claude Sonnet 5.5 (High)",
+                "text": "Claude Sonnet 5.5 (High)"
+            },
+            {
+                "value": "GPT-OSS 120B (Medium)",
+                "text": "GPT-OSS 120B (Medium)"
+            }
+        ],
+        "conn_aria": "Connection Status",
+        "conn_text": "Connecting..."
+    },
+    "welcome": {
+        "feed_aria": "Conversation Feed",
+        "icon": "SR",
+        "heading": "Siraugga Engine Ready",
+        "status_sr": "System Status",
+        "dt_conn": "Connection Status:",
+        "dd_conn": "Secure & Resilient",
+        "dt_tasks": "Background Tasks:",
+        "dd_tasks": "0 Running",
+        "dt_nav": "Navigation:",
+        "dd_nav_prefix": "Press ",
+        "dd_nav_mid": " or ",
+        "dd_nav_suffix": " for messages"
+    },
+    "js_alerts": {
+        "status_connected": "Connected",
+        "status_reconnecting": "Reconnecting...",
+        "status_failed": "Disconnected",
+        "announce_connected": "Connected to Siraugga server.",
+        "announce_failed": "Failed to connect to Siraugga core.",
+        "msg_thinking": "Siraugga thinking...",
+        "msg_user": "User prompt:",
+        "msg_agent": "Siraugga response:"
+    },
+    "media_player": {
+        "title_tag": "Siraugga Accessible Media Player",
+        "btn_play": "Play",
+        "btn_play_aria": "Play Video",
+        "btn_pause": "Pause",
+        "btn_pause_aria": "Pause Video",
+        "btn_rewind": "\u23ea -10s",
+        "btn_rewind_aria": "Rewind 10 seconds",
+        "btn_forward": "\u23e9 +10s",
+        "btn_forward_aria": "Fast forward 10 seconds",
+        "btn_fullscreen": "\u26f6 Fullscreen",
+        "btn_fullscreen_aria": "Enter Fullscreen",
+        "lbl_volume": "Volume:",
+        "chk_autoplay": "Autoplay Next"
+    },
+    "security_dashboard": {
+        "title_tag": "Zero-Trust Security Posture Dashboard",
+        "aria_label": "Security Dashboard",
+        "h1_title": "Security Posture Dashboard",
+        "loading": "Loading Audit Data...",
+        "audit_pass": "AUDIT PASS",
+        "red_team": "Red Team Test Protocol",
+        "architecture": "Architectural Solution",
+        "resolution": "Resolution Outcome",
+        "error_loading": "Error loading security audit data: "
+    },
+    "exam_app": {
+        "btn_start": "Start Exam",
+        "btn_submit": "Submit (Alt+N)",
+        "btn_next": "Next Question (Alt+N)",
+        "heading_complete": "Exam Complete!",
+        "score_prefix": "You scored ",
+        "score_mid": " out of ",
+        "question_prefix": "Question ",
+        "progress_mid": " of ",
+        "feedback_correct": "Correct!",
+        "feedback_incorrect": "Incorrect."
+    },
+    "tts_engine": {
+        "enabled": false,
+        "provider": "elevenlabs",
+        "api_key": "",
+        "voice_id": "pNInz6obbfDQGcgMyIGC"
+    },
+    "sounds": {
+        "incoming": "/api/sounds/incoming",
+        "completed": "/api/sounds/completed",
+        "notification": "/api/sounds/notification"
+    }
+}

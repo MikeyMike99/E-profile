@@ -1,0 +1,296 @@
+{
+  "score": "82.4%",
+  "pointsEarned": 29.666666666666664,
+  "pointsPossible": 36,
+  "breakdown": [
+    {
+      "question": "A public web app is being hit by SQL injection attempts and, separately, by a large volumetric traffic flood. Which pairing of services best addresses each threat?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which of the following can filter network traffic between subnets or virtual networks using rules? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "Contoso's network team must block all inbound traffic to a database subnet except SQL traffic from the app subnet. A colleague asks what the resource they will configure actually does. Complete the sentence: a network security group is best described this way: [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Administrators need to connect to Azure virtual machines over RDP and SSH from the Azure portal, without giving the VMs public IP addresses. What should they use?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A developer at Fabrikam hard-codes a database connection string and an API key into application source code. The security team wants these secrets, plus TLS certificates, stored centrally with access control and auditing. The right service is [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An organisation splits its network into segments, separating web, application and database tiers. What is the main security benefit of this segmentation?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Defender for Cloud advises enabling multifactor authentication for accounts with owner permissions on a subscription. What type of item is this?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Defender for Servers detects a suspicious process on a virtual machine that looks like an active attack. What does Defender for Cloud generate?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An organisation's secure score in Defender for Cloud rose from 50 percent to 70 percent. What does this indicate?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "A newly created Azure subscription is onboarded to Defender for Cloud. Before anyone adds standards, the compliance officer opens the regulatory compliance dashboard and sees one standard already assigned. That standard is [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An auditor wants to see how Azure resources measure against standards such as PCI DSS and ISO 27001. Where in Defender for Cloud should you look?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Northwind has only the free tier of Defender for Cloud and asks for budget for new features. Which of these capabilities would require them to enable a paid plan? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": true,
+      "points": 0.6666666666666666,
+      "weight": 1
+    },
+    {
+      "question": "Tailwind Traders' SOC manager is explaining Microsoft Sentinel to new hires and says it is both a SIEM and a SOAR. Which of these tasks fall under its SIEM role rather than its SOAR role? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "A company deployed Microsoft Sentinel and connected only Azure firewall logs. It is detecting no identity-based attacks such as suspicious sign-ins. What is the most likely reason?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Overnight, an attacker triggers ten related Sentinel alerts against one user: impossible travel, mass downloads, and a new inbox rule. When the analyst logs in the next morning, these alerts are shown [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "The CISO at Woodgrove Bank wants a visual, interactive Sentinel dashboard with charts showing sign-in failures by country over the past week. The analyst should build [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A SOC analyst proactively runs queries in Sentinel to search for signs of attackers that no alert has detected yet. What is this activity called?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "During a ransomware attack, Microsoft Defender XDR automatically contains the compromised device and user account without waiting for an analyst. Which capability is this?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "Which of the following are features of Microsoft Defender for Office 365? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Contoso is rolling out Microsoft Defender for Endpoint to 2,000 laptops and the CFO asks what protections it brings. Which of these are capabilities of Defender for Endpoint? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A firewall log review reveals that staff are uploading company files to dozens of unapproved file-sharing and note-taking websites. To discover and assess these apps, the security team should use [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A security team wants to find, prioritise and fix software weaknesses and misconfigurations across its laptops and servers. Which solution is designed for this?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An organisation wants to detect pass-the-hash and other suspicious activity against its on-premises Active Directory domain controllers. What should it deploy?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Where do analysts now access Microsoft Defender Threat Intelligence content, such as threat actor profiles and intel articles?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A new security architect at Litware is mapping Microsoft's tools. They need one tool to protect staff laptops, mailboxes and user identities, and another to protect Azure VMs, SQL databases and storage accounts. Which statement correctly assigns the scope?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An external auditor working for Contoso asks for Microsoft's latest SOC 2 and ISO 27001 audit reports covering Microsoft 365, so they can confirm Microsoft's cloud controls. Where should Contoso's compliance officer get them?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "A board member reads a SOC 2 report downloaded from the Service Trust Portal and asks whose compliance it actually proves. What is the correct answer?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A small business owner browses the Service Trust Portal without signing in and can read general documents, but cannot open the detailed audit reports. What must they do to access them?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A compliance analyst downloads the same five Microsoft audit reports every quarter. She wants to save them in one place and be notified automatically when Microsoft publishes updated versions. She should use [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Fabrikam's compliance officer must show the board how well Fabrikam itself is progressing towards GDPR, with improvement actions assigned to staff. Which tool fits this inward-looking task?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A customer asks a Microsoft partner to list the privacy principles Microsoft commits to for its cloud services. Which list is correct?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "During a privacy training session, staff are given a list of terms. Which of these are among Microsoft's six privacy principles? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A hospital moves its patient records into Microsoft 365. Its lawyer asks who owns this data and who decides how it is processed. What is the correct answer?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A marketing manager worries that Microsoft scans her team's Outlook emails and Teams chats to show them targeted ads. The privacy principle that rules this out is [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A foreign government sends Microsoft an overly broad request demanding a European customer's data. Microsoft challenges the request in court and follows GDPR. Which privacy principle does this demonstrate?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An online retailer encrypts all customer data at rest and in transit, and uses MFA for every admin. However, it sells customers' purchase histories to advertisers without their consent. Which statement is correct?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    }
+  ],
+  "timestamp": "2026-10-25T17:56:55.214Z"
+}

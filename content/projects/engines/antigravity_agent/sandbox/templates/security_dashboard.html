@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ui.security_dashboard.title_tag }}</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #334155;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .dashboard-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+        h1 {
+            color: var(--accent-blue);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header-meta {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .status-badge {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border: 1px solid var(--accent-green);
+        }
+        .threat-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .threat-id {
+            color: var(--accent-red);
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .threat-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 5px 0 10px 0;
+        }
+        .threat-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        .outcome-box {
+            margin-top: 20px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .outcome-text {
+            font-weight: 500;
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="dashboard-container" aria-label="{{ ui.security_dashboard.aria_label }}">
+        <h1 tabindex="0">{{ ui.security_dashboard.h1_title }}</h1>
+        <div class="header-meta">
+            <span id="auditMeta">{{ ui.security_dashboard.loading }}</span>
+            <span class="status-badge" id="auditStatus">{{ ui.security_dashboard.audit_pass }}</span>
+        </div>
+
+        <div id="threatContainer" aria-live="polite">
+            <!-- Cards will be injected here -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/static/security_audit.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('auditMeta').innerText = `Last Audit: ${new Date(data.last_audit).toLocaleString()} | Auditor: ${data.auditor}`;
+                    
+                    const container = document.getElementById('threatContainer');
+                    data.threat_matrix.forEach(item => {
+                        const card = document.createElement('article');
+                        card.className = 'threat-card';
+                        
+                        const testStepsHTML = item.test_steps.map(step => `<li>${step}</li>`).join('');
+                        const solStepsHTML = item.solution_steps.map(step => `<li>${step}</li>`).join('');
+                        
+                        card.innerHTML = `
+                            <div class="threat-header">
+                                <div>
+                                    <div class="threat-id">${item.id}</div>
+                                    <h2 class="threat-title" tabindex="0">${item.threat}</h2>
+                                </div>
+                            </div>
+                            <p class="threat-desc">${item.description}</p>
+                            
+                            <div class="grid-container">
+                                <div>
+                                    <div class="section-title">{{ ui.security_dashboard.red_team }}</div>
+                                    <ul>${testStepsHTML}</ul>
+                                </div>
+                                <div>
+                                    <div class="section-title">{{ ui.security_dashboard.architecture }}</div>
+                                    <ul>${solStepsHTML}</ul>
+                                </div>
+                            </div>
+                            
+                            <div class="outcome-box">
+                                <div class="section-title" style="color: var(--accent-green); border-bottom: none;">{{ ui.security_dashboard.resolution }}</div>
+                                <p class="outcome-text">${item.outcome}</p>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    document.getElementById('threatContainer').innerHTML = `<p style="color:red;">{{ ui.security_dashboard.error_loading }}${err}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>

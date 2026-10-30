@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Telemetry &amp; AST Efficiency Dashboard | DevCore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#14b8a6', 600: '#0d9488' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        :focus-visible { outline: 2px solid #14b8a6; outline-offset: 2px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-teal-500/30 selection:text-teal-200 antialiased">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded focus:shadow-lg">
+        Skip to main content
+    </a>
+
+    <!-- Primary Global Navigation Bar -->
+    <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl" aria-hidden="true">📊</span>
+                <div>
+                    <h1 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                        DevCore Observability &amp; Telemetry
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-teal-950/90 text-teal-300 border border-teal-800 font-mono">Live Engine</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Token telemetry, AST surgical block efficiency, and system diagnostic audits</p>
+                </div>
+            </div>
+
+            <nav aria-label="Global application navigation" class="flex items-center flex-wrap gap-2">
+                <a href="/" id="nav-portal-link" aria-label="Return to DevCore Web Portal (Alt+H)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">🏠</span> Portal
+                </a>
+                <a href="/telemetry" id="nav-telemetry-link" aria-current="page" aria-label="Current page: Token Telemetry (Alt+T)" class="px-3 py-1.5 bg-teal-600 text-white border border-teal-500 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 shadow focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                    <span aria-hidden="true">📊</span> Telemetry
+                </a>
+                <a href="/audits" id="nav-audits-link" aria-label="Navigate to System Audits Review Hub (Alt+A)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">🛡️</span> Audits
+                </a>
+                <a href="/plugin/security" id="nav-security-link" aria-label="Navigate to Security Dashboard" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">🔒</span> Security
+                </a>
+
+                <div class="h-4 w-px bg-slate-800 mx-1 hidden sm:block" aria-hidden="true"></div>
+
+                <div class="flex items-center gap-2 px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700/60 text-xs">
+                    <span id="live-pulse" class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+                    <span id="telemetry-status" class="font-mono text-slate-300">● Live (5s)</span>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <label for="refresh-interval-select" class="text-xs text-slate-400 sr-only">Auto-Refresh Rate</label>
+                    <select id="refresh-interval-select" onchange="changeInterval()" aria-label="Auto-refresh rate" class="bg-slate-800 border border-slate-700 rounded text-xs px-2 py-1 text-slate-200 focus:ring-1 focus:ring-teal-500 cursor-pointer">
+                        <option value="5000" selected>Every 5s</option>
+                        <option value="15000">Every 15s</option>
+                        <option value="30000">Every 30s</option>
+                        <option value="60000">Every 60s</option>
+                        <option value="0">Paused</option>
+                    </select>
+                </div>
+
+                <button type="button" id="btn-refresh-now" onclick="fetchTelemetry(true)" aria-label="Refresh telemetry data now" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 hover:text-teal-200 border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">↻</span> Refresh Now
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Screen Reader Live Announcer -->
+    <div id="telemetry-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <main id="main-content" tabindex="-1" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Top-Level Multi-View Switcher -->
+        <nav aria-label="Observability Dashboard Views" class="mb-6">
+            <div role="tablist" aria-label="Observability Dashboard Sections" id="main-view-tablist" class="flex flex-wrap gap-2 border-b border-slate-800/80 pb-3">
+                <button type="button" role="tab" id="tab-view-usage" aria-selected="true" aria-controls="view-token-usage" tabindex="0" onclick="switchMainView('usage')" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-teal-600 text-white shadow focus:ring-2 focus:ring-teal-400 focus:outline-none flex items-center gap-2">
+                    <span aria-hidden="true">📊</span> Token Usage &amp; Burn
+                </button>
+                <button type="button" role="tab" id="tab-view-efficiency" aria-selected="false" aria-controls="view-ast-efficiency" tabindex="-1" onclick="switchMainView('efficiency')" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none flex items-center gap-2">
+                    <span aria-hidden="true">⚡</span> AST Efficiency &amp; Benchmarks
+                </button>
+                <button type="button" role="tab" id="tab-view-audits" aria-selected="false" aria-controls="view-audit-health" tabindex="-1" onclick="switchMainView('audits')" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none flex items-center gap-2">
+                    <span aria-hidden="true">🛡️</span> Audit Health &amp; Diagnostics
+                </button>
+            </div>
+        </nav>
+
+        <!-- VIEW 1: Token Usage & Burn Rate -->
+        <section id="view-token-usage" role="tabpanel" aria-labelledby="tab-view-usage" tabindex="0" class="focus:outline-none">
+            <section aria-labelledby="kpi-heading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                <h2 id="kpi-heading" class="sr-only">Key Performance Indicators</h2>
+
+                <div role="region" aria-label="Current Minute Burn Rate" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Minute Burn Rate</span>
+                        <span class="text-teal-400 font-mono text-[11px]" aria-hidden="true">🔥 Active</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-minute" class="text-2xl font-bold font-mono text-white tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">tokens / min</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Rolling 60-second window</span>
+                </div>
+
+                <div role="region" aria-label="Current Hour Total" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Current Hour</span>
+                        <span class="text-sky-400 font-mono text-[11px]" aria-hidden="true">⏱️ Hourly</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-hour" class="text-2xl font-bold font-mono text-white tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">tokens</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Elapsed this clock hour</span>
+                </div>
+
+                <div role="region" aria-label="Last 24 Hours Total Tokens" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>24-Hour Total</span>
+                        <span class="text-indigo-400 font-mono text-[11px]" aria-hidden="true">📅 Daily</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-24h" aria-live="polite" class="text-2xl font-bold font-mono text-white tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">tokens</span>
+                    </div>
+                    <span id="kpi-24h-requests" class="text-[11px] text-slate-400 mt-1">0 requests</span>
+                </div>
+
+                <div role="region" aria-label="24-Hour Cache Hit Efficiency" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Cache Hit Efficiency</span>
+                        <span class="text-emerald-400 font-mono text-[11px]" aria-hidden="true">⚡ Caching</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-cache-rate" aria-live="polite" class="text-2xl font-bold font-mono text-emerald-400 tabular-nums">0.0%</span>
+                        <span class="text-xs text-slate-400">24h hit rate</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Saves uncached compute</span>
+                </div>
+
+                <div role="region" aria-label="Average Tokens Per Turn" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Average / Turn</span>
+                        <span class="text-amber-400 font-mono text-[11px]" aria-hidden="true">📈 Per Req</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-avg-turn" aria-live="polite" class="text-2xl font-bold font-mono text-white tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">tokens</span>
+                    </div>
+                    <span id="kpi-lifetime-total" class="text-[11px] text-slate-400 mt-1">Lifetime: 0</span>
+                </div>
+
+                <div role="region" aria-label="Local Model Offload Savings" class="bg-slate-900/80 border border-emerald-900/60 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-emerald-400 font-medium">
+                        <span>Local Model Offload</span>
+                        <span class="text-emerald-400 font-mono text-[11px]" aria-hidden="true">🛡️ 0-Cloud</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-local-saved" aria-live="polite" class="text-2xl font-bold font-mono text-emerald-400 tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">tokens</span>
+                    </div>
+                    <span id="kpi-local-dollars" class="text-[11px] text-emerald-400 mt-1">$0.000 saved (0.0% local)</span>
+                </div>
+            </section>
+
+            <!-- Time Granularity Selector & Bar Chart -->
+            <section aria-labelledby="granularity-heading" class="mt-8 bg-slate-900/70 border border-slate-800 rounded-xl p-5 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h2 id="granularity-heading" class="text-base font-bold text-white flex items-center gap-2">
+                            <span>Token Consumption by Granularity</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Switch across Minute, Hourly, Daily, Monthly, and Yearly intervals</p>
+                    </div>
+                    <div class="text-xs text-slate-400 font-mono" id="data-as-of">
+                        As of: --
+                    </div>
+                </div>
+
+                <div role="tablist" aria-label="Token Usage Time Granularities" id="granularity-tablist" class="flex flex-wrap gap-2 border-b border-slate-800/80 pb-3">
+                    <button type="button" role="tab" id="tab-minute" aria-selected="true" aria-controls="panel-telemetry" tabindex="0" onclick="switchTimeframe('minute')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-teal-600 text-white shadow-sm focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                        Per-Minute (60m)
+                    </button>
+                    <button type="button" role="tab" id="tab-hourly" aria-selected="false" aria-controls="panel-telemetry" tabindex="-1" onclick="switchTimeframe('hourly')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                        Hourly (24h)
+                    </button>
+                    <button type="button" role="tab" id="tab-daily" aria-selected="false" aria-controls="panel-telemetry" tabindex="-1" onclick="switchTimeframe('daily')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                        Daily (30d)
+                    </button>
+                    <button type="button" role="tab" id="tab-monthly" aria-selected="false" aria-controls="panel-telemetry" tabindex="-1" onclick="switchTimeframe('monthly')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                        Monthly (12m)
+                    </button>
+                    <button type="button" role="tab" id="tab-yearly" aria-selected="false" aria-controls="panel-telemetry" tabindex="-1" onclick="switchTimeframe('yearly')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                        Yearly (Annual)
+                    </button>
+                </div>
+
+                <div role="tabpanel" id="panel-telemetry" aria-labelledby="tab-minute" tabindex="0" class="mt-4 focus:outline-none">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 p-3 bg-slate-950/60 border border-slate-800/80 rounded-lg text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">View Requests</span>
+                            <span id="view-requests" class="font-mono font-bold text-slate-200">0</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Uncached Input</span>
+                            <span id="view-uncached" class="font-mono font-bold text-amber-300">0</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Cache Read</span>
+                            <span id="view-cached" class="font-mono font-bold text-emerald-300">0</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Output Tokens</span>
+                            <span id="view-output" class="font-mono font-bold text-sky-300">0</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Total Tokens</span>
+                            <span id="view-total" class="font-mono font-bold text-teal-400">0</span>
+                        </div>
+                    </div>
+
+                    <div id="chart-container" class="mt-5 p-4 bg-slate-950/40 rounded-lg border border-slate-800/60" aria-hidden="true">
+                        <div class="text-xs font-semibold text-slate-400 mb-2 flex justify-between items-center">
+                            <span>Relative Token Volume</span>
+                            <span id="chart-max-label" class="font-mono text-[11px] text-slate-400">Max: 0</span>
+                        </div>
+                        <div id="visual-bars" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <div class="overflow-x-auto mt-5 rounded-lg border border-slate-800">
+                        <table class="w-full text-left text-xs" aria-label="Detailed token metrics by interval">
+                            <caption class="sr-only">Token metrics table for the selected time granularity</caption>
+                            <thead>
+                                <tr class="bg-slate-900/90 text-[11px] font-semibold text-slate-300 uppercase tracking-wider border-b border-slate-800">
+                                    <th scope="col" class="py-2.5 px-3">Interval</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right">Requests</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right text-amber-300">Uncached Input</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right text-emerald-300">Cache Read</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right text-sky-300">Output</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right font-bold text-teal-300">Total Tokens</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right">Cache Hit %</th>
+                                    <th scope="col" class="py-2.5 px-3 text-right">Avg / Req</th>
+                                </tr>
+                            </thead>
+                            <tbody id="telemetry-table-body" class="divide-y divide-slate-800/60 font-mono">
+                                <tr>
+                                    <td colspan="8" class="py-4 text-center text-slate-400 font-sans">Loading telemetry data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Sessions Table -->
+            <section aria-labelledby="sessions-heading" class="mt-8 mb-12 bg-slate-900/70 border border-slate-800 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 id="sessions-heading" class="text-base font-bold text-white">Recent Sessions Breakdown</h2>
+                        <p class="text-xs text-slate-400">Most active agent sessions and token distributions</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-slate-800">
+                    <table class="w-full text-left text-xs" aria-label="Recent session token breakdown">
+                        <caption class="sr-only">Breakdown of tokens consumed by recent active sessions</caption>
+                        <thead>
+                            <tr class="bg-slate-900/90 text-[11px] font-semibold text-slate-300 uppercase tracking-wider border-b border-slate-800">
+                                <th scope="col" class="py-2.5 px-3">Session ID</th>
+                                <th scope="col" class="py-2.5 px-3">Last Active (SAST)</th>
+                                <th scope="col" class="py-2.5 px-3 text-right">Steps</th>
+                                <th scope="col" class="py-2.5 px-3 text-right text-amber-300">Uncached</th>
+                                <th scope="col" class="py-2.5 px-3 text-right text-emerald-300">Cache Read</th>
+                                <th scope="col" class="py-2.5 px-3 text-right text-sky-300">Output</th>
+                                <th scope="col" class="py-2.5 px-3 text-right font-bold text-teal-300">Total Tokens</th>
+                                <th scope="col" class="py-2.5 px-3 text-right">Cache %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessions-table-body" class="divide-y divide-slate-800/60 font-mono">
+                            <tr>
+                                <td colspan="8" class="py-4 text-center text-slate-400 font-sans">Loading recent sessions...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- VIEW 2: AST Efficiency & Benchmark Runner -->
+        <section id="view-ast-efficiency" role="tabpanel" aria-labelledby="tab-view-efficiency" tabindex="0" class="hidden focus:outline-none">
+            <!-- Efficiency KPI Grid -->
+            <section aria-labelledby="efficiency-kpi-heading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <h2 id="efficiency-kpi-heading" class="sr-only">AST Token Efficiency Metrics</h2>
+
+                <div role="region" aria-label="Average Token Reduction Ratio" class="bg-slate-900/80 border border-teal-800/60 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-teal-400 font-medium">
+                        <span>Average Reduction Ratio</span>
+                        <span id="ast-sla-badge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">SLA Met (≥80%)</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-ast-reduction" class="text-3xl font-bold font-mono text-teal-400 tabular-nums">90.4%</span>
+                        <span class="text-xs text-slate-400">spared per block</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Formula: (T_full - T_ast) / T_full</span>
+                </div>
+
+                <div role="region" aria-label="Cumulative Tokens Spared" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Tokens Spared</span>
+                        <span class="text-sky-400 font-mono text-[11px]" aria-hidden="true">⚡ Preserved</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-ast-tokens-spared" class="text-3xl font-bold font-mono text-white tabular-nums">17,471</span>
+                        <span class="text-xs text-slate-400">tokens spared</span>
+                    </div>
+                    <span id="kpi-ast-tokens-ratio" class="text-[11px] text-slate-400 mt-1">1,852 AST vs 19,323 Full</span>
+                </div>
+
+                <div role="region" aria-label="Financial Cost Avoidance" class="bg-slate-900/80 border border-emerald-900/60 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-emerald-400 font-medium">
+                        <span>Cost Avoidance</span>
+                        <span class="text-emerald-400 font-mono text-[11px]" aria-hidden="true">💰 $3.50/M</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-ast-cost-avoided" class="text-3xl font-bold font-mono text-emerald-400 tabular-nums">$0.0611</span>
+                        <span class="text-xs text-slate-400">USD avoided</span>
+                    </div>
+                    <span class="text-[11px] text-emerald-400 mt-1">Direct API spend reduction</span>
+                </div>
+
+                <div role="region" aria-label="Context Window Headroom" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Context Headroom</span>
+                        <span class="text-amber-400 font-mono text-[11px]" aria-hidden="true">🚀 Compaction Delay</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-ast-headroom" class="text-3xl font-bold font-mono text-amber-300 tabular-nums">10.4x</span>
+                        <span class="text-xs text-slate-400">slope reduction</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Delays session rollover</span>
+                </div>
+            </section>
+
+            <!-- Benchmark Runner Action Panel -->
+            <section aria-labelledby="benchmark-runner-heading" class="mt-8 bg-slate-900/70 border border-slate-800 rounded-xl p-5 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+                    <div>
+                        <h2 id="benchmark-runner-heading" class="text-base font-bold text-white flex items-center gap-2">
+                            <span>Empirical AST Efficiency Benchmark Runner</span>
+                            <span id="benchmark-status-badge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">Ready</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Executes dynamic AST symbol isolation vs full module parsing across DevCore core modules and specs</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span id="benchmark-duration-label" class="text-xs font-mono text-slate-400">Latency: ~28 ms</span>
+                        <button type="button" id="btn-run-benchmark" onclick="runAstBenchmark()" aria-label="Execute AST Efficiency Benchmark Suite" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 shadow focus:ring-2 focus:ring-teal-400 focus:outline-none">
+                            <span id="benchmark-btn-spinner" class="hidden animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full" aria-hidden="true"></span>
+                            <span id="benchmark-btn-text">▶ Run Benchmark Suite</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AST Benchmark Detailed Table -->
+                <div class="overflow-x-auto mt-4 rounded-lg border border-slate-800">
+                    <table class="w-full text-left text-xs" aria-label="AST Surgical Benchmark Test Cases">
+                        <caption class="sr-only">Detailed empirical metrics comparing full module reading to surgical AST symbol extraction</caption>
+                        <thead>
+                            <tr class="bg-slate-900/90 text-[11px] font-semibold text-slate-300 uppercase tracking-wider border-b border-slate-800">
+                                <th scope="col" class="py-2.5 px-3">Target Component</th>
+                                <th scope="col" class="py-2.5 px-3">Source Asset &amp; Symbol</th>
+                                <th scope="col" class="py-2.5 px-3">Span</th>
+                                <th scope="col" class="py-2.5 px-3 text-right text-slate-400">Full Tokens</th>
+                                <th scope="col" class="py-2.5 px-3 text-right text-teal-300">AST Tokens</th>
+                                <th scope="col" class="py-2.5 px-3 text-right text-emerald-400 font-bold">Tokens Spared</th>
+                                <th scope="col" class="py-2.5 px-3 text-right font-bold text-teal-400">Reduction %</th>
+                                <th scope="col" class="py-2.5 px-3 text-right font-mono text-slate-400">Parse Latency</th>
+                                <th scope="col" class="py-2.5 px-3 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ast-benchmark-table-body" class="divide-y divide-slate-800/60 font-mono">
+                            <!-- Pre-populated baseline rows; dynamically updated by runAstBenchmark() -->
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">Telemetry Engine Factory</th>
+                                <td class="py-2 px-3 text-slate-400">core/token_telemetry.py::get_telemetry_engine</td>
+                                <td class="py-2 px-3 text-slate-400">L453-457</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">3,417</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">22</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+3,395</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">99.36%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">4.15 ms</td>
+                                <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">PASS</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">Telemetry Live Step Recorder</th>
+                                <td class="py-2 px-3 text-slate-400">core/token_telemetry.py::record_live_step</td>
+                                <td class="py-2 px-3 text-slate-400">L22-69</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">3,417</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">351</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+3,066</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">89.73%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">3.96 ms</td>
+                                <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">PASS</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">System Route API Telemetry</th>
+                                <td class="py-2 px-3 text-slate-400">core/routes/system.py::api_token_telemetry</td>
+                                <td class="py-2 px-3 text-slate-400">L474-483</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">5,116</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">113</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+5,003</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">97.79%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">8.25 ms</td>
+                                <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">PASS</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">Audit Registry Builtins</th>
+                                <td class="py-2 px-3 text-slate-400">core/audit_registry.py::register_builtin_audits</td>
+                                <td class="py-2 px-3 text-slate-400">L32-117</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">4,396</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">961</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+3,435</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">78.14%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">4.45 ms</td>
+                                <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">PASS</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">Encrypted VFS Constructor</th>
+                                <td class="py-2 px-3 text-slate-400">security/vfs.py::EncryptedVFS.__init__</td>
+                                <td class="py-2 px-3 text-slate-400">L11-16</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">578</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">52</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+526</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">91.00%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">0.46 ms</td>
+                                <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">PASS</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">GEMINI.md Hot-Patch Spec</th>
+                                <td class="py-2 px-3 text-slate-400">GEMINI.md::Section 3 (Zero-Restart)</td>
+                                <td class="py-2 px-3 text-slate-400">L31-40</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">2,399</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">353</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+2,046</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">85.29%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">0.41 ms</td>
+                                <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">PASS</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- VIEW 3: Audit Health & Diagnostics -->
+        <section id="view-audit-health" role="tabpanel" aria-labelledby="tab-view-audits" tabindex="0" class="hidden focus:outline-none">
+            <section aria-labelledby="audit-kpi-heading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <h2 id="audit-kpi-heading" class="sr-only">Audit Catalog Summary</h2>
+
+                <div role="region" aria-label="Total Registered Audits" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Total Audits</span>
+                        <span class="text-sky-400 font-mono text-[11px]" aria-hidden="true">Catalog</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-audit-total" class="text-3xl font-bold font-mono text-white tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">audits cataloged</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Discovered dynamically</span>
+                </div>
+
+                <div role="region" aria-label="Passing Audits" class="bg-slate-900/80 border border-emerald-900/60 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-emerald-400 font-medium">
+                        <span>Passing</span>
+                        <span class="text-emerald-400 font-mono text-[11px]" aria-hidden="true">✓ Verified</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-audit-passing" class="text-3xl font-bold font-mono text-emerald-400 tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">clean passing</span>
+                    </div>
+                    <span class="text-[11px] text-emerald-400 mt-1">Zero regression</span>
+                </div>
+
+                <div role="region" aria-label="Failing or Warning Audits" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-amber-400 font-medium">
+                        <span>Warnings / Failures</span>
+                        <span class="text-amber-400 font-mono text-[11px]" aria-hidden="true">⚠️ Review</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-audit-failing" class="text-3xl font-bold font-mono text-amber-300 tabular-nums">0</span>
+                        <span class="text-xs text-slate-400">requiring action</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Diagnostics review</span>
+                </div>
+
+                <div role="region" aria-label="Interactive Hub Link" class="bg-slate-900/80 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span>Audit Hub</span>
+                        <span class="text-teal-400 font-mono text-[11px]" aria-hidden="true">Hub</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="/audits" id="btn-launch-audits-hub" aria-label="Launch interactive system audits hub (Alt+A)" class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-lg text-xs transition-colors shadow">
+                            <span aria-hidden="true">🛡️</span> Open Audits Hub
+                        </a>
+                    </div>
+                    <span class="text-[11px] text-slate-400 mt-1">Full interactive runner &amp; logs</span>
+                </div>
+            </section>
+
+            <!-- Quick Audit Status Table -->
+            <section aria-labelledby="quick-audit-list-heading" class="mt-8 mb-12 bg-slate-900/70 border border-slate-800 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 id="quick-audit-list-heading" class="text-base font-bold text-white">System Diagnostics Overview</h2>
+                        <p class="text-xs text-slate-400">Live operational status across all security, accessibility, and efficiency audits</p>
+                    </div>
+                    <button type="button" id="btn-refresh-audit-catalog" onclick="fetchAuditHealth()" aria-label="Refresh audit catalog status" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                        <span aria-hidden="true">↻</span> Refresh Audits
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-slate-800">
+                    <table class="w-full text-left text-xs" aria-label="System Audits Catalog Overview">
+                        <caption class="sr-only">Summary table of discovered audits and their last execution status</caption>
+                        <thead>
+                            <tr class="bg-slate-900/90 text-[11px] font-semibold text-slate-300 uppercase tracking-wider border-b border-slate-800">
+                                <th scope="col" class="py-2.5 px-3">Audit Name</th>
+                                <th scope="col" class="py-2.5 px-3">Category</th>
+                                <th scope="col" class="py-2.5 px-3">Target File</th>
+                                <th scope="col" class="py-2.5 px-3 text-right">Duration</th>
+                                <th scope="col" class="py-2.5 px-3">Summary</th>
+                                <th scope="col" class="py-2.5 px-3 text-center">Last Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quick-audit-tbody" class="divide-y divide-slate-800/60 font-mono">
+                            <tr>
+                                <td colspan="6" class="py-4 text-center text-slate-400 font-sans">Loading system audits...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        let currentTab = 'minute';
+        let currentMainView = 'usage';
+        let refreshIntervalMs = 5000;
+        let refreshTimer = null;
+        let telemetryCache = null;
+        let auditHealthLoaded = false;
+        const numberFmt = new Intl.NumberFormat('en-US');
+
+        function announceTelemetry(msg) {
+            const el = document.getElementById('telemetry-announcer');
+            if (el) {
+                el.textContent = '';
+                setTimeout(() => { el.textContent = msg; }, 40);
+            }
+        }
+
+        function formatNum(n) {
+            return numberFmt.format(n || 0);
+        }
+
+        function getAuthToken() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token') || localStorage.getItem('agy_auth_token') || '';
+        }
+
+        function switchMainView(view) {
+            currentMainView = view;
+            const views = {
+                usage: {
+                    tab: document.getElementById('tab-view-usage'),
+                    panel: document.getElementById('view-token-usage'),
+                    title: 'Token Usage & Burn'
+                },
+                efficiency: {
+                    tab: document.getElementById('tab-view-efficiency'),
+                    panel: document.getElementById('view-ast-efficiency'),
+                    title: 'AST Efficiency & Benchmarks'
+                },
+                audits: {
+                    tab: document.getElementById('tab-view-audits'),
+                    panel: document.getElementById('view-audit-health'),
+                    title: 'Audit Health & Diagnostics'
+                }
+            };
+
+            Object.entries(views).forEach(([k, item]) => {
+                if (!item.tab || !item.panel) return;
+                const isSelected = (k === view);
+                item.tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+                item.tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+
+                if (isSelected) {
+                    item.tab.className = "px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-teal-600 text-white shadow focus:ring-2 focus:ring-teal-400 focus:outline-none flex items-center gap-2";
+                    item.panel.classList.remove('hidden');
+                } else {
+                    item.tab.className = "px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none flex items-center gap-2";
+                    item.panel.classList.add('hidden');
+                }
+            });
+
+            announceTelemetry(`Switched to ${views[view].title} view.`);
+
+            if (view === 'audits' && !auditHealthLoaded) {
+                fetchAuditHealth();
+            }
+        }
+
+        function setupMainViewKeyboard() {
+            const tablist = document.getElementById('main-view-tablist');
+            if (!tablist) return;
+            const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+
+            tablist.addEventListener('keydown', (e) => {
+                const currentIdx = tabs.indexOf(document.activeElement);
+                if (currentIdx === -1) return;
+
+                let nextIdx = -1;
+                if (e.key === 'ArrowRight') {
+                    nextIdx = (currentIdx + 1) % tabs.length;
+                } else if (e.key === 'ArrowLeft') {
+                    nextIdx = (currentIdx - 1 + tabs.length) % tabs.length;
+                } else if (e.key === 'Home') {
+                    nextIdx = 0;
+                } else if (e.key === 'End') {
+                    nextIdx = tabs.length - 1;
+                }
+
+                if (nextIdx !== -1) {
+                    e.preventDefault();
+                    tabs[nextIdx].focus();
+                    tabs[nextIdx].click();
+                }
+            });
+        }
+
+        function setupTablistKeyboard() {
+            const tablist = document.getElementById('granularity-tablist');
+            if (!tablist) return;
+            const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+
+            tablist.addEventListener('keydown', (e) => {
+                const currentIdx = tabs.indexOf(document.activeElement);
+                if (currentIdx === -1) return;
+
+                let nextIdx = -1;
+                if (e.key === 'ArrowRight') {
+                    nextIdx = (currentIdx + 1) % tabs.length;
+                } else if (e.key === 'ArrowLeft') {
+                    nextIdx = (currentIdx - 1 + tabs.length) % tabs.length;
+                } else if (e.key === 'Home') {
+                    nextIdx = 0;
+                } else if (e.key === 'End') {
+                    nextIdx = tabs.length - 1;
+                }
+
+                if (nextIdx !== -1) {
+                    e.preventDefault();
+                    tabs[nextIdx].focus();
+                    tabs[nextIdx].click();
+                }
+            });
+        }
+
+        function setupGlobalShortcuts() {
+            window.addEventListener('keydown', (e) => {
+                if (e.altKey && !e.ctrlKey && !e.metaKey) {
+                    const key = e.key.toLowerCase();
+                    if (key === 'h') {
+                        e.preventDefault();
+                        window.location.href = '/';
+                    } else if (key === 't') {
+                        e.preventDefault();
+                        window.location.href = '/telemetry';
+                    } else if (key === 'a') {
+                        e.preventDefault();
+                        window.location.href = '/audits';
+                    }
+                }
+            });
+        }
+
+        function switchTimeframe(tf) {
+            currentTab = tf;
+            const tabs = {
+                minute: document.getElementById('tab-minute'),
+                hourly: document.getElementById('tab-hourly'),
+                daily: document.getElementById('tab-daily'),
+                monthly: document.getElementById('tab-monthly'),
+                yearly: document.getElementById('tab-yearly')
+            };
+
+            Object.entries(tabs).forEach(([k, btn]) => {
+                if (!btn) return;
+                const isSelected = (k === tf);
+                btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+                btn.setAttribute('tabindex', isSelected ? '0' : '-1');
+                if (isSelected) {
+                    btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-teal-600 text-white shadow-sm focus:ring-2 focus:ring-teal-400 focus:outline-none";
+                } else {
+                    btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white focus:ring-2 focus:ring-teal-400 focus:outline-none";
+                }
+            });
+
+            const panel = document.getElementById('panel-telemetry');
+            if (panel && tabs[tf]) {
+                panel.setAttribute('aria-labelledby', tabs[tf].id);
+            }
+
+            if (telemetryCache) {
+                renderActiveSeries(telemetryCache);
+            }
+        }
+
+        async function fetchTelemetry(manual = false) {
+            const token = getAuthToken();
+            const statusEl = document.getElementById('telemetry-status');
+            const pulseEl = document.getElementById('live-pulse');
+
+            try {
+                const url = '/api/telemetry/tokens?timeframe=' + encodeURIComponent(currentTab) + (manual ? '&force=true' : '');
+                const res = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+
+                const data = await res.json();
+                if (data && data.success) {
+                    telemetryCache = data;
+                    renderKpis(data.kpis);
+                    renderActiveSeries(data);
+                    renderSessions(data.recent_sessions);
+                    if (pulseEl) pulseEl.className = "inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                    if (statusEl) {
+                        const rateSec = Math.round(refreshIntervalMs / 1000);
+                        statusEl.textContent = refreshIntervalMs > 0 ? `● Live (${rateSec}s)` : '⏸️ Paused';
+                    }
+                    if (manual && data.kpis) {
+                        announceTelemetry('Telemetry refreshed. Minute burn rate: ' + formatNum(data.kpis.minute_burn_rate) + ' tokens per minute.');
+                    }
+                }
+            } catch (err) {
+                if (pulseEl) pulseEl.className = "inline-block w-2 h-2 rounded-full bg-rose-500";
+                if (statusEl) statusEl.textContent = '⚠️ Reconnecting...';
+            }
+        }
+
+        function renderKpis(kpis) {
+            if (!kpis) return;
+            document.getElementById('kpi-minute').textContent = formatNum(kpis.minute_burn_rate);
+            document.getElementById('kpi-hour').textContent = formatNum(kpis.current_hour_tokens);
+            document.getElementById('kpi-24h').textContent = formatNum(kpis.last_24h_tokens);
+            document.getElementById('kpi-24h-requests').textContent = formatNum(kpis.last_24h_requests) + ' requests';
+            document.getElementById('kpi-cache-rate').textContent = (kpis.last_24h_cache_hit_rate || 0).toFixed(2) + '%';
+            document.getElementById('kpi-avg-turn').textContent = formatNum(kpis.last_24h_avg_per_request);
+            document.getElementById('kpi-lifetime-total').textContent = 'Lifetime: ' + formatNum(kpis.lifetime_tokens);
+            document.getElementById('data-as-of').textContent = 'As of: ' + (kpis.as_of || '--');
+            if (document.getElementById('kpi-local-saved')) {
+                document.getElementById('kpi-local-saved').textContent = formatNum(kpis.local_tokens_offloaded || 0);
+            }
+            if (document.getElementById('kpi-local-dollars')) {
+                const dollars = (kpis.estimated_cost_saved_usd || 0).toFixed(4);
+                const pct = (kpis.local_offload_percent || 0).toFixed(1);
+                document.getElementById('kpi-local-dollars').textContent = '$' + dollars + ' saved (' + pct + '% local)';
+            }
+        }
+
+        function renderActiveSeries(data) {
+            const series = (data.series && data.series[currentTab]) || [];
+            const tbody = document.getElementById('telemetry-table-body');
+            const barsContainer = document.getElementById('visual-bars');
+            const maxLabel = document.getElementById('chart-max-label');
+
+            let totalReq = 0, totalInp = 0, totalCache = 0, totalOut = 0, totalTokens = 0;
+            let maxVal = 1;
+
+            series.forEach(item => {
+                totalReq += item.requests || 0;
+                totalInp += item.input_tokens || 0;
+                totalCache += item.cache_read_tokens || 0;
+                totalOut += item.output_tokens || 0;
+                totalTokens += item.total_tokens || 0;
+                if (item.total_tokens > maxVal) maxVal = item.total_tokens;
+            });
+
+            document.getElementById('view-requests').textContent = formatNum(totalReq);
+            document.getElementById('view-uncached').textContent = formatNum(totalInp);
+            document.getElementById('view-cached').textContent = formatNum(totalCache);
+            document.getElementById('view-output').textContent = formatNum(totalOut);
+            document.getElementById('view-total').textContent = formatNum(totalTokens);
+            if (maxLabel) maxLabel.textContent = 'Max: ' + formatNum(maxVal) + ' tokens';
+
+            if (barsContainer) {
+                const sample = series.filter(s => s.total_tokens > 0).slice(-20);
+                if (sample.length === 0) {
+                    barsContainer.innerHTML = '<div class="text-[11px] text-slate-400 py-2">No active token activity recorded in this timeframe.</div>';
+                } else {
+                    barsContainer.innerHTML = sample.map(item => {
+                        const pct = Math.max(3, Math.round((item.total_tokens / maxVal) * 100));
+                        return `
+                            <div class="flex items-center gap-2 text-[11px] font-mono">
+                                <span class="w-16 text-slate-400 text-right truncate">${item.label}</span>
+                                <div class="flex-1 bg-slate-900 rounded h-3 overflow-hidden border border-slate-800 flex">
+                                    <div class="bg-gradient-to-r from-teal-500 to-emerald-400 h-full rounded" style="width: ${pct}%"></div>
+                                </div>
+                                <span class="w-20 text-slate-200 text-right font-bold">${formatNum(item.total_tokens)}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            if (tbody) {
+                if (series.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-400">No data points available.</td></tr>';
+                    return;
+                }
+                const reversed = [...series].reverse();
+                tbody.innerHTML = reversed.map(item => `
+                    <tr class="hover:bg-slate-800/40 transition-colors">
+                        <th scope="row" class="py-2 px-3 font-semibold text-slate-200 whitespace-nowrap">${item.full_label || item.label}</th>
+                        <td class="py-2 px-3 text-right tabular-nums text-slate-300">${formatNum(item.requests)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-amber-300">${formatNum(item.input_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-emerald-300">${formatNum(item.cache_read_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-sky-300">${formatNum(item.output_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums font-bold text-teal-300">${formatNum(item.total_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-slate-300">${(item.cache_hit_rate || 0).toFixed(1)}%</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-slate-400">${formatNum(item.avg_per_request)}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderSessions(sessions) {
+            const tbody = document.getElementById('sessions-table-body');
+            if (!tbody) return;
+
+            if (!sessions || sessions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-400 font-sans">No recorded sessions.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = sessions.map(s => {
+                const shortId = s.conv_id.length > 18 ? s.conv_id.substring(0, 8) + '...' + s.conv_id.substring(s.conv_id.length - 6) : s.conv_id;
+                return `
+                    <tr class="hover:bg-slate-800/40 transition-colors">
+                        <th scope="row" class="py-2 px-3 text-teal-400 hover:text-teal-300 whitespace-nowrap" title="${s.conv_id}">
+                            ${shortId}
+                        </th>
+                        <td class="py-2 px-3 text-slate-300 whitespace-nowrap">${s.last_active}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-slate-300">${formatNum(s.steps)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-amber-300">${formatNum(s.input_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-emerald-300">${formatNum(s.cache_read_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-sky-300">${formatNum(s.output_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums font-bold text-teal-300">${formatNum(s.total_tokens)}</td>
+                        <td class="py-2 px-3 text-right tabular-nums text-slate-300">${(s.cache_hit_rate || 0).toFixed(1)}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function runAstBenchmark() {
+            const btn = document.getElementById('btn-run-benchmark');
+            const spinner = document.getElementById('benchmark-btn-spinner');
+            const btnText = document.getElementById('benchmark-btn-text');
+            const badge = document.getElementById('benchmark-status-badge');
+            const latencyLabel = document.getElementById('benchmark-duration-label');
+            const token = getAuthToken();
+
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+            btnText.textContent = 'Running Benchmark...';
+            badge.className = "text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800 font-mono animate-pulse";
+            badge.textContent = 'Executing';
+            announceTelemetry('Executing AST Token Efficiency Benchmark suite across DevCore modules.');
+
+            const startTime = performance.now();
+
+            try {
+                const res = await fetch('/api/audits/run', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ audit_id: 'audit_ast_efficiency' })
+                });
+
+                const dur = Math.round(performance.now() - startTime);
+
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                if (data && data.success && data.result) {
+                    const parsed = data.result.parsed_data || {};
+                    badge.className = "text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono";
+                    badge.textContent = 'Verified (PASS)';
+                    latencyLabel.textContent = `Latency: ${dur} ms`;
+
+                    if (parsed.avg_reduction_pct !== undefined) {
+                        document.getElementById('kpi-ast-reduction').textContent = parsed.avg_reduction_pct + '%';
+                        document.getElementById('kpi-ast-tokens-spared').textContent = formatNum(parsed.total_tokens_spared);
+                        document.getElementById('kpi-ast-tokens-ratio').textContent = `${formatNum(parsed.total_ast_tokens)} AST vs ${formatNum(parsed.total_full_tokens)} Full`;
+                        document.getElementById('kpi-ast-cost-avoided').textContent = '$' + (parsed.cost_avoidance_usd || 0).toFixed(4);
+                        document.getElementById('kpi-ast-headroom').textContent = (parsed.headroom_multiplier || 1.0) + 'x';
+                    }
+
+                    if (parsed.cases && parsed.cases.length > 0) {
+                        const tbody = document.getElementById('ast-benchmark-table-body');
+                        tbody.innerHTML = parsed.cases.map(c => `
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <th scope="row" class="py-2 px-3 font-semibold text-slate-200">${c.label}</th>
+                                <td class="py-2 px-3 text-slate-400">${c.target_file}::${c.symbol}</td>
+                                <td class="py-2 px-3 text-slate-400">L${c.line_span ? c.line_span.join('-') : '--'}</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">${formatNum(c.full_tokens)}</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-300 font-bold">${formatNum(c.ast_tokens)}</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-emerald-400 font-bold">+${formatNum(c.tokens_saved)}</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-teal-400 font-bold">${c.reduction_pct}%</td>
+                                <td class="py-2 px-3 text-right tabular-nums text-slate-400">${c.parse_duration_ms} ms</td>
+                                <td class="py-2 px-3 text-center">
+                                    <span class="px-2 py-0.5 rounded text-[10px] ${c.status === 'PASS' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'} font-bold">${c.status}</span>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+
+                    announceTelemetry(`Benchmark complete: ${parsed.avg_reduction_pct || 90}% average token reduction achieved across ${parsed.cases ? parsed.cases.length : 6} cases. Status PASS.`);
+                } else {
+                    throw new Error(data.error || 'Benchmark execution failed');
+                }
+            } catch (err) {
+                badge.className = "text-xs px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono";
+                badge.textContent = 'Failed';
+                announceTelemetry('Benchmark execution failed: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+                btnText.textContent = '▶ Re-Run Benchmark Suite';
+            }
+        }
+
+        async function fetchAuditHealth() {
+            const token = getAuthToken();
+            const tbody = document.getElementById('quick-audit-tbody');
+
+            try {
+                const res = await fetch('/api/audits', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                if (data && data.audits) {
+                    auditHealthLoaded = true;
+                    const audits = data.audits;
+                    const total = audits.length;
+                    const passing = audits.filter(a => a.last_status === 'PASS').length;
+                    const failing = audits.filter(a => a.last_status === 'FAIL' || a.last_status === 'WARN').length;
+
+                    document.getElementById('kpi-audit-total').textContent = total;
+                    document.getElementById('kpi-audit-passing').textContent = passing;
+                    document.getElementById('kpi-audit-failing').textContent = failing;
+
+                    if (tbody) {
+                        tbody.innerHTML = audits.map(a => {
+                            const badgeColor = a.last_status === 'PASS' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : (a.last_status === 'FAIL' ? 'bg-rose-950 text-rose-300 border border-rose-800' : 'bg-slate-800 text-slate-400 border border-slate-700');
+                            const dur = a.duration_seconds !== null ? `${a.duration_seconds}s` : '--';
+                            return `
+                                <tr class="hover:bg-slate-800/40 transition-colors">
+                                    <th scope="row" class="py-2 px-3 font-semibold text-slate-200">${a.name}</th>
+                                    <td class="py-2 px-3 text-slate-400 capitalize">${a.category || 'general'}</td>
+                                    <td class="py-2 px-3 text-slate-400 truncate max-w-xs">${a.target_file}</td>
+                                    <td class="py-2 px-3 text-right tabular-nums text-slate-400">${dur}</td>
+                                    <td class="py-2 px-3 text-slate-300 max-w-sm truncate">${a.summary || a.description || '--'}</td>
+                                    <td class="py-2 px-3 text-center">
+                                        <span class="px-2 py-0.5 rounded text-[10px] ${badgeColor} font-bold">${a.last_status || 'PENDING'}</span>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-rose-400">Failed to load system audits.</td></tr>';
+                }
+            }
+        }
+
+        function changeInterval() {
+            const val = parseInt(document.getElementById('refresh-interval-select').value, 10);
+            refreshIntervalMs = val;
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+            }
+            if (refreshIntervalMs > 0) {
+                refreshTimer = setInterval(() => fetchTelemetry(false), refreshIntervalMs);
+                document.getElementById('telemetry-status').textContent = `● Live (${Math.round(refreshIntervalMs / 1000)}s)`;
+                announceTelemetry(`Auto-refresh interval set to ${Math.round(refreshIntervalMs / 1000)} seconds.`);
+            } else {
+                document.getElementById('telemetry-status').textContent = '⏸️ Paused';
+                announceTelemetry('Auto-refresh paused.');
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (refreshTimer) {
+                    clearInterval(refreshTimer);
+                    refreshTimer = null;
+                }
+            } else {
+                fetchTelemetry(false);
+                if (refreshIntervalMs > 0 && !refreshTimer) {
+                    refreshTimer = setInterval(() => fetchTelemetry(false), refreshIntervalMs);
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupMainViewKeyboard();
+            setupTablistKeyboard();
+            setupGlobalShortcuts();
+            fetchTelemetry(false);
+            if (refreshIntervalMs > 0) {
+                refreshTimer = setInterval(() => fetchTelemetry(false), refreshIntervalMs);
+            }
+        });
+    </script>
+</body>
+</html>

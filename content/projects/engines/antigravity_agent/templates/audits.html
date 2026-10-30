@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Audits Review Hub | DevCore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#14b8a6', 600: '#0d9488' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        :focus-visible { outline: 2px solid #14b8a6; outline-offset: 2px; }
+        pre code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-teal-500/30 selection:text-teal-200 antialiased">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded focus:shadow-lg">
+        Skip to main content
+    </a>
+
+    <!-- Accessibility Live Announcer for Screen Readers -->
+    <div id="a11y-announcer" role="status" aria-live="polite" class="sr-only"></div>
+
+    <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl" aria-hidden="true">🛡️</span>
+                <div>
+                    <h1 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                        System Audits Review Hub
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-800 font-mono">Dynamic Discovery</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Comprehensive diagnostic review, live execution, and automated discovery engine</p>
+                </div>
+            </div>
+
+            <div class="flex items-center flex-wrap gap-2.5">
+                <div class="flex items-center gap-2 px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700/60 text-xs">
+                    <span id="global-status-indicator" class="inline-block w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                    <span id="global-status-text" class="font-mono text-slate-300">Ready</span>
+                </div>
+
+                <button type="button" id="btn-run-all" onclick="runAllAudits()" aria-label="Execute all registered audits sequentially" class="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs font-bold transition-colors flex items-center gap-1.5 shadow focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">▶</span> Run All Audits
+                </button>
+
+                <button type="button" id="btn-rescan" onclick="refreshAudits()" aria-label="Re-scan scripts folder and manifest for newly added audits" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-teal-300 hover:text-teal-200 border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">↻</span> Re-Scan Directory
+                </button>
+
+                <a href="/telemetry" id="nav-telemetry-btn" aria-label="Navigate to Token Telemetry Dashboard (Alt+T)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-teal-300 hover:text-white border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">📊</span> Telemetry
+                </a>
+
+                <a href="/" id="nav-portal-btn" aria-label="Return to DevCore Web Portal (Alt+H)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                    <span aria-hidden="true">🏠</span> Portal
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" tabindex="-1" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+        <!-- KPI Summary Cards -->
+        <section aria-labelledby="kpi-heading" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+            <h2 id="kpi-heading" class="sr-only">Audit Metrics Summary</h2>
+
+            <div role="region" aria-label="Total Registered Audits" class="bg-slate-900/80 border border-slate-800 rounded-lg p-3.5 flex flex-col justify-between">
+                <span class="text-xs text-slate-400 font-medium">Total Audits</span>
+                <div class="mt-1.5 flex items-baseline gap-2">
+                    <span id="kpi-total" class="text-2xl font-bold font-mono text-white tabular-nums">0</span>
+                    <span class="text-xs text-slate-400">cataloged</span>
+                </div>
+                <span class="text-[11px] text-slate-400 mt-1">Built-in + Discovered</span>
+            </div>
+
+            <div role="region" aria-label="Passing Audits" class="bg-slate-900/80 border border-slate-800 rounded-lg p-3.5 flex flex-col justify-between">
+                <span class="text-xs text-emerald-400 font-medium">Passing Audits</span>
+                <div class="mt-1.5 flex items-baseline gap-2">
+                    <span id="kpi-passing" class="text-2xl font-bold font-mono text-emerald-400 tabular-nums">0</span>
+                    <span class="text-xs text-slate-400">tests pass</span>
+                </div>
+                <span class="text-[11px] text-slate-400 mt-1">Zero critical issues</span>
+            </div>
+
+            <div role="region" aria-label="Audits with Warnings" class="bg-slate-900/80 border border-slate-800 rounded-lg p-3.5 flex flex-col justify-between">
+                <span class="text-xs text-amber-400 font-medium">Warnings</span>
+                <div class="mt-1.5 flex items-baseline gap-2">
+                    <span id="kpi-warnings" class="text-2xl font-bold font-mono text-amber-400 tabular-nums">0</span>
+                    <span class="text-xs text-slate-400">non-blocking</span>
+                </div>
+                <span class="text-[11px] text-slate-400 mt-1">Advisory findings</span>
+            </div>
+
+            <div role="region" aria-label="Failing Audits" class="bg-slate-900/80 border border-slate-800 rounded-lg p-3.5 flex flex-col justify-between">
+                <span class="text-xs text-rose-400 font-medium">Failing / Errors</span>
+                <div class="mt-1.5 flex items-baseline gap-2">
+                    <span id="kpi-failing" class="text-2xl font-bold font-mono text-rose-400 tabular-nums">0</span>
+                    <span class="text-xs text-slate-400">failing</span>
+                </div>
+                <span class="text-[11px] text-slate-400 mt-1">Require triage</span>
+            </div>
+
+            <div role="region" aria-label="Total Execution Time" class="bg-slate-900/80 border border-slate-800 rounded-lg p-3.5 flex flex-col justify-between col-span-2 sm:col-span-1">
+                <span class="text-xs text-sky-400 font-medium">Last Run Time</span>
+                <div class="mt-1.5 flex items-baseline gap-2">
+                    <span id="kpi-duration" class="text-2xl font-bold font-mono text-sky-300 tabular-nums">0.0s</span>
+                    <span class="text-xs text-slate-400">elapsed</span>
+                </div>
+                <span id="kpi-last-run-date" class="text-[11px] text-slate-400 mt-1 truncate">Never executed</span>
+            </div>
+        </section>
+
+        <!-- Filters & Search Toolbar -->
+        <section aria-label="Filter and Search Audits" class="bg-slate-900/60 border border-slate-800 rounded-lg p-3.5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0" role="tablist" aria-label="Audit Category Filters">
+                <button type="button" role="tab" aria-selected="true" id="tab-all" onclick="filterCategory('all')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-900 text-teal-200 border border-teal-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">All (<span id="count-all">0</span>)</button>
+                <button type="button" role="tab" aria-selected="false" id="tab-network" onclick="filterCategory('network')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">Network (<span id="count-network">0</span>)</button>
+                <button type="button" role="tab" aria-selected="false" id="tab-security" onclick="filterCategory('security')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">Security (<span id="count-security">0</span>)</button>
+                <button type="button" role="tab" aria-selected="false" id="tab-threat" onclick="filterCategory('threat')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">Threat Matrix (<span id="count-threat">0</span>)</button>
+                <button type="button" role="tab" aria-selected="false" id="tab-system" onclick="filterCategory('system')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">System (<span id="count-system">0</span>)</button>
+                <button type="button" role="tab" aria-selected="false" id="tab-documentation" onclick="filterCategory('documentation')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">Docs (<span id="count-documentation">0</span>)</button>
+                <button type="button" role="tab" aria-selected="false" id="tab-custom" onclick="filterCategory('custom')" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none">Custom (<span id="count-custom">0</span>)</button>
+            </div>
+
+            <div class="relative w-full md:w-72">
+                <label for="audit-search" class="sr-only">Search audits by name or keyword</label>
+                <input type="text" id="audit-search" oninput="handleSearch()" placeholder="Search audits..." class="w-full bg-slate-950 border border-slate-700 rounded-lg text-xs px-3 py-1.5 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:outline-none" />
+                <span class="absolute right-2.5 top-2 text-slate-500 text-xs" aria-hidden="true">🔍</span>
+            </div>
+        </section>
+
+        <!-- Audit Cards List -->
+        <section aria-labelledby="audits-list-heading" class="flex flex-col gap-3">
+            <h2 id="audits-list-heading" class="sr-only">Audits Catalog and Diagnostic Outputs</h2>
+
+            <div id="audits-container" class="flex flex-col gap-3">
+                <div class="p-8 text-center text-slate-400 bg-slate-900/40 rounded-lg border border-slate-800">
+                    <span class="inline-block animate-spin mr-2" aria-hidden="true">⏳</span> Loading registered audits...
+                </div>
+            </div>
+        </section>
+
+        <!-- Extensibility Helper Accordion -->
+        <section aria-labelledby="extensibility-heading" class="mt-4">
+            <details class="bg-slate-900/60 border border-slate-800 rounded-lg p-4 group">
+                <summary class="font-bold text-sm text-teal-400 cursor-pointer flex items-center justify-between focus:ring-2 focus:ring-teal-500 focus:outline-none rounded">
+                    <span id="extensibility-heading" class="flex items-center gap-2">
+                        <span aria-hidden="true">💡</span> How to Add New System Audits (Zero-Code Dynamic Discovery)
+                    </span>
+                    <span class="text-xs text-slate-400 group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
+                </summary>
+                <div class="mt-3 text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-3">
+                    <p><strong class="text-white">Option 1: Drop a script into <code>scripts/</code></strong></p>
+                    <p class="text-slate-400">Place any executable Python script named <code>audit_&lt;name&gt;.py</code> in the <code>scripts/</code> directory. DevCore's Discovery Engine automatically parses its module docstring via AST for title/summary and catalogs it immediately. If the script supports <code>--json</code>, its structured scorecard will automatically render in the dashboard.</p>
+                    <p class="mt-2"><strong class="text-white">Option 2: Register in <code>core/audits_manifest.json</code></strong></p>
+                    <p class="text-slate-400">Add an entry into <code>core/audits_manifest.json</code> to declare arbitrary shell, bash, or python commands with custom categories without modifying any core engine code.</p>
+                </div>
+            </details>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-900 mt-12 py-6 text-center text-xs text-slate-500">
+        DevCore Dynamic Audits Review Engine &bull; Zero-Restart Architecture &bull; Screen-Reader Optimized
+    </footer>
+
+    <script>
+        let allAudits = [];
+        let activeCategory = 'all';
+        let searchQuery = '';
+        let runningAudits = new Set();
+
+        function announceA11y(msg) {
+            const el = document.getElementById('a11y-announcer');
+            if (el) el.textContent = msg;
+        }
+
+        async function fetchAudits() {
+            try {
+                const res = await fetch('/api/audits');
+                const data = await res.json();
+                if (data.success && Array.isArray(data.audits)) {
+                    allAudits = data.audits;
+                    updateKpis();
+                    renderAudits();
+                } else {
+                    document.getElementById('audits-container').innerHTML = `
+                        <div class="p-6 text-center text-rose-400 bg-rose-950/20 border border-rose-800 rounded-lg">
+                            Failed to load audits catalog: ${data.error || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                document.getElementById('audits-container').innerHTML = `
+                    <div class="p-6 text-center text-rose-400 bg-rose-950/20 border border-rose-800 rounded-lg">
+                        Network error contacting audits API: ${err.message}
+                    </div>
+                `;
+            }
+        }
+
+        function updateKpis() {
+            const total = allAudits.length;
+            const passing = allAudits.filter(a => a.last_status === 'PASS').length;
+            const warnings = allAudits.filter(a => a.last_status === 'WARN').length;
+            const failing = allAudits.filter(a => a.last_status === 'FAIL' || a.last_status === 'ERROR').length;
+            
+            let totalSecs = 0;
+            let latestTimestamp = null;
+            allAudits.forEach(a => {
+                if (typeof a.duration_seconds === 'number') totalSecs += a.duration_seconds;
+                if (a.last_run) {
+                    if (!latestTimestamp || new Date(a.last_run) > new Date(latestTimestamp)) {
+                        latestTimestamp = a.last_run;
+                    }
+                }
+            });
+
+            document.getElementById('kpi-total').textContent = total;
+            document.getElementById('kpi-passing').textContent = passing;
+            document.getElementById('kpi-warnings').textContent = warnings;
+            document.getElementById('kpi-failing').textContent = failing;
+            document.getElementById('kpi-duration').textContent = totalSecs.toFixed(1) + 's';
+            
+            if (latestTimestamp) {
+                const d = new Date(latestTimestamp);
+                document.getElementById('kpi-last-run-date').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+
+            // Update category counts
+            const cats = ['all', 'network', 'security', 'threat', 'system', 'documentation', 'custom'];
+            cats.forEach(c => {
+                const el = document.getElementById(`count-${c}`);
+                if (el) {
+                    const count = c === 'all' ? total : allAudits.filter(a => a.category === c).length;
+                    el.textContent = count;
+                }
+            });
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                const isSelected = btn.id === `tab-${cat}`;
+                btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+                if (isSelected) {
+                    btn.className = 'cat-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-900 text-teal-200 border border-teal-700 focus:ring-2 focus:ring-teal-500 focus:outline-none';
+                } else {
+                    btn.className = 'cat-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 focus:ring-2 focus:ring-teal-500 focus:outline-none';
+                }
+            });
+            announceA11y(`Filtered by category ${cat}`);
+            renderAudits();
+        }
+
+        function handleSearch() {
+            const input = document.getElementById('audit-search');
+            searchQuery = (input ? input.value : '').toLowerCase().trim();
+            renderAudits();
+        }
+
+        function getStatusBadge(status, isRunning) {
+            if (isRunning) {
+                return `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-sky-950 text-sky-300 border border-sky-800 flex items-center gap-1"><span class="animate-spin inline-block">⏳</span> RUNNING</span>`;
+            }
+            switch (status) {
+                case 'PASS':
+                    return `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">[PASS]</span>`;
+                case 'WARN':
+                    return `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-amber-950 text-amber-300 border border-amber-800">[WARN]</span>`;
+                case 'FAIL':
+                    return `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800">[FAIL]</span>`;
+                case 'ERROR':
+                    return `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800">[ERROR]</span>`;
+                default:
+                    return `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">[PENDING]</span>`;
+            }
+        }
+
+        function renderAudits() {
+            const container = document.getElementById('audits-container');
+            if (!container) return;
+
+            const filtered = allAudits.filter(a => {
+                const matchCat = activeCategory === 'all' || a.category === activeCategory;
+                const matchSearch = !searchQuery || 
+                    (a.name && a.name.toLowerCase().includes(searchQuery)) || 
+                    (a.description && a.description.toLowerCase().includes(searchQuery)) ||
+                    (a.id && a.id.toLowerCase().includes(searchQuery)) ||
+                    (a.target_file && a.target_file.toLowerCase().includes(searchQuery));
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center text-slate-400 bg-slate-900/40 rounded-lg border border-slate-800">
+                        No audits found matching the selected category and search criteria.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(a => {
+                const isRunning = runningAudits.has(a.id);
+                const badge = getStatusBadge(a.last_status, isRunning);
+                const durationText = a.duration_seconds ? `${a.duration_seconds}s` : 'N/A';
+                const runDateText = a.last_run ? new Date(a.last_run).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Never';
+                const catBadge = `<span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${a.category || 'custom'}</span>`;
+
+                return `
+                    <article class="bg-slate-900/70 border border-slate-800 hover:border-slate-700 rounded-lg overflow-hidden transition-colors" id="card-${a.id}">
+                        <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                            <div class="flex items-start gap-3 flex-1 min-w-0">
+                                <div class="mt-0.5">${badge}</div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="text-sm font-bold text-white truncate">${escapeHtml(a.name || a.id)}</h3>
+                                        ${catBadge}
+                                        ${a.is_builtin ? '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-teal-950/80 text-teal-300 border border-teal-800">BUILT-IN</span>' : '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800">DISCOVERED</span>'}
+                                    </div>
+                                    <p class="text-xs text-slate-400 mt-1 line-clamp-2">${escapeHtml(a.description || 'No description provided.')}</p>
+                                    <div class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-4 flex-wrap">
+                                        <span>Target: <code class="text-slate-400">${escapeHtml(a.target_file || 'script')}</code></span>
+                                        <span>Last Run: <span class="text-slate-300 font-mono">${runDateText}</span></span>
+                                        <span>Duration: <span class="text-slate-300 font-mono">${durationText}</span></span>
+                                        ${a.summary ? `<span class="text-teal-400 truncate max-w-xs font-mono">&bull; ${escapeHtml(a.summary)}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
+                                <button type="button" onclick="runSingleAudit('${a.id}')" ${isRunning ? 'disabled' : ''} aria-label="Run audit ${escapeHtml(a.name)}" class="px-3 py-1.5 ${isRunning ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700 text-emerald-300 hover:text-emerald-200'} border border-slate-700 rounded text-xs font-bold transition-colors flex items-center gap-1.5 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                                    <span aria-hidden="true">${isRunning ? '⏳' : '▶'}</span> Run
+                                </button>
+                                <button type="button" onclick="toggleDetails('${a.id}')" id="btn-details-${a.id}" aria-expanded="false" aria-controls="details-${a.id}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded text-xs font-semibold transition-colors flex items-center gap-1 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                                    <span>Details</span> <span class="text-[10px]" aria-hidden="true">▼</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Details Panel -->
+                        <div id="details-${a.id}" class="hidden border-t border-slate-800/80 bg-slate-950/70 p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Terminal Output & Diagnostics</span>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="copyAuditOutput('${a.id}')" aria-label="Copy terminal log output to clipboard" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 rounded text-[11px] font-semibold transition-colors focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                                        📋 Copy Output
+                                    </button>
+                                </div>
+                            </div>
+                            <pre id="pre-${a.id}" tabindex="0" class="bg-slate-950 text-slate-300 p-3 rounded border border-slate-800 font-mono text-xs overflow-x-auto max-h-72 whitespace-pre-wrap select-text focus:outline-none focus:ring-1 focus:ring-teal-500">Loading output...</pre>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        async function toggleDetails(auditId) {
+            const panel = document.getElementById(`details-${auditId}`);
+            const btn = document.getElementById(`btn-details-${auditId}`);
+            if (!panel || !btn) return;
+
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                panel.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.querySelector('span:last-child').textContent = '▼';
+            } else {
+                panel.classList.remove('hidden');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.querySelector('span:last-child').textContent = '▲';
+                await loadAuditOutput(auditId);
+            }
+        }
+
+        async function loadAuditOutput(auditId) {
+            const pre = document.getElementById(`pre-${auditId}`);
+            if (!pre) return;
+            pre.textContent = 'Loading latest diagnostic output...';
+            try {
+                const res = await fetch(`/api/audits/results/${auditId}`);
+                const data = await res.json();
+                if (data.success && data.audit && data.audit.result) {
+                    const r = data.audit.result;
+                    const out = (r.stdout || '') + (r.stderr ? `\n--- STDERR ---\n${r.stderr}` : '');
+                    pre.textContent = out.trim() || '(No output recorded yet. Run the audit to generate diagnostic output.)';
+                } else {
+                    pre.textContent = '(No audit execution history recorded yet. Click "Run" to execute.)';
+                }
+            } catch (err) {
+                pre.textContent = `Error loading details: ${err.message}`;
+            }
+        }
+
+        async function copyAuditOutput(auditId) {
+            const pre = document.getElementById(`pre-${auditId}`);
+            if (!pre) return;
+            try {
+                await navigator.clipboard.writeText(pre.textContent);
+                announceA11y(`Audit output copied to clipboard`);
+                alert('Audit terminal log copied to clipboard!');
+            } catch (err) {
+                announceA11y(`Failed to copy to clipboard`);
+            }
+        }
+
+        async function runSingleAudit(auditId) {
+            if (runningAudits.has(auditId)) return;
+            runningAudits.add(auditId);
+            announceA11y(`Running audit ${auditId}`);
+            renderAudits();
+
+            try {
+                const res = await fetch('/api/audits/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audit_id: auditId })
+                });
+                const data = await res.json();
+                if (data.success && data.result) {
+                    announceA11y(`Audit ${auditId} finished with status ${data.result.status}`);
+                    // If details open, update pre
+                    const pre = document.getElementById(`pre-${auditId}`);
+                    if (pre) {
+                        const out = (data.result.stdout || '') + (data.result.stderr ? `\n--- STDERR ---\n${data.result.stderr}` : '');
+                        pre.textContent = out.trim() || '(Completed with no output)';
+                    }
+                } else {
+                    announceA11y(`Audit ${auditId} failed to run`);
+                }
+            } catch (err) {
+                announceA11y(`Error executing audit ${auditId}`);
+            } finally {
+                runningAudits.delete(auditId);
+                await fetchAudits();
+            }
+        }
+
+        async function runAllAudits() {
+            const btn = document.getElementById('btn-run-all');
+            const statusInd = document.getElementById('global-status-indicator');
+            const statusTxt = document.getElementById('global-status-text');
+
+            if (btn) btn.disabled = true;
+            if (statusInd) statusInd.className = 'inline-block w-2 h-2 rounded-full bg-sky-400 animate-pulse';
+            if (statusTxt) statusTxt.textContent = 'Running All...';
+            announceA11y('Executing all system audits in sequence');
+
+            try {
+                const res = await fetch('/api/audits/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audit_id: 'all' })
+                });
+                const data = await res.json();
+                announceA11y('All system audits completed');
+            } catch (err) {
+                announceA11y(`Error running all audits: ${err.message}`);
+            } finally {
+                if (btn) btn.disabled = false;
+                if (statusInd) statusInd.className = 'inline-block w-2 h-2 rounded-full bg-emerald-500';
+                if (statusTxt) statusTxt.textContent = 'Ready';
+                await fetchAudits();
+            }
+        }
+
+        async function refreshAudits() {
+            announceA11y('Re-scanning audit directory and manifest');
+            try {
+                const res = await fetch('/api/audits/refresh', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    announceA11y(`Catalog refreshed. Discovered ${data.audits ? data.audits.length : 0} audits`);
+                    await fetchAudits();
+                }
+            } catch (err) {
+                announceA11y('Failed to refresh audit directory');
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAudits();
+            window.addEventListener('keydown', (e) => {
+                if (e.altKey && !e.ctrlKey && !e.metaKey) {
+                    const key = e.key.toLowerCase();
+                    if (key === 'h') {
+                        e.preventDefault();
+                        window.location.href = '/';
+                    } else if (key === 't') {
+                        e.preventDefault();
+                        window.location.href = '/telemetry';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

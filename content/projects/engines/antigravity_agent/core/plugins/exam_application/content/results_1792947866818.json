@@ -1,0 +1,208 @@
+{
+  "score": "73.3%",
+  "pointsEarned": 18.333333333333336,
+  "pointsPossible": 25,
+  "breakdown": [
+    {
+      "question": "A public web app is being hit by SQL injection attempts and, separately, by a large volumetric traffic flood. Which pairing of services best addresses each threat?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which of the following can filter network traffic between subnets or virtual networks using rules? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "A network security group is best described this way: [BLANK].",
+      "type": "dropdown_blank",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "Administrators need to connect to Azure virtual machines over RDP and SSH from the Azure portal, without giving the VMs public IP addresses. What should they use?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "To securely store and manage secrets, encryption keys and certificates, an organisation should use [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An organisation splits its network into segments, separating web, application and database tiers. What is the main security benefit of this segmentation?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Defender for Cloud advises enabling multifactor authentication for accounts with owner permissions on a subscription. What type of item is this?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Defender for Servers detects a suspicious process on a virtual machine that looks like an active attack. What does Defender for Cloud generate?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An organisation's secure score in Defender for Cloud rose from 50 percent to 70 percent. What does this indicate?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "By default, the Defender for Cloud regulatory compliance dashboard assesses your resources against [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An auditor wants to see how Azure resources measure against standards such as PCI DSS and ISO 27001. Where in Defender for Cloud should you look?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which of the following Defender for Cloud capabilities require a paid plan rather than being included free? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": true,
+      "points": 0.3333333333333333,
+      "weight": 1
+    },
+    {
+      "question": "Microsoft Sentinel is both a SIEM and a SOAR solution. Which of the following are SIEM functions rather than SOAR functions? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "A company deployed Microsoft Sentinel and connected only Azure firewall logs. It is detecting no identity-based attacks such as suspicious sign-ins. What is the most likely reason?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "When Sentinel analytics rules raise ten related alerts about the same attack, they are presented to analysts [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "In Microsoft Sentinel, interactive dashboards that visualise your data with charts and graphs are called [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A SOC analyst proactively runs queries in Sentinel to search for signs of attackers that no alert has detected yet. What is this activity called?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "During a ransomware attack, Microsoft Defender XDR automatically contains the compromised device and user account without waiting for an analyst. Which capability is this?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "Which of the following are features of Microsoft Defender for Office 365? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which of the following are capabilities of Microsoft Defender for Endpoint? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "To discover shadow IT, meaning unsanctioned SaaS apps that employees are using, an organisation should use [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A security team wants to find, prioritise and fix software weaknesses and misconfigurations across its laptops and servers. Which solution is designed for this?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "An organisation wants to detect pass-the-hash and other suspicious activity against its on-premises Active Directory domain controllers. What should it deploy?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Where do analysts now access Microsoft Defender Threat Intelligence content, such as threat actor profiles and intel articles?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which statement correctly describes the scope of Microsoft Defender XDR compared with Microsoft Defender for Cloud?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    }
+  ],
+  "timestamp": "2026-10-25T17:04:26.817Z"
+}
