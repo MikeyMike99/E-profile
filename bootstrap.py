@@ -9,6 +9,8 @@ import argparse
 import json
 import shutil
 import threading
+import hashlib
+import urllib.parse
 
 # --- BULLETPROOF PATH INJECTION ---
 local_lib = Path.home() / '.local' / 'lib'
@@ -178,8 +180,255 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
         _GIT_SYNC_DONE = True
         return True
 
-def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files):
-    """Generates a diagnostic dashboard in raw HTML."""
+def _parse_bootstrap_request(environ):
+    method = environ.get("REQUEST_METHOD", "GET").upper()
+    query_string = environ.get("QUERY_STRING", "")
+    params = urllib.parse.parse_qs(query_string)
+
+    post_params = {}
+    if method == "POST":
+        try:
+            content_length = int(environ.get("CONTENT_LENGTH", 0) or 0)
+            if 0 < content_length < 65536:
+                raw_body = environ["wsgi.input"].read(content_length)
+                post_params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
+        except Exception:
+            pass
+
+    cookies = {}
+    raw_cookie = environ.get("HTTP_COOKIE", "")
+    if raw_cookie:
+        for part in raw_cookie.split(";"):
+            if "=" in part:
+                k, v = part.strip().split("=", 1)
+                cookies[k.strip()] = v.strip()
+
+    return method, params, post_params, cookies
+
+
+def authenticate_bootstrap_admin(base_dir: Path, params: dict, post_params: dict, cookies: dict, environ: dict) -> tuple[bool, str, tuple | None]:
+    token = (
+        (post_params.get("admin_token") or [""])[0].strip()
+        or (post_params.get("token") or [""])[0].strip()
+        or (params.get("admin_token") or [""])[0].strip()
+        or (params.get("token") or [""])[0].strip()
+    )
+
+    auth_header = environ.get("HTTP_AUTHORIZATION", "")
+    if auth_header.lower().startswith("bearer "):
+        bearer = auth_header[7:].strip()
+        if bearer:
+            token = bearer
+
+    cookie_hash = cookies.get("bootstrap_admin_session", "").strip()
+
+    admin_hashes = {}
+    profiles_path = base_dir / "profiles.json"
+    if profiles_path.exists():
+        try:
+            data = json.loads(profiles_path.read_text(encoding="utf-8"))
+            for h, u in data.get("data", {}).items():
+                if u.get("is_admin", False):
+                    admin_hashes[h] = u.get("username", "Administrator")
+        except Exception:
+            pass
+
+    sync_secret = os.environ.get("SYNC_SECRET", "").strip()
+    if sync_secret:
+        admin_hashes[hashlib.sha256(sync_secret.encode("utf-8")).hexdigest()] = "Root (SYNC_SECRET)"
+
+    token_file = base_dir / "gethub_token.txt"
+    if not token_file.exists():
+        token_file = Path.home() / "gethub_token.txt"
+    if token_file.exists():
+        try:
+            gt = token_file.read_text(encoding="utf-8").strip()
+            if gt:
+                admin_hashes[hashlib.sha256(gt.encode("utf-8")).hexdigest()] = "Root (GitHub Token)"
+        except Exception:
+            pass
+
+    master_key_file = base_dir / ".devcore_master.key"
+    if master_key_file.exists():
+        try:
+            mk = master_key_file.read_text(encoding="utf-8").strip()
+            if mk:
+                admin_hashes[hashlib.sha256(mk.encode("utf-8")).hexdigest()] = "Root (Master Key)"
+        except Exception:
+            pass
+
+    if cookie_hash and cookie_hash in admin_hashes:
+        return True, admin_hashes[cookie_hash], None
+
+    if token:
+        token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+        if token_hash in admin_hashes:
+            cookie_hdr = ("Set-Cookie", f"bootstrap_admin_session={token_hash}; Path=/; HttpOnly; SameSite=Lax")
+            return True, admin_hashes[token_hash], cookie_hdr
+
+    return False, "", None
+
+
+def generate_secure_holding_html(login_failed: bool = False) -> bytes:
+    """Renders a zero-disclosure maintenance page with an admin authentication gate."""
+    alert_html = """
+    <div style="background: rgba(255, 0, 85, 0.15); border: 1px solid #ff0055; color: #ff80a0; padding: 10px 14px; margin-bottom: 18px; border-radius: 6px; font-size: 13px; text-align: left;">
+        Access denied. Invalid administrator token.
+    </div>
+    """ if login_failed else ""
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Unavailable | Maintenance Mode</title>
+    <style>
+        :root {{
+            --bg: #090a10;
+            --card-bg: rgba(18, 20, 29, 0.95);
+            --text-main: #f0f3f8;
+            --text-muted: #8b949e;
+            --accent-cyan: #00e5ff;
+            --accent-magenta: #ff0055;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }}
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body {{
+            background: radial-gradient(circle at 50% 20%, #151928 0%, var(--bg) 80%);
+            color: var(--text-main);
+            font-family: var(--font);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }}
+        .card {{
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: 480px;
+            width: 100%;
+            padding: 36px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            text-align: center;
+        }}
+        .status-badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            color: var(--accent-cyan);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 20px;
+        }}
+        .status-badge::before {{
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }}
+        h1 {{
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }}
+        p {{
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }}
+        .divider {{
+            height: 1px;
+            background: var(--border-color);
+            margin: 24px 0;
+        }}
+        .admin-section {{
+            text-align: left;
+        }}
+        .admin-label {{
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }}
+        .input-group {{
+            display: flex;
+            gap: 8px;
+        }}
+        input[type="password"] {{
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-family: var(--mono);
+            font-size: 13px;
+            padding: 10px 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }}
+        input[type="password"]:focus {{
+            border-color: var(--accent-cyan);
+        }}
+        button {{
+            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 16px;
+            transition: opacity 0.2s;
+        }}
+        button:hover {{ opacity: 0.92; }}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="status-badge">System Status: Standby</div>
+        <h1>Service Temporarily Unavailable</h1>
+        <p>The application server is currently updating or undergoing maintenance. Please check back shortly.</p>
+        
+        <div class="divider"></div>
+        
+        <div class="admin-section">
+            <span class="admin-label">Administrator Terminal Access</span>
+            {alert_html}
+            <form method="POST">
+                <div class="input-group">
+                    <input type="password" name="admin_token" placeholder="Enter Admin Token / PIN" autocomplete="off" required>
+                    <button type="submit">Unlock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>"""
+    return html.encode("utf-8")
+
+
+def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files, admin_name="Administrator"):
+    """Generates an authenticated diagnostic dashboard for administrators."""
     html = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -193,23 +442,67 @@ def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_fil
                 --text: #e0e0e0;
                 --cyan: #00e5ff;
                 --magenta: #ff0055;
-                --panel: rgba(20, 20, 25, 0.9);
+                --panel: rgba(20, 20, 25, 0.95);
                 --font: 'Consolas', monospace;
             }}
             body {{
                 background-color: var(--bg);
                 color: var(--text);
                 font-family: var(--font);
-                padding: 40px;
+                padding: 30px;
                 margin: 0;
             }}
             .container {{
-                max-width: 900px;
+                max-width: 950px;
                 margin: 0 auto;
                 background: var(--panel);
                 border: 1px solid var(--magenta);
                 padding: 30px;
                 box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
+                border-radius: 8px;
+            }}
+            .top-bar {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: rgba(0, 229, 255, 0.08);
+                border: 1px solid rgba(0, 229, 255, 0.2);
+                padding: 10px 16px;
+                margin-bottom: 20px;
+                border-radius: 4px;
+                font-size: 13px;
+            }}
+            .operator {{
+                color: var(--cyan);
+                font-weight: bold;
+            }}
+            .actions {{
+                display: flex;
+                gap: 10px;
+            }}
+            .btn {{
+                background: rgba(0, 229, 255, 0.15);
+                border: 1px solid var(--cyan);
+                color: var(--cyan);
+                padding: 6px 12px;
+                border-radius: 4px;
+                font-family: var(--font);
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }}
+            .btn:hover {{
+                background: var(--cyan);
+                color: #000;
+            }}
+            .btn-danger {{
+                background: rgba(255, 0, 85, 0.15);
+                border-color: var(--magenta);
+                color: var(--magenta);
+            }}
+            .btn-danger:hover {{
+                background: var(--magenta);
+                color: #fff;
             }}
             h1 {{
                 color: var(--magenta);
@@ -217,10 +510,13 @@ def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_fil
                 letter-spacing: 2px;
                 border-bottom: 1px solid var(--magenta);
                 padding-bottom: 10px;
+                font-size: 20px;
             }}
             h2 {{
                 color: var(--cyan);
-                margin-top: 30px;
+                margin-top: 25px;
+                font-size: 15px;
+                letter-spacing: 1px;
             }}
             .status-box {{
                 background: rgba(0, 0, 0, 0.5);
@@ -238,9 +534,12 @@ def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_fil
                 border: 1px solid #333;
                 overflow-x: auto;
                 color: #a3be8c;
+                font-size: 12px;
+                line-height: 1.4;
             }}
             ul {{
                 list-style-type: square;
+                padding-left: 20px;
             }}
             li.missing {{ color: var(--magenta); }}
             li.found {{ color: var(--cyan); }}
@@ -248,6 +547,20 @@ def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_fil
     </head>
     <body>
         <div class="container">
+            <div class="top-bar">
+                <span class="operator">🛡️ AUTHENTICATED: {admin_name}</span>
+                <div class="actions">
+                    <form method="POST" style="margin:0;">
+                        <input type="hidden" name="action" value="pull_and_restart">
+                        <button type="submit" class="btn">⚡ 2-Way Git Sync & Restart</button>
+                    </form>
+                    <form method="POST" style="margin:0;">
+                        <input type="hidden" name="action" value="logout">
+                        <button type="submit" class="btn btn-danger">🔒 Lock Console</button>
+                    </form>
+                </div>
+            </div>
+
             <h1>[CRITICAL_FAILURE] Server Initialization Halted</h1>
             
             <div class="status-box error">
@@ -272,7 +585,6 @@ def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_fil
             <h2>[03] FILE_SYSTEM_CHECK</h2>
             <ul>
     """
-    
     for path, status in missing_files.items():
         if status == 'MISSING':
             html += f"<li class='missing'>[MISSING] {path}</li>"
@@ -286,13 +598,54 @@ def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_fil
             <div class="status-box">
                 1. Ensure <strong>sync_mod.py</strong> and all required modules are uploaded.<br>
                 2. Verify that <strong>SYNC_SECRET</strong> is set in your environment variables.<br>
-                3. Click the green "Reload" button on your PythonAnywhere Web dashboard.
+                3. Click "2-Way Git Sync & Restart" above or the green "Reload" button on PythonAnywhere.
             </div>
         </div>
     </body>
     </html>
     """
     return html.encode('utf-8')
+
+
+def render_bootstrap_response(environ, start_response, base_dir: Path, error_msg: str, traceback_str: str, missing_pkgs: dict, missing_files: dict):
+    """Guards diagnostic environment information behind administrator authentication."""
+    method, params, post_params, cookies = _parse_bootstrap_request(environ)
+    action = (post_params.get("action") or params.get("action") or [""])[0].strip()
+
+    if action == "logout":
+        headers = [
+            ("Content-type", "text/html; charset=utf-8"),
+            ("Set-Cookie", "bootstrap_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax")
+        ]
+        start_response("200 OK", headers)
+        return [generate_secure_holding_html()]
+
+    is_admin, admin_name, set_cookie_header = authenticate_bootstrap_admin(base_dir, params, post_params, cookies, environ)
+
+    if not is_admin:
+        token_attempted = bool(post_params.get("admin_token") or post_params.get("token") or params.get("admin_token") or params.get("token"))
+        headers = [("Content-type", "text/html; charset=utf-8")]
+        start_response("503 Service Unavailable", headers)
+        return [generate_secure_holding_html(login_failed=token_attempted)]
+
+    if action == "pull_and_restart":
+        auto_sync_git(base_dir, force=True)
+        try:
+            import importlib
+            if "server" in sys.modules:
+                importlib.reload(sys.modules["server"])
+            from server import app as flask_app
+            return flask_app(environ, start_response)
+        except Exception as retry_err:
+            error_msg = f"Post-pull reload failed: {retry_err}"
+            traceback_str = traceback.format_exc()
+
+    headers = [("Content-type", "text/html; charset=utf-8")]
+    if set_cookie_header:
+        headers.append(set_cookie_header)
+
+    start_response("200 OK", headers)
+    return [generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files, admin_name)]
 
 # The main WSGI application entry point
 def application(environ, start_response):
@@ -347,18 +700,14 @@ def application(environ, start_response):
 
         # Step 4: If structural file or package errors exist, render the diagnostic page immediately
         if has_errors:
-            html_bytes = generate_diagnostic_html(
+            return render_bootstrap_response(
+                environ, start_response, BASE_DIR,
                 "System validation failed. Missing core components or sync module.",
                 "None (Caught during pre-flight checks)",
                 missing_pkgs,
                 missing_files
             )
-            status = '500 Internal Server Error'
-            headers = [('Content-type', 'text/html; charset=utf-8')]
-            start_response(status, headers)
-            return [html_bytes]
 
-        # Step 5: Attempt to import sync_mod and run the actual Flask app defensively
         try:
             import sync_mod
             from server import app as flask_app
@@ -379,29 +728,22 @@ def application(environ, start_response):
                         pass
 
             missing_files[str(import_err).split("'")[-1]] = 'MISSING (Import Failed)'
-            html_bytes = generate_diagnostic_html(
+            return render_bootstrap_response(
+                environ, start_response, BASE_DIR,
                 f"Initialization error: {import_err}",
                 traceback.format_exc(),
                 missing_pkgs,
                 missing_files
             )
-            status = '500 Internal Server Error'
-            headers = [('Content-type', 'text/html; charset=utf-8')]
-            start_response(status, headers)
-            return [html_bytes]
         
     except Exception as e:
-        traceback_str = traceback.format_exc()
-        html_bytes = generate_diagnostic_html(
+        return render_bootstrap_response(
+            environ, start_response, BASE_DIR,
             str(e),
-            traceback_str,
+            traceback.format_exc(),
             missing_pkgs if 'missing_pkgs' in locals() else {},
             missing_files if 'missing_files' in locals() else {}
         )
-        status = '500 Internal Server Error'
-        headers = [('Content-type', 'text/html; charset=utf-8')]
-        start_response(status, headers)
-        return [html_bytes]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bootstrap and Maintenance Utility")
