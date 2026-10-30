@@ -1,5 +1,5 @@
 {
-    "total_views": 9022,
+    "total_views": 24698,
     "unique_visitors": [
         "cb32debd289d6c37e7624a1340044c3f",
         "f79b8f722f51c2f2fe4cc3307aeb14c1",
@@ -51,19 +51,22 @@
         "facfcae92a1508361bd6395660768d13",
         "56ec807fd7b635bb796397bd4adf65f9",
         "13cec47f35ec2a3aa21da75af67c75aa",
-        "5ddccc1d9ab4932aa75245c444762167"
+        "5ddccc1d9ab4932aa75245c444762167",
+        "8741c7a5a0b92e2dc126d353d0a5a8db",
+        "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
+        "0660ae61c17cb0cbc325db642539719c"
     ],
     "paths": {
-        "/": 2598,
-        "/favicon.ico": 407,
-        "/projects": 82,
+        "/": 2618,
+        "/favicon.ico": 423,
+        "/projects": 86,
         "/ai_agent": 34,
-        "/login": 112,
-        "/ai_agent/": 46,
+        "/login": 115,
+        "/ai_agent/": 49,
         "/ws": 123,
-        "/ai_agent/api/chat": 24,
-        "/ai_agent/api/stream": 4935,
-        "/robots.txt": 72,
+        "/ai_agent/api/chat": 26,
+        "/ai_agent/api/stream": 20545,
+        "/robots.txt": 73,
         "/sitemap.xml": 1,
         "/docs/devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE": 2,
         "/docs": 113,
@@ -124,14 +127,14 @@
         "/telemetry": 2,
         "/usage": 23,
         "/downloads/get/git_source": 5,
-        "/downloads/get/portable": 2,
+        "/downloads/get/portable": 3,
         "/docs/manifesto/02_The_Echoes_Architecture.md": 3,
         "/hub": 5,
-        "/ai_agent/api/projects": 12,
-        "/ai_agent/api/conversations": 11,
+        "/ai_agent/api/projects": 15,
+        "/ai_agent/api/conversations": 16,
         "/ai_agent/):": 1,
-        "/ai_agent/api/auth_check": 30,
-        "/ai_agent/login": 19,
+        "/ai_agent/api/auth_check": 33,
+        "/ai_agent/login": 21,
         "/access/005333e6-42b3-438c-b1fc-5bbc309d2ccf": 1,
         "/access/74f5b9f5-3060-4b9e-9121-ceb658bad7eb": 1,
         "/sync": 1,
@@ -141,6 +144,7 @@
         "/newsletter": 1,
         "/hub/story/cve-2024-test": 1,
         "/newsletter/story/cve-2024-test": 1,
-        "/ai_agent/api/ui-config": 1
+        "/ai_agent/api/ui-config": 1,
+        "/ai_agent/api/auth/system-status": 3
     }
 }
