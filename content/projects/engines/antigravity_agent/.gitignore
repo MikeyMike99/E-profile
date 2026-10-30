@@ -1,0 +1,41 @@
+
+# --- Siraugga Runtime & Sandbox Data ---
+venv/
+workspaces/
+logs/
+backups/
+data/
+archives/
+archive_scripts/
+.agents/
+sessions.json
+install_done.txt
+__pycache__/
+*.pyc
+.devcore_master.key
+*.exe
+*.build/
+*.dist/
+*.onefile-build/
+*.log
+.runtime/
+
+crash_log*.txt
+
+# Dynamic Exam & Content Payloads
+sandbox/static/*.json
+desktop_app.dist/sandbox/static/*.json
+plugins/exam_application/content/
+
+# Hot-Patch Quarantine & Local Backups
+core/patches/*.py
+core/backups/*.py
+*.bak
+scratch/
+
+# BYOS & Credential Isolation
+subscriptions.json
+*antigravity-oauth-token*
+*.token
+*.key
+users/

@@ -306,6 +306,9 @@ def git_sync():
         shutil.rmtree(home / ".cache", ignore_errors=True)
         shutil.rmtree(home / ".npm", ignore_errors=True)
         shutil.rmtree(home / ".local" / "share" / "Trash", ignore_errors=True)
+        shutil.rmtree(target / ".git" / "modules", ignore_errors=True)
+        (target / ".gitmodules").unlink(missing_ok=True)
+        (target / "content" / "projects" / "engines" / "antigravity_agent" / ".git").unlink(missing_ok=True)
 
         for base in [target / ".git", home / ".git"]:
             if base.is_dir():
@@ -387,7 +390,7 @@ def git_sync():
 
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
-    subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'], cwd=str(target))
+    subprocess.run(['git', 'config', '--remove-section', 'submodule.content/projects/engines/antigravity_agent'], cwd=str(target), capture_output=True)
 
     gi_path = target / ".gitignore"
     if gi_path.exists():
@@ -416,6 +419,9 @@ def git_sync():
     except Exception:
         pass
 
+    subprocess.run(['git', 'merge', '--abort'], cwd=str(target), capture_output=True)
+    subprocess.run(['git', 'rebase', '--abort'], cwd=str(target), capture_output=True)
+
     run_git_cmd(['add', '.'])
     run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
 
@@ -439,22 +445,13 @@ def git_sync():
     else:
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
         emergency_quota_relief()
-        pull_ok = run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
+        pull_ok = run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '-X', 'ours'])
         if not pull_ok:
             output_log += "[System] Pull encountered conflicts or corrupt objects. Purging corrupt objects & retrying...\n"
+            run_git_cmd(['merge', '--abort'])
             emergency_quota_relief()
             run_git_cmd(['fetch', authenticated_url, target_branch, '--prune'])
             run_git_cmd(['merge', f'origin/{target_branch}', '--no-edit', '-m', f'Auto-merge {target_branch} updates', '-X', 'ours'])
-
-        run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
-        run_git_cmd(['submodule', 'sync'])
-        submod_url = f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git' if token else 'https://github.com/MikeyMike99/DevCore.git'
-        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', submod_url])
-        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
-        purge_git_locks()
-        run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
-        run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
-        run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
 
         push_ok = False
         if local_branch == 'master' and target_branch == 'main':

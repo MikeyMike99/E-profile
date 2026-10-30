@@ -1,0 +1,808 @@
+{
+  "score": "72.4%",
+  "pointsEarned": 167.33333333333334,
+  "pointsPossible": 231,
+  "breakdown": [
+    {
+      "question": "Which Purview feature restricts communication or collaboration between two groups in an organisation, such as investment bankers and research analysts, to avoid conflicts of interest?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "Which Entra ID Governance feature automates tasks like creating accounts on a joiner's first day and disabling accounts when someone leaves?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which Purview feature lets users or policies tag a document as 'Confidential', which can then encrypt it and add a watermark?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which Entra feature blocks users from choosing passwords such as 'Contoso2024!' that include the company name or common weak terms?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which of the following can be used as signals (conditions) in a Conditional Access policy? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Match each Microsoft Entra identity type to its description.",
+      "type": "match_columns",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A company wants on-premises Active Directory users to sign in to Microsoft 365 with the same password. Which tool synchronises identities to Microsoft Entra ID?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Defender for Identity raises an alert that a single account is being used to try passwords against hundreds of on-premises AD accounts. What signal source does Defender for Identity primarily rely on?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Purview solution prevents users from sharing credit card numbers in emails to external recipients and can show a policy tip?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Microsoft Sentinel is best described as which two technologies?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which type of encryption uses one shared key to both encrypt and decrypt data?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "After a breach, Litware segments its network, uses end-to-end encryption and analytics to detect threats in real time, aiming to minimise the 'blast radius'. Which Zero Trust principle does this best reflect?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "A developer needs to store user passwords so that even administrators cannot reverse them back to plain text, but logins can still be checked. What should be used?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "An attacker silently changes bank account numbers in an invoice database. Which CIA element was violated?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which Defender for Office 365 feature opens email attachments in a virtual environment to detect malicious behaviour before delivery?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A Global Administrator should not hold the role permanently. Instead, she should activate it for up to 4 hours when needed, with a justification. In PIM, her assignment type should be:",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "An admin wants to test whether staff would click a credential-harvesting link in a realistic fake phishing email, and then assign training to those who clicked. Which feature fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Microsoft Entra role-based access control principle should guide administrators when assigning roles?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Fabrikam lets its partners sign in to Fabrikam apps using the partners' own corporate identities, with trust established between the two identity providers. What is this called?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Purview solution helps organisations discover, govern and protect data used in generative AI apps such as Microsoft 365 Copilot and third-party AI sites?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Purview solution helps detect and act on risky activities by users, such as a departing employee downloading large volumes of sensitive files?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A security architect explains that Zero Trust is based on the principle of 'never trust, always [BLANK]'.",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Asymmetric encryption is used in TLS. Which statement about it is correct?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which Entra ID Governance feature lets managers periodically confirm whether users still need access to groups and applications?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "An admin publishes sensitivity labels and wants Word to automatically recommend 'Highly Confidential' when a user types a passport number. What should she configure?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Microsoft Entra Permissions Management helps organisations with which challenge?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "In Compliance Manager, which element is a grouping of controls from a specific regulation, standard or policy such as GDPR or ISO 27001?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "A company runs virtual machines in Azure IaaS. Who is responsible for patching the guest operating system on those VMs?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "What does Privileged Identity Management (PIM) primarily provide?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Match each device join type to its scenario.",
+      "type": "match_columns",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "A web app redirects users to a trusted third party which authenticates them and returns a token. Which modern authentication protocol family is typically used for this?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A law firm must keep all email for 7 years and then delete it automatically. Which Purview feature fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A user labels a single contract as a 'Record', which prevents editing and deletion, and it should be retained for 10 years from the contract end date. Which capability is used?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Purview tool shows how many items contain sensitive information types and which labels are applied across your organisation?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "In Conditional Access, signals such as user, location and device are evaluated, a decision is made, and then the policy is [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "What is the term for proving that a user is who they claim to be?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Contoso wants to invite consultants from another company to collaborate in Teams and SharePoint using their own work accounts. Which Entra capability is this?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A central system that provides identity services such as authentication and authorization, like Active Directory, is known as a [BLANK].",
+      "type": "dropdown_blank",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "Match each GRC term to its description.",
+      "type": "match_columns",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which authentication method is generally considered the least secure on its own?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "A legacy application needs LDAP and Kerberos authentication in Azure but the company does not want to deploy and patch its own domain controllers. Which service fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which service specifically protects web applications from common exploits such as cross-site scripting and SQL injection?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Defender for Cloud combines cloud security posture management with workload protection. The workload protection capabilities are known as a cloud workload protection [BLANK].",
+      "type": "dropdown_blank",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "A developer's Azure Function needs to read secrets from Azure Key Vault without storing any credentials in code, and the identity should be deleted automatically when the function is deleted. What should be used?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Which cloud model places the MOST responsibility on the cloud provider?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A French customer's data is stored in a US datacenter. A lawyer warns that US laws may now apply to that data in addition to French law. Which concept is the lawyer describing?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Match each ID Protection risk to its category.",
+      "type": "match_columns",
+      "correct": false,
+      "partial": true,
+      "points": 1,
+      "weight": 3
+    },
+    {
+      "question": "A Conditional Access policy grants access only if the device is marked compliant. Which service evaluates and reports device compliance to Entra ID?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Contoso wants to stop users copying files with confidential data to USB drives or uploading them to personal cloud storage from Windows devices. Which feature fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Azure service provides DDoS mitigation tuned to your virtual network resources, with telemetry and rapid response support, beyond the default platform protection?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which Entra feature allows users to access many applications after signing in once?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Legal counsel needs to find, place on hold and export all emails and documents related to a lawsuit. Which Purview solution fits?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "Data that is moving across a network, such as an HTTPS request between a browser and a website, is called data in [BLANK].",
+      "type": "dropdown_blank",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Northwind wants to require MFA only when users sign in from outside the corporate network, and block access completely from countries where it does no business. What is the best tool?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Contoso moves its file server to a SaaS service. Under the shared responsibility model, which responsibility always stays with Contoso regardless of the cloud model?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which Microsoft Purview capability helps automate discovery and cataloguing of data across on-premises, multicloud and SaaS sources and shows data lineage?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which feature lets users reset their own forgotten password without calling the help desk?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "What is Microsoft Entra ID?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which Defender for Cloud capability tells you that only 3 of 10 controls for 'Enable MFA' are satisfied and estimates how much your score would increase by fixing them?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "A layered approach to security where multiple controls protect data so that if one layer is breached another layer still stops the attacker is called:",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 1,
+      "weight": 1
+    },
+    {
+      "question": "Which Entra feature detects risks such as sign-ins from anonymous IP addresses, impossible travel and leaked credentials?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Investigators need to know whether an attacker accessed specific mail items (MailItemsAccessed events) and need logs retained for one year by default. Which tier is required?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "After signing in, a user is denied access to the finance share because she is not in the finance group. Which process denied her?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which statement about modern identity as the 'primary security perimeter' is correct?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which group type in Microsoft Entra ID automatically adds or removes users based on attributes such as department equals Sales?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "An organisation needs a role that can only reset passwords for non-admin users and nothing else, and no built-in role is narrow enough. What can it create in Entra ID (with P1 or P2)?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Fabrikam wants to allow contractors to view documents in Salesforce from unmanaged devices but block downloads in real time during the session. Which Defender for Cloud Apps capability fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which of the following describe the four pillars of an identity infrastructure? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": true,
+      "points": 1.5,
+      "weight": 2
+    },
+    {
+      "question": "Defender for Cloud Apps is Microsoft's:",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "An employee keeps receiving MFA push notifications she did not request and eventually approves one by accident. Which Authenticator feature best reduces this 'MFA fatigue' risk?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "A German company must keep customer data physically stored within the EU. Which compliance concept does this describe?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Contoso wants one centrally managed, stateful, cloud-native firewall service with threat intelligence filtering, used across many virtual networks and subscriptions. Which service fits?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Woodgrove requires that passwords are never stored in the cloud in any form, but users should still sign in to cloud apps with on-premises credentials validated against on-premises domain controllers. Which hybrid authentication method best fits, without deploying AD FS?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Microsoft family of solutions helps organisations govern, protect and manage data, and manage compliance and risk?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 1
+    },
+    {
+      "question": "A project manager wants external partners to request a bundle of a Teams group, a SharePoint site and an app, approved by her, with access expiring after 90 days. Which feature fits best?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Which Entra product provides a decentralised way to issue and verify credentials, such as a digital employee badge or a degree certificate?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "Several Azure virtual machines need to share the same identity to access a storage account, and the identity must survive when VMs are deleted. Which option fits?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "Which feature grants users a time-limited passcode to sign in and register passwordless methods for the first time, such as on their first day?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "Which of the following belong to the Microsoft Defender XDR suite? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A DDoS attack makes an online store unreachable for hours. Which element of the CIA triad was primarily affected?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A bank must detect inappropriate language, harassment and sharing of sensitive information in Teams chats and emails to meet regulatory obligations. Which solution fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Microsoft Defender portal feature measures your organisation's security posture across identities, devices and apps, with improvement actions?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which of the following are passwordless authentication options supported by Microsoft Entra ID? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": true,
+      "points": 1.3333333333333333,
+      "weight": 2
+    },
+    {
+      "question": "A small company with no Entra ID P1 licenses wants a free, preconfigured baseline that enforces MFA registration and blocks legacy authentication. What should it enable?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Woodgrove wants to identify its unique contract documents, which have no fixed pattern, by training a model on 50 example contracts. Which classification method fits?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 3
+    },
+    {
+      "question": "A SOC wants Sentinel to automatically disable a user account and post a Teams message whenever a high-severity 'compromised account' incident is created. What should it use?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which Purview capability classifies data using built-in patterns such as credit card numbers and passport numbers?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "A compliance officer completes an improvement action in Compliance Manager worth 27 points. What happens to the compliance score?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "A retailer is building a consumer shopping app and wants customers to sign up with Google, Facebook or a local account, with a fully branded sign-in experience. Which external identity scenario fits?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Which actions can a sensitivity label perform? (Select all that apply)",
+      "type": "multi_select",
+      "correct": false,
+      "partial": true,
+      "points": 1,
+      "weight": 3
+    },
+    {
+      "question": "Which of the following are among the six foundational pillars of the Zero Trust model? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Defender for Cloud can protect workloads in which environments?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "In Compliance Manager, a control that Microsoft is responsible for implementing on its cloud infrastructure is called a:",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Match each Purview solution to the problem it solves.",
+      "type": "match_columns",
+      "correct": false,
+      "partial": true,
+      "points": 1.5,
+      "weight": 3
+    },
+    {
+      "question": "Which Purview feature controls Microsoft engineer access to customer content during a support request, requiring explicit customer approval?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "A user clicks a link in an email that was safe at delivery time but was weaponised two hours later. Which feature checks the URL at the moment of the click?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 3,
+      "weight": 3
+    },
+    {
+      "question": "Match each part of the CIA triad to its meaning.",
+      "type": "match_columns",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which hybrid authentication option is the simplest to deploy and also enables leaked-credential detection in Entra ID Protection?",
+      "type": "multiple_choice",
+      "correct": false,
+      "partial": false,
+      "points": 0,
+      "weight": 2
+    },
+    {
+      "question": "Multifactor authentication requires two or more factors from different categories. Which combination qualifies as true MFA?",
+      "type": "multiple_choice",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    },
+    {
+      "question": "Which of the following are the three guiding principles of Zero Trust? (Select all that apply)",
+      "type": "multi_select",
+      "correct": true,
+      "partial": false,
+      "points": 2,
+      "weight": 2
+    }
+  ],
+  "timestamp": "2026-10-25T20:37:08.869Z"
+}

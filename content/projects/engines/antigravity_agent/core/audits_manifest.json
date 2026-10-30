@@ -1,0 +1,12 @@
+{
+  "custom_audits": [
+    {
+      "id": "custom_sample",
+      "name": "Sample Custom Health Check",
+      "description": "Example template for user-defined audit commands.",
+      "category": "custom",
+      "command": ["python3", "-c", "print('Custom check passed')"],
+      "enabled": false
+    }
+  ]
+}

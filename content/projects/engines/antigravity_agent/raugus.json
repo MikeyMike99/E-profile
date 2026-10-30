@@ -1,0 +1,10 @@
+{
+  "namespace": "devcore",
+  "project_name": "DevCore Portal & IDE",
+  "default_tier": 5,
+  "hot_patch_dirs": ["core/patches"],
+  "protected_files": [
+    "server.py",
+    "security/raugus_map.json"
+  ]
+}

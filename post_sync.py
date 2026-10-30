@@ -78,44 +78,9 @@ def main():
                         lock_file.unlink(missing_ok=True)
                     except Exception:
                         pass
-        token = ""
-        token_file = root / "gethub_token.txt"
-        if token_file.exists():
-            token = token_file.read_text().strip()
-        if not token:
-            token = os.environ.get("GITHUB_TOKEN", "").strip()
-        submod_url = (
-            f"https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git"
-            if token
-            else "https://github.com/MikeyMike99/DevCore.git"
-        )
-        subprocess.run(["git", "submodule", "sync"], cwd=str(root), capture_output=True, text=True)
-        subprocess.run(
-            ["git", "config", "submodule.content/projects/engines/antigravity_agent.url", submod_url],
-            cwd=str(root),
-            capture_output=True,
-            text=True,
-        )
-        subprocess.run(
-            ["git", "config", "submodule.content/projects/engines/antigravity_agent.ignore", "dirty"],
-            cwd=str(root),
-            capture_output=True,
-            text=True,
-        )
-        if (submod_worktree / ".git").exists():
-            subprocess.run(
-                ["git", "-C", str(submod_worktree), "pull", submod_url, "main", "--no-edit", "-X", "theirs"],
-                cwd=str(root),
-                capture_output=True,
-                text=True,
-            )
-        if not (submod_worktree / "ai_plugin.py").exists():
-            subprocess.run(
-                ["git", "submodule", "update", "--init", "--remote", "--force"],
-                cwd=str(root),
-                capture_output=True,
-                text=True,
-            )
+        shutil.rmtree(root / ".git" / "modules", ignore_errors=True)
+        (root / ".gitmodules").unlink(missing_ok=True)
+        (root / "content" / "projects" / "engines" / "antigravity_agent" / ".git").unlink(missing_ok=True)
 
         agy_bin = _find_agy_bin(root)
         if agy_bin:

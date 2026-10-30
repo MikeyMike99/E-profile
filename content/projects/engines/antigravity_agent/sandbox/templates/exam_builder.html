@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-300 font-sans p-4 m-0">
+
+<div class="max-w-4xl mx-auto bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
+    <h1 class="text-2xl font-bold text-teal-400 mb-6">Siraugga Exam Builder</h1>
+    
+    <form id="builder-form" class="space-y-6">
+        
+        <!-- Question Types -->
+        <div>
+            <h2 class="text-lg font-semibold text-slate-100 mb-2">1. Question Types</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="qtypes-container">
+                <div role="checkbox" aria-checked="true" tabindex="0" data-value="Multiple Choice (Single Answer)" aria-label="Multiple Choice (Radio Buttons)" class="builder-custom-checkbox flex items-center space-x-3 p-3 rounded bg-slate-700 hover:bg-slate-600 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors">
+                    <div class="visual-box w-5 h-5 rounded border-2 border-teal-500 flex items-center justify-center bg-slate-800 transition-colors" aria-hidden="true">
+                        <div class="inner-check w-3 h-3 bg-teal-400 opacity-100 transition-opacity" aria-hidden="true" style="clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);"></div>
+                    </div>
+                    <span class="text-slate-200 text-sm font-medium leading-relaxed select-none">Multiple Choice (Radio Buttons)</span>
+                </div>
+                
+                <div role="checkbox" aria-checked="false" tabindex="0" data-value="Multi-Select (Multiple Answers)" aria-label="Multi-Select (Checkboxes)" class="builder-custom-checkbox flex items-center space-x-3 p-3 rounded bg-slate-700 hover:bg-slate-600 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors">
+                    <div class="visual-box w-5 h-5 rounded border-2 border-slate-400 flex items-center justify-center bg-slate-800 transition-colors" aria-hidden="true">
+                        <div class="inner-check w-3 h-3 bg-teal-400 opacity-0 transition-opacity" aria-hidden="true" style="clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);"></div>
+                    </div>
+                    <span class="text-slate-200 text-sm font-medium leading-relaxed select-none">Multi-Select (Checkboxes)</span>
+                </div>
+
+                <div role="checkbox" aria-checked="false" tabindex="0" data-value="Fill-in-the-blank (Text Box)" aria-label="Fill-in-the-blank (Text Box)" class="builder-custom-checkbox flex items-center space-x-3 p-3 rounded bg-slate-700 hover:bg-slate-600 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors">
+                    <div class="visual-box w-5 h-5 rounded border-2 border-slate-400 flex items-center justify-center bg-slate-800 transition-colors" aria-hidden="true">
+                        <div class="inner-check w-3 h-3 bg-teal-400 opacity-0 transition-opacity" aria-hidden="true" style="clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);"></div>
+                    </div>
+                    <span class="text-slate-200 text-sm font-medium leading-relaxed select-none">Fill-in-the-blank (Text Box)</span>
+                </div>
+
+                <div role="checkbox" aria-checked="false" tabindex="0" data-value="Fill-in-the-blank (Dropdown)" aria-label="Fill-in-the-blank (Dropdown)" class="builder-custom-checkbox flex items-center space-x-3 p-3 rounded bg-slate-700 hover:bg-slate-600 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors">
+                    <div class="visual-box w-5 h-5 rounded border-2 border-slate-400 flex items-center justify-center bg-slate-800 transition-colors" aria-hidden="true">
+                        <div class="inner-check w-3 h-3 bg-teal-400 opacity-0 transition-opacity" aria-hidden="true" style="clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);"></div>
+                    </div>
+                    <span class="text-slate-200 text-sm font-medium leading-relaxed select-none">Fill-in-the-blank (Dropdown)</span>
+                </div>
+
+                <div role="checkbox" aria-checked="false" tabindex="0" data-value="Comparison Tables (Matching)" aria-label="Comparison Tables (Matching)" class="builder-custom-checkbox flex items-center space-x-3 p-3 rounded bg-slate-700 hover:bg-slate-600 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors">
+                    <div class="visual-box w-5 h-5 rounded border-2 border-slate-400 flex items-center justify-center bg-slate-800 transition-colors" aria-hidden="true">
+                        <div class="inner-check w-3 h-3 bg-teal-400 opacity-0 transition-opacity" aria-hidden="true" style="clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);"></div>
+                    </div>
+                    <span class="text-slate-200 text-sm font-medium leading-relaxed select-none">Comparison Tables (Matching)</span>
+                </div>
+
+                <div role="checkbox" aria-checked="false" tabindex="0" data-value="Terminal Commands (CLI)" aria-label="Terminal Commands (CLI input)" class="builder-custom-checkbox flex items-center space-x-3 p-3 rounded bg-slate-700 hover:bg-slate-600 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer transition-colors">
+                    <div class="visual-box w-5 h-5 rounded border-2 border-slate-400 flex items-center justify-center bg-slate-800 transition-colors" aria-hidden="true">
+                        <div class="inner-check w-3 h-3 bg-teal-400 opacity-0 transition-opacity" aria-hidden="true" style="clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);"></div>
+                    </div>
+                    <span class="text-slate-200 text-sm font-medium leading-relaxed select-none">Terminal Commands (CLI input)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complexity & Distribution -->
+        <div>
+            <h2 class="text-lg font-semibold text-slate-100 mb-2">2. Complexity</h2>
+            <div class="flex flex-col space-y-2">
+                <label class="flex items-center justify-between bg-slate-700 p-3 rounded">
+                    <span>% of questions requiring multiple answers:</span>
+                    <input type="number" id="multi-percent" min="0" max="100" value="0" class="w-20 bg-slate-800 border border-slate-600 rounded px-2 py-1 text-center focus:ring-2 focus:ring-teal-500">
+                </label>
+            </div>
+        </div>
+
+        <!-- Timer Setup -->
+        <div>
+            <h2 class="text-lg font-semibold text-slate-100 mb-2">3. Timer</h2>
+            <div class="flex space-x-4 bg-slate-700 p-3 rounded">
+                <label class="flex flex-col">
+                    <span class="text-sm text-slate-400">Hours</span>
+                    <input type="number" id="timer-hours" min="0" value="0" class="w-20 bg-slate-800 border border-slate-600 rounded px-2 py-1 focus:ring-2 focus:ring-teal-500">
+                </label>
+                <label class="flex flex-col">
+                    <span class="text-sm text-slate-400">Minutes</span>
+                    <input type="number" id="timer-minutes" min="0" max="59" value="15" class="w-20 bg-slate-800 border border-slate-600 rounded px-2 py-1 focus:ring-2 focus:ring-teal-500">
+                </label>
+            </div>
+        </div>
+
+        <!-- Media & Source Content -->
+        <div>
+            <h2 class="text-lg font-semibold text-slate-100 mb-2">4. Content & Media Integration</h2>
+            <div class="space-y-4 bg-slate-700 p-4 rounded">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="has-content" class="form-checkbox text-teal-500 rounded w-5 h-5">
+                    <span class="font-semibold text-white">Do you have content ready for me?</span>
+                </label>
+                
+                <div id="content-selector-area" class="hidden space-y-3 pl-7 border-l-2 border-slate-600">
+                    <label class="block">
+                        <span class="text-sm text-slate-400 block mb-1">Select from existing plugin content:</span>
+                        <div class="flex space-x-2">
+                            <select id="content-dropdown" class="flex-1 bg-slate-800 border border-slate-600 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500">
+                                <option value="">Loading content...</option>
+                            </select>
+                            <button type="button" id="refresh-content-btn" class="bg-slate-600 hover:bg-slate-500 text-white px-3 py-2 rounded" title="Refresh List">🔄</button>
+                        </div>
+                    </label>
+                    <div class="text-sm text-slate-400">
+                        <p>Or upload new content directly to the UI (this saves it to <code>plugins/exam_application/content/</code>):</p>
+                        <div class="flex space-x-2 mt-2">
+                            <input type="file" id="content-upload-file" class="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm flex-1">
+                            <button type="button" id="upload-content-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1 rounded">Upload</button>
+                        </div>
+                        <p id="upload-status" class="text-xs text-green-400 mt-1 hidden"></p>
+                    </div>
+                </div>
+
+                <label class="block">
+                    <span class="text-sm text-slate-400 block mb-1">Topic or Instructions (If no content selected, what should the exam be about?):</span>
+                    <input type="text" id="topic-input" placeholder="e.g., Python decorators, Linux basics..." class="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500">
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer mt-2">
+                    <input type="checkbox" id="generate-media" class="form-checkbox text-teal-500 rounded">
+                    <span>Generate missing image/audio media (if applicable)</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Security & Scoring -->
+        <div>
+            <h2 class="text-lg font-semibold text-slate-100 mb-2">5. Security & Scoring</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <label class="flex items-center space-x-2 bg-slate-700 p-3 rounded cursor-pointer hover:bg-slate-600">
+                    <input type="checkbox" id="anti-cheat" class="form-checkbox text-teal-500 rounded w-5 h-5">
+                    <span class="font-bold text-red-400">Enable Anti-Cheat</span>
+                    <span class="text-xs text-slate-400 ml-1">(Blocks copy/paste, right-click, tab-switching)</span>
+                </label>
+                <label class="flex items-center space-x-2 bg-slate-700 p-3 rounded cursor-pointer hover:bg-slate-600">
+                    <input type="checkbox" id="weighted-scoring" class="form-checkbox text-teal-500 rounded w-5 h-5" checked>
+                    <span>Weighted Scoring</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Generate Action -->
+        <div class="pt-4 border-t border-slate-600 text-right">
+            <button type="button" id="generate-btn" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 px-8 rounded shadow-lg focus:outline-none focus:ring-4 focus:ring-teal-400 transition-transform transform hover:scale-105">
+                Generate Exam
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    // Logic for Content Selection
+    const hasContentCb = document.getElementById('has-content');
+    const contentArea = document.getElementById('content-selector-area');
+    const contentDropdown = document.getElementById('content-dropdown');
+    const refreshBtn = document.getElementById('refresh-content-btn');
+    const uploadBtn = document.getElementById('upload-content-btn');
+    const uploadFile = document.getElementById('content-upload-file');
+    const uploadStatus = document.getElementById('upload-status');
+
+    hasContentCb.addEventListener('change', () => {
+        if (hasContentCb.checked) {
+            contentArea.classList.remove('hidden');
+            fetchContentList();
+        } else {
+            contentArea.classList.add('hidden');
+        }
+    });
+
+    async function fetchContentList() {
+        contentDropdown.innerHTML = '<option value="">Loading content...</option>';
+        try {
+            const res = await fetch('/api/exam/content');
+            if (res.ok) {
+                const data = await res.json();
+                contentDropdown.innerHTML = '';
+                if (data.files && data.files.length > 0) {
+                    data.files.forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f;
+                        opt.textContent = f;
+                        contentDropdown.appendChild(opt);
+                    });
+                } else {
+                    contentDropdown.innerHTML = '<option value="">No files found in folder.</option>';
+                }
+            }
+        } catch (e) {
+            contentDropdown.innerHTML = '<option value="">Error loading content</option>';
+        }
+    }
+
+    refreshBtn.addEventListener('click', fetchContentList);
+
+    uploadBtn.addEventListener('click', async () => {
+        if (!uploadFile.files || uploadFile.files.length === 0) return;
+        uploadStatus.classList.remove('hidden');
+        uploadStatus.textContent = 'Uploading...';
+        const formData = new FormData();
+        formData.append('file', uploadFile.files[0]);
+        
+        try {
+            const res = await fetch('/api/exam/content', { method: 'POST', body: formData });
+            if (res.ok) {
+                uploadStatus.textContent = 'Uploaded successfully!';
+                uploadFile.value = '';
+                fetchContentList();
+                setTimeout(() => { uploadStatus.classList.add('hidden'); }, 3000);
+            } else {
+                uploadStatus.textContent = 'Upload failed.';
+                uploadStatus.classList.replace('text-green-400', 'text-red-400');
+            }
+        } catch(e) {
+            uploadStatus.textContent = 'Upload error.';
+            uploadStatus.classList.replace('text-green-400', 'text-red-400');
+        }
+    });
+
+    // Logic for Custom ARIA Checkboxes
+    document.querySelectorAll('.builder-custom-checkbox').forEach(checkBtn => {
+        function toggleThis() {
+            const isChecked = checkBtn.getAttribute('aria-checked') === 'true';
+            checkBtn.setAttribute('aria-checked', !isChecked ? 'true' : 'false');
+            checkBtn.querySelector('.visual-box').classList.toggle('border-teal-500', !isChecked);
+            checkBtn.querySelector('.visual-box').classList.toggle('border-slate-400', isChecked);
+            checkBtn.querySelector('.inner-check').classList.toggle('opacity-0', isChecked);
+            checkBtn.querySelector('.inner-check').classList.toggle('opacity-100', !isChecked);
+        }
+        
+        checkBtn.addEventListener('click', toggleThis);
+        checkBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleThis(); }
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { 
+                e.preventDefault(); 
+                let next = checkBtn.nextElementSibling; 
+                if (next && next.classList.contains('builder-custom-checkbox')) { next.focus(); } 
+            }
+            if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { 
+                e.preventDefault(); 
+                let prev = checkBtn.previousElementSibling; 
+                if (prev && prev.classList.contains('builder-custom-checkbox')) { prev.focus(); } 
+            }
+        });
+    });
+
+    document.getElementById('generate-btn').addEventListener('click', function() {
+        // Collect Question Types from ARIA checkboxes
+        const qtypes = Array.from(document.querySelectorAll('.builder-custom-checkbox[aria-checked="true"]')).map(cb => cb.getAttribute('data-value'));
+        if (qtypes.length === 0) {
+            alert("Please select at least one question type.");
+            return;
+        }
+
+        // Collect Timer
+        const hours = parseInt(document.getElementById('timer-hours').value) || 0;
+        const minutes = parseInt(document.getElementById('timer-minutes').value) || 0;
+        const totalMinutes = (hours * 60) + minutes;
+
+        // Collect other fields
+        const multiPercent = document.getElementById('multi-percent').value;
+        const generateMedia = document.getElementById('generate-media').checked;
+        const antiCheat = document.getElementById('anti-cheat').checked;
+        const weightedScoring = document.getElementById('weighted-scoring').checked;
+
+        let selectedContent = '';
+        if (hasContentCb.checked && contentDropdown.value) {
+            selectedContent = contentDropdown.value;
+        }
+        const userTopic = document.getElementById('topic-input').value;
+        const topic = userTopic || (selectedContent ? `the file: ${selectedContent}` : "a comprehensive topic of your choice");
+
+        // Build the prompt
+        let promptText = `Generate a ${totalMinutes}-minute exam on: "${topic}".\n\n`;
+        promptText += `Use the following question types: ${qtypes.join(', ')}.\n`;
+        
+        if (multiPercent > 0) {
+            promptText += `Ensure that approximately ${multiPercent}% of the questions require more than one answer (multi-select).\n`;
+        }
+        
+        if (antiCheat) {
+            promptText += `IMPORTANT: You MUST set the root JSON property "anti_cheat": true to enforce security.\n`;
+        }
+
+        promptText += `Scoring Configuration: Weighted Scoring is ${weightedScoring ? 'ON' : 'OFF'}.\n`;
+        
+        if (generateMedia) {
+            promptText += `If helpful, generate or embed relevant image/audio media for the questions.\n`;
+        }
+        
+        promptText += `\nPlease output the JSON using the Exam Generator skill.`;
+
+        // Attempt to inject into parent window and send
+        try {
+            if (window.parent && window.parent.document.getElementById('prompt')) {
+                window.parent.document.getElementById('prompt').value = promptText;
+                
+                if (typeof window.parent.sendPrompt === 'function') {
+                    window.parent.sendPrompt();
+                } else {
+                    const form = window.parent.document.querySelector('form');
+                    if (form) {
+                        form.dispatchEvent(new Event('submit', {cancelable: true}));
+                    }
+                }
+            } else {
+                alert("Could not communicate with the chat interface. Here is the generated prompt:\n\n" + promptText);
+            }
+        } catch(e) {
+            console.error("Cross-origin or element error:", e);
+            alert("Could not automatically send prompt. Here it is:\n\n" + promptText);
+        }
+    });
+</script>
+
+</body>
+</html>

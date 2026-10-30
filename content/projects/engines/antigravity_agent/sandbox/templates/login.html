@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siraugga Agent • Google OAuth Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex flex-col justify-center items-center p-4">
+
+    <main class="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-2xl max-w-lg w-full relative overflow-hidden" role="region" aria-label="Siraugga Authentication Portal">
+        
+        <header class="flex items-center gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 flex items-center justify-center text-xl shrink-0" aria-hidden="true">
+                <i class="fab fa-google"></i>
+            </div>
+            <div>
+                <h1 id="portalMainHeading" class="text-xl sm:text-2xl font-bold text-white tracking-tight">Agent Authentication</h1>
+                <p id="portalSubHeading" class="text-xs sm:text-sm text-slate-400">Connect Google credentials or launch demo evaluation mode</p>
+            </div>
+        </header>
+
+        <div id="statusBanner" class="mb-6 p-4 rounded-xl border border-slate-800 bg-slate-950/70 flex items-center justify-between text-xs sm:text-sm" role="status" aria-live="polite">
+            <div class="flex items-center gap-2.5">
+                <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                <span id="statusText" class="text-slate-300 font-medium">Checking agent status...</span>
+            </div>
+            <a id="dashboardBtn" href="/ai_agent" class="hidden px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-medium transition text-xs flex items-center gap-1.5 shrink-0">
+                Workspace <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+
+        <section id="demoQuickLaunchSection" class="hidden mb-6 p-5 rounded-2xl bg-gradient-to-r from-teal-950/80 via-slate-900 to-slate-950 border border-teal-500/40 shadow-xl space-y-3" role="region" aria-label="1-Click Demo Evaluation">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-400 text-lg" aria-hidden="true">⚡</span>
+                    <h2 class="text-sm font-bold text-white tracking-wide uppercase">1-Click Demo Evaluation</h2>
+                </div>
+                <span id="demoReadinessBadge" class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-teal-900/80 text-teal-300 border border-teal-600/50">Instant Access</span>
+            </div>
+            <p id="demoReadinessDesc" class="text-xs text-slate-300 leading-relaxed">
+                Test Siraugga Agent capabilities immediately with isolated sandbox privileges (projects/demo • 7-day retention).
+            </p>
+            <button type="button" id="quickDemoBtn" onclick="handleDemoAuthenticate()" class="w-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl transition duration-150 shadow-lg shadow-teal-950/50 flex items-center justify-center gap-2 text-sm focus:ring-4 focus:ring-teal-700/50 cursor-pointer" aria-label="Launch Demo Workspace immediately">
+                <i class="fas fa-play text-white text-xs"></i> <span id="quickDemoBtnText">Launch Demo Workspace (1-Click)</span>
+            </button>
+        </section>
+
+        <section id="googleAuthSection" class="space-y-5" aria-labelledby="googleOAuthHeading">
+            <div class="flex items-center justify-between">
+                <h2 id="googleOAuthHeading" class="text-sm font-bold text-white tracking-wide uppercase flex items-center gap-2">
+                    <i class="fab fa-google text-teal-400"></i> Google OAuth Flow
+                </h2>
+                <button type="button" onclick="checkInitialStatus(true)" id="refreshLinkBtn" class="text-xs text-teal-400 hover:text-teal-300 transition-colors flex items-center gap-1 cursor-pointer">
+                    <i class="fas fa-arrows-rotate text-[10px]"></i> Refresh Link
+                </button>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-teal-400 tracking-wider uppercase">Step 1</span>
+                    <span id="step1Badge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Ready</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Open Google's authentication consent screen in a new tab. Sign in to your Google account and grant permissions to receive your authorization token.
+                </p>
+                <a id="oauthLinkBtn" href="#" target="_blank" rel="noopener noreferrer"
+                   class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 px-4 rounded-xl transition duration-150 shadow-md flex items-center justify-center gap-2.5 text-sm focus:ring-4 focus:ring-slate-300 cursor-pointer">
+                    <i class="fab fa-google text-red-500 text-base"></i> Open Google Authentication Screen
+                </a>
+            </div>
+
+            <form id="oauthForm" onsubmit="handleOAuthSubmit(event)" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <label for="oauthTokenInput" class="text-xs font-bold text-teal-400 tracking-wider uppercase cursor-pointer">
+                        Step 2: Paste Authorization Token
+                    </label>
+                    <span class="text-[10px] font-medium text-slate-400">Required</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Paste the authorization code / token Google displayed on the confirmation screen below:
+                </p>
+                <input type="text" id="oauthTokenInput" autocomplete="off" required
+                       class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono text-sm placeholder-slate-600"
+                       placeholder="4/0A... (paste Google authorization code here)">
+                <button type="submit" id="oauthSubmitBtn" 
+                        class="w-full bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl transition duration-150 shadow-lg shadow-teal-950/60 flex items-center justify-center gap-2 text-sm focus:ring-4 focus:ring-teal-900/50 cursor-pointer">
+                    <i class="fas fa-check-circle text-white"></i> Authorize Token &amp; Connect
+                </button>
+            </form>
+        </section>
+
+        <div id="feedbackContainer" class="mt-5 space-y-3" role="region" aria-live="polite">
+            <div id="errorAlert" class="hidden p-4 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-300 text-xs sm:text-sm flex items-start gap-3" role="alert">
+                <i class="fas fa-circle-exclamation text-rose-400 text-base mt-0.5 shrink-0"></i>
+                <div class="flex-1">
+                    <div class="font-bold">Authentication Failed</div>
+                    <div id="errorMsg" class="mt-0.5 text-rose-300/90 text-xs leading-relaxed"></div>
+                </div>
+            </div>
+
+            <div id="successAlert" class="hidden p-4 rounded-xl bg-emerald-950/70 border border-emerald-700/80 text-emerald-300 text-xs sm:text-sm flex flex-col gap-3" role="status">
+                <div class="flex items-center gap-2.5">
+                    <i class="fas fa-circle-check text-emerald-400 text-base"></i>
+                    <span class="font-bold">Authentication Successful!</span>
+                </div>
+                <p class="text-xs text-emerald-300/90 leading-relaxed">Your Google credentials are verified and securely saved. Agent Workspace is unlocked.</p>
+                <a id="continueBtn" href="/ai_agent" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-center rounded-xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-lg">
+                    Proceed to Agent Workspace <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-slate-800">
+            <button type="button" id="toggleAltBtn" onclick="toggleAltOptions()" class="w-full flex items-center justify-between text-xs text-slate-400 hover:text-slate-300 font-medium transition cursor-pointer" aria-expanded="false" aria-controls="altOptionsTray">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-sliders text-slate-500"></i> Alternative Options (Gemini API Key &amp; 1-Click Demo)
+                </span>
+                <i id="altArrowIcon" class="fas fa-chevron-down text-[10px] transition-transform duration-200"></i>
+            </button>
+
+            <div id="altOptionsTray" class="hidden mt-4 space-y-4 pt-3 border-t border-slate-800/60" role="region" aria-label="Alternative Authentication Options">
+                <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white">Instant Demo Mode</span>
+                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-teal-900/60 text-teal-300 border border-teal-700/40">1-Click</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Bypass credentials immediately with local demo privileges for evaluation.</p>
+                    <button type="button" id="demoAuthBtn" onclick="handleDemoAuthenticate()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-3 rounded-lg text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-slate-700">
+                        <i class="fas fa-bolt text-amber-400"></i> Authenticate Demo Mode
+                    </button>
+                </div>
+
+                <form id="apiKeyForm" onsubmit="handleApiKeySubmit(event)" class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <label for="apiKeyInput" class="text-xs font-bold text-white cursor-pointer">Gemini API Key</label>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[10px] text-teal-400 hover:underline flex items-center gap-1">
+                            Get Key <i class="fas fa-external-link-alt text-[8px]"></i>
+                        </a>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="apiKeyInput" autocomplete="off"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs font-mono placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 pr-9"
+                               placeholder="AIzaSy...">
+                        <button type="button" onclick="togglePasswordVisibility('apiKeyInput', 'eyeIcon')" class="absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300 text-xs" aria-label="Toggle password visibility">
+                            <i id="eyeIcon" class="fas fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                    <button type="submit" id="apiKeySubmitBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 px-3 rounded-lg text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-slate-700">
+                        <i class="fas fa-key text-teal-400"></i> Save API Key
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-6 text-center text-xs text-slate-500">
+        Siraugga Framework • Zero-Restart Live Architecture
+    </footer>
+
+    <script>
+        const basePath = window.location.pathname.replace(/\/login\/?$/, '');
+        const urlParams = new URLSearchParams(window.location.search);
+        let activeScope = (urlParams.get('demo') === '1' || urlParams.get('mode') === 'demo') ? 'demo' : (urlParams.get('demo') === '0' || urlParams.get('mode') === 'root' ? 'root' : '');
+        const scopeQuery = activeScope === 'demo' ? 'demo=1' : (activeScope === 'root' ? 'demo=0' : '');
+        const authCheckUrl = (basePath ? basePath + '/api/auth_check' : 'api/auth_check') + (scopeQuery ? '?' + scopeQuery : '');
+        const authSubmitUrl = basePath ? basePath + '/api/auth_submit' : 'api/auth_submit';
+        const setApiKeyUrl = basePath ? basePath + '/api/set_api_key' : 'api/set_api_key';
+        const returnUrl = (basePath || '.') + '/' + (activeScope === 'demo' ? '?demo=1' : '?mode=root');
+
+        document.getElementById('dashboardBtn').href = returnUrl;
+        document.getElementById('continueBtn').href = returnUrl;
+
+        function toggleAltOptions() {
+            const tray = document.getElementById('altOptionsTray');
+            const btn = document.getElementById('toggleAltBtn');
+            const icon = document.getElementById('altArrowIcon');
+            const isHidden = tray.classList.contains('hidden');
+            
+            if (isHidden) {
+                tray.classList.remove('hidden');
+                btn.setAttribute('aria-expanded', 'true');
+                icon.classList.add('rotate-180');
+            } else {
+                tray.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash text-xs text-teal-400';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye text-xs text-slate-500';
+            }
+        }
+
+        function clearAlerts() {
+            document.getElementById('errorAlert').classList.add('hidden');
+            document.getElementById('successAlert').classList.add('hidden');
+        }
+
+        function showError(msg) {
+            clearAlerts();
+            const alert = document.getElementById('errorAlert');
+            const errorElem = document.getElementById('errorMsg');
+            let content = msg || 'An unknown error occurred.';
+            if (content.toLowerCase().includes('expired') || content.toLowerCase().includes('refresh') || content.toLowerCase().includes('active') || content.toLowerCase().includes('restart')) {
+                content += '<div class="mt-2.5 flex items-center gap-2"><button type="button" onclick="restartAuthFlow()" class="px-3 py-1 bg-rose-900 hover:bg-rose-800 text-rose-200 border border-rose-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"><i class="fas fa-arrows-rotate text-[10px]"></i> Restart Authorization Session</button></div>';
+            }
+            errorElem.innerHTML = content;
+            alert.classList.remove('hidden');
+        }
+
+        function restartAuthFlow() {
+            const tokenInput = document.getElementById('oauthTokenInput');
+            if (tokenInput) tokenInput.value = '';
+            clearAlerts();
+            checkInitialStatus(true);
+        }
+
+        function showSuccess() {
+            clearAlerts();
+            document.getElementById('successAlert').classList.remove('hidden');
+            updateStatus(true);
+        }
+
+        let countdownInterval = null;
+        let currentRemaining = 0;
+
+        function formatRemaining(totalSecs) {
+            const m = Math.floor(totalSecs / 60);
+            const s = totalSecs % 60;
+            if (m > 0) {
+                return `${m}m ${s < 10 ? '0' : ''}${s}s remaining`;
+            }
+            return `${s}s remaining`;
+        }
+
+        function startCountdown(seconds) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            currentRemaining = Math.max(0, Number(seconds) || 0);
+            const badge = document.getElementById('step1Badge');
+            
+            function tick() {
+                if (currentRemaining > 0) {
+                    badge.innerText = formatRemaining(currentRemaining);
+                    badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-teal-900/60 text-teal-300 border border-teal-700/40';
+                    currentRemaining--;
+                } else {
+                    badge.innerText = 'Expired - Click Refresh';
+                    badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-900/60 text-amber-300 border border-amber-700/40';
+                    if (countdownInterval) clearInterval(countdownInterval);
+                }
+            }
+            tick();
+            countdownInterval = setInterval(tick, 1000);
+        }
+
+        function updateStatus(authenticated, oauthUrl, remaining, scope, hasExisting) {
+            if (scope) activeScope = scope;
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const dashBtn = document.getElementById('dashboardBtn');
+            const oauthBtn = document.getElementById('oauthLinkBtn');
+            const badge = document.getElementById('step1Badge');
+            const scopeLabel = activeScope === 'demo' ? ' [Demo Storage: projects/demo • 7d TTL]' : ' [Root Storage]';
+
+            if (activeScope === 'demo') {
+                const demoSec = document.getElementById('demoQuickLaunchSection');
+                if (demoSec) demoSec.classList.remove('hidden');
+                const mainH = document.getElementById('portalMainHeading');
+                const subH = document.getElementById('portalSubHeading');
+                if (mainH) mainH.innerText = 'Demo Agent Authentication';
+                if (subH) subH.innerText = 'Launch demo workspace immediately or connect Google credentials';
+
+                if (hasExisting) {
+                    const rBadge = document.getElementById('demoReadinessBadge');
+                    const rDesc = document.getElementById('demoReadinessDesc');
+                    const rBtnText = document.getElementById('quickDemoBtnText');
+                    if (rBadge) {
+                        rBadge.innerText = 'Pre-Configured Session Ready';
+                        rBadge.className = 'text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-900/80 text-emerald-300 border border-emerald-600/50';
+                    }
+                    if (rDesc) {
+                        rDesc.innerText = 'Verified demo credentials are ready on this server. You can enter the demo chamber immediately or connect personal Google credentials below.';
+                    }
+                    if (rBtnText) {
+                        rBtnText.innerText = 'Enter Demo Workspace (Verified Session Active)';
+                    }
+                }
+            }
+
+            if (authenticated) {
+                if (countdownInterval) clearInterval(countdownInterval);
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+                text.innerText = 'Agent Authenticated & Active' + scopeLabel;
+                dashBtn.classList.remove('hidden');
+                badge.innerText = 'Connected';
+                badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/40';
+            } else {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0';
+                text.innerText = 'Authentication Required' + scopeLabel;
+                dashBtn.classList.add('hidden');
+                if (remaining !== undefined && remaining > 0) {
+                    startCountdown(remaining);
+                } else {
+                    badge.innerText = 'Ready';
+                    badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400';
+                }
+            }
+            if (oauthUrl && oauthUrl !== '#') {
+                oauthBtn.href = oauthUrl;
+            }
+        }
+
+        async function checkInitialStatus(force = false) {
+            const refreshBtn = document.getElementById('refreshLinkBtn');
+            if (force && refreshBtn) {
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px]"></i> Refreshing...';
+            }
+            try {
+                const sep = authCheckUrl.includes('?') ? '&' : '?';
+                const targetUrl = force ? `${authCheckUrl}${sep}force=1` : authCheckUrl;
+                const res = await fetch(targetUrl);
+                const data = await res.json();
+                updateStatus(Boolean(data.authenticated), data.url, data.remaining, data.scope, Boolean(data.has_existing));
+            } catch (err) {
+                updateStatus(false);
+            } finally {
+                if (force && refreshBtn) {
+                    refreshBtn.innerHTML = '<i class="fas fa-arrows-rotate text-[10px]"></i> Refresh Link';
+                }
+            }
+        }
+
+        document.getElementById('oauthLinkBtn').addEventListener('click', async function(e) {
+            if (currentRemaining < 30 || !this.href || this.href.endsWith('#')) {
+                e.preventDefault();
+                const btn = this;
+                const origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin text-base"></i> Generating Fresh Link...';
+                try {
+                    const sep = authCheckUrl.includes('?') ? '&' : '?';
+                    const res = await fetch(`${authCheckUrl}${sep}force=1`);
+                    const data = await res.json();
+                    updateStatus(Boolean(data.authenticated), data.url, data.remaining, data.scope, Boolean(data.has_existing));
+                    if (data.url && data.url !== '#') {
+                        window.open(data.url, '_blank');
+                    }
+                } catch (err) {
+                    showError('Failed to refresh authentication session: ' + err.message);
+                } finally {
+                    btn.innerHTML = origHtml;
+                }
+            }
+        });
+
+        async function handleOAuthSubmit(e) {
+            e.preventDefault();
+            clearAlerts();
+            const btn = document.getElementById('oauthSubmitBtn');
+            const tokenInput = document.getElementById('oauthTokenInput');
+            const token = tokenInput.value.trim();
+
+            if (!token) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exchanging Token & Verifying...';
+
+            try {
+                const res = await fetch(authSubmitUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token, scope: activeScope || undefined })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.scope) activeScope = data.scope;
+                    showSuccess();
+                } else {
+                    showError(data.error || 'Authentication rejected. Please check the authorization code.');
+                }
+            } catch (err) {
+                showError('Network error connecting to backend: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle text-white"></i> Authorize Token & Connect';
+            }
+        }
+
+        async function handleApiKeySubmit(e) {
+            e.preventDefault();
+            clearAlerts();
+            const btn = document.getElementById('apiKeySubmitBtn');
+            const keyInput = document.getElementById('apiKeyInput');
+            const key = keyInput.value.trim();
+
+            if (!key) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const res = await fetch(setApiKeyUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ api_key: key, scope: activeScope || undefined })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.scope) activeScope = data.scope;
+                    showSuccess();
+                } else {
+                    showError(data.error || 'Failed to save API key.');
+                }
+            } catch (err) {
+                showError('Network error connecting to backend: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-key text-teal-400"></i> Save API Key';
+            }
+        }
+
+        async function handleDemoAuthenticate() {
+            clearAlerts();
+            const qBtn = document.getElementById('quickDemoBtn');
+            const dBtn = document.getElementById('demoAuthBtn');
+            if (qBtn) { qBtn.disabled = true; qBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Launching Demo Workspace...'; }
+            if (dBtn) { dBtn.disabled = true; dBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating Demo...'; }
+
+            try {
+                let res = await fetch(basePath + '/api/auth_demo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (res.status === 404) {
+                    res = await fetch(basePath + '/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ demo: true })
+                    });
+                }
+                const data = await res.json();
+
+                if (data.success || data.authenticated || data.token) {
+                    if (data.token) {
+                        localStorage.setItem('agy_auth_token', data.token);
+                    }
+                    if (data.user) {
+                        localStorage.setItem('agy_user', JSON.stringify(data.user));
+                    }
+                    updateStatus(true);
+                    showSuccess();
+                    setTimeout(() => {
+                        window.location.href = returnUrl;
+                    }, 500);
+                } else {
+                    showError(data.error || 'Failed to authenticate demo.');
+                }
+            } catch (err) {
+                showError('Network error authenticating demo: ' + err.message);
+            } finally {
+                if (qBtn) { qBtn.disabled = false; qBtn.innerHTML = '<i class="fas fa-play text-white text-xs"></i> <span id="quickDemoBtnText">Launch Demo Workspace (1-Click)</span>'; }
+                if (dBtn) { dBtn.disabled = false; dBtn.innerHTML = '<i class="fas fa-bolt text-amber-400"></i> Authenticate Demo Mode'; }
+            }
+        }
+
+        checkInitialStatus();
+    </script>
+</body>
+</html>
