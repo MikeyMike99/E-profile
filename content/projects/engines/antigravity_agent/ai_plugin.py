@@ -331,7 +331,144 @@ def _sync_demo_oauth_token():
             pass
 
 
+def _get_cli_credential_details(scope: str = None) -> dict:
+    import datetime
+    active_scope = scope or _resolve_token_scope()
+    active_scope = "demo" if str(active_scope).lower() == "demo" else "root"
+    _cleanup_expired_demo_tokens()
+
+    details = {
+        "authorized": False,
+        "scope": active_scope,
+        "auth_method": None,
+        "account": None,
+        "expiry": None,
+        "is_expired": False,
+        "has_refresh_token": False,
+        "key_source": None,
+        "cli_installed": bool(_find_agy_binary()),
+    }
+
+    if active_scope == "demo":
+        for d in _get_demo_dirs():
+            for rel in [
+                os.path.join(".gemini", "antigravity-cli", "antigravity-oauth-token"),
+                "antigravity-oauth-token"
+            ]:
+                cand = os.path.join(d, rel)
+                if os.path.isfile(cand) and os.path.getsize(cand) > 8:
+                    try:
+                        with open(cand, "r", encoding="utf-8") as f:
+                            tok_data = json.load(f)
+                        token_obj = tok_data.get("token", {})
+                        exp_str = token_obj.get("expiry")
+                        is_exp = False
+                        if exp_str:
+                            try:
+                                exp_dt = datetime.datetime.fromisoformat(exp_str.replace("Z", "+00:00"))
+                                is_exp = datetime.datetime.now(datetime.timezone.utc) > exp_dt
+                            except Exception:
+                                pass
+                        email = tok_data.get("id_token_email") or "Demo Google Account"
+                        has_ref = bool(token_obj.get("refresh_token"))
+                        details.update({
+                            "authorized": (not is_exp) or has_ref,
+                            "auth_method": "oauth",
+                            "account": email,
+                            "expiry": exp_str,
+                            "is_expired": is_exp,
+                            "has_refresh_token": has_ref,
+                            "key_source": cand,
+                        })
+                        return details
+                    except Exception:
+                        pass
+            for kname in [".devcore_client_key.txt", "gemini_api_key.txt"]:
+                cand = os.path.join(d, kname)
+                if os.path.isfile(cand) and os.path.getsize(cand) > 5:
+                    try:
+                        with open(cand, "r", encoding="utf-8") as f:
+                            val = f.read().strip()
+                        if val:
+                            masked = val[:6] + "..." + val[-4:] if len(val) > 10 else "API Key"
+                            details.update({
+                                "authorized": True,
+                                "auth_method": "api_key",
+                                "account": f"Demo API Key ({masked})",
+                                "key_source": cand,
+                            })
+                            return details
+                    except Exception:
+                        pass
+        return details
+
+    env_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if env_key:
+        masked = env_key[:6] + "..." + env_key[-4:] if len(env_key) > 10 else "API Key"
+        details.update({
+            "authorized": True,
+            "auth_method": "api_key",
+            "account": f"Env Key ({masked})",
+            "key_source": "environment",
+        })
+        return details
+
+    for root in _iter_relative_roots():
+        for rel in (
+            Path(".gemini/antigravity-cli/antigravity-oauth-token"),
+            Path("antigravity-oauth-token"),
+        ):
+            cand = root / rel
+            if cand.is_file() and cand.stat().st_size > 8:
+                try:
+                    tok_data = json.loads(cand.read_text(encoding="utf-8"))
+                    token_obj = tok_data.get("token", {})
+                    exp_str = token_obj.get("expiry")
+                    is_exp = False
+                    if exp_str:
+                        try:
+                            exp_dt = datetime.datetime.fromisoformat(exp_str.replace("Z", "+00:00"))
+                            is_exp = datetime.datetime.now(datetime.timezone.utc) > exp_dt
+                        except Exception:
+                            pass
+                    email = tok_data.get("id_token_email") or "Google Account"
+                    has_ref = bool(token_obj.get("refresh_token"))
+                    details.update({
+                        "authorized": (not is_exp) or has_ref,
+                        "auth_method": "oauth",
+                        "account": email,
+                        "expiry": exp_str,
+                        "is_expired": is_exp,
+                        "has_refresh_token": has_ref,
+                        "key_source": str(cand),
+                    })
+                    return details
+                except Exception:
+                    pass
+
+        for rel in (Path(".devcore_client_key.txt"), Path("gemini_api_key.txt")):
+            cand = root / rel
+            if cand.is_file() and cand.stat().st_size > 5:
+                try:
+                    val = cand.read_text(encoding="utf-8").strip()
+                    if val:
+                        masked = val[:6] + "..." + val[-4:] if len(val) > 10 else "API Key"
+                        details.update({
+                            "authorized": True,
+                            "auth_method": "api_key",
+                            "account": f"Local API Key ({masked})",
+                            "key_source": str(cand),
+                        })
+                        return details
+                except Exception:
+                    pass
+
+    return details
+
 def _has_local_cli_credentials(scope: str = None) -> bool:
+    return _get_cli_credential_details(scope)["authorized"]
+
+def _legacy_has_local_cli_credentials(scope: str = None) -> bool:
     _cleanup_expired_demo_tokens()
     active_scope = scope or _resolve_token_scope()
 
@@ -422,22 +559,16 @@ def _resolve_active_user() -> dict:
 def ai_home():
     auth_header = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
     bearer_user = security_mgr.get_user_from_token(auth_header) if auth_header else None
-    has_explicit_session = bool(
+    is_master = security_mgr.check_master_signature()
+
+    is_admin = bool(
         session.get("is_admin")
         or session.get("admin")
         or (bearer_user and bearer_user.get("role") in ("admin", "super_admin", "super admin"))
+        or is_master
     )
 
-    if not has_explicit_session:
-        scope = session.get("agent_token_scope", "demo")
-        if scope == "demo" and not session.get("agent_authenticated"):
-            return redirect(url_for("ai.login_page", demo="1"))
-        return redirect(url_for("ai.login_page"))
-
-    is_master = security_mgr.check_master_signature()
-    is_admin = has_explicit_session or is_master
-
-    if is_admin and not session.get("is_admin"):
+    if (is_master or is_admin) and not session.get("is_admin"):
         session["is_admin"] = True
         session["admin"] = True
         session["username"] = session.get("username") or "Michael (Admin)"
@@ -470,35 +601,92 @@ def ai_home():
     return _render_ai_template("index.html", ui=_get_ui_config())
 
 
+def _get_home_url(**kwargs) -> str:
+    for ep in (".ai_home", "ai.ai_home", "ai_plugin.ai_home"):
+        try:
+            return url_for(ep, **kwargs)
+        except Exception:
+            pass
+    base = request.script_root or ""
+    query = ("?" + "&".join(f"{k}={v}" for k, v in kwargs.items())) if kwargs else ""
+    return f"{base}/{query}"
+
+
+def _get_login_url(**kwargs) -> str:
+    for ep in (".login_page", "ai.login_page", "ai_plugin.login_page"):
+        try:
+            return url_for(ep, **kwargs)
+        except Exception:
+            pass
+    base = request.script_root or ""
+    query = ("?" + "&".join(f"{k}={v}" for k, v in kwargs.items())) if kwargs else ""
+    return f"{base}/login{query}"
+
+
 @ai_bp.route("/demo")
 def ai_demo_entry():
     session["agent_token_scope"] = "demo"
     session["agent_authenticated"] = True
-    return redirect(url_for("ai.ai_home", demo="1"))
+    return redirect(_get_home_url(demo="1"))
 
 
 @ai_bp.route("/login")
 def login_page():
-    if request.args.get("demo") == "1":
-        session["agent_token_scope"] = "demo"
-        session["agent_authenticated"] = False
+    reauth = (
+        request.args.get("reauth") in ("1", "true")
+        or request.args.get("reset") in ("1", "true")
+        or request.args.get("force") in ("1", "true")
+    )
+    target_scope = request.args.get("scope")
+    if target_scope in ("root", "demo"):
+        session["agent_token_scope"] = target_scope
+
+    if reauth:
+        session.pop("agent_authenticated", None)
         return _render_ai_template("login.html")
 
     auth_header = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
     bearer_user = security_mgr.get_user_from_token(auth_header) if auth_header else None
-    has_explicit_session = bool(
+    is_master = security_mgr.check_master_signature()
+    is_admin = bool(
         session.get("is_admin")
         or session.get("admin")
         or (bearer_user and bearer_user.get("role") in ("admin", "super_admin", "super admin"))
+        or is_master
     )
-    if has_explicit_session:
+    if is_admin or _has_local_cli_credentials("root"):
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
         session["is_admin"] = True
         session["admin"] = True
-        return redirect(url_for("ai.ai_home"))
+        return redirect(_get_home_url())
 
     return _render_ai_template("login.html")
+
+
+@ai_bp.route("/api/auth/reset", methods=["POST"])
+def reset_auth_session():
+    """Reset active session tokens, invalidate cached CLI tokens, and return re-auth redirect URL."""
+    target_scope = "root"
+    if request.is_json and request.json:
+        target_scope = request.json.get("scope", "root")
+    elif request.form:
+        target_scope = request.form.get("scope", "root")
+
+    session.pop("agent_authenticated", None)
+    session.pop("agent_token_scope", None)
+    session.pop("user", None)
+    session.pop("is_admin", None)
+    session.pop("admin", None)
+
+    session["agent_token_scope"] = target_scope
+    reauth_url = _get_login_url(reauth="1", scope=target_scope)
+    return jsonify({
+        "status": "success",
+        "message": "Authentication session reset successfully.",
+        "reauth_url": reauth_url,
+    })
+
 
 @ai_bp.route("/api/ui-config", methods=["GET"])
 def get_ui_config_route():
@@ -521,17 +709,27 @@ def auth_check():
         or is_master
     )
 
-    if (scope == "root" and (is_admin or is_master)) or (bearer_user and bearer_user.get("role") in ("admin", "super_admin")):
-        session["agent_token_scope"] = "root"
+    cli_details = _get_cli_credential_details(scope)
+    has_creds = cli_details["authorized"]
+
+    if not force and has_creds:
+        session["agent_token_scope"] = scope
         session["agent_authenticated"] = True
-        session["is_admin"] = True
+        if is_admin:
+            session["is_admin"] = True
         session.permanent = True
         return jsonify({
             "authenticated": True,
-            "scope": "root",
+            "cli_authorized": True,
+            "scope": scope,
             "fast_path": True,
-            "has_existing": has_creds,
-            "role": "admin"
+            "has_existing": True,
+            "account": cli_details.get("account"),
+            "auth_method": cli_details.get("auth_method"),
+            "expiry": cli_details.get("expiry"),
+            "is_expired": cli_details.get("is_expired", False),
+            "role": "admin" if is_admin else "visitor",
+            "url": "#",
         })
 
     is_authenticated = bool(bearer_user) or (bool(session.get("agent_authenticated")) if scope == "demo" else has_creds)
@@ -862,10 +1060,9 @@ def auth_logout():
 @ai_bp.route("/api/auth/me", methods=["GET"])
 def auth_me():
     token = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
-    if token:
-        user = security_mgr.get_user_from_token(token)
-        if user:
-            return jsonify({"user": user})
+    user = security_mgr.get_user_from_token(token)
+    if user:
+        return jsonify({"user": user})
     active_user = _resolve_active_user()
     if active_user:
         return jsonify({"user": active_user})
@@ -876,11 +1073,22 @@ def auth_me():
 def auth_system_status():
     scope = _resolve_token_scope()
     is_super = security_mgr.check_master_signature() or bool(session.get("is_admin") or session.get("admin"))
+    root_status = _get_cli_credential_details("root")
+    demo_status = _get_cli_credential_details("demo")
+    active_status = demo_status if scope == "demo" else root_status
     return jsonify({
         "cli_installed": bool(_find_agy_binary()),
-        "has_api_key": _has_local_cli_credentials(scope),
+        "has_api_key": active_status["authorized"],
+        "cli_authorized": active_status["authorized"],
+        "account": active_status.get("account"),
+        "auth_method": active_status.get("auth_method"),
+        "expiry": active_status.get("expiry"),
+        "is_expired": active_status.get("is_expired", False),
+        "has_refresh_token": active_status.get("has_refresh_token", False),
         "scope": scope,
         "super_admin": is_super,
+        "root_status": root_status,
+        "demo_status": demo_status,
     })
 
 

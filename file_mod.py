@@ -425,10 +425,14 @@ def git_sync():
             run_git_cmd(['push', authenticated_url, '--delete', 'clean-main'])
         local_branch = 'main'
 
-    is_windows = (os.name == 'nt')
+    try:
+        from bootstrap import is_production_server
+        is_server = is_production_server()
+    except Exception:
+        is_server = ("PYTHONANYWHERE_DOMAIN" in os.environ or Path("/var/www").exists()) and not (Path("/mnt/c").exists() or os.name == "nt")
 
-    if is_windows:
-        output_log += f"[System] Local Windows environment detected (Branch: {target_branch})...\n"
+    if not is_server:
+        output_log += f"[System] Local development environment detected (Branch: {target_branch})...\n"
         run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--no-recurse-submodules', '-X', 'ours'])
         if local_branch == target_branch:
             run_git_cmd(['push', authenticated_url, target_branch])
@@ -462,24 +466,39 @@ def git_sync():
             purge_git_locks()
             run_git_cmd(['push', authenticated_url, target_branch])
         
-        output_log += "[System] Auto-installing updated dependencies...\n"
+        req_changed = False
+        try:
+            diff_p = subprocess.run(['git', 'diff', 'HEAD@{1}', 'HEAD', '--name-only'], cwd=str(target), capture_output=True, text=True, timeout=10)
+            if 'requirements.txt' in (diff_p.stdout or ''):
+                req_changed = True
+        except Exception:
+            req_changed = True
+
         import sys
         py_bin = shutil.which('python3') or (sys.executable if not Path(sys.executable).name.lower().startswith('uwsgi') else 'python3')
-        try:
-            pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '--no-cache-dir', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True)
-            shutil.rmtree(Path.home() / ".cache", ignore_errors=True)
-            output_log += "[System] pip requirements verified.\n"
+
+        if req_changed:
+            output_log += "[System] Dependencies updated. Auto-installing requirements...\n"
+            try:
+                pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True, timeout=90)
+                shutil.rmtree(Path.home() / ".cache", ignore_errors=True)
+                output_log += "[System] pip requirements verified.\n"
+            except Exception as e:
+                output_log += f"[ERROR] Failed to auto-install dependencies: {e}\n"
+        else:
+            output_log += "[System] requirements.txt unchanged, skipping redundant pip install.\n"
             
-            post_sync_script = target / "post_sync.py"
-            if post_sync_script.exists():
-                output_log += "[System] Executing post_sync.py hook...\n"
-                hook_p = subprocess.run([py_bin, str(post_sync_script)], cwd=str(target), capture_output=True, text=True)
+        post_sync_script = target / "post_sync.py"
+        if post_sync_script.exists():
+            output_log += "[System] Executing post_sync.py hook...\n"
+            try:
+                hook_p = subprocess.run([py_bin, str(post_sync_script)], cwd=str(target), capture_output=True, text=True, timeout=30)
                 if hook_p.stdout:
                     output_log += hook_p.stdout + "\n"
                 if hook_p.stderr:
                     output_log += hook_p.stderr + "\n"
-        except Exception as e:
-            output_log += f"[ERROR] Failed to auto-install dependencies or run hooks: {e}\n"
+            except Exception as e:
+                output_log += f"[ERROR] post_sync hook execution failed: {e}\n"
             
         output_log += "\n[System] Sync complete. Attempting to reload PythonAnywhere server...\n"
         try:

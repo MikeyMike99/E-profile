@@ -127,8 +127,16 @@
             <a href="/audits" id="header-audits-btn" aria-label="Open System Audits Review Hub" class="text-sm px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-emerald-300 font-bold focus:ring-2 focus:ring-teal-500 focus:outline-none transition-colors flex items-center gap-1.5">
                 <span aria-hidden="true">🛡️</span> Audits
             </a>
+            <!-- Antigravity CLI Authorization Status & Control -->
+            <button id="header-cli-auth-btn" type="button" onclick="openCliAuthModal()" aria-haspopup="dialog" aria-controls="cli-auth-modal" title="Antigravity CLI Authorization Status" class="text-sm px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-slate-200 font-bold focus:ring-2 focus:ring-teal-500 focus:outline-none transition-colors flex items-center gap-2 shadow-sm cursor-pointer">
+                <span id="header-cli-auth-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0" aria-hidden="true"></span>
+                <span id="header-cli-auth-label">CLI: Checking...</span>
+            </button>
             <button id="header-demo-auth-btn" type="button" onclick="handleDemoAuthenticate()" title="1-Click Demo Authentication" class="text-sm px-3.5 py-2 bg-gradient-to-r from-teal-800 to-teal-700 hover:from-teal-700 hover:to-teal-600 border border-teal-500/50 rounded-lg text-white font-bold focus:ring-2 focus:ring-teal-500 focus:outline-none transition-colors flex items-center gap-1.5 shadow-sm">
                 <span class="text-amber-300">⚡</span> Demo Auth
+            </button>
+            <button id="header-reauth-btn" type="button" onclick="openReauthModal()" aria-haspopup="dialog" aria-controls="reauth-modal" title="Reset Token &amp; Re-Authenticate Root" class="text-sm px-3.5 py-2 bg-gradient-to-r from-amber-950/80 to-amber-900/80 hover:from-amber-900 hover:to-amber-800 border border-amber-600/60 rounded-lg text-amber-200 font-bold focus:ring-2 focus:ring-amber-500 focus:outline-none transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer">
+                <span class="text-amber-400">👑</span> <span>Reset &amp; Re-Auth</span>
             </button>
             <button id="settings-panel-btn" type="button" aria-controls="settings-panel" aria-expanded="false" onclick="openSettingsPanel()" class="text-sm px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-teal-400 font-bold focus:ring-2 focus:ring-teal-500 focus:outline-none transition-colors">
                 Settings &amp; Sessions
@@ -219,6 +227,12 @@
                                     <span class="text-base flex items-center gap-2"><span aria-hidden="true">🛡️</span> System Audits Review Hub</span>
                                     <span class="text-xs text-emerald-400 font-mono">Diagnostics &amp; Health</span>
                                 </a>
+                            </li>
+                            <li>
+                                <button type="button" id="quick-action-reauth" onclick="openReauthModal()" aria-label="Reset &amp; Re-Authenticate Root Agent" class="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-amber-600/50 rounded-lg text-amber-300 font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none transition-colors flex items-center justify-between cursor-pointer">
+                                    <span class="text-base flex items-center gap-2"><span aria-hidden="true">👑</span> Reset &amp; Re-Authenticate</span>
+                                    <span class="text-xs text-amber-400 font-mono">Restore Root / Google OAuth</span>
+                                </button>
                             </li>
                         </ul>
                     </nav>
@@ -330,7 +344,7 @@
                 <span id="user-display-name" class="font-medium text-slate-200">Guest</span>
                 <div class="flex gap-1.5 mt-1">
                     <button type="button" onclick="handleDemoAuthenticate()" class="flex-1 text-[11px] text-white font-bold bg-teal-700 hover:bg-teal-600 px-1.5 py-1.5 rounded border border-teal-500/50 flex items-center justify-center gap-1 focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"><span class="text-amber-300">⚡</span> Demo</button>
-                    <button type="button" id="restore-root-btn" onclick="restoreSuperAdmin()" class="flex-1 text-[11px] text-amber-300 hover:text-amber-100 font-bold bg-amber-950/80 px-1.5 py-1.5 rounded border border-amber-600/60 flex items-center justify-center gap-1 focus:ring-2 focus:ring-amber-500 focus:outline-none cursor-pointer" title="Resume Root Super Admin"><i class="fas fa-crown text-[9px]"></i> Root</button>
+                    <button type="button" id="restore-root-btn" onclick="openReauthModal()" class="flex-1 text-[11px] text-amber-300 hover:text-amber-100 font-bold bg-amber-950/80 px-1.5 py-1.5 rounded border border-amber-600/60 flex items-center justify-center gap-1 focus:ring-2 focus:ring-amber-500 focus:outline-none cursor-pointer" title="Reset &amp; Re-Authenticate Root"><i class="fas fa-crown text-[9px]"></i> Re-Auth</button>
                     <button type="button" onclick="toggleLoginModal()" id="login-btn" class="flex-1 text-[11px] text-teal-400 hover:text-teal-200 font-bold bg-slate-800 px-1.5 py-1.5 rounded border border-teal-800/50 focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">Login</button>
                     <button type="button" onclick="logout()" id="logout-btn" class="hidden flex-1 text-[11px] text-rose-400 hover:text-rose-200 font-bold bg-slate-800 px-1.5 py-1.5 rounded border border-rose-800/50 focus:ring-2 focus:ring-rose-500 focus:outline-none cursor-pointer">Logout</button>
                 </div>
@@ -844,6 +858,7 @@
                 const sysRes = await fetch('/api/auth/system-status');
                 const sysData = await sysRes.json();
                 window._isSuperAdminHost = Boolean(sysData && sysData.super_admin);
+                loadCliStatus();
                 
                 let token = localStorage.getItem('agy_auth_token') || '';
                 if ((!token || token.startsWith('sec-demo-')) && sysData.super_admin && !window.location.search.includes('demo=1') && !sessionStorage.getItem('agy_manual_logout')) {
@@ -3686,6 +3701,210 @@
     }
     </script>
 
+    <!-- Accessible CLI Authorization & Status Modal -->
+    <dialog id="cli-auth-modal" class="bg-transparent p-0 m-auto backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm" aria-labelledby="cli-modal-title">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 mx-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-teal-400 text-lg"><i class="fas fa-shield-halved"></i></span>
+                    <h2 id="cli-modal-title" class="text-base font-bold text-white">Antigravity CLI Authorization</h2>
+                </div>
+                <button type="button" onclick="closeCliAuthModal()" aria-label="Close CLI authorization dialog" class="text-slate-400 hover:text-white text-lg px-2 py-0.5 rounded focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">&times;</button>
+            </div>
+
+            <!-- Scope Navigation Tabs -->
+            <div class="flex rounded-xl bg-slate-950/80 border border-slate-800 p-1 text-xs font-semibold" role="tablist" aria-label="CLI Target Scope">
+                <button id="cli-tab-root" type="button" onclick="switchCliModalTab('root')" role="tab" aria-selected="true" class="flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer bg-teal-600 text-white shadow">
+                    <i class="fas fa-crown text-amber-300"></i> Root Agent CLI
+                </button>
+                <button id="cli-tab-demo" type="button" onclick="switchCliModalTab('demo')" role="tab" aria-selected="false" class="flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200">
+                    <i class="fas fa-flask text-teal-400"></i> Demo Chamber CLI
+                </button>
+            </div>
+
+            <!-- ROOT CLI PANEL -->
+            <div id="cli-panel-root" class="space-y-4" role="tabpanel" aria-labelledby="cli-tab-root">
+                <!-- Status Card -->
+                <div id="root-status-card" class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Root CLI Status</span>
+                        <span id="root-status-badge" class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400">Checking...</span>
+                    </div>
+                    <div class="text-xs text-slate-300 space-y-1">
+                        <div><span class="text-slate-500">Account:</span> <span id="root-account-val" class="font-mono text-teal-300">Loading...</span></div>
+                        <div><span class="text-slate-500">Method:</span> <span id="root-method-val" class="font-mono text-slate-300">--</span></div>
+                        <div><span class="text-slate-500">Expiry:</span> <span id="root-expiry-val" class="font-mono text-slate-300">--</span></div>
+                    </div>
+                </div>
+
+                <!-- Google OAuth Flow Section -->
+                <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fab fa-google text-teal-400"></i> Google OAuth Flow</span>
+                        <span class="text-[10px] text-teal-400 font-semibold">Recommended</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">Generate a fresh Google consent link, grant permissions, and paste the authorization code below to connect your CLI.</p>
+                    <button type="button" id="btn-oauth-open-root" onclick="startCliOAuthFlow('root')" class="w-full py-2.5 px-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-lg text-xs shadow flex items-center justify-center gap-2 transition cursor-pointer">
+                        <i class="fab fa-google text-red-500"></i> Open Google Authorization Screen
+                    </button>
+                    <div class="flex gap-2">
+                        <input id="oauth-code-root" type="text" placeholder="Paste Google authorization code (4/0A...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono">
+                        <button type="button" id="btn-oauth-submit-root" onclick="submitCliOAuthCode('root')" class="py-1.5 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-bold shrink-0 transition cursor-pointer">
+                            Connect
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gemini API Key Section -->
+                <details class="text-xs text-slate-400 border border-slate-800 rounded-xl bg-slate-950/40 p-3">
+                    <summary class="cursor-pointer text-slate-300 hover:text-white font-semibold flex items-center justify-between select-none">
+                        <span><i class="fas fa-key text-teal-400 mr-1.5"></i> Alternative: Gemini API Key</span>
+                        <i class="fas fa-chevron-down text-[10px]"></i>
+                    </summary>
+                    <div class="mt-2.5 space-y-2">
+                        <div class="flex gap-2">
+                            <input id="api-key-root" type="password" placeholder="AIzaSy..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono">
+                            <button type="button" onclick="submitCliApiKey('root')" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 rounded-lg text-xs font-bold shrink-0 transition cursor-pointer">
+                                Save Key
+                            </button>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- DEMO CLI PANEL -->
+            <div id="cli-panel-demo" class="hidden space-y-4" role="tabpanel" aria-labelledby="cli-tab-demo">
+                <!-- Status Card -->
+                <div id="demo-status-card" class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Demo Chamber Status</span>
+                        <span id="demo-status-badge" class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400">Checking...</span>
+                    </div>
+                    <div class="text-xs text-slate-300 space-y-1">
+                        <div><span class="text-slate-500">Account:</span> <span id="demo-account-val" class="font-mono text-teal-300">Loading...</span></div>
+                        <div><span class="text-slate-500">Method:</span> <span id="demo-method-val" class="font-mono text-slate-300">--</span></div>
+                        <div><span class="text-slate-500">Expiry:</span> <span id="demo-expiry-val" class="font-mono text-slate-300">--</span></div>
+                    </div>
+                </div>
+
+                <!-- 1-Click Sync From Root (Admin Convenience) -->
+                <div class="p-3.5 rounded-xl bg-gradient-to-r from-teal-950/80 via-slate-900 to-slate-950 border border-teal-500/40 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fas fa-bolt text-amber-300"></i> 1-Click Mirror from Root</span>
+                        <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-teal-900 text-teal-300">Fastest</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300">Copy current Root CLI credentials to the isolated Demo chamber (7-day retention TTL).</p>
+                    <button type="button" id="btn-sync-to-demo" onclick="syncRootCredentialsToDemo()" class="w-full py-2 px-3 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white rounded-lg font-bold text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        <i class="fas fa-copy text-[10px]"></i> Sync Root Credentials to Demo
+                    </button>
+                </div>
+
+                <!-- Demo Google OAuth Flow -->
+                <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2.5">
+                    <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fab fa-google text-teal-400"></i> Authorize Demo Chamber Separately</span>
+                    <button type="button" id="btn-oauth-open-demo" onclick="startCliOAuthFlow('demo')" class="w-full py-2.5 px-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-lg text-xs shadow flex items-center justify-center gap-2 transition cursor-pointer">
+                        <i class="fab fa-google text-red-500"></i> Open Google Authorization Screen (Demo)
+                    </button>
+                    <div class="flex gap-2">
+                        <input id="oauth-code-demo" type="text" placeholder="Paste demo Google authorization code" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono">
+                        <button type="button" id="btn-oauth-submit-demo" onclick="submitCliOAuthCode('demo')" class="py-1.5 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-bold shrink-0 transition cursor-pointer">
+                            Connect
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Demo Scrub Button -->
+                <div class="flex justify-between items-center pt-1 border-t border-slate-800">
+                    <span class="text-[11px] text-slate-500">Reset Demo Chamber:</span>
+                    <button type="button" onclick="scrubScopeAuth('demo')" class="text-xs text-rose-400 hover:text-rose-300 py-1 px-2.5 rounded bg-rose-950/40 hover:bg-rose-950/70 border border-rose-800/50 transition cursor-pointer">
+                        <i class="fas fa-trash-can mr-1"></i> Scrub Demo Credentials
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Action Bar -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+                <button type="button" onclick="loadCliStatus(true)" class="text-teal-400 hover:text-teal-300 flex items-center gap-1 cursor-pointer">
+                    <i class="fas fa-arrows-rotate text-[10px]"></i> Refresh Status
+                </button>
+                <button type="button" onclick="closeCliAuthModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition cursor-pointer">
+                    Done
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Dedicated Root Agent Reset & Re-Auth Modal -->
+    <dialog id="reauth-modal" class="bg-transparent p-0 m-auto backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm" aria-labelledby="reauth-modal-title">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 mx-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-400 text-xl">👑</span>
+                    <div>
+                        <h2 id="reauth-modal-title" class="text-base font-bold text-white">Reset Token &amp; Re-Authenticate</h2>
+                        <p class="text-xs text-slate-400">Restore root admin privileges, re-link Google OAuth, or clear broken sessions</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeReauthModal()" aria-label="Close dialog" class="text-slate-400 hover:text-white text-xl px-2 py-0.5 rounded focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">&times;</button>
+            </div>
+
+            <!-- Card 1: 1-Click Restore Root Super Admin -->
+            <div class="p-4 rounded-xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-950 border border-amber-500/50 space-y-2 shadow-md">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                        <span class="text-amber-400 text-sm">👑</span> Restore Root Super Admin
+                    </span>
+                    <span class="text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-amber-900/80 text-amber-200 border border-amber-600/40">1-Click Instant</span>
+                </div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                    Instantly exit demo mode and restore permanent owner credentials (<code class="text-amber-300 font-mono">sec-root-owner-permanent</code>). Gives full unrestricted access across all projects.
+                </p>
+                <button type="button" onclick="executeRootReset()" class="w-full py-2.5 px-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold rounded-lg text-xs shadow flex items-center justify-center gap-2 transition cursor-pointer">
+                    <i class="fas fa-unlock text-[11px]"></i> Restore Root Super Admin Authority
+                </button>
+            </div>
+
+            <!-- Card 2: Re-Initiate Google Cloud OAuth Flow -->
+            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                        <i class="fab fa-google text-teal-400"></i> Re-Initiate Google Cloud OAuth
+                    </span>
+                    <span class="text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-teal-900/60 text-teal-300 border border-teal-700/50">Google Account</span>
+                </div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                    Clears cached CLI credentials and restarts the Google consent link workflow if authentication failed or timed out.
+                </p>
+                <button type="button" onclick="launchGoogleOAuthReauth()" class="w-full py-2 px-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-lg text-xs shadow flex items-center justify-center gap-2 transition cursor-pointer">
+                    <i class="fab fa-google text-red-500"></i> Re-Initiate Google OAuth Flow
+                </button>
+            </div>
+
+            <!-- Card 3: Emergency Hard Reset Local State -->
+            <div class="p-3.5 rounded-xl bg-rose-950/30 border border-rose-800/40 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+                        <i class="fas fa-trash-can text-rose-400"></i> Reset All Local Session Tokens
+                    </span>
+                    <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-rose-900/60 text-rose-300">Clean Slate</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    Flushes localStorage, sessionStorage, and cached tokens to resolve stuck auth loops or expired tokens.
+                </p>
+                <button type="button" onclick="hardResetAuth()" class="w-full py-2 px-3 bg-rose-900/70 hover:bg-rose-800 text-rose-200 font-bold rounded-lg text-xs border border-rose-700/50 shadow flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <i class="fas fa-arrows-rotate text-[10px]"></i> Flush Tokens &amp; Restart
+                </button>
+            </div>
+
+            <!-- Footer Action Bar -->
+            <div class="flex items-center justify-end pt-2 border-t border-slate-800 text-xs">
+                <button type="button" onclick="closeReauthModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition cursor-pointer">
+                    Close
+                </button>
+            </div>
+        </div>
+    </dialog>
+
     <!-- Accessible Login & Role Switcher Modal (Top-Layer Dialog) -->
     <dialog id="login-modal" class="bg-transparent p-0 m-auto backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm" aria-labelledby="modal-title">
         <div class="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4 mx-4">
@@ -4032,9 +4251,405 @@
             }
         });
     })();
+    
+        // --- Antigravity CLI Authorization & Health Management ---
+        let _cliStatusCache = null;
+
+        function openCliAuthModal(defaultScope) {
+            const modal = document.getElementById('cli-auth-modal');
+            if (!modal) return;
+            const isDemo = window.location.search.includes('demo=1') || (currentUser && currentUser.token_scope === 'demo');
+            const targetScope = defaultScope || (isDemo ? 'demo' : 'root');
+            switchCliModalTab(targetScope);
+            loadCliStatus();
+            if (typeof modal.showModal === 'function') {
+                modal.showModal();
+            } else {
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeCliAuthModal() {
+            const modal = document.getElementById('cli-auth-modal');
+            if (!modal) return;
+            if (typeof modal.close === 'function') {
+                modal.close();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function openReauthModal() {
+            const modal = document.getElementById('reauth-modal');
+            if (!modal) return;
+            if (typeof modal.showModal === 'function') {
+                modal.showModal();
+            } else {
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeReauthModal() {
+            const modal = document.getElementById('reauth-modal');
+            if (!modal) return;
+            if (typeof modal.close === 'function') {
+                modal.close();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        async function executeRootReset() {
+            try {
+                sessionStorage.removeItem('agy_manual_logout');
+                localStorage.removeItem('agy_demo_user');
+
+                let res = await fetch('/api/auth/restore-root', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_key: 'SUPER_ADMIN_AUTO' })
+                });
+                if (!res.ok) {
+                    res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ access_key: 'SUPER_ADMIN_AUTO' })
+                    });
+                }
+                let data = await res.json();
+                if (data.token) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('agy_auth_token', authToken);
+                    localStorage.setItem('agy_user', JSON.stringify(currentUser));
+                    updateUserUI();
+                    closeReauthModal();
+
+                    var loginModal = document.getElementById('login-modal');
+                    if (loginModal && loginModal.open) loginModal.close();
+
+                    await initProjects();
+                    await initConversations(10);
+                    await loadChatHistory();
+
+                    if (typeof renderToast === 'function') {
+                        renderToast('👑 Root Super Admin authority restored successfully!', 'success');
+                    } else {
+                        alert('👑 Root Super Admin authority restored successfully!');
+                    }
+
+                    if (window.location.search.includes('demo=') || window.location.search.includes('mode=')) {
+                        window.location.href = window.location.pathname;
+                    }
+                } else {
+                    throw new Error(data.error || 'Server did not return root credentials');
+                }
+            } catch (e) {
+                console.error('Failed to reset root auth:', e);
+                if (typeof renderToast === 'function') {
+                    renderToast('Root reset error: ' + (e.message || e), 'error');
+                } else {
+                    alert('Root reset error: ' + (e.message || e));
+                }
+            }
+        }
+
+        async function launchGoogleOAuthReauth() {
+            try {
+                closeReauthModal();
+                let res = await fetch('/api/auth/reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scope: 'root' })
+                });
+                let data = await res.json();
+                let targetUrl = (data && data.reauth_url) ? data.reauth_url : '/login?reauth=1&scope=root';
+                window.location.href = targetUrl;
+            } catch (e) {
+                window.location.href = '/login?reauth=1&scope=root';
+            }
+        }
+
+        async function hardResetAuth() {
+            if (!confirm('Are you sure you want to completely purge local session tokens and restart authentication?')) {
+                return;
+            }
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                await fetch('/api/auth/reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scope: 'root' })
+                });
+            } catch (e) {}
+            window.location.href = '/login?reauth=1&scope=root';
+        }
+
+        function switchCliModalTab(scope) {
+            const tabRoot = document.getElementById('cli-tab-root');
+            const tabDemo = document.getElementById('cli-tab-demo');
+            const panelRoot = document.getElementById('cli-panel-root');
+            const panelDemo = document.getElementById('cli-panel-demo');
+
+            if (scope === 'demo') {
+                if (tabDemo) {
+                    tabDemo.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer bg-teal-600 text-white shadow';
+                    tabDemo.setAttribute('aria-selected', 'true');
+                }
+                if (tabRoot) {
+                    tabRoot.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200';
+                    tabRoot.setAttribute('aria-selected', 'false');
+                }
+                if (panelDemo) panelDemo.classList.remove('hidden');
+                if (panelRoot) panelRoot.classList.add('hidden');
+            } else {
+                if (tabRoot) {
+                    tabRoot.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer bg-teal-600 text-white shadow';
+                    tabRoot.setAttribute('aria-selected', 'true');
+                }
+                if (tabDemo) {
+                    tabDemo.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200';
+                    tabDemo.setAttribute('aria-selected', 'false');
+                }
+                if (panelRoot) panelRoot.classList.remove('hidden');
+                if (panelDemo) panelDemo.classList.add('hidden');
+            }
+        }
+
+        async function loadCliStatus(manualRefresh = false) {
+            const isDemo = window.location.search.includes('demo=1') || (currentUser && currentUser.token_scope === 'demo');
+            const activeScope = isDemo ? 'demo' : 'root';
+            try {
+                const res = await fetch('/api/auth/system-status?scope=' + activeScope);
+                const data = await res.json();
+                _cliStatusCache = data;
+                renderCliAuthUI(data);
+                if (manualRefresh && typeof renderToast === 'function') {
+                    renderToast('CLI authorization status updated.', 'info');
+                }
+            } catch (err) {
+                console.error('Error fetching CLI status:', err);
+            }
+        }
+
+        function renderCliAuthUI(data) {
+            if (!data) return;
+            const isDemo = window.location.search.includes('demo=1') || (currentUser && currentUser.token_scope === 'demo');
+            const activeStatus = isDemo ? (data.demo_status || data) : (data.root_status || data);
+
+            // Update Header Badge
+            const headerBtn = document.getElementById('header-cli-auth-btn');
+            const headerDot = document.getElementById('header-cli-auth-dot');
+            const headerLabel = document.getElementById('header-cli-auth-label');
+
+            if (headerBtn && headerDot && headerLabel) {
+                const scopeName = isDemo ? 'Demo CLI' : 'Root CLI';
+                if (activeStatus.cli_authorized || activeStatus.authorized) {
+                    headerDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0';
+                    const acct = activeStatus.account ? ` (${activeStatus.account.split('@')[0]})` : '';
+                    headerLabel.innerText = `${scopeName}: Connected${acct}`;
+                    headerBtn.className = 'text-sm px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-emerald-700/60 text-emerald-300 font-bold focus:ring-2 focus:ring-teal-500 focus:outline-none transition-colors flex items-center gap-2 shadow-sm cursor-pointer';
+                    headerBtn.title = `${scopeName} is Authorized & Connected (${activeStatus.account || 'Active'}). Click to view details or re-authorize.`;
+                } else {
+                    headerDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0';
+                    headerLabel.innerText = `${scopeName}: Not Authorized`;
+                    headerBtn.className = 'text-sm px-3.5 py-2 bg-amber-950/40 hover:bg-amber-950/60 border border-amber-700/60 text-amber-300 font-bold focus:ring-2 focus:ring-teal-500 focus:outline-none transition-colors flex items-center gap-2 shadow-sm cursor-pointer';
+                    headerBtn.title = `${scopeName} is NOT authorized. Click to connect Google OAuth or Gemini API Key.`;
+                }
+            }
+
+            // Update Root Card in Modal
+            const rStat = data.root_status || {};
+            const rBadge = document.getElementById('root-status-badge');
+            const rAcct = document.getElementById('root-account-val');
+            const rMethod = document.getElementById('root-method-val');
+            const rExpiry = document.getElementById('root-expiry-val');
+
+            if (rBadge) {
+                if (rStat.authorized) {
+                    rBadge.innerText = 'Authorized & Connected';
+                    rBadge.className = 'text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-900/80 text-emerald-300 border border-emerald-700/50';
+                } else {
+                    rBadge.innerText = 'Not Authorized';
+                    rBadge.className = 'text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-900/80 text-amber-300 border border-amber-700/50';
+                }
+            }
+            if (rAcct) rAcct.innerText = rStat.account || 'None configured';
+            if (rMethod) rMethod.innerText = rStat.auth_method ? (rStat.auth_method === 'oauth' ? 'Google OAuth (PKCE)' : 'Gemini API Key') : 'None';
+            if (rExpiry) rExpiry.innerText = rStat.expiry ? (rStat.has_refresh_token ? `${rStat.expiry.slice(0, 19)} (Refresh Token Active)` : rStat.expiry.slice(0, 19)) : (rStat.authorized ? 'Active' : 'N/A');
+
+            // Update Demo Card in Modal
+            const dStat = data.demo_status || {};
+            const dBadge = document.getElementById('demo-status-badge');
+            const dAcct = document.getElementById('demo-account-val');
+            const dMethod = document.getElementById('demo-method-val');
+            const dExpiry = document.getElementById('demo-expiry-val');
+
+            if (dBadge) {
+                if (dStat.authorized) {
+                    dBadge.innerText = 'Authorized & Ready';
+                    dBadge.className = 'text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-900/80 text-emerald-300 border border-emerald-700/50';
+                } else {
+                    dBadge.innerText = 'Not Authorized';
+                    dBadge.className = 'text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-900/80 text-amber-300 border border-amber-700/50';
+                }
+            }
+            if (dAcct) dAcct.innerText = dStat.account || 'None configured';
+            if (dMethod) dMethod.innerText = dStat.auth_method ? (dStat.auth_method === 'oauth' ? 'Google OAuth (PKCE)' : 'Gemini API Key') : 'None';
+            if (dExpiry) dExpiry.innerText = dStat.expiry ? dStat.expiry.slice(0, 19) : (dStat.authorized ? 'Active (7-day TTL)' : 'N/A');
+        }
+
+        async function startCliOAuthFlow(scope) {
+            const btn = document.getElementById(scope === 'demo' ? 'btn-oauth-open-demo' : 'btn-oauth-open-root');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin text-base"></i> Generating Link...';
+                btn.disabled = true;
+            }
+            try {
+                const res = await fetch(`/api/auth_check?scope=${scope}&force=1`);
+                const data = await res.json();
+                if (data.url && data.url !== '#') {
+                    window.open(data.url, '_blank');
+                    if (btn) {
+                        btn.innerHTML = '<i class="fas fa-check text-emerald-400"></i> Opened Google Screen (Grant &amp; Paste Code Below)';
+                    }
+                } else {
+                    alert('Failed to generate Google OAuth link.');
+                    if (btn) btn.innerHTML = origHtml;
+                }
+            } catch (err) {
+                alert('Network error generating OAuth link: ' + err.message);
+                if (btn) btn.innerHTML = origHtml;
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function submitCliOAuthCode(scope) {
+            const input = document.getElementById(scope === 'demo' ? 'oauth-code-demo' : 'oauth-code-root');
+            const btn = document.getElementById(scope === 'demo' ? 'btn-oauth-submit-demo' : 'btn-oauth-submit-root');
+            const code = input ? input.value.trim() : '';
+            if (!code) {
+                alert('Please paste the Google authorization code first.');
+                return;
+            }
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            }
+            try {
+                const res = await fetch('/api/auth_submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: code, scope: scope })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (input) input.value = '';
+                    await loadCliStatus();
+                    const scopeLabel = scope === 'demo' ? 'Demo' : 'Root';
+                    if (typeof renderToast === 'function') {
+                        renderToast(`Google OAuth connected for ${scopeLabel} CLI!`, 'success');
+                    } else {
+                        alert(`Google OAuth connected for ${scopeLabel} CLI!`);
+                    }
+                } else {
+                    alert('Authorization failed: ' + (data.error || 'Invalid code'));
+                }
+            } catch (err) {
+                alert('Network error connecting CLI: ' + err.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Connect';
+                }
+            }
+        }
+
+        async function submitCliApiKey(scope) {
+            const input = document.getElementById(scope === 'demo' ? 'api-key-demo' : 'api-key-root');
+            const key = input ? input.value.trim() : '';
+            if (!key) {
+                alert('Please enter a Gemini API Key.');
+                return;
+            }
+            try {
+                const res = await fetch('/api/set_api_key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ api_key: key, scope: scope })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (input) input.value = '';
+                    await loadCliStatus();
+                    const scopeLabel = scope === 'demo' ? 'Demo' : 'Root';
+                    if (typeof renderToast === 'function') {
+                        renderToast(`Gemini API Key saved for ${scopeLabel} CLI!`, 'success');
+                    } else {
+                        alert(`Gemini API Key saved for ${scopeLabel} CLI!`);
+                    }
+                } else {
+                    alert('Failed to save API key: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Network error saving API key: ' + err.message);
+            }
+        }
+
+        async function syncRootCredentialsToDemo() {
+            const btn = document.getElementById('btn-sync-to-demo');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mirroring...';
+            }
+            try {
+                const res = await fetch('/api/auth_demo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'sync_from_root' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadCliStatus();
+                    if (typeof renderToast === 'function') {
+                        renderToast('Root credentials mirrored to Demo Chamber (7-day TTL)!', 'success');
+                    } else {
+                        alert('Root credentials mirrored to Demo Chamber (7-day TTL)!');
+                    }
+                } else {
+                    alert('Sync failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Network error mirroring credentials: ' + err.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-copy text-[10px]"></i> Sync Root Credentials to Demo';
+                }
+            }
+        }
+
+        async function scrubScopeAuth(scope) {
+            const scopeUpper = scope.toUpperCase();
+            if (!confirm(`Are you sure you want to scrub all ${scopeUpper} CLI credentials?`)) return;
+            try {
+                const res = await fetch(`/api/auth/scrub?scope=${scope}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    await loadCliStatus();
+                    if (typeof renderToast === 'function') {
+                        renderToast(`${scopeUpper} CLI credentials scrubbed.`, 'info');
+                    } else {
+                        alert(`${scopeUpper} CLI credentials scrubbed.`);
+                    }
+                }
+            } catch (err) {
+                alert('Error scrubbing credentials: ' + err.message);
+            }
+        }
     </script>
-
-
-
 </body>
 </html>

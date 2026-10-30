@@ -64,7 +64,60 @@ def install_package(package):
 
 _GIT_SYNC_DONE = False
 _GIT_SYNC_LOCK = threading.Lock()
+_SYNC_THREAD_STARTED = False
+_SYNC_THREAD_LOCK = threading.Lock()
 _EMERGENCY_RETRY_DONE = False
+_FLASK_APP = None
+
+
+def is_production_server() -> bool:
+    """Accurately identifies production server environments (e.g. PythonAnywhere)
+    while strictly excluding local Windows and WSL2 development environments.
+    """
+    if os.environ.get("FORCE_BOOTSTRAP_SYNC") == "1":
+        return True
+    if os.name == "nt":
+        return False
+    if "WSL_DISTRO_NAME" in os.environ or "WSL_INTEROP" in os.environ:
+        return False
+    try:
+        proc_ver = Path("/proc/version")
+        if proc_ver.exists():
+            content = proc_ver.read_text(encoding="utf-8", errors="ignore").lower()
+            if "microsoft" in content or "wsl" in content:
+                return False
+    except Exception:
+        pass
+    if Path("/mnt/c").exists():
+        return False
+
+    return (
+        "PYTHONANYWHERE_DOMAIN" in os.environ
+        or "PYTHONANYWHERE_SITE" in os.environ
+        or Path("/var/www").exists()
+    )
+
+
+def trigger_background_sync(base_dir: Path, force: bool = False) -> None:
+    """Spawns git sync in a detached background daemon thread so incoming WSGI
+    requests are served immediately in milliseconds without blocking on network I/O.
+    """
+    global _SYNC_THREAD_STARTED
+    if not is_production_server() and not force:
+        return
+
+    with _SYNC_THREAD_LOCK:
+        if _SYNC_THREAD_STARTED and not force:
+            return
+        _SYNC_THREAD_STARTED = True
+
+    thread = threading.Thread(
+        target=auto_sync_git,
+        args=(base_dir, force),
+        name="GitAutoSyncDaemon",
+        daemon=True,
+    )
+    thread.start()
 
 
 def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
@@ -73,13 +126,7 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
     if _GIT_SYNC_DONE and not force:
         return True
 
-    is_server = (
-        os.name != "nt"
-        or "FORCE_BOOTSTRAP_SYNC" in os.environ
-        or "PYTHONANYWHERE_DOMAIN" in os.environ
-        or Path("/var/www").exists()
-    )
-    if not is_server:
+    if not is_production_server() and not force:
         _GIT_SYNC_DONE = True
         return False
 
@@ -176,6 +223,14 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
                 subprocess.run([py_bin, str(post_sync_script)], cwd=str(base_dir), capture_output=True, text=True, timeout=25)
             except Exception:
                 pass
+
+        try:
+            wsgi_dir = Path("/var/www/")
+            if wsgi_dir.exists():
+                for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                    wsgi_file.touch()
+        except Exception:
+            pass
 
         _GIT_SYNC_DONE = True
         return True
@@ -635,6 +690,8 @@ def render_bootstrap_response(environ, start_response, base_dir: Path, error_msg
             if "server" in sys.modules:
                 importlib.reload(sys.modules["server"])
             from server import app as flask_app
+            global _FLASK_APP
+            _FLASK_APP = flask_app
             return flask_app(environ, start_response)
         except Exception as retry_err:
             error_msg = f"Post-pull reload failed: {retry_err}"
@@ -649,6 +706,7 @@ def render_bootstrap_response(environ, start_response, base_dir: Path, error_msg
 
 # The main WSGI application entry point
 def application(environ, start_response):
+    global _FLASK_APP
     try:
         # Step 1: Set working directory and prioritize path
         BASE_DIR = Path(__file__).resolve().parent
@@ -656,17 +714,23 @@ def application(environ, start_response):
             sys.path.insert(0, str(BASE_DIR))
         os.chdir(str(BASE_DIR))
 
-        auto_sync_git(BASE_DIR)
+        # Fast path: Serve healthy Flask app immediately with zero filesystem overhead
+        if _FLASK_APP is not None:
+            return _FLASK_APP(environ, start_response)
+
+        # Trigger non-blocking background sync on production servers
+        trigger_background_sync(BASE_DIR)
 
         missing_pkgs = {}
         missing_files = {}
         has_errors = False
         
-        # Wipe the incompatible 3.10 directory unconditionally before importing
-        import shutil
-        bad_path = Path.home() / '.local' / 'lib' / 'python3.10'
-        if bad_path.exists():
-            shutil.rmtree(bad_path, ignore_errors=True)
+        # Wipe the incompatible 3.10 directory unconditionally before importing (production only)
+        if is_production_server():
+            import shutil
+            bad_path = Path.home() / '.local' / 'lib' / 'python3.10'
+            if bad_path.exists():
+                shutil.rmtree(bad_path, ignore_errors=True)
             
         # Step 2: Check dependencies programmatically
         import importlib
@@ -711,21 +775,24 @@ def application(environ, start_response):
         try:
             import sync_mod
             from server import app as flask_app
-            return flask_app(environ, start_response)
+            _FLASK_APP = flask_app
+            return _FLASK_APP(environ, start_response)
         except Exception as import_err:
             global _EMERGENCY_RETRY_DONE
             if not _EMERGENCY_RETRY_DONE:
                 _EMERGENCY_RETRY_DONE = True
-                synced = auto_sync_git(BASE_DIR, force=True)
-                if synced:
-                    try:
-                        import importlib
-                        if "server" in sys.modules:
-                            importlib.reload(sys.modules["server"])
-                        from server import app as flask_app
-                        return flask_app(environ, start_response)
-                    except Exception:
-                        pass
+                if is_production_server():
+                    synced = auto_sync_git(BASE_DIR, force=True)
+                    if synced:
+                        try:
+                            import importlib
+                            if "server" in sys.modules:
+                                importlib.reload(sys.modules["server"])
+                            from server import app as flask_app
+                            _FLASK_APP = flask_app
+                            return _FLASK_APP(environ, start_response)
+                        except Exception:
+                            pass
 
             missing_files[str(import_err).split("'")[-1]] = 'MISSING (Import Failed)'
             return render_bootstrap_response(

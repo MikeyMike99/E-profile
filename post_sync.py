@@ -25,12 +25,29 @@ def _find_agy_bin(root: Path):
     return shutil.which("agy")
 
 
+def is_production_server() -> bool:
+    """Accurately identifies PythonAnywhere production environment."""
+    if os.environ.get("FORCE_BOOTSTRAP_SYNC") == "1":
+        return True
+    if os.name == "nt":
+        return False
+    if "WSL_DISTRO_NAME" in os.environ or "WSL_INTEROP" in os.environ or Path("/mnt/c").exists():
+        return False
+    try:
+        proc_ver = Path("/proc/version")
+        if proc_ver.exists() and any(k in proc_ver.read_text(encoding="utf-8", errors="ignore").lower() for k in ("microsoft", "wsl")):
+            return False
+    except Exception:
+        pass
+    return "PYTHONANYWHERE_DOMAIN" in os.environ or "PYTHONANYWHERE_SITE" in os.environ or Path("/var/www").exists()
+
+
 def main():
     root = Path(__file__).resolve().parent
     py_bin = shutil.which("python3") or "python3"
     submod_worktree = root / "content" / "projects" / "engines" / "antigravity_agent"
 
-    if os.name != "nt":
+    if is_production_server():
         home = Path.home()
         for rel in [".bashrc", ".profile", ".vimrc", ".pythonstartup.py"]:
             _ensure_lf(home / rel)
