@@ -1,5 +1,5 @@
 {
-    "total_views": 2951,
+    "total_views": 2952,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719"
@@ -15,7 +15,7 @@
         "/ai_agent/api/auth_check": 2,
         "/": 5,
         "/ai_agent/api/chat": 11,
-        "/projects": 1,
+        "/projects": 2,
         "/ai_agent/api/auth/login": 1,
         "/docs/api/cache/status": 1,
         "/docs/api/cache/cleanup": 1,
