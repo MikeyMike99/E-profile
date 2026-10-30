@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import os
 import re
 import json
 import shutil
 from datetime import datetime
 from pathlib import Path
+from typing import Optional, Dict, Any, List
 from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session
 import markdown
 from config import Config
@@ -451,7 +454,7 @@ def cleanup_docs_cache(max_age_days=None, max_files=None, max_size_mb=None) -> d
         "remaining_count": len(remaining_files)
     }
 
-def fetch_remote_doc(category: str, doc_slug: str, doc_meta: dict = None) -> Path | None:
+def fetch_remote_doc(category: str, doc_slug: str, doc_meta: Optional[dict] = None) -> Optional[Path]:
     """
     Fetches raw markdown document on-demand from GitHub (Central_Docs) when not cached.
     Saves to CACHE_DOCS_DIR, updates access timestamp, and triggers cache cleanup.

@@ -1,5 +1,8 @@
 """Host administrative recovery utility for rotating or resetting administrator PINs/tokens in profiles.json."""
 
+from __future__ import annotations
+
+from typing import Optional
 import argparse
 import getpass
 import hashlib
@@ -42,7 +45,7 @@ def persist_profile_store(file_path: Path, envelope: dict, profiles: dict) -> No
     file_path.write_text(json.dumps(envelope, indent=4), encoding="utf-8")
 
 
-def reset_admin_token(target_username: str | None, new_pin: str, profiles_path: Path | None = None) -> bool:
+def reset_admin_token(target_username: Optional[str], new_pin: str, profiles_path: Optional[Path] = None) -> bool:
     target_path = profiles_path or resolve_profiles_path()
     envelope, profiles = load_profile_store(target_path)
 
@@ -79,7 +82,7 @@ def reset_admin_token(target_username: str | None, new_pin: str, profiles_path: 
     return True
 
 
-def list_profiles(profiles_path: Path | None = None) -> None:
+def list_profiles(profiles_path: Optional[Path] = None) -> None:
     target_path = profiles_path or resolve_profiles_path()
     _, profiles = load_profile_store(target_path)
     print(f"\nActive Profiles ({target_path}):")

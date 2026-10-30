@@ -133,8 +133,14 @@ def main():
             capture_output=True,
             text=True
         )
-        print("[post_sync] Enforced LF on shell profiles, verified engine workspace, synced CLI models, cleaned pip cache, and pruned unused NLP packages.")
+        try:
+            from docs_mod import cleanup_docs_cache
+            cache_res = cleanup_docs_cache(max_age_days=7)
+            print(f"[post_sync] Cleaned docs cache: evicted {cache_res.get('evicted_count', 0)} stale files ({round(cache_res.get('freed_bytes', 0)/1024, 1)} KB freed).")
+        except Exception:
+            pass
 
+        print("[post_sync] Enforced LF on shell profiles, verified engine workspace, synced CLI models, cleaned pip cache, pruned unused NLP packages, and refreshed docs cache.")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 """Central Flask WSGI Blueprint adapter mounting the Siraugga Framework into e_profile."""
-from flask import Blueprint, jsonify, request, render_template, render_template_string, session, redirect
+from flask import Blueprint, jsonify, request, render_template, render_template_string, session, redirect, url_for
 from pathlib import Path
 import sys
 import os
@@ -422,21 +422,23 @@ def _resolve_active_user() -> dict:
 def ai_home():
     auth_header = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
     bearer_user = security_mgr.get_user_from_token(auth_header) if auth_header else None
-    is_master = security_mgr.check_master_signature()
-
-    is_admin = bool(
+    has_explicit_session = bool(
         session.get("is_admin")
         or session.get("admin")
         or (bearer_user and bearer_user.get("role") in ("admin", "super_admin", "super admin"))
-        or is_master
     )
 
-    if (is_master or is_admin) and not session.get("is_admin"):
+    if request.args.get("mode") == "root" and not has_explicit_session:
+        return redirect(url_for("ai.login_page"))
+
+    is_master = security_mgr.check_master_signature()
+    is_admin = has_explicit_session or is_master
+
+    if is_admin and not session.get("is_admin"):
         session["is_admin"] = True
         session["admin"] = True
         session["username"] = session.get("username") or "Michael (Admin)"
         session.permanent = True
-
     if is_admin and request.args.get("demo") != "1" and request.args.get("mode") != "demo":
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
@@ -451,7 +453,6 @@ def ai_home():
                 project_mgr.set_active_project(target_project)
         except Exception:
             pass
-
     if is_admin:
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
@@ -468,7 +469,7 @@ def ai_home():
 def ai_demo_entry():
     session["agent_token_scope"] = "demo"
     session["agent_authenticated"] = True
-    return redirect(url_for("ai_plugin.ai_home", demo="1"))
+    return redirect(url_for("ai.ai_home", demo="1"))
 
 
 @ai_bp.route("/login")
@@ -487,8 +488,7 @@ def login_page():
         session["agent_authenticated"] = True
         session["is_admin"] = True
         session["admin"] = True
-        return redirect(url_for("ai_plugin.ai_home"))
-
+        return redirect(url_for("ai.ai_home"))
     return _render_ai_template("login.html")
 
 

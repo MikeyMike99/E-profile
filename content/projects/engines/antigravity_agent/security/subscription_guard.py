@@ -3,6 +3,7 @@ Bring Your Own Subscription (BYOS) cryptographic credential vault and quota guar
 Enforces per-user API key/OAuth isolation, 7-day TTL countdown auto-purging,
 and strict quota halts to guarantee zero host billing bleed.
 """
+from __future__ import annotations
 
 import base64
 import hashlib
@@ -14,20 +15,21 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+from typing import Optional, Tuple, Dict, Any
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 DEFAULT_TTL_SECONDS = 7 * 86400
 VAULT_SALT = b"devcore_byos_vault_salt_v1"
-_EPHEMERAL_VAULT: dict[str, dict] = {}
+_EPHEMERAL_VAULT: Dict[str, Dict[str, Any]] = {}
 
 
-def get_base_dir(base_dir: str | None = None) -> Path:
+def get_base_dir(base_dir: Optional[str] = None) -> Path:
     if base_dir:
         return Path(base_dir).resolve()
     return Path(__file__).resolve().parent.parent
 
 
-def _derive_vault_key(base_dir: str | None = None) -> bytes:
+def _derive_vault_key(base_dir: Optional[str] = None) -> bytes:
     root = get_base_dir(base_dir)
     master_key_file = root / ".devcore_master.key"
     if master_key_file.exists():
@@ -47,7 +49,7 @@ def _derive_vault_key(base_dir: str | None = None) -> bytes:
     )
 
 
-def encrypt_credential(credential: str, base_dir: str | None = None) -> str:
+def encrypt_credential(credential: str, base_dir: Optional[str] = None) -> str:
     key = _derive_vault_key(base_dir)
     aesgcm = AESGCM(key)
     nonce = os.urandom(12)
@@ -55,7 +57,7 @@ def encrypt_credential(credential: str, base_dir: str | None = None) -> str:
     return base64.b64encode(nonce + ciphertext).decode("utf-8")
 
 
-def decrypt_credential(encrypted_b64: str, base_dir: str | None = None) -> str:
+def decrypt_credential(encrypted_b64: str, base_dir: Optional[str] = None) -> str:
     key = _derive_vault_key(base_dir)
     aesgcm = AESGCM(key)
     raw_payload = base64.b64decode(encrypted_b64.encode("utf-8"))
@@ -65,7 +67,7 @@ def decrypt_credential(encrypted_b64: str, base_dir: str | None = None) -> str:
     return decrypted_bytes.decode("utf-8")
 
 
-def get_subscriptions_path(base_dir: str | None = None) -> Path:
+def get_subscriptions_path(base_dir: Optional[str] = None) -> Path:
     return get_base_dir(base_dir) / "subscriptions.json"
 
 
@@ -80,7 +82,7 @@ def get_user_runtime_chamber(user_id: str) -> Path:
     return chamber
 
 
-def _load_vault(base_dir: str | None = None) -> dict:
+def _load_vault(base_dir: Optional[str] = None) -> dict:
     path = get_subscriptions_path(base_dir)
     if not path.exists():
         return {}
@@ -93,14 +95,14 @@ def _load_vault(base_dir: str | None = None) -> dict:
     return {}
 
 
-def _save_vault(data: dict, base_dir: str | None = None) -> None:
+def _save_vault(data: dict, base_dir: Optional[str] = None) -> None:
     path = get_subscriptions_path(base_dir)
     temp_path = path.with_suffix(".tmp")
     temp_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     temp_path.replace(path)
 
 
-def purge_expired_subscriptions(base_dir: str | None = None) -> int:
+def purge_expired_subscriptions(base_dir: Optional[str] = None) -> int:
     vault = _load_vault(base_dir)
     now = time.time()
     purged_count = 0
@@ -131,7 +133,7 @@ def set_user_subscription(
     credential: str,
     ttl_days: float = 7.0,
     storage_mode: str = "vault",
-    base_dir: str | None = None
+    base_dir: Optional[str] = None
 ) -> dict:
     clean_id = _clean_user_id(user_id)
     mode = storage_mode.lower().strip()
@@ -199,9 +201,9 @@ def set_user_subscription(
 
 def get_user_subscription(
     user_id: str,
-    base_dir: str | None = None,
+    base_dir: Optional[str] = None,
     include_decrypted: bool = False
-) -> dict | None:
+) -> Optional[dict]:
     clean_id = _clean_user_id(user_id)
     now = time.time()
 
@@ -261,7 +263,7 @@ def get_user_subscription(
     return result
 
 
-def delete_user_subscription(user_id: str, base_dir: str | None = None) -> bool:
+def delete_user_subscription(user_id: str, base_dir: Optional[str] = None) -> bool:
     clean_id = _clean_user_id(user_id)
     deleted = False
 
@@ -286,7 +288,7 @@ def delete_user_subscription(user_id: str, base_dir: str | None = None) -> bool:
     return deleted
 
 
-def verify_subscription_health(provider: str, credential: str) -> tuple[bool, str]:
+def verify_subscription_health(provider: str, credential: str) -> Tuple[bool, str]:
     prov = (provider or "gemini").lower().strip()
     cred = (credential or "").strip()
     if not cred:
@@ -338,15 +340,22 @@ def verify_subscription_health(provider: str, credential: str) -> tuple[bool, st
 
 
 def assert_user_execution_quota(
-    user: dict | None,
-    base_dir: str | None = None
-) -> tuple[bool, str, dict | None]:
+    user: Optional[dict],
+    base_dir: Optional[str] = None
+) -> Tuple[bool, str, Optional[dict]]:
     if not isinstance(user, dict):
         return True, "System default", None
 
+    token_scope = user.get("token_scope")
+    if token_scope == "demo":
+        return True, "Demo scope sandbox allowed", None
+
     user_role = str(user.get("role", "")).lower()
+    if user_role in ("demo", "demo_guest"):
+        return True, "Demo scope sandbox allowed", None
+
     user_id = user.get("username") or user.get("name") or user.get("key_id") or "guest"
-    is_admin = user_role in ("admin", "super_admin", "super admin")
+    is_admin = user_role in ("admin", "super_admin", "super admin", "tier5_sysadmin")
 
     sub = get_user_subscription(user_id, base_dir=base_dir, include_decrypted=True)
 
