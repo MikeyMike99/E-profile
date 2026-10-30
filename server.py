@@ -7,7 +7,7 @@ import math
 import re
 from datetime import datetime, timedelta
 from pathlib import Path
-from flask import Flask, render_template, session, abort, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, session, abort, request, redirect, url_for, jsonify, flash, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 import markdown
 
@@ -77,6 +77,19 @@ try:
     app.register_blueprint(ai_bp, url_prefix='/ai_agent')
 except Exception as e:
     app.logger.error(f"Failed to load AI Blueprint: {e}")
+
+@app.route('/api/sounds/<sound_name>', methods=['GET'])
+def play_sound(sound_name):
+    sounds_dir = Path(ai_path) / "sandbox" / "static" / "sounds"
+    for ext in [".wav", ".mp3", ".ogg"]:
+        file_path = sounds_dir / f"{sound_name}{ext}"
+        if file_path.is_file():
+            return send_file(str(file_path))
+    if sound_name == "notification":
+        fallback_path = sounds_dir / "incoming.wav"
+        if fallback_path.is_file():
+            return send_file(str(fallback_path))
+    return jsonify({"error": f"No custom {sound_name} audio file found in {sounds_dir}"}), 404
 
 class SystemLogger:
     def __init__(self):
