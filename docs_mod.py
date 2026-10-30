@@ -18,6 +18,15 @@ RELEASE_SCHEDULE_PATH = DOCS_DIR / "release_schedule.json"
 CENTRAL_DOCS_DIR = getattr(config, 'CENTRAL_DOCS_DIR', Path("/mnt/c/Users/michael/Documents/Central_Docs"))
 CENTRAL_RELEASE_SCHEDULE_PATH = CENTRAL_DOCS_DIR / "release_schedule.json"
 
+CACHE_DOCS_DIR = config.ROOT_DIR / "cache" / "docs"
+CACHE_DOCS_DIR.mkdir(parents=True, exist_ok=True)
+
+DOCS_CACHE_MAX_AGE_DAYS = int(os.environ.get("DOCS_CACHE_MAX_AGE_DAYS", "7"))
+DOCS_CACHE_MAX_FILES = int(os.environ.get("DOCS_CACHE_MAX_FILES", "50"))
+DOCS_CACHE_MAX_SIZE_MB = float(os.environ.get("DOCS_CACHE_MAX_SIZE_MB", "20.0"))
+GITHUB_DOCS_REPO = os.environ.get("GITHUB_DOCS_REPO", "MikeyMike99/Central_Docs")
+GITHUB_DOCS_BRANCH = os.environ.get("GITHUB_DOCS_BRANCH", "main")
+
 COLLECTIONS = {
     "devlog": {
         "title": "5-Pillar Architecture Devlog Suite",
@@ -307,7 +316,215 @@ def clean_markdown_text(raw_text: str) -> str:
     text = re.sub(r'\[([^\]]+)\]\((/docs/[^)]+)\)', fix_link_label, text)
     return text
 
+def get_github_token():
+    token = os.environ.get("GIT_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if not token:
+        token_file = config.ROOT_DIR / "gethub_token.txt"
+        if token_file.exists():
+            try:
+                token = token_file.read_text(encoding="utf-8").strip()
+            except Exception:
+                pass
+    return token
+
+def _check_pa_proxy():
+    try:
+        import socket
+        socket.gethostbyname("proxy.server")
+        return True
+    except Exception:
+        return False
+
+def touch_cache_file(file_path: Path):
+    try:
+        os.utime(file_path, None)
+    except Exception:
+        pass
+
+def sanitize_downloaded_markdown(raw_text: str, category: str) -> str:
+    text = raw_text
+    # 1. Scrub Windows/WSL local paths to web relative links
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/docs/devlog/[^/]+/([a-zA-Z0-9_]+)\.md', r'/docs/devlog/\1', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/docs/Siraugga_Textbook/([a-zA-Z0-9_]+)\.md', r'/docs/textbook/\1', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/docs/Siraugga_Master_Manual/([a-zA-Z0-9_]+)\.md', r'/docs/manual/\1', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/docs/The_Manifesto/([a-zA-Z0-9_]+)\.md', r'/docs/manifesto/\1', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/docs/DEVLOG\.md', r'/docs/story/DEVLOG', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/docs/([a-zA-Z0-9_]+)\.md', r'/docs/guides/\1', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/Audio_pllayback_suite/docs/([a-zA-Z0-9_]+)\.md', r'/docs/audio_suite/\1', text)
+    
+    # Generic local path scrubbing
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/DevCore/([a-zA-Z0-9_./-]+)', r'/\1', text)
+    text = re.sub(r'file:///mnt/c/Users/michael/Documents/Audio_pllayback_suite/([a-zA-Z0-9_./-]+)', r'/\1', text)
+    text = re.sub(r'file:///home/michael/\.gemini/antigravity-cli/brain/[a-zA-Z0-9_-]+/[a-zA-Z0-9_./-]+', r'[SANITY_REDACTED_BRAIN_SESSION]', text)
+    text = re.sub(r'/mnt/c/Users/michael/Documents/DevCore/', r'/', text)
+    text = re.sub(r'/mnt/c/Users/michael/Documents/Audio_pllayback_suite/', r'/', text)
+    text = re.sub(r'C:\\Users\\michael\\Documents\\Audio_pllayback_suite\\', r'/', text)
+    text = re.sub(r'/home/michael/\.gemini/antigravity-cli/brain/', r'[LOCAL_BRAIN_VAULT]/', text)
+    
+    # 2. Normalize relative markdown links between devlog pillars
+    def normalize_link(match):
+        target = match.group(1)
+        if target.endswith('.md'):
+            basename = os.path.basename(target)[:-3]
+            if category == "audio_suite":
+                return f'(/docs/audio_suite/{basename})'
+            if any(target.startswith(p) for p in ["01_", "02_", "03_", "04_", "05_"]):
+                return f'(/docs/devlog/{basename})'
+            elif any(target.startswith(p) for p in ["Chapter_", "Module_", "Checkpoint_"]):
+                return f'(/docs/textbook/{basename})'
+            return f'(/docs/{category}/{basename})'
+        return match.group(0)
+
+    text = re.sub(r'\(\./([^)]+\.md)\)', normalize_link, text)
+    text = re.sub(r'\(\.\./([^)]+\.md)\)', normalize_link, text)
+    text = re.sub(r'\[`([^`]+)`\]\(\.\./([^)]+\.(?:exe|bat|iss|py|dll|json|pka|sh))\)', r'`\1` (\2)', text)
+    return text
+
+def cleanup_docs_cache(max_age_days=None, max_files=None, max_size_mb=None) -> dict:
+    """
+    Cleans up cached markdown documents that have not been touched in a while (TTL)
+    or when total cache files/size exceed configured thresholds (LRU eviction).
+    Strictly isolated to CACHE_DOCS_DIR.
+    """
+    if not CACHE_DOCS_DIR.exists():
+        return {"evicted_count": 0, "freed_bytes": 0, "remaining_count": 0}
+
+    import time
+    now = time.time()
+    max_days = max_age_days if max_age_days is not None else DOCS_CACHE_MAX_AGE_DAYS
+    max_count = max_files if max_files is not None else DOCS_CACHE_MAX_FILES
+    max_mb = max_size_mb if max_size_mb is not None else DOCS_CACHE_MAX_SIZE_MB
+
+    max_age_seconds = max_days * 86400
+    evicted_count = 0
+    freed_bytes = 0
+
+    cached_files = []
+    for p in CACHE_DOCS_DIR.rglob("*.md"):
+        try:
+            st = p.stat()
+            cached_files.append((p, st.st_mtime, st.st_size))
+        except OSError:
+            continue
+
+    # 1. TTL Inactivity Eviction (files not touched in max_age_days)
+    remaining_files = []
+    for path, mtime, size in cached_files:
+        if (now - mtime) > max_age_seconds:
+            try:
+                path.unlink()
+                evicted_count += 1
+                freed_bytes += size
+            except OSError:
+                pass
+        else:
+            remaining_files.append((path, mtime, size))
+
+    # 2. LRU Eviction if count or size limits exceeded
+    total_size = sum(s for _, _, s in remaining_files)
+    max_bytes = max_mb * 1024 * 1024
+
+    if len(remaining_files) > max_count or total_size > max_bytes:
+        remaining_files.sort(key=lambda x: x[1])  # oldest mtime first
+        while remaining_files and (len(remaining_files) > max_count or total_size > max_bytes):
+            path, mtime, size = remaining_files.pop(0)
+            try:
+                path.unlink()
+                evicted_count += 1
+                freed_bytes += size
+                total_size -= size
+            except OSError:
+                pass
+
+    # 3. Clean up empty subdirectories
+    for d in list(CACHE_DOCS_DIR.iterdir()):
+        if d.is_dir():
+            try:
+                if not any(d.iterdir()):
+                    d.rmdir()
+            except OSError:
+                pass
+
+    return {
+        "evicted_count": evicted_count,
+        "freed_bytes": freed_bytes,
+        "remaining_count": len(remaining_files)
+    }
+
+def fetch_remote_doc(category: str, doc_slug: str, doc_meta: dict = None) -> Path | None:
+    """
+    Fetches raw markdown document on-demand from GitHub (Central_Docs) when not cached.
+    Saves to CACHE_DOCS_DIR, updates access timestamp, and triggers cache cleanup.
+    """
+    import urllib.request
+    import urllib.error
+
+    if ".." in str(category) or ".." in str(doc_slug) or "/" in str(doc_slug) or "\\" in str(doc_slug):
+        return None
+
+    target_cache_path = CACHE_DOCS_DIR / category / f"{doc_slug}.md"
+
+    candidates = []
+    if doc_meta and doc_meta.get("github_path"):
+        candidates.append(doc_meta.get("github_path"))
+    if doc_meta and doc_meta.get("rel_path"):
+        rel = doc_meta.get("rel_path")
+        candidates.append(f"projects/siraugga_framework/{rel}")
+        candidates.append(f"projects/audio_suite/{rel}")
+        candidates.append(f"projects/{rel}")
+    if doc_slug == "06_EPROFILE_DEVLOG":
+        candidates.append("projects/eprofile/DEVLOG.md")
+    candidates.extend([
+        f"projects/eprofile/{doc_slug}.md",
+        f"projects/eprofile/{category}/{doc_slug}.md",
+        f"projects/siraugga_framework/{category}/{doc_slug}.md",
+        f"projects/siraugga_framework/{doc_slug}.md",
+        f"projects/audio_suite/{doc_slug}.md",
+        f"projects/encrypt_me/{doc_slug}.md",
+        f"projects/echoes_of_the_world/{doc_slug}.md",
+    ])
+
+    proxies = {}
+    if os.environ.get("https_proxy"):
+        proxies["https"] = os.environ.get("https_proxy")
+    elif "PYTHONANYWHERE_DOMAIN" in os.environ or Path("/var/www").exists() or _check_pa_proxy():
+        proxies["https"] = "http://proxy.server:3128"
+        proxies["http"] = "http://proxy.server:3128"
+
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler(proxies)) if proxies else urllib.request.build_opener()
+    token = get_github_token()
+    headers = {"User-Agent": "EProfile-LazyDocs/1.0"}
+    if token:
+        headers["Authorization"] = f"token {token}"
+
+    for cand in candidates:
+        url = f"https://raw.githubusercontent.com/{GITHUB_DOCS_REPO}/{GITHUB_DOCS_BRANCH}/{cand}"
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with opener.open(req, timeout=8) as resp:
+                if resp.status == 200:
+                    raw_bytes = resp.read()
+                    raw_text = raw_bytes.decode("utf-8", errors="replace")
+                    sanitized_text = sanitize_downloaded_markdown(raw_text, category)
+                    target_cache_path.parent.mkdir(parents=True, exist_ok=True)
+                    target_cache_path.write_text(sanitized_text, encoding="utf-8")
+                    touch_cache_file(target_cache_path)
+                    try:
+                        cleanup_docs_cache()
+                    except Exception:
+                        pass
+                    return target_cache_path
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError):
+            continue
+
+    return None
+
 def resolve_physical_file(category, doc_slug, doc_meta=None):
+    if not category or not doc_slug:
+        return []
+    if ".." in str(category) or ".." in str(doc_slug) or "/" in str(doc_slug) or "\\" in str(doc_slug):
+        return []
+
     if not doc_meta:
         catalog = load_catalog()
         doc_meta = next((d for d in catalog if d.get('category') == category and d.get('slug') == doc_slug), None)
@@ -320,6 +537,8 @@ def resolve_physical_file(category, doc_slug, doc_meta=None):
             candidates.append(CENTRAL_DOCS_DIR / "projects" / "siraugga_framework" / rel)
             candidates.append(CENTRAL_DOCS_DIR / "projects" / "audio_suite" / rel)
             candidates.append(CENTRAL_DOCS_DIR / "projects" / rel)
+        if doc_meta and doc_meta.get('github_path'):
+            candidates.append(CENTRAL_DOCS_DIR / doc_meta.get('github_path'))
         candidates.extend([
             CENTRAL_DOCS_DIR / "projects" / "eprofile" / f"{doc_slug}.md",
             CENTRAL_DOCS_DIR / "projects" / "eprofile" / category / f"{doc_slug}.md",
@@ -333,7 +552,14 @@ def resolve_physical_file(category, doc_slug, doc_meta=None):
             if c.exists() and c.is_file():
                 paths.append(c)
                 break
-                
+
+    cache_file = CACHE_DOCS_DIR / category / f"{doc_slug}.md"
+    if cache_file.exists() and cache_file.is_file():
+        touch_cache_file(cache_file)
+        if cache_file not in paths:
+            paths.append(cache_file)
+        return paths
+
     docs_candidate = None
     if doc_meta and doc_meta.get('rel_path'):
         p = DOCS_DIR / doc_meta.get('rel_path', '')
@@ -346,6 +572,11 @@ def resolve_physical_file(category, doc_slug, doc_meta=None):
             
     if docs_candidate and docs_candidate not in paths:
         paths.append(docs_candidate)
+
+    if not paths:
+        fetched_path = fetch_remote_doc(category, doc_slug, doc_meta)
+        if fetched_path and fetched_path.exists():
+            paths.append(fetched_path)
         
     return paths
 
@@ -1064,3 +1295,43 @@ def docs_search():
             
     results.sort(key=lambda x: x["score"], reverse=True)
     return jsonify(results[:30])
+@docs_bp.route('/api/cache/status', methods=['GET'])
+def docs_api_cache_status():
+    cached_files = []
+    total_bytes = 0
+    if CACHE_DOCS_DIR.exists():
+        for p in CACHE_DOCS_DIR.rglob("*.md"):
+            try:
+                st = p.stat()
+                total_bytes += st.st_size
+                rel = str(p.relative_to(CACHE_DOCS_DIR)).replace('\\', '/')
+                cached_files.append({
+                    "path": rel,
+                    "size_bytes": st.st_size,
+                    "last_touched": datetime.fromtimestamp(st.st_mtime).isoformat()
+                })
+            except OSError:
+                pass
+    return jsonify({
+        "status": "success",
+        "cached_count": len(cached_files),
+        "total_size_kb": round(total_bytes / 1024, 2),
+        "total_size_mb": round(total_bytes / (1024 * 1024), 2),
+        "max_age_days": DOCS_CACHE_MAX_AGE_DAYS,
+        "max_files": DOCS_CACHE_MAX_FILES,
+        "max_size_mb": DOCS_CACHE_MAX_SIZE_MB,
+        "cached_files": cached_files
+    })
+
+@docs_bp.route('/api/cache/cleanup', methods=['POST'])
+def docs_api_cache_cleanup():
+    data = request.get_json() or {}
+    max_days = data.get('max_age_days')
+    max_files = data.get('max_files')
+    max_mb = data.get('max_size_mb')
+    metrics = cleanup_docs_cache(max_age_days=max_days, max_files=max_files, max_size_mb=max_mb)
+    return jsonify({
+        "status": "success",
+        "message": f"Cache cleanup complete. Evicted {metrics['evicted_count']} stale files ({round(metrics['freed_bytes'] / 1024, 1)} KB freed).",
+        "metrics": metrics
+    })

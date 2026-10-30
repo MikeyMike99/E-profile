@@ -66,6 +66,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -377,6 +378,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "eprofile/DEVLOG.md",
+    "github_path": "projects/eprofile/DEVLOG.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -442,8 +444,8 @@
     "slug": "05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE",
     "category": "audio_suite",
     "title": "Chapter 5: Beginner's Step-by-Step Guide to Creating `compile_joshy.bat` From Scratch",
-    "summary": "- **Previous**: [`04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md`](/docs/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE)",
-    "word_count": 2563,
+    "summary": "- **Previous**: [`04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md`](./04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md)",
+    "word_count": 2558,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -624,6 +626,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE.md",
+    "github_path": "projects/audio_suite/05_STEP_BY_STEP_BAT_FILE_CREATION_GUIDE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -729,6 +732,121 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE.md",
+    "github_path": "projects/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
+    "category": "encrypt_me",
+    "title": "The encrypt_me (v3.0) Cryptographic Architecture",
+    "summary": "* **Developer:** Michael Robberts",
+    "word_count": 604,
+    "project": "encrypt_me",
+    "project_label": "EncryptMe Multi-User Vault",
+    "project_code": "ENCR",
+    "collection_code": "VAULT",
+    "doc_id": "ENCR-VAULT-CRYPTOGRAPHIC_ARCH",
+    "version": "v1.1",
+    "canonical_id": "ENCR-VAULT-CRYPTOGRAPHIC_ARCH",
+    "versioned_id": "ENCR-VAULT-CRYPTOGRAPHIC_ARCH@v1.1",
+    "sections": [
+      {
+        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-1",
+        "num": "1",
+        "title": "Overview & Classification",
+        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-1"
+      },
+      {
+        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-2",
+        "num": "2",
+        "title": "Core Cryptographic Specifications",
+        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-2"
+      },
+      {
+        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-3",
+        "num": "3",
+        "title": "The Identity-Gated Administrative Recovery (IGAR)",
+        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-3"
+      },
+      {
+        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-4",
+        "num": "4",
+        "title": "Integration into the Antigravity Engine",
+        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-4"
+      },
+      {
+        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-5",
+        "num": "5",
+        "title": "Cross-References & System Parallels",
+        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-5"
+      }
+    ],
+    "topics": [
+      "security",
+      "cryptography",
+      "workflow",
+      "changelog"
+    ],
+    "order_score": 13000,
+    "is_latest": true,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE.md",
+    "github_path": "projects/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -826,6 +944,105 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "encrypt_me/DEVLOG.md",
+    "github_path": "projects/encrypt_me/DEVLOG.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "DEVLOG",
+    "category": "encrypt_me",
+    "title": "encrypt_me Engineering Development Log",
+    "summary": "* **Date:** Sunday, 01 February 2026 (18:00 \u2013 20:29)",
+    "word_count": 221,
+    "project": "encrypt_me",
+    "project_label": "EncryptMe Multi-User Vault",
+    "project_code": "ENCR",
+    "collection_code": "VAULT",
+    "doc_id": "ENCR-VAULT-DEVLOG",
+    "version": "v1.2",
+    "canonical_id": "ENCR-VAULT-DEVLOG",
+    "versioned_id": "ENCR-VAULT-DEVLOG@v1.2",
+    "sections": [
+      {
+        "id": "ENCR-VAULT-LOG-SEC-1",
+        "num": "1",
+        "title": "Sprint 1: Security Hardening & Social Engineering Defense",
+        "anchor": "#ENCR-VAULT-LOG-SEC-1"
+      },
+      {
+        "id": "ENCR-VAULT-LOG-SEC-2",
+        "num": "2",
+        "title": "Sprint 2: Market Analysis & Cryptographic Landscape",
+        "anchor": "#ENCR-VAULT-LOG-SEC-2"
+      }
+    ],
+    "topics": [
+      "security",
+      "cryptography",
+      "infrastructure",
+      "workflow",
+      "origin_story",
+      "changelog"
+    ],
+    "order_score": 13000,
+    "is_latest": true,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "encrypt_me/DEVLOG.md",
+    "github_path": "projects/encrypt_me/DEVLOG.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -928,6 +1145,110 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "encrypt_me/README.md",
+    "github_path": "projects/encrypt_me/README.md",
+    "cross_references": [
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "devlog",
+        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
+        "title": "The Origin Architecture: Echoes of the World",
+        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
+      },
+      {
+        "project": "echoes",
+        "project_label": "Echoes of the World (Audio Game)",
+        "category": "manifesto",
+        "slug": "01_Echoes_in_the_Void",
+        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
+        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
+      },
+      {
+        "project": "eprofile",
+        "project_label": "E-Profile Portal",
+        "category": "eprofile",
+        "slug": "DEVLOG",
+        "title": "E-Profile Architecture & Forensic Devlog",
+        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "SECURITY",
+        "title": "Siraugga Framework Security Specification",
+        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "guides",
+        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
+        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
+        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
+      },
+      {
+        "project": "siraugga",
+        "project_label": "Siraugga / DevCore Core",
+        "category": "manifesto",
+        "slug": "03_The_Forge_of_Sovereignty",
+        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
+        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
+      }
+    ],
+    "publish_status": "draft",
+    "release_date": null
+  },
+  {
+    "slug": "README",
+    "category": "encrypt_me",
+    "title": "encrypt_me (v3.0) User & System Guide",
+    "summary": "* **Developer:** Michael Robberts",
+    "word_count": 248,
+    "project": "encrypt_me",
+    "project_label": "EncryptMe Multi-User Vault",
+    "project_code": "ENCR",
+    "collection_code": "VAULT",
+    "doc_id": "ENCR-VAULT-README",
+    "version": "v1.1",
+    "canonical_id": "ENCR-VAULT-README",
+    "versioned_id": "ENCR-VAULT-README@v1.1",
+    "sections": [
+      {
+        "id": "ENCR-VAULT-README-SEC-1",
+        "num": "1",
+        "title": "Project Overview",
+        "anchor": "#ENCR-VAULT-README-SEC-1"
+      },
+      {
+        "id": "ENCR-VAULT-README-SEC-2",
+        "num": "2",
+        "title": "Security Specifications",
+        "anchor": "#ENCR-VAULT-README-SEC-2"
+      },
+      {
+        "id": "ENCR-VAULT-README-SEC-3",
+        "num": "3",
+        "title": "User Guide & Team Operations",
+        "anchor": "#ENCR-VAULT-README-SEC-3"
+      }
+    ],
+    "topics": [
+      "security",
+      "cryptography",
+      "infrastructure",
+      "workflow",
+      "changelog"
+    ],
+    "order_score": 13000,
+    "is_latest": true,
+    "is_origin": false,
+    "is_proprietary": false,
+    "clearance": "public",
+    "base_sensitivity": 1,
+    "max_sensitivity": 3,
+    "rel_path": "encrypt_me/README.md",
+    "github_path": "projects/encrypt_me/README.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -1044,6 +1365,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 4,
     "rel_path": "echoes/CLASS_WORLD_ARCHITECTURE.md",
+    "github_path": "projects/echoes_of_the_world/CLASS_WORLD_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -1154,6 +1476,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "echoes/MENU_CONFIG.md",
+    "github_path": "projects/echoes_of_the_world/MENU_CONFIG.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -2568,6 +2891,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "story/DEVLOG.md",
+    "github_path": "projects/siraugga_framework/DEVLOG.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -2609,8 +2933,8 @@
     "slug": "04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE",
     "category": "audio_suite",
     "title": "Chapter 4: How We Made It Work & Step-by-Step Future Compilation Guide",
-    "summary": "- **Previous**: [`03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md`](/docs/audio_suite/03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS)",
-    "word_count": 1707,
+    "summary": "- **Previous**: [`03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md`](./03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md)",
+    "word_count": 1696,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -2748,6 +3072,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md",
+    "github_path": "projects/audio_suite/04_STEP_BY_STEP_SOLUTION_AND_COMPILATION_GUIDE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -2797,7 +3122,7 @@
     "slug": "03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS",
     "category": "audio_suite",
     "title": "Chapter 3: Diagnostic Tests Executed & How We Reached Our Conclusions",
-    "summary": "- **Previous**: [`02_SOURCE_CODE_EVIDENCE.md`](/docs/audio_suite/02_SOURCE_CODE_EVIDENCE)",
+    "summary": "- **Previous**: [`02_SOURCE_CODE_EVIDENCE.md`](./02_SOURCE_CODE_EVIDENCE.md)",
     "word_count": 1885,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
@@ -3038,6 +3363,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 4,
     "rel_path": "audio_suite/03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md",
+    "github_path": "projects/audio_suite/03_DIAGNOSTIC_TESTS_AND_CONCLUSIONS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -3087,8 +3413,8 @@
     "slug": "02_SOURCE_CODE_EVIDENCE",
     "category": "audio_suite",
     "title": "Chapter 2: Where the Information Was Found (Primary Source Documents)",
-    "summary": "- **Previous**: [`01_PROBLEMS_WE_ENCOUNTERED.md`](/docs/audio_suite/01_PROBLEMS_WE_ENCOUNTERED)",
-    "word_count": 1533,
+    "summary": "- **Previous**: [`01_PROBLEMS_WE_ENCOUNTERED.md`](./01_PROBLEMS_WE_ENCOUNTERED.md)",
+    "word_count": 1532,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -3244,6 +3570,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "audio_suite/02_SOURCE_CODE_EVIDENCE.md",
+    "github_path": "projects/audio_suite/02_SOURCE_CODE_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -3293,8 +3620,8 @@
     "slug": "01_PROBLEMS_WE_ENCOUNTERED",
     "category": "audio_suite",
     "title": "Chapter 1: The Three Problems We Encountered",
-    "summary": "- **Previous**: [`00_README_INDEX.md`](/docs/audio_suite/00_README_INDEX)",
-    "word_count": 1748,
+    "summary": "- **Previous**: [`00_README_INDEX.md`](./00_README_INDEX.md)",
+    "word_count": 1746,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -3416,6 +3743,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "audio_suite/01_PROBLEMS_WE_ENCOUNTERED.md",
+    "github_path": "projects/audio_suite/01_PROBLEMS_WE_ENCOUNTERED.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -3465,8 +3793,8 @@
     "slug": "00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY",
     "category": "audio_suite",
     "title": "Beginner Developer Guide: What Are Screen Readers & How Does This Help Me Build Accessible Apps?",
-    "summary": "- **Back to Index**: [`00_README_INDEX.md`](/docs/audio_suite/00_README_INDEX)",
-    "word_count": 1907,
+    "summary": "- **Back to Index**: [`00_README_INDEX.md`](./00_README_INDEX.md)",
+    "word_count": 1904,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -3573,6 +3901,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY.md",
+    "github_path": "projects/audio_suite/00A_BEGINNER_GUIDE_TO_SCREENREADERS_AND_ACCESSIBILITY.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -3623,7 +3952,7 @@
     "category": "audio_suite",
     "title": "JOSHY Screen Reader & Nuitka Packaging Documentation Index",
     "summary": "Welcome to the technical documentation and future compilation guide for the **JOSHY Audio Playback Suite**.",
-    "word_count": 692,
+    "word_count": 678,
     "project": "audio_suite",
     "project_label": "JOSHY Audio Suite",
     "project_code": "JOSH",
@@ -3679,6 +4008,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "audio_suite/00_README_INDEX.md",
+    "github_path": "projects/audio_suite/00_README_INDEX.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -3822,6 +4152,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_43_TOKEN_BURST_PREMATURE_ROLLOVER_AND_MIDTASK_RESET_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -3967,6 +4298,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_42_SESSION_ROLLOVER_AND_GUARD_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -4108,6 +4440,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_39_SESSION_ROLLOVER_DISTILLATION_AND_GUARD_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -4223,6 +4556,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_39_AUTOMATED_SILENT_SESSION_ROLLOVER_AND_GUARD_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -4340,6 +4674,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_36_SESSION_ROLLOVER_GUARD_AND_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -4644,6 +4979,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/06_EPROFILE_DEVLOG.md",
+    "github_path": "projects/eprofile/DEVLOG.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -4809,6 +5145,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_46_LOCAL_MODEL_DISTILLATION_AND_TOKEN_BURNOUT_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -4850,7 +5187,7 @@
     "slug": "01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.45: Problems Encountered: Visitor Cognitive Overwhelm & In-Place Edit Race Traps",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 847,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
@@ -4940,6 +5277,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_45_VISITOR_COGNITIVE_OVERWHELM_AND_IN_PLACE_EDIT_RACE_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -5090,6 +5428,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_45_LOCAL_MODEL_SERVICE_AND_TELEMETRY_ENGINE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -5131,7 +5470,7 @@
     "slug": "01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.44: Problems Encountered: Cross-Reference Degradation & Tag Clutter Traps",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 871,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -5222,6 +5561,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_44_CROSS_REFERENCE_DEGRADATION_AND_TAG_CLUTTER_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -5271,7 +5611,7 @@
     "slug": "05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.44: From-Scratch Creation Guide: Release Staging Engine & In-Place Editor",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 1125,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -5367,6 +5707,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_44_RELEASE_SCHEDULER_AND_IN_PLACE_EDITOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -5400,7 +5741,7 @@
     "slug": "05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.43: From-Scratch Creation Guide: Invariant Tagging Validator & AST Anchor Injector",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 1077,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -5497,6 +5838,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_43_INVARIANT_TAGGING_VALIDATOR_AND_AST_ANCHOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -5633,6 +5975,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_42_THOUGHT_VECTOR_EXPOSURE_AND_REASONING_LEAK_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -5770,6 +6113,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_42_LOCAL_MODEL_AND_TOKEN_TELEMETRY_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -5899,6 +6243,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_42_LOCAL_MODEL_TOKEN_OPTIMIZATION_AND_DISTILLATION_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -6024,6 +6369,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_41_ZONE_BASED_POLICIES_AND_SEMANTIC_WILDCARD_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -6065,7 +6411,7 @@
     "slug": "02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.41: Source Code Evidence: Release Staging Engine & In-Place Surgery",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 825,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
@@ -6155,6 +6501,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_41_RELEASE_STAGING_AND_IN_PLACE_SURGERY_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -6220,7 +6567,7 @@
     "slug": "04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.41: Solutions & Architecture: Curated Release Scheduling & Dual Persistence",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 848,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -6304,6 +6651,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_41_CURATED_RELEASE_SCHEDULING_AND_DUAL_PERSISTENCE_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -6439,6 +6787,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "devlog/05_41_THOUGHT_VECTOR_OBFUSCATOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_41_THOUGHT_VECTOR_OBFUSCATOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -6566,6 +6915,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_40_SWARM_COLLAPSE_AND_CONVERSATIONAL_LOOP_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -6607,7 +6957,7 @@
     "slug": "02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.40: Source Code Evidence: CommonMark Reference Parser & AST Heading Anchors",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 766,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
@@ -6691,6 +7041,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_40_COMMONMARK_REFERENCE_PARSER_AND_AST_ANCHORS_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -6756,7 +7107,7 @@
     "slug": "04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.40: Solutions & Architecture: Canonical Metadata & Section Invariant Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 839,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -6841,6 +7192,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_40_CANONICAL_METADATA_AND_SECTION_INVARIANT_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -6976,6 +7328,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_40_ZONE_BASED_SANDBOX_FILTER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -7103,6 +7456,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_39_INNO_SETUP_COMPILATION_AND_SPEECH_DLL_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -7278,6 +7632,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_39_LOCAL_MODEL_AND_TOKEN_TELEMETRY_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -7390,6 +7745,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_39_RAIA_SWARM_SUPERVISOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_39_RAIA_SWARM_SUPERVISOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -7516,6 +7872,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_38_SPOTIFY_HEADLESS_PLAYBACK_AND_GLOBAL_HOTKEY_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -7656,6 +8013,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_38_THOUGHT_VECTOR_OBFUSCATION_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -7697,7 +8055,7 @@
     "slug": "03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.38: Diagnostic Tests: Release Schedule & In-Place Surgery Audit Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 869,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
@@ -7799,6 +8157,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_38_RELEASE_SCHEDULE_AND_IN_PLACE_SURGERY_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -7962,6 +8321,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_38_AGENTIC_CRYPTOGRAPHY_AND_VECTOR_MASKING_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -8083,6 +8443,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_38_INNO_SETUP_INSTALLER_SCRIPT_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_38_INNO_SETUP_INSTALLER_SCRIPT_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -8218,6 +8579,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_37_OPENHANDS_LOCAL_INTEGRATION_AND_TOKEN_ECONOMICS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -8343,6 +8705,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_37_ZONE_BASED_SANDBOX_POLICY_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -8384,7 +8747,7 @@
     "slug": "03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS",
     "category": "devlog",
     "title": "Pillar 03.37: Diagnostic Tests: Metadata Tag Integrity & Screen Reader DOM Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 768,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
@@ -8494,6 +8857,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_37_METADATA_TAG_INTEGRITY_AND_SCREEN_READER_DOM_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -8655,6 +9019,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_37_ZONE_BASED_SANDBOX_AND_WILDCARD_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -8780,6 +9145,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_37_HEADLESS_SPOTIFY_CONTROLLER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_37_HEADLESS_SPOTIFY_CONTROLLER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -8916,6 +9282,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_36_VENV_CONTAMINATION_AND_ALP_SCRATCH_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_36_VENV_CONTAMINATION_AND_ALP_SCRATCH_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -9054,6 +9421,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_36_RAIA_AND_SEMANTIC_TREE_PROTOCOL_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -9195,6 +9563,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_36_HIGH_AVAILABILITY_SWARM_RESILIENCY_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -9337,6 +9706,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_36_LOCAL_OPENHANDS_RUNNER_AND_TOKEN_CALCULATOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_36_LOCAL_OPENHANDS_RUNNER_AND_TOKEN_CALCULATOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -9433,6 +9803,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_35_OWASP_DAST_VULNERABILITIES_AND_CSP_REPORT_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_35_OWASP_DAST_VULNERABILITIES_AND_CSP_REPORT_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -9560,6 +9931,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "devlog/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_35_INNO_SETUP_AND_ACCESSIBLE_OUTPUT2_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -9707,6 +10079,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_35_THOUGHT_VECTOR_HASHING_AND_MASKING_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -9845,6 +10218,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "devlog/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_35_STANDALONE_INSTALLER_AND_SPEECH_DLL_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -9978,6 +10352,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_35_BASHRC_AUTO_VENV_HOOK_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_35_BASHRC_AUTO_VENV_HOOK_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -10068,6 +10443,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_34_PRETOOLUSE_HOOK_INTERCEPTION_AND_WRITE_LOCK_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_34_PRETOOLUSE_HOOK_INTERCEPTION_AND_WRITE_LOCK_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -10193,6 +10569,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_34_SPOTIFY_HEADLESS_AND_HOTKEY_HOOK_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_34_SPOTIFY_HEADLESS_AND_HOTKEY_HOOK_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -10338,6 +10715,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_34_ZONE_SANDBOX_AND_WILDCARD_EVALUATION_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -10475,6 +10853,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_34_HEADLESS_AUDIO_STREAMING_AND_HOTKEY_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_34_HEADLESS_AUDIO_STREAMING_AND_HOTKEY_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -10624,6 +11003,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_34_SCRATCH_DEVCORE_PURGE_TOOL_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_34_SCRATCH_DEVCORE_PURGE_TOOL_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -10719,6 +11099,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_33_INODE_TAMPERING_AND_AST_KEY_DRIFT_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_33_INODE_TAMPERING_AND_AST_KEY_DRIFT_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -10845,6 +11226,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_33_OPENHANDS_LOCAL_BROKER_AND_TOKEN_COST_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -10985,6 +11367,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_33_SWARM_FAILOVER_AND_LOOP_PREVENTION_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11122,6 +11505,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_33_LOCAL_AGENTIC_RUNNER_AND_TOKEN_ECONOMICS_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11218,6 +11602,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_33_OWASP_SECURITY_HEADERS_AND_CSP_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_33_OWASP_SECURITY_HEADERS_AND_CSP_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11315,6 +11700,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_32_KMS_KEY_HIERARCHY_AND_COLD_STORAGE_LOCKOUTS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_32_KMS_KEY_HIERARCHY_AND_COLD_STORAGE_LOCKOUTS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11443,6 +11829,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_32_SCRATCH_DEVCORE_AND_BASHRC_HOOK_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_32_SCRATCH_DEVCORE_AND_BASHRC_HOOK_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11581,6 +11968,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_32_INNO_SETUP_INSTALLER_AND_DLL_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -11729,6 +12117,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_32_ENVIRONMENT_ISOLATION_AND_SHELL_HOOK_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_32_ENVIRONMENT_ISOLATION_AND_SHELL_HOOK_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11826,6 +12215,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_32_PRETOOLUSE_HOOK_INTERCEPTOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_32_PRETOOLUSE_HOOK_INTERCEPTOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -11923,6 +12313,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_31_POPIA_DATA_PRIVACY_AND_CLOUD_LEAK_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_31_POPIA_DATA_PRIVACY_AND_CLOUD_LEAK_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12019,6 +12410,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_31_SECURITY_HEADERS_AND_CSP_DAST_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_31_SECURITY_HEADERS_AND_CSP_DAST_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12156,6 +12548,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_31_SPOTIFY_GLOBAL_HOTKEY_AND_VOLUME_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_31_SPOTIFY_GLOBAL_HOTKEY_AND_VOLUME_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -12260,6 +12653,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_31_OWASP_DAST_HARDENING_AND_SMART_CSP_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_31_OWASP_DAST_HARDENING_AND_SMART_CSP_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12358,6 +12752,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_31_RAUGUS_MAP_AST_INODE_INDEXER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_31_RAUGUS_MAP_AST_INODE_INDEXER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12455,6 +12850,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_30_ACTIVE_THREAT_SIMULATION_ZIPCRYPTO_VS_AES_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_30_ACTIVE_THREAT_SIMULATION_ZIPCRYPTO_VS_AES_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12556,6 +12952,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_30_PRETOOLUSE_RAUGUS_HOOK_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_30_PRETOOLUSE_RAUGUS_HOOK_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12693,6 +13090,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_30_OPENHANDS_LOCAL_INFERENCE_AND_TOKEN_COST_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12789,6 +13187,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_30_PRETOOLUSE_HOOK_AND_FUNCTION_LOCK_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_30_PRETOOLUSE_HOOK_AND_FUNCTION_LOCK_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12885,6 +13284,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_30_KMS_KEYCHAIN_AND_COLD_STORAGE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_30_KMS_KEYCHAIN_AND_COLD_STORAGE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -12983,6 +13383,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_29_SIEM_LOG_EXHAUSTION_AND_ALERT_QUEUE_FLOODING.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_29_SIEM_LOG_EXHAUSTION_AND_ALERT_QUEUE_FLOODING.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13085,6 +13486,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_29_RAUGUS_MAP_AST_AND_INODE_GENERATOR_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_29_RAUGUS_MAP_AST_AND_INODE_GENERATOR_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13223,6 +13625,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_29_VENV_SWITCHING_AND_PURGE_BENCHMARK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_29_VENV_SWITCHING_AND_PURGE_BENCHMARK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13312,6 +13715,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_29_HARDWARE_INODE_AND_AST_KEY_MAP_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_29_HARDWARE_INODE_AND_AST_KEY_MAP_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13408,6 +13812,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_29_POPIA_OFFLINE_PII_SCRUBBER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_29_POPIA_OFFLINE_PII_SCRUBBER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13505,6 +13910,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_28_HEADLESS_DEPLOYMENT_TOKEN_AUTH_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_28_HEADLESS_DEPLOYMENT_TOKEN_AUTH_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13607,6 +14013,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_28_KMS_KEYCHAIN_AND_COLD_STORAGE_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_28_KMS_KEYCHAIN_AND_COLD_STORAGE_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13704,6 +14111,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_28_OWASP_ZAP_DAST_SCAN_AND_CSP_VIOLATION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_28_OWASP_ZAP_DAST_SCAN_AND_CSP_VIOLATION_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13801,6 +14209,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_28_ENTERPRISE_KMS_AND_COLD_STORAGE_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_28_ENTERPRISE_KMS_AND_COLD_STORAGE_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -13896,6 +14305,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -14008,6 +14418,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_27_ACCESSIBLE_MEDIA_PLAYER_AND_IFRAME_FOCUS_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_27_ACCESSIBLE_MEDIA_PLAYER_AND_IFRAME_FOCUS_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14110,6 +14521,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_27_POPIA_LOCAL_BRAIN_BROKER_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_27_POPIA_LOCAL_BRAIN_BROKER_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14202,6 +14614,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_27_PRETOOLUSE_HOOK_SIMULATION_30_CHECK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_27_PRETOOLUSE_HOOK_SIMULATION_30_CHECK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14297,6 +14710,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_27_POPIA_COMPLIANT_OFFLINE_BROKER_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_27_POPIA_COMPLIANT_OFFLINE_BROKER_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14393,6 +14807,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_27_OFFLINE_PASSWORD_DICTIONARY_AUDITOR_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_27_OFFLINE_PASSWORD_DICTIONARY_AUDITOR_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14490,6 +14905,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_26_TERMINAL_BLANK_BLANK_AUDIO_GAME_ORIGINS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_26_TERMINAL_BLANK_BLANK_AUDIO_GAME_ORIGINS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -14600,6 +15016,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_26_NVDA_DLL_MOVEMENT_ENGINE_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -14712,6 +15129,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_26_INODE_TAMPERING_AND_AST_KEY_VERIFICATION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_26_INODE_TAMPERING_AND_AST_KEY_VERIFICATION_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14809,6 +15227,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_26_CENTRAL_SIEM_TELEMETRY_LOGGER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_26_CENTRAL_SIEM_TELEMETRY_LOGGER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -14907,6 +15326,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_25_THE_317000_LINE_MANIFESTO_AND_LSP_COLLAPSE.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_25_THE_317000_LINE_MANIFESTO_AND_LSP_COLLAPSE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -15028,6 +15448,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_25_OFFLINE_AND_ONLINE_THREAT_LAB_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_25_OFFLINE_AND_ONLINE_THREAT_LAB_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15125,6 +15546,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_25_COLD_STORAGE_ENCRYPTION_AND_DEK_ROTATION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_25_COLD_STORAGE_ENCRYPTION_AND_DEK_ROTATION_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -15238,6 +15660,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_25_OFFLINE_AND_ONLINE_THREAT_MODELING_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_25_OFFLINE_AND_ONLINE_THREAT_MODELING_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15334,6 +15757,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_25_DEPLOYMENT_TOKEN_AUTH_GATEWAY_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_25_DEPLOYMENT_TOKEN_AUTH_GATEWAY_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15443,6 +15867,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_24_DESKTOP_WINDOW_WRAPPING_AND_PYWEBVIEW_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15539,6 +15964,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_24_SIEM_CENTRAL_LOGGER_SOURCE_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_24_SIEM_CENTRAL_LOGGER_SOURCE_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15641,6 +16067,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_24_POPIA_PII_SCRUBBING_AND_NLP_BENCHMARK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_24_POPIA_PII_SCRUBBING_AND_NLP_BENCHMARK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15738,6 +16165,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_24_CENTRAL_SIEM_AND_MASTER_ALERT_QUEUE_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_24_CENTRAL_SIEM_AND_MASTER_ALERT_QUEUE_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -15833,6 +16261,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/05_24_ACCESSIBLE_VIDEO_PLAYER_APPLICATION_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_24_ACCESSIBLE_VIDEO_PLAYER_APPLICATION_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -15954,6 +16383,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_23_SLASH_MENU_ENTER_KEY_CONFLICT_AND_ACCESSIBILITY_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_23_SLASH_MENU_ENTER_KEY_CONFLICT_AND_ACCESSIBILITY_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -16064,6 +16494,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_23_HEADLESS_LOGIN_AUTHENTICATION_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_23_HEADLESS_LOGIN_AUTHENTICATION_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16161,6 +16592,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_23_ZIPCRYPTO_VS_AES256_OFFLINE_CRACK_BENCHMARK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_23_ZIPCRYPTO_VS_AES256_OFFLINE_CRACK_BENCHMARK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16257,6 +16689,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_23_HEADLESS_DEPLOYMENT_TOKEN_SECURITY_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_23_HEADLESS_DEPLOYMENT_TOKEN_SECURITY_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16353,6 +16786,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_23_CUSTOM_PYGAME_SCREEN_READER_CHUNK_READER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_23_CUSTOM_PYGAME_SCREEN_READER_CHUNK_READER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -16474,6 +16908,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_22_FILE_LEVEL_CLASSIFICATION_FLAW_AND_DIRECTORY_TIERING.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16576,6 +17011,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/02_22_ACCESSIBLE_VIDEO_PLAYER_SOURCE_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_22_ACCESSIBLE_VIDEO_PLAYER_SOURCE_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16672,6 +17108,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_22_SIEM_TELEMETRY_AND_MAQ_ROTATION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_22_SIEM_TELEMETRY_AND_MAQ_ROTATION_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16768,6 +17205,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_22_ACCESSIBLE_MEDIA_APPLICATION_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_22_ACCESSIBLE_MEDIA_APPLICATION_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -16870,6 +17308,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_22_MODEL_QUOTA_FALLBACK_AND_BANNER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_22_MODEL_QUOTA_FALLBACK_AND_BANNER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -16993,6 +17432,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_21_SECRET_TOKEN_EXHAUSTION_AND_REASONING_ALIAS_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_21_SECRET_TOKEN_EXHAUSTION_AND_REASONING_ALIAS_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -17103,6 +17543,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_21_MANIFESTO_PYGAME_READER_SOURCE_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_21_MANIFESTO_PYGAME_READER_SOURCE_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -17208,6 +17649,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_21_DEPLOY_TOKEN_BRUTE_FORCE_AND_AUTH_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_21_DEPLOY_TOKEN_BRUTE_FORCE_AND_AUTH_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -17304,6 +17746,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_21_THE_AUTONOMOUS_SCRIBE_SWARM_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_21_THE_AUTONOMOUS_SCRIBE_SWARM_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -17407,6 +17850,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_21_PYWEBVIEW_DESKTOP_WRAPPER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_21_PYWEBVIEW_DESKTOP_WRAPPER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -17514,6 +17958,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_20_KMS_LOCKOUTS_AND_DISASTER_RECOVERY_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -17616,6 +18061,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/02_20_WCAG_SLASH_COMBOBOX_AND_ENTER_KEY_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_20_WCAG_SLASH_COMBOBOX_AND_ENTER_KEY_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -17719,6 +18165,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_20_MEDIA_PLAYER_ACCESSIBLE_OVERLAY_TEST_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_20_MEDIA_PLAYER_ACCESSIBLE_OVERLAY_TEST_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -17816,6 +18263,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_20_QUOTA_BREACH_DETECTION_AND_FALLBACK_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_20_QUOTA_BREACH_DETECTION_AND_FALLBACK_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -17919,6 +18367,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/05_20_WCAG_ACCESSIBLE_COMBOBOX_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_20_WCAG_ACCESSIBLE_COMBOBOX_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -18043,6 +18492,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_19_CONTINUOUS_ADVERSARIAL_VALIDATION_AND_AGENTIC_REFUSAL_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -18144,6 +18594,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_19_PYWEBVIEW_DESKTOP_WRAPPER_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_19_PYWEBVIEW_DESKTOP_WRAPPER_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -18238,6 +18689,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_19_MANIFESTO_READER_CHUNK_LOAD_BENCHMARK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_19_MANIFESTO_READER_CHUNK_LOAD_BENCHMARK_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -18348,6 +18800,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_19_PYWEBVIEW_NATIVE_DESKTOP_APP_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_19_PYWEBVIEW_NATIVE_DESKTOP_APP_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -18437,6 +18890,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_19_GAME_ENGINE_WEBSOCKET_BRIDGE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_19_GAME_ENGINE_WEBSOCKET_BRIDGE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -18560,6 +19014,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_18_GIT_SYNC_MERGE_CONFLICTS_AND_TERMINAL_SESSION_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -18712,6 +19167,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_18_GAME_ENGINE_HEADLESS_DAEMON_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_18_GAME_ENGINE_HEADLESS_DAEMON_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -18839,6 +19295,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_18_WCAG_COMBOBOX_KEYBOARD_ACCESSIBILITY_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_18_WCAG_COMBOBOX_KEYBOARD_ACCESSIBILITY_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -18941,6 +19398,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_18_WCAG_ACCESSIBLE_SLASH_COMBOBOX_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_18_WCAG_ACCESSIBLE_SLASH_COMBOBOX_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -19044,6 +19502,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_18_PREFLIGHT_AUTONOMOUS_SELF_HEALER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_18_PREFLIGHT_AUTONOMOUS_SELF_HEALER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -19150,6 +19609,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_17_SCREEN_READER_DLL_BINDINGS_AND_IMPORT_ORDER_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -19285,6 +19745,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_17_DIRECTORY_TIERING_AND_API_CONTRACT_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -19387,6 +19848,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_17_PYWEBVIEW_IPC_AND_WINDOW_LIFECYCLE_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_17_PYWEBVIEW_IPC_AND_WINDOW_LIFECYCLE_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -19493,6 +19955,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_17_GAME_ENGINE_PLUGIN_INTEGRATION_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_17_GAME_ENGINE_PLUGIN_INTEGRATION_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -19590,6 +20053,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_17_PE_BINARY_STAMPER_AND_VERIFIER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_17_PE_BINARY_STAMPER_AND_VERIFIER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -19705,6 +20169,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_16_EPHEMERAL_PLUGIN_MUTATION_AND_BLUEPRINT_TAMPERING_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -19838,6 +20303,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_16_SELF_HEALING_BOOTSTRAP_AND_TRACEBACK_REPAIR_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_16_SELF_HEALING_BOOTSTRAP_AND_TRACEBACK_REPAIR_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -19951,6 +20417,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_16_DIRECTORY_TIERING_AND_SANDBOX_JAIL_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_16_DIRECTORY_TIERING_AND_SANDBOX_JAIL_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20064,6 +20531,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_16_AUTONOMOUS_SELF_HEALING_BOOT_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_16_AUTONOMOUS_SELF_HEALING_BOOT_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20206,6 +20674,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "devlog/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_16_KMS_MNEMONIC_SEED_PHRASE_RECOVERY_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20320,6 +20789,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_15_THE_QUOTA_WALL_AMNESIA_AND_CONTEXT_EXHAUSTION_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_15_THE_QUOTA_WALL_AMNESIA_AND_CONTEXT_EXHAUSTION_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -20463,6 +20933,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_15_BINARY_STAMPER_AND_PE_TRAILER_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20589,6 +21060,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_15_AUTONOMOUS_SELF_HEALING_REPAIR_LOOP_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_15_AUTONOMOUS_SELF_HEALING_REPAIR_LOOP_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20703,6 +21175,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_15_PORTABLE_EXECUTABLE_AND_BINARY_STAMPING_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_15_PORTABLE_EXECUTABLE_AND_BINARY_STAMPING_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20852,6 +21325,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/05_15_GIT_AUTOMATION_AND_SESSION_RECORDER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_15_GIT_AUTOMATION_AND_SESSION_RECORDER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -20959,6 +21433,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_14_SUBAGENT_AUDIO_ROUTING_AND_EOF_CACHE_BUFFER_TRAPS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -21095,6 +21570,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_14_TOOL_SECURITY_AUDIT_31_CHECK_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -21216,6 +21692,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_14_BINARY_STAMP_EXTRACTION_AND_EXPIRATION_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_14_BINARY_STAMP_EXTRACTION_AND_EXPIRATION_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -21337,6 +21814,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_14_KMS_SEED_PHRASE_DISASTER_RECOVERY_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -21480,6 +21958,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_14_ACCESSIBLE_SCREEN_READER_SPEECH_MODULE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_14_ACCESSIBLE_SCREEN_READER_SPEECH_MODULE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -21601,6 +22080,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_13_SEMANTIC_MANTRAP_AND_CONCURRENT_THREAD_LOCK_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -21726,6 +22206,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_13_GIT_RECORDING_AND_MERGE_AUTOMATION_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -21843,6 +22324,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_13_TOOL_SECURITY_AUDIT_31_STAGE_SCAN_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -21964,6 +22446,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_13_THE_31_STAGE_TOOL_SECURITY_AUDIT_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_13_THE_31_STAGE_TOOL_SECURITY_AUDIT_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -22106,6 +22589,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_13_ZERO_MODIFICATION_EXAM_ENGINE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -22147,7 +22631,7 @@
     "slug": "01_12_PASSWORD_CRACKING_AND_ACTIVE_THREAT_SIMULATION_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.12: Problems Encountered: Active Threat Simulation & Password Auditing",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 743,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -22256,6 +22740,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_12_PASSWORD_CRACKING_AND_ACTIVE_THREAT_SIMULATION_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_12_PASSWORD_CRACKING_AND_ACTIVE_THREAT_SIMULATION_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -22382,6 +22867,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "devlog/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_12_ACCESSIBLE_SPEECH_AND_DRIVER_INITIALIZATION_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -22517,6 +23003,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_12_GIT_AUTOMATION_AND_MERGE_TEST_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -22646,6 +23133,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_12_ACCESSIBLE_AUDIO_OVERLAY_AND_SPEECH_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_12_ACCESSIBLE_AUDIO_OVERLAY_AND_SPEECH_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -22796,6 +23284,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_12_NATIVE_TRANSCRIPT_TAILER_AUDIO_ROUTER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_12_NATIVE_TRANSCRIPT_TAILER_AUDIO_ROUTER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -22837,7 +23326,7 @@
     "slug": "01_11_AI_INTERNAL_MONOLOGUE_AND_ROBOTIC_BOT_SPEAK",
     "category": "devlog",
     "title": "Pillar 01.11: Problems Encountered: Internal Monologue & Robotic Bot-Speak",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 709,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -22932,6 +23421,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_11_AI_INTERNAL_MONOLOGUE_AND_ROBOTIC_BOT_SPEAK.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_11_AI_INTERNAL_MONOLOGUE_AND_ROBOTIC_BOT_SPEAK.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23057,6 +23547,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_11_EPHEMERAL_BLUEPRINT_AND_JSON_SCHEMA_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23175,6 +23666,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 5,
     "rel_path": "devlog/03_11_SCREEN_READER_DLL_AND_DRIVER_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_11_SCREEN_READER_DLL_AND_DRIVER_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -23303,6 +23795,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_11_ZERO_MODIFICATION_EPHEMERAL_PLUGIN_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_11_ZERO_MODIFICATION_EPHEMERAL_PLUGIN_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -23455,6 +23948,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_11_CROSS_PLATFORM_SEMANTIC_MANTRAP_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23496,7 +23990,7 @@
     "slug": "01_10_INGESTION_SWARM_PRIVILEGE_ESCALATION_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.10: Problems Encountered: Ingestion Swarms & Privilege Escalation",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 659,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -23581,6 +24075,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_10_INGESTION_SWARM_PRIVILEGE_ESCALATION_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_10_INGESTION_SWARM_PRIVILEGE_ESCALATION_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23706,6 +24201,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_10_TRANSCRIPT_TAILER_AND_NATIVE_SUBPROCESS_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23823,6 +24319,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_10_NATIVE_TAIL_VS_PYTHON_BUFFER_BENCHMARK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_10_NATIVE_TAIL_VS_PYTHON_BUFFER_BENCHMARK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23936,6 +24433,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_10_ZERO_TRUST_SUBAGENT_AUDIO_EVENT_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_10_ZERO_TRUST_SUBAGENT_AUDIO_EVENT_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -23977,7 +24475,7 @@
     "slug": "05_10_WSL_WINDOWS_IO_BRIDGE_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.10: From-Scratch Creation Guide: WSL/Windows File Bridge",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 686,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -24063,6 +24561,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_10_WSL_WINDOWS_IO_BRIDGE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_10_WSL_WINDOWS_IO_BRIDGE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24104,7 +24603,7 @@
     "slug": "01_09_WSL_BROKEN_PIPES_AND_CROSS_OS_IO_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.9: Problems Encountered: WSL Broken Pipes & Cross-OS I/O Traps",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 690,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -24184,6 +24683,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_09_WSL_BROKEN_PIPES_AND_CROSS_OS_IO_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_09_WSL_BROKEN_PIPES_AND_CROSS_OS_IO_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24301,6 +24801,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_09_SEMANTIC_MANTRAP_AND_FILE_LOCKING_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24426,6 +24927,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_09_SEMANTIC_MANTRAP_AND_CONCURRENCY_BENCHMARK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24558,6 +25060,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_09_CROSS_PLATFORM_MANTRAP_AND_CONCURRENCY_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24599,7 +25102,7 @@
     "slug": "05_09_OFFLINE_PASSWORD_CRACK_LAB_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.9: From-Scratch Creation Guide: Offline Password Audit Lab",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 646,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -24692,6 +25195,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_09_OFFLINE_PASSWORD_CRACK_LAB_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_09_OFFLINE_PASSWORD_CRACK_LAB_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24733,7 +25237,7 @@
     "slug": "01_08_THE_ENTERPRISE_PRE_AUTHORIZATION_WALL",
     "category": "devlog",
     "title": "Pillar 01.8: Problems Encountered: The Enterprise Pre-Authorization Wall (AADSTS65002)",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 773,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -24817,6 +25321,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_08_THE_ENTERPRISE_PRE_AUTHORIZATION_WALL.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_08_THE_ENTERPRISE_PRE_AUTHORIZATION_WALL.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24850,7 +25355,7 @@
     "slug": "02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.8: Source Evidence: Offline Crack Lab & Threat Simulation",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 432,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -24918,6 +25423,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_08_OFFLINE_CRACK_LAB_AND_ACTIVE_THREAT_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -24959,7 +25465,7 @@
     "slug": "03_08_OFFLINE_PASSWORD_AUDIT_AND_CRACK_LOGS",
     "category": "devlog",
     "title": "Pillar 03.8: Diagnostic Tests: Offline Password Auditing & Crack Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 626,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25081,6 +25587,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_08_OFFLINE_PASSWORD_AUDIT_AND_CRACK_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_08_OFFLINE_PASSWORD_AUDIT_AND_CRACK_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -25122,7 +25629,7 @@
     "slug": "04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL",
     "category": "devlog",
     "title": "Pillar 04.8: Architecture Solutions: In-Memory Execution & Clean Workspace Protocol",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 613,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25215,6 +25722,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_08_IN_MEMORY_EXECUTION_AND_CLEAN_WORKSPACE_PROTOCOL.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -25256,7 +25764,7 @@
     "slug": "05_08_CINEMATIC_TTS_PROXY_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.8: From-Scratch Creation Guide: Cinematic TTS Proxy & Sanitizer",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 735,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25348,6 +25856,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_08_CINEMATIC_TTS_PROXY_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_08_CINEMATIC_TTS_PROXY_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -25389,7 +25898,7 @@
     "slug": "01_07_NUITKA_COMPILATION_AND_BINARY_PACKAGING_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.7: Problems Encountered: Nuitka Compilation & Binary Packaging",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 747,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25517,6 +26026,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/01_07_NUITKA_COMPILATION_AND_BINARY_PACKAGING_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_07_NUITKA_COMPILATION_AND_BINARY_PACKAGING_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -25558,7 +26068,7 @@
     "slug": "02_07_CINEMATIC_TTS_AND_STEALTH_FEED_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.7: Source Evidence: Cinematic TTS & Stealth Audio Feed",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 588,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25640,6 +26150,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/02_07_CINEMATIC_TTS_AND_STEALTH_FEED_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_07_CINEMATIC_TTS_AND_STEALTH_FEED_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -25681,7 +26192,7 @@
     "slug": "03_07_TTS_AUDIO_LATENCY_AND_MONOLOGUE_SCRUBBING_LOGS",
     "category": "devlog",
     "title": "Pillar 03.7: Diagnostic Tests: TTS Latency & Monologue Scrubbing Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 634,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25785,6 +26296,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_07_TTS_AUDIO_LATENCY_AND_MONOLOGUE_SCRUBBING_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_07_TTS_AUDIO_LATENCY_AND_MONOLOGUE_SCRUBBING_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -25826,7 +26338,7 @@
     "slug": "04_07_THE_VOICE_OF_SIRAUGGA_CINEMATIC_TTS_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.7: Architecture Solutions: The Voice of Siraugga Cinematic TTS",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 491,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -25893,6 +26405,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_07_THE_VOICE_OF_SIRAUGGA_CINEMATIC_TTS_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_07_THE_VOICE_OF_SIRAUGGA_CINEMATIC_TTS_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -25942,7 +26455,7 @@
     "slug": "05_07_BOOTSTRAP_SUPERVISOR_GATEWAY_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.7: From-Scratch Creation Guide: Bootstrap Supervisor Gateway",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 688,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26034,6 +26547,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_07_BOOTSTRAP_SUPERVISOR_GATEWAY_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_07_BOOTSTRAP_SUPERVISOR_GATEWAY_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -26075,7 +26589,7 @@
     "slug": "01_06_THE_FRIENDLY_LEAK_AND_EGRESS_FIREWALL_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.6: Problems Encountered: The \"Friendly Leak\" & Egress Firewalls",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 757,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26175,6 +26689,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_06_THE_FRIENDLY_LEAK_AND_EGRESS_FIREWALL_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_06_THE_FRIENDLY_LEAK_AND_EGRESS_FIREWALL_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -26216,7 +26731,7 @@
     "slug": "02_06_BOOTSTRAP_GATEWAY_AND_SUPERVISOR_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.6: Source Evidence: Bootstrap Gateway & Supervisor Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 619,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26296,6 +26811,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_06_BOOTSTRAP_GATEWAY_AND_SUPERVISOR_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_06_BOOTSTRAP_GATEWAY_AND_SUPERVISOR_EVIDENCE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -26345,7 +26861,7 @@
     "slug": "03_06_WSL_PIPE_CORRUPTION_AND_IO_BENCHMARKS",
     "category": "devlog",
     "title": "Pillar 03.6: Diagnostic Tests: WSL Pipe Corruption & I/O Benchmarks",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 672,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26462,6 +26978,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_06_WSL_PIPE_CORRUPTION_AND_IO_BENCHMARKS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_06_WSL_PIPE_CORRUPTION_AND_IO_BENCHMARKS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -26511,7 +27028,7 @@
     "slug": "04_06_PRE_FLIGHT_SELF_HEALING_SUPERVISOR_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.6: Architecture Solutions: Pre-Flight Self-Healing Supervisor",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 589,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26596,6 +27113,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_06_PRE_FLIGHT_SELF_HEALING_SUPERVISOR_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_06_PRE_FLIGHT_SELF_HEALING_SUPERVISOR_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -26645,7 +27163,7 @@
     "slug": "05_06_FORENSIC_SESSION_VAULT_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.6: From-Scratch Creation Guide: Forensic Session Vault",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 693,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26732,6 +27250,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_06_FORENSIC_SESSION_VAULT_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_06_FORENSIC_SESSION_VAULT_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -26773,7 +27292,7 @@
     "slug": "01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES",
     "category": "devlog",
     "title": "Pillar 01.5: Problems Encountered: Screen Reader Spam & Phantom Keystrokes",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 799,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -26895,6 +27414,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_05_SCREEN_READER_SPAM_AND_PHANTOM_KEYSTROKES.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -26936,7 +27456,7 @@
     "slug": "02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.5: Source Evidence: Ephemeral Plugins & MCP Protocols",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 603,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -27015,6 +27535,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_05_EPHEMERAL_PLUGINS_AND_MCP_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27056,7 +27577,7 @@
     "slug": "03_05_COMPILATION_AND_BINARY_INTEGRITY_LOGS",
     "category": "devlog",
     "title": "Pillar 03.5: Diagnostic Tests: Compilation & Binary Integrity Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 603,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -27171,6 +27692,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_05_COMPILATION_AND_BINARY_INTEGRITY_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_05_COMPILATION_AND_BINARY_INTEGRITY_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27212,7 +27734,7 @@
     "slug": "04_05_SOVEREIGN_AI_AND_OFFLINE_BROKER_RECIPES",
     "category": "devlog",
     "title": "Pillar 04.5: Architecture Solutions: Sovereign AI & Offline Broker Recipes",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 652,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -27290,6 +27812,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_05_SOVEREIGN_AI_AND_OFFLINE_BROKER_RECIPES.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_05_SOVEREIGN_AI_AND_OFFLINE_BROKER_RECIPES.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27331,7 +27854,7 @@
     "slug": "05_05_ZERO_DOWNTIME_HOT_PATCH_RUNNER_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.5: From-Scratch Creation Guide: Zero-Downtime Hot-Patch Runner",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 756,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -27417,6 +27940,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_05_ZERO_DOWNTIME_HOT_PATCH_RUNNER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_05_ZERO_DOWNTIME_HOT_PATCH_RUNNER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27499,6 +28023,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_50_Semantic_Firewall_Hooks.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_50_Semantic_Firewall_Hooks.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27599,6 +28124,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_49_Triaging_Swarm_Intrusions.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_49_Triaging_Swarm_Intrusions.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27682,6 +28208,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_48_Evaluating_Alerts.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_48_Evaluating_Alerts.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27789,6 +28316,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_47_Centralized_Swarm_Auditing.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_47_Centralized_Swarm_Auditing.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27889,6 +28417,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_46_Types_of_Security_Data.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_46_Types_of_Security_Data.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -27989,6 +28518,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_45_The_Black_Box_Effect.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_45_The_Black_Box_Effect.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28096,6 +28626,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_44_Auditing_Swarm_Telemetry.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_44_Auditing_Swarm_Telemetry.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28179,6 +28710,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 1,
     "rel_path": "textbook/Chapter_43_Swarm_Telemetry.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_43_Swarm_Telemetry.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28275,6 +28807,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_42_Impacts_of_Cryptography.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_42_Impacts_of_Cryptography.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28378,6 +28911,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_41_PKI_Trust_System.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_41_PKI_Trust_System.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28419,7 +28953,7 @@
     "slug": "01_04_ZOMBIE_SUBAGENTS_AND_PROCESS_EXHAUSTION",
     "category": "devlog",
     "title": "Pillar 01.4: Problems Encountered: Zombie Subagents & Process Exhaustion",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 711,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -28516,6 +29050,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/01_04_ZOMBIE_SUBAGENTS_AND_PROCESS_EXHAUSTION.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_04_ZOMBIE_SUBAGENTS_AND_PROCESS_EXHAUSTION.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -28565,7 +29100,7 @@
     "slug": "02_04_FORENSIC_VAULT_AND_PII_SCRUBBING_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.4: Source Evidence: Forensic Vault & PII Scrubbing Engine",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 579,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -28645,6 +29180,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_04_FORENSIC_VAULT_AND_PII_SCRUBBING_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_04_FORENSIC_VAULT_AND_PII_SCRUBBING_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28686,7 +29222,7 @@
     "slug": "03_04_SEMANTIC_FIREWALL_AND_DLP_AUDIT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.4: Diagnostic Tests: Semantic Egress Firewall & DLP Audits",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 653,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -28810,6 +29346,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/03_04_SEMANTIC_FIREWALL_AND_DLP_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_04_SEMANTIC_FIREWALL_AND_DLP_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28851,7 +29388,7 @@
     "slug": "04_04_EXTENDING_SIRAUGGA_PLUGINS_AND_SERVICES",
     "category": "devlog",
     "title": "Pillar 04.4: Architecture Solutions: Extending Plugins & Protected Services",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 615,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -28942,6 +29479,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/04_04_EXTENDING_SIRAUGGA_PLUGINS_AND_SERVICES.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_04_EXTENDING_SIRAUGGA_PLUGINS_AND_SERVICES.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -28983,7 +29521,7 @@
     "slug": "05_04_RAUGUS_OPAQUE_VFS_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.4: From-Scratch Creation Guide: Raugus Opaque VFS Resolver",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 775,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -29073,6 +29611,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_04_RAUGUS_OPAQUE_VFS_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_04_RAUGUS_OPAQUE_VFS_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29169,6 +29708,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_40_Public_Key_Cryptography.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_40_Public_Key_Cryptography.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29272,6 +29812,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_39_Hashing_and_Salting.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_39_Hashing_and_Salting.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29375,6 +29916,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_38_Integrity_Authenticity.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_38_Integrity_Authenticity.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29476,6 +30018,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_37_Obscuring_Data.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_37_Obscuring_Data.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29572,6 +30115,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 1,
     "rel_path": "textbook/Chapter_36_Context_Confidentiality.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_36_Context_Confidentiality.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29656,6 +30200,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "textbook/Chapter_35_Agentic_Cryptography.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_35_Agentic_Cryptography.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29751,6 +30296,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_34_Protecting_SVs.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_34_Protecting_SVs.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29848,6 +30394,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_33_Data_Security.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_33_Data_Security.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -29949,6 +30496,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_32_Application_Security.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_32_Application_Security.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30044,6 +30592,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_31_Infrastructure_Security.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_31_Infrastructure_Security.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30085,7 +30634,7 @@
     "slug": "01_03_PATH_TRAVERSAL_AND_PRIVILEGE_ESCALATION",
     "category": "devlog",
     "title": "Pillar 01.3: Problems Encountered: Path Traversal & Privilege Escalation",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 759,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -30200,6 +30749,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/01_03_PATH_TRAVERSAL_AND_PRIVILEGE_ESCALATION.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_03_PATH_TRAVERSAL_AND_PRIVILEGE_ESCALATION.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30241,7 +30791,7 @@
     "slug": "02_03_HOT_PATCH_AND_SELF_HEALING_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.3: Source Evidence: Safe Hot-Patching & Self-Healing Engine",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 605,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -30321,6 +30871,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_03_HOT_PATCH_AND_SELF_HEALING_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_03_HOT_PATCH_AND_SELF_HEALING_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30362,7 +30913,7 @@
     "slug": "03_03_ZOMBIE_REAPING_AND_PROCESS_AUDIT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.3: Diagnostic Tests: Zombie Reaping & Process Audits",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 636,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -30477,6 +31028,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_03_ZOMBIE_REAPING_AND_PROCESS_AUDIT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_03_ZOMBIE_REAPING_AND_PROCESS_AUDIT_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30518,7 +31070,7 @@
     "slug": "04_03_OPAQUE_VFS_AND_AST_DIFFING_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.3: Architecture Solutions: Opaque VFS & AST Diffing Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 583,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -30591,6 +31143,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_03_OPAQUE_VFS_AND_AST_DIFFING_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_03_OPAQUE_VFS_AND_AST_DIFFING_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30632,7 +31185,7 @@
     "slug": "05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.3: From-Scratch Creation Guide: Zero-Trust RBAC & Path Defense",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 809,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -30731,6 +31284,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_03_ZERO_TRUST_RBAC_ENGINE_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30820,6 +31374,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_30_Domains_of_Security.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_30_Domains_of_Security.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -30928,6 +31483,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_29_Virtualization.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_29_Virtualization.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31010,6 +31566,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_28_Swarm_Hosting.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_28_Swarm_Hosting.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31116,6 +31673,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_27_Configure_ZSP.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_27_Configure_ZSP.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31210,6 +31768,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_26_ZSP_Operation.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_26_ZSP_Operation.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31310,6 +31869,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_25_ZSP_Overview.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_25_ZSP_Overview.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31392,6 +31952,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_24_Zone_Based_Policies.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_24_Zone_Based_Policies.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31500,6 +32061,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_23_Sandbox_Topologies.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_23_Sandbox_Topologies.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31607,6 +32169,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_22_Agentic_Bulkheads.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_22_Agentic_Bulkheads.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31685,6 +32248,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_21_Agentic_Firewalls.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_21_Agentic_Firewalls.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31726,7 +32290,7 @@
     "slug": "01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES",
     "category": "devlog",
     "title": "Pillar 01.2: Problems Encountered: WebSocket Dropouts & Refresh Crashes",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 790,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -31843,6 +32407,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_02_WEBSOCKET_DROPOUTS_AND_REFRESH_CRASHES.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31876,7 +32441,7 @@
     "slug": "02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.2: Source Evidence: Security RBAC & Raugus VFS Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 645,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -31955,6 +32520,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_02_SECURITY_RBAC_AND_RAUGUS_VFS_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -31996,7 +32562,7 @@
     "slug": "03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS",
     "category": "devlog",
     "title": "Pillar 03.2: Diagnostic Tests: RBAC Sandbox & Hot-Patch Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 609,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -32117,6 +32683,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_02_RBAC_SANDBOX_AND_HOT_PATCH_TEST_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32158,7 +32725,7 @@
     "slug": "04_02_THE_5_TIER_ZERO_TRUST_HIERARCHY",
     "category": "devlog",
     "title": "Pillar 04.2: Architecture Solutions: The 5-Tier Zero-Trust Hierarchy",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 652,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -32233,6 +32800,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_02_THE_5_TIER_ZERO_TRUST_HIERARCHY.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_02_THE_5_TIER_ZERO_TRUST_HIERARCHY.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32274,7 +32842,7 @@
     "slug": "05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.2: From-Scratch Creation Guide: Accessible Web Portal & Flip Card",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 808,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -32365,6 +32933,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_02_ACCESSIBLE_WEB_PORTAL_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32466,6 +33035,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_20_Swarm_ACLs.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_20_Swarm_ACLs.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32567,6 +33137,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_19_Mitigating_Attacks.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_19_Mitigating_Attacks.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32680,6 +33251,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_18_Implementing_ACLs.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_18_Implementing_ACLs.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32776,6 +33348,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_17_Modifying_ACLs.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_17_Modifying_ACLs.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -32889,6 +33462,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_16_Configuring_ACLs.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_16_Configuring_ACLs.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33009,6 +33583,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_15_Wildcard_Masking.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_15_Wildcard_Masking.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33129,6 +33704,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_14_Agentic_Control_Lists.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_14_Agentic_Control_Lists.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33236,6 +33812,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_13_AAA_Operation.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_13_AAA_Operation.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33420,6 +33997,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_12_Account_Management.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_12_Account_Management.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33520,6 +34098,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_11_Access_Control_Concepts.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_11_Access_Control_Concepts.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33561,7 +34140,7 @@
     "slug": "01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS",
     "category": "devlog",
     "title": "Pillar 01.1: Problems Encountered: Terminal Tearing & Headless Traps",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 779,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -33659,6 +34238,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS.md",
+    "github_path": "projects/siraugga_framework/devlog/01_PROBLEMS_ENCOUNTERED/01_01_TERMINAL_TEARING_AND_HEADLESS_BYPASS_TRAPS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33700,7 +34280,7 @@
     "slug": "02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE",
     "category": "devlog",
     "title": "Pillar 02.1: Source Evidence: Server & Agent Streaming Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 725,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -33805,6 +34385,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE.md",
+    "github_path": "projects/siraugga_framework/devlog/02_SOURCE_EVIDENCE/02_01_SERVER_AND_AGENT_STREAMING_EVIDENCE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33846,7 +34427,7 @@
     "slug": "03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS",
     "category": "devlog",
     "title": "Pillar 03.1: Diagnostic Tests: Streaming Resilience & Reconnection Logs",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 716,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -33955,6 +34536,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS.md",
+    "github_path": "projects/siraugga_framework/devlog/03_DIAGNOSTIC_TESTS/03_01_STREAMING_RESILIENCE_AND_RECONNECT_LOGS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -33996,7 +34578,7 @@
     "slug": "04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE",
     "category": "devlog",
     "title": "Pillar 04.1: Architecture Blueprint: Siraugga Core System Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 728,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -34089,6 +34671,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/devlog/04_SOLUTIONS_AND_ARCHITECTURE/04_01_SIRAUGGA_CORE_SYSTEM_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -34130,7 +34713,7 @@
     "slug": "05_01_QUART_STREAMING_SERVER_FROM_SCRATCH",
     "category": "devlog",
     "title": "Pillar 05.1: From-Scratch Creation Guide: Asynchronous Quart Streaming Server",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 772,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -34227,6 +34810,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "devlog/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH.md",
+    "github_path": "projects/siraugga_framework/devlog/05_FROM_SCRATCH_CREATION_GUIDES/05_01_QUART_STREAMING_SERVER_FROM_SCRATCH.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -34398,6 +34982,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_10_Access_Control.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_10_Access_Control.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -34517,6 +35102,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_09_Agentic_Deception.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_09_Agentic_Deception.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -34721,6 +35307,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_08_Cybersecurity_Resilience.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_08_Cybersecurity_Resilience.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -34871,6 +35458,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_07_Securing_Wireless_Devices.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_07_Securing_Wireless_Devices.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -34972,6 +35560,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_06_Securing_Network_Devices.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_06_Securing_Network_Devices.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35124,6 +35713,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_05_Network_Hardening_and_Protocols.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_05_Network_Hardening_and_Protocols.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35411,6 +36001,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_04_System_and_Network_Defense.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_04_System_and_Network_Defense.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35536,6 +36127,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_03_Governance_and_Policies.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_03_Governance_and_Policies.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35675,6 +36267,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_02_Operational_Management.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_02_Operational_Management.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35839,6 +36432,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Chapter_01_Asset_Management.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Chapter_01_Asset_Management.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35957,6 +36551,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00_README_INDEX.md",
+    "github_path": "projects/siraugga_framework/devlog/00_README_INDEX.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -35998,7 +36593,7 @@
     "slug": "00A_BEGINNER_GUIDE_TO_SIRAUGGA_AND_ZERO_TRUST",
     "category": "devlog",
     "title": "Pillar 00A: Beginner Guide to Siraugga & Zero-Trust Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 824,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36085,6 +36680,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 3,
     "rel_path": "devlog/00A_BEGINNER_GUIDE_TO_SIRAUGGA_AND_ZERO_TRUST.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00A_BEGINNER_GUIDE_TO_SIRAUGGA_AND_ZERO_TRUST.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -36126,7 +36722,7 @@
     "slug": "00B_BEGINNER_GUIDE_TO_ACCESSIBLE_WEBSOCKET_STREAMING",
     "category": "devlog",
     "title": "Pillar 00B: Beginner Guide to Accessible WebSocket Streaming",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 832,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36217,6 +36813,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00B_BEGINNER_GUIDE_TO_ACCESSIBLE_WEBSOCKET_STREAMING.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00B_BEGINNER_GUIDE_TO_ACCESSIBLE_WEBSOCKET_STREAMING.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -36266,7 +36863,7 @@
     "slug": "00C_BEGINNER_GUIDE_TO_OPAQUE_VFS_AND_RAUGUS_MAP",
     "category": "devlog",
     "title": "Pillar 00C: Beginner Guide to Opaque Virtual File Systems & Raugus Map",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 713,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36347,6 +36944,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00C_BEGINNER_GUIDE_TO_OPAQUE_VFS_AND_RAUGUS_MAP.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00C_BEGINNER_GUIDE_TO_OPAQUE_VFS_AND_RAUGUS_MAP.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -36388,7 +36986,7 @@
     "slug": "00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS",
     "category": "devlog",
     "title": "Pillar 00D: Beginner Guide to Ephemeral Plugins & Zero-Modification Architecture",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 625,
     "project": "accessible_apps",
     "project_label": "Accessible Applications",
@@ -36457,6 +37055,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00D_BEGINNER_GUIDE_TO_EPHEMERAL_PLUGINS_AND_CONTAINERS.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -36498,7 +37097,7 @@
     "slug": "00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS",
     "category": "devlog",
     "title": "Pillar 00E: Beginner Guide to Cinematic TTS & Intent-Driven Audio Feeds",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 622,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36566,6 +37165,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00E_BEGINNER_GUIDE_TO_CINEMATIC_TTS_AND_AUDIO_FEEDS.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -36615,7 +37215,7 @@
     "slug": "00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY",
     "category": "devlog",
     "title": "Pillar 00F: Beginner Guide to Clean-Room Development & Sovereignty",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 658,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36689,6 +37289,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00F_BEGINNER_GUIDE_TO_CLEAN_ROOM_DEVELOPMENT_AND_SOVEREIGNTY.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -36738,7 +37339,7 @@
     "slug": "00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING",
     "category": "devlog",
     "title": "Pillar 00G: Beginner Guide to Invariant Metadata & Canonical Tagging",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 878,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36841,6 +37442,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00G_BEGINNER_GUIDE_TO_INVARIANT_METADATA_AND_CANONICAL_TAGGING.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -36890,7 +37492,7 @@
     "slug": "00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING",
     "category": "devlog",
     "title": "Pillar 00H: Beginner Guide to Release Scheduling & In-Place Editing",
-    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](/docs/devlog/00_README_INDEX)",
+    "summary": "- **Back to Master Index**: [`../00_README_INDEX.md`](../00_README_INDEX.md)",
     "word_count": 786,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
@@ -36956,6 +37558,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "devlog/00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING.md",
+    "github_path": "projects/siraugga_framework/devlog/00_PRIMERS/00H_BEGINNER_GUIDE_TO_RELEASE_SCHEDULING_AND_IN_PLACE_EDITING.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37075,6 +37678,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Checkpoint_01_to_03.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Checkpoint_01_to_03.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37202,6 +37806,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Checkpoint_04_to_09.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Checkpoint_04_to_09.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37296,6 +37901,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_10_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_10_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37397,6 +38003,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_11_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_11_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37498,6 +38105,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_3_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_3_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37588,6 +38196,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_3_Summary.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_3_Summary.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37702,6 +38311,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_4_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_4_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37791,6 +38401,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_5_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_5_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37885,6 +38496,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_6_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_6_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -37998,6 +38610,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_7_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_7_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38118,6 +38731,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_8_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_8_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38208,6 +38822,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "textbook/Module_9_Checkpoint.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Textbook/Module_9_Checkpoint.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38328,6 +38943,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "manual/Module_01_Sandbox_and_Tiers.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_01_Sandbox_and_Tiers.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38476,6 +39092,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manual/Module_02_Access_Control.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_02_Access_Control.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38570,6 +39187,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manual/Module_03_Swarm_Telemetry.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_03_Swarm_Telemetry.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -38664,6 +39282,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manual/Module_04_Orchestrator_SIEM.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_04_Orchestrator_SIEM.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38766,6 +39385,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manual/Module_05_Cryptography.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_05_Cryptography.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38864,6 +39484,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 1,
     "rel_path": "manual/Module_06_Swarm_Obfuscation.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_06_Swarm_Obfuscation.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -38946,6 +39567,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manual/Module_07_Threat_Intelligence.md",
+    "github_path": "projects/siraugga_framework/Siraugga_Master_Manual/Module_07_Threat_Intelligence.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -39009,6 +39631,7 @@
     "base_sensitivity": 2,
     "max_sensitivity": 2,
     "rel_path": "manifesto/00_Foreword.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/00_Foreword.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -39227,6 +39850,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "manifesto/00_The_Forensic_Timeline.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/00_The_Forensic_Timeline.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -39318,6 +39942,7 @@
     "base_sensitivity": 3,
     "max_sensitivity": 3,
     "rel_path": "manifesto/01_Echoes_in_the_Void.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/01_Echoes_in_the_Void.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -39438,6 +40063,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/02_The_Echoes_Architecture.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/02_The_Echoes_Architecture.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -39551,6 +40177,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/03_The_Forge_of_Sovereignty.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/03_The_Forge_of_Sovereignty.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -39664,6 +40291,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/04_The_24_Hour_Crucible.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/04_The_24_Hour_Crucible.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -39761,6 +40389,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "manifesto/05_The_Quantitative_Era.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/05_The_Quantitative_Era.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -39834,6 +40463,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 2,
     "rel_path": "manifesto/README.md",
+    "github_path": "projects/siraugga_framework/The_Manifesto/README.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -40025,6 +40655,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "guides/USER_MANUAL.md",
+    "github_path": "projects/siraugga_framework/USER_MANUAL.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -40212,6 +40843,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 3,
     "rel_path": "guides/SECURITY.md",
+    "github_path": "projects/siraugga_framework/SECURITY.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -40384,6 +41016,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "guides/HOT_PATCH_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/HOT_PATCH_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -40583,6 +41216,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "guides/RAUGUS_RESOLVER_MCP_ARCHITECTURE.md",
+    "github_path": "projects/siraugga_framework/RAUGUS_RESOLVER_MCP_ARCHITECTURE.md",
     "cross_references": [
       {
         "project": "eprofile",
@@ -40759,6 +41393,7 @@
     "base_sensitivity": 1,
     "max_sensitivity": 4,
     "rel_path": "guides/DOCUMENTATION_TAGGING_AND_VERSIONING_GUIDE.md",
+    "github_path": "projects/siraugga_framework/guides/DOCUMENTATION_TAGGING_AND_VERSIONING_GUIDE.md",
     "cross_references": [
       {
         "project": "echoes",

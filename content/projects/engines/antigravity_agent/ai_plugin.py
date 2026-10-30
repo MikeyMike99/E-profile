@@ -335,8 +335,34 @@ def _has_local_cli_credentials(scope: str = None) -> bool:
     _cleanup_expired_demo_tokens()
     active_scope = scope or _resolve_token_scope()
 
+    root_has_creds = False
+    if os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):
+        root_has_creds = True
+    else:
+        for root in _iter_relative_roots():
+            for rel in (
+                Path(".devcore_client_key.txt"),
+                Path("gemini_api_key.txt"),
+                Path("antigravity-oauth-token"),
+                Path(".gemini/antigravity-cli/antigravity-oauth-token"),
+                Path(".gemini/antigravity/credentials.json"),
+                Path(".config/antigravity/credentials.json"),
+                Path(".gemini/credentials.json"),
+                Path(".config/gcloud/application_default_credentials.json"),
+            ):
+                cand = root / rel
+                try:
+                    if cand.is_file() and cand.stat().st_size > 8:
+                        root_has_creds = True
+                        break
+                except Exception:
+                    pass
+            if root_has_creds:
+                break
+
     if active_scope == "demo":
-        _sync_demo_oauth_token()
+        if root_has_creds:
+            return True
         for d_dir in _get_demo_dirs():
             demo_candidates = [
                 os.path.join(d_dir, ".gemini", "antigravity-cli", "antigravity-oauth-token"),
@@ -352,26 +378,7 @@ def _has_local_cli_credentials(scope: str = None) -> bool:
                     pass
         return False
 
-    if os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):
-        return True
-    for root in _iter_relative_roots():
-        for rel in (
-            Path(".devcore_client_key.txt"),
-            Path("gemini_api_key.txt"),
-            Path("antigravity-oauth-token"),
-            Path(".gemini/antigravity-cli/antigravity-oauth-token"),
-            Path(".gemini/antigravity/credentials.json"),
-            Path(".config/antigravity/credentials.json"),
-            Path(".gemini/credentials.json"),
-            Path(".config/gcloud/application_default_credentials.json"),
-        ):
-            cand = root / rel
-            try:
-                if cand.is_file() and cand.stat().st_size > 8:
-                    return True
-            except Exception:
-                pass
-    return False
+    return root_has_creds
 
 
 def _save_api_key_for_scope(api_key: str, scope: str):
@@ -445,27 +452,43 @@ def ai_home():
         except Exception:
             pass
 
-    if scope == "demo":
-        if not session.get("agent_authenticated"):
-            return redirect("login?demo=1")
-    else:
+    if is_admin:
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
+        session["is_admin"] = True
+        session["admin"] = True
+        return _render_ai_template("index.html", ui=_get_ui_config())
+
+    session["agent_token_scope"] = "demo"
+    session["agent_authenticated"] = True
     return _render_ai_template("index.html", ui=_get_ui_config())
 
 
 @ai_bp.route("/demo")
 def ai_demo_entry():
     session["agent_token_scope"] = "demo"
-    session.pop("agent_authenticated", None)
-    return redirect("login?demo=1")
+    session["agent_authenticated"] = True
+    return redirect(url_for("ai_plugin.ai_home", demo="1"))
 
 
 @ai_bp.route("/login")
 def login_page():
-    scope = _resolve_token_scope()
-    if scope == "demo":
-        session.pop("agent_authenticated", None)
+    auth_header = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
+    bearer_user = security_mgr.get_user_from_token(auth_header) if auth_header else None
+    is_master = security_mgr.check_master_signature()
+    is_admin = bool(
+        session.get("is_admin")
+        or session.get("admin")
+        or (bearer_user and bearer_user.get("role") in ("admin", "super_admin", "super admin"))
+        or is_master
+    )
+    if is_admin or _has_local_cli_credentials("root"):
+        session["agent_token_scope"] = "root"
+        session["agent_authenticated"] = True
+        session["is_admin"] = True
+        session["admin"] = True
+        return redirect(url_for("ai_plugin.ai_home"))
+
     return _render_ai_template("login.html")
 
 
