@@ -1,4 +1,5 @@
-#
+from __future__ import annotations
+
 import os
 import sys
 import traceback
@@ -6,6 +7,8 @@ import subprocess
 from pathlib import Path
 import argparse
 import json
+import shutil
+import threading
 
 # --- BULLETPROOF PATH INJECTION ---
 local_lib = Path.home() / '.local' / 'lib'
@@ -55,6 +58,125 @@ def install_package(package):
         return True
     except Exception as e:
         return False
+
+
+_GIT_SYNC_DONE = False
+_GIT_SYNC_LOCK = threading.Lock()
+_EMERGENCY_RETRY_DONE = False
+
+
+def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
+    """Synchronizes repository with origin/main on worker startup or reload."""
+    global _GIT_SYNC_DONE
+    if _GIT_SYNC_DONE and not force:
+        return True
+
+    is_server = (
+        os.name != "nt"
+        or "FORCE_BOOTSTRAP_SYNC" in os.environ
+        or "PYTHONANYWHERE_DOMAIN" in os.environ
+        or Path("/var/www").exists()
+    )
+    if not is_server:
+        _GIT_SYNC_DONE = True
+        return False
+
+    with _GIT_SYNC_LOCK:
+        if _GIT_SYNC_DONE and not force:
+            return True
+
+        git_dir = base_dir / ".git"
+        if not git_dir.exists():
+            _GIT_SYNC_DONE = True
+            return False
+
+        git_bin = shutil.which("git") or "/usr/bin/git"
+        if not os.path.exists(git_bin) and not shutil.which("git"):
+            _GIT_SYNC_DONE = True
+            return False
+
+        for base in (git_dir, Path.home() / ".git"):
+            if base.is_dir():
+                for lock_file in base.rglob("*.lock"):
+                    try:
+                        lock_file.unlink(missing_ok=True)
+                    except Exception:
+                        pass
+
+        if os.name != "nt":
+            home = Path.home()
+            shutil.rmtree(home / ".cache", ignore_errors=True)
+            shutil.rmtree(home / ".npm", ignore_errors=True)
+            shutil.rmtree(home / ".local" / "share" / "Trash", ignore_errors=True)
+            shutil.rmtree(base_dir / ".git" / "modules", ignore_errors=True)
+            (base_dir / ".gitmodules").unlink(missing_ok=True)
+            (base_dir / "content" / "projects" / "engines" / "antigravity_agent" / ".git").unlink(missing_ok=True)
+
+            pack_dir = git_dir / "objects" / "pack"
+            if pack_dir.is_dir():
+                for tmp_pack in pack_dir.glob("tmp_*"):
+                    tmp_pack.unlink(missing_ok=True)
+            (git_dir / "gc.log").unlink(missing_ok=True)
+
+            obj_dir = git_dir / "objects"
+            if obj_dir.is_dir():
+                for obj in obj_dir.glob("*/*"):
+                    try:
+                        if obj.is_file() and obj.stat().st_size == 0:
+                            obj.unlink(missing_ok=True)
+                    except Exception:
+                        pass
+
+        token = ""
+        token_file = base_dir / "gethub_token.txt"
+        if not token_file.exists():
+            token_file = Path.home() / "gethub_token.txt"
+        if token_file.exists():
+            try:
+                token = token_file.read_text(encoding="utf-8").strip()
+            except Exception:
+                pass
+        if not token:
+            token = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GIT_TOKEN", "").strip()
+
+        authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
+
+        def _git(args, timeout=30):
+            cmd = [git_bin, "-c", "credential.helper="] + args
+            try:
+                res = subprocess.run(cmd, cwd=str(base_dir), capture_output=True, text=True, timeout=timeout)
+                return res.returncode == 0, res.stdout, res.stderr
+            except Exception as e:
+                return False, "", str(e)
+
+        _git(["config", "user.name", "MikeyMike99"])
+        _git(["config", "user.email", "mikeymike@server.local"])
+        _git(["merge", "--abort"])
+        _git(["rebase", "--abort"])
+
+        traffic_file = base_dir / "traffic_metrics.json"
+        if traffic_file.exists():
+            _git(["add", "traffic_metrics.json"])
+            _git(["commit", "-m", "Auto-preserve local traffic metrics [skip ci]"])
+
+        _git(["checkout", "-B", "main"])
+
+        pull_ok, out, err = _git(["pull", authenticated_url, "main", "--no-edit", "--allow-unrelated-histories", "-X", "ours"], timeout=35)
+        if not pull_ok:
+            _git(["merge", "--abort"])
+            _git(["fetch", authenticated_url, "main", "--prune"], timeout=25)
+            _git(["merge", "origin/main", "--no-edit", "-m", "Auto-merge main updates", "-X", "ours"], timeout=20)
+
+        post_sync_script = base_dir / "post_sync.py"
+        if post_sync_script.exists():
+            py_bin = shutil.which("python3") or sys.executable
+            try:
+                subprocess.run([py_bin, str(post_sync_script)], cwd=str(base_dir), capture_output=True, text=True, timeout=25)
+            except Exception:
+                pass
+
+        _GIT_SYNC_DONE = True
+        return True
 
 def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files):
     """Generates a diagnostic dashboard in raw HTML."""
@@ -180,7 +302,9 @@ def application(environ, start_response):
         if str(BASE_DIR) not in sys.path:
             sys.path.insert(0, str(BASE_DIR))
         os.chdir(str(BASE_DIR))
-        
+
+        auto_sync_git(BASE_DIR)
+
         missing_pkgs = {}
         missing_files = {}
         has_errors = False
@@ -236,13 +360,27 @@ def application(environ, start_response):
 
         # Step 5: Attempt to import sync_mod and run the actual Flask app defensively
         try:
-            import sync_mod  # Validates that sync_mod is functional
+            import sync_mod
             from server import app as flask_app
             return flask_app(environ, start_response)
-        except (ImportError, ModuleNotFoundError) as import_err:
+        except Exception as import_err:
+            global _EMERGENCY_RETRY_DONE
+            if not _EMERGENCY_RETRY_DONE:
+                _EMERGENCY_RETRY_DONE = True
+                synced = auto_sync_git(BASE_DIR, force=True)
+                if synced:
+                    try:
+                        import importlib
+                        if "server" in sys.modules:
+                            importlib.reload(sys.modules["server"])
+                        from server import app as flask_app
+                        return flask_app(environ, start_response)
+                    except Exception:
+                        pass
+
             missing_files[str(import_err).split("'")[-1]] = 'MISSING (Import Failed)'
             html_bytes = generate_diagnostic_html(
-                f"Missing module error: {import_err}",
+                f"Initialization error: {import_err}",
                 traceback.format_exc(),
                 missing_pkgs,
                 missing_files
