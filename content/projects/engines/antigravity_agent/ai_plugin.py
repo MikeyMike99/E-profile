@@ -428,7 +428,10 @@ def ai_home():
         or (bearer_user and bearer_user.get("role") in ("admin", "super_admin", "super admin"))
     )
 
-    if request.args.get("mode") == "root" and not has_explicit_session:
+    if not has_explicit_session:
+        scope = session.get("agent_token_scope", "demo")
+        if scope == "demo" and not session.get("agent_authenticated"):
+            return redirect(url_for("ai.login_page", demo="1"))
         return redirect(url_for("ai.login_page"))
 
     is_master = security_mgr.check_master_signature()
@@ -439,6 +442,7 @@ def ai_home():
         session["admin"] = True
         session["username"] = session.get("username") or "Michael (Admin)"
         session.permanent = True
+
     if is_admin and request.args.get("demo") != "1" and request.args.get("mode") != "demo":
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
@@ -453,6 +457,7 @@ def ai_home():
                 project_mgr.set_active_project(target_project)
         except Exception:
             pass
+
     if is_admin:
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
@@ -474,23 +479,26 @@ def ai_demo_entry():
 
 @ai_bp.route("/login")
 def login_page():
+    if request.args.get("demo") == "1":
+        session["agent_token_scope"] = "demo"
+        session["agent_authenticated"] = False
+        return _render_ai_template("login.html")
+
     auth_header = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
     bearer_user = security_mgr.get_user_from_token(auth_header) if auth_header else None
-    is_master = security_mgr.check_master_signature()
-    is_admin = bool(
+    has_explicit_session = bool(
         session.get("is_admin")
         or session.get("admin")
         or (bearer_user and bearer_user.get("role") in ("admin", "super_admin", "super admin"))
-        or is_master
     )
-    if is_admin or _has_local_cli_credentials("root"):
+    if has_explicit_session:
         session["agent_token_scope"] = "root"
         session["agent_authenticated"] = True
         session["is_admin"] = True
         session["admin"] = True
         return redirect(url_for("ai.ai_home"))
-    return _render_ai_template("login.html")
 
+    return _render_ai_template("login.html")
 
 @ai_bp.route("/api/ui-config", methods=["GET"])
 def get_ui_config_route():
@@ -854,9 +862,10 @@ def auth_logout():
 @ai_bp.route("/api/auth/me", methods=["GET"])
 def auth_me():
     token = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
-    user = security_mgr.get_user_from_token(token)
-    if user:
-        return jsonify({"user": user})
+    if token:
+        user = security_mgr.get_user_from_token(token)
+        if user:
+            return jsonify({"user": user})
     active_user = _resolve_active_user()
     if active_user:
         return jsonify({"user": active_user})
