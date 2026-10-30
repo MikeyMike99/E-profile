@@ -1,9 +1,14 @@
 {
-    "total_views": 28,
+    "total_views": 57,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d"
     ],
     "paths": {
-        "/ai_agent/api/stream": 28
+        "/ai_agent/api/stream": 45,
+        "/ai_agent/": 2,
+        "/favicon.ico": 4,
+        "/": 4,
+        "/ai_agent/login": 1,
+        "/projects": 1
     }
 }

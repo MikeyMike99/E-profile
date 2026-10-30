@@ -328,6 +328,19 @@ def git_sync():
                 tmp_pack.unlink(missing_ok=True)
         (target / ".git" / "gc.log").unlink(missing_ok=True)
 
+        for lock_file in (target / ".git").rglob("*.lock"):
+            try:
+                lock_file.unlink(missing_ok=True)
+            except Exception:
+                pass
+        submod_dir = target / "content" / "projects" / "engines" / "antigravity_agent"
+        if (submod_dir / ".git").is_dir():
+            for lock_file in (submod_dir / ".git").rglob("*.lock"):
+                try:
+                    lock_file.unlink(missing_ok=True)
+                except Exception:
+                    pass
+
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
     subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'], cwd=str(target))
@@ -387,6 +400,11 @@ def git_sync():
         submod_url = f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git' if token else 'https://github.com/MikeyMike99/DevCore.git'
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', submod_url])
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
+        for lock_file in (target / ".git").rglob("*.lock"):
+            try:
+                lock_file.unlink(missing_ok=True)
+            except Exception:
+                pass
         run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
         run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
