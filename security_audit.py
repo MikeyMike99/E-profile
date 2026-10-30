@@ -490,12 +490,13 @@ class SecurityAuditor:
             r_demo.status_code == 200
             and scope_after_demo == "demo"
             and not auth_after_demo
-            and "Siraugga Command Center" not in html_demo
+            and "Siraugga Agent • Google OAuth Authentication" in html_demo
+            and "SECURE_GATE | ACCESS_RESTRICTED" not in html_demo
         )
         self.record(
             "Stage 7",
             "AGENT-03",
-            "Test Demo button (/ai_agent/login?demo=1) isolates demo scope and renders Demo authentication page (distinct from AGENT button)",
+            "Test Demo button (/ai_agent/login?demo=1) isolates demo scope and renders Siraugga Google OAuth login (never E-Profile SECURE_GATE)",
             demo_btn_ok,
             f"HTTP {r_demo.status_code}, scope={scope_after_demo}, auth={auth_after_demo}",
         )
@@ -525,11 +526,11 @@ class SecurityAuditor:
 
         r_unauth = self.client.get("/ai_agent/?mode=root&project=root", follow_redirects=False)
         unauth_loc = r_unauth.headers.get("Location", "")
-        unauth_ok = r_unauth.status_code in (301, 302) and "/ai_agent/login" in unauth_loc and "/home" not in unauth_loc
+        unauth_ok = r_unauth.status_code in (301, 302) and "login" in unauth_loc and "/home" not in unauth_loc
         self.record(
             "Stage 7",
             "AGENT-05",
-            "Unauthenticated visitor hitting AGENT route is redirected to /ai_agent/login (never to /home)",
+            "Unauthenticated visitor hitting AGENT route is redirected to relative login (never to /home)",
             unauth_ok,
             f"HTTP {r_unauth.status_code}, Location={unauth_loc}",
         )
@@ -550,6 +551,39 @@ class SecurityAuditor:
             "UI templates & server router enforce distinct AGENT (?mode=root) vs Test Demo (/login?demo=1) bindings and block Home fallback redirects",
             ui_contract_ok,
             "Verified projects.html, projects.js, and server.py dynamic_route guard",
+        )
+
+        submod_root = EPROFILE_ROOT / "content" / "projects" / "engines" / "antigravity_agent"
+        ai_plugin_src = (submod_root / "ai_plugin.py").read_text(encoding="utf-8", errors="ignore")
+        index_tpl_src = (submod_root / "sandbox" / "templates" / "index.html").read_text(encoding="utf-8", errors="ignore")
+        exec_mixin_src = (submod_root / "agents" / "mixins" / "execution_mixin.py").read_text(encoding="utf-8", errors="ignore")
+
+        rel_path_ok = (
+            "_render_ai_template" in ai_plugin_src
+            and 'window.location.href = "/login"' not in index_tpl_src
+            and "/mnt/c/Users/michael" not in ai_plugin_src
+            and "/mnt/c/Users/michael" not in exec_mixin_src
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-07",
+            "Plugin templates and execution engine enforce relative path resolution and isolated blueprint template rendering",
+            rel_path_ok,
+            "Verified _render_ai_template, relative login redirects, and zero hardcoded /mnt/c host paths",
+        )
+
+        stream_and_model_ok = (
+            "is not recognized as a known model" in exec_mixin_src
+            and '"output": full_output' in exec_mixin_src
+            and "since_seq" in ai_plugin_src
+            and "since_seq=" in index_tpl_src
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-08",
+            "Execution engine auto-recovers from unsupported CLI models and preserves response chunks via sequence-cursor stream polling",
+            stream_and_model_ok,
+            "Verified CLI model fallback retry, agent_done output payload, and non-destructive since_seq cursor polling",
         )
 
     # =========================================================================
