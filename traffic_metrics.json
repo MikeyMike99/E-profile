@@ -1,20 +1,20 @@
 {
-    "total_views": 7758,
+    "total_views": 9463,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719"
     ],
     "paths": {
-        "/ai_agent/api/stream": 7263,
-        "/ai_agent/": 49,
-        "/ai_agent/api/projects": 22,
-        "/ai_agent/api/conversations": 27,
-        "/ai_agent/api/user/subscription/status": 11,
-        "/ai_agent/api/auth/system-status": 15,
-        "/favicon.ico": 17,
-        "/ai_agent/api/auth_check": 6,
-        "/": 18,
-        "/ai_agent/api/chat": 12,
+        "/ai_agent/api/stream": 8864,
+        "/ai_agent/": 58,
+        "/ai_agent/api/projects": 32,
+        "/ai_agent/api/conversations": 46,
+        "/ai_agent/api/user/subscription/status": 21,
+        "/ai_agent/api/auth/system-status": 23,
+        "/favicon.ico": 34,
+        "/ai_agent/api/auth_check": 16,
+        "/": 35,
+        "/ai_agent/api/chat": 13,
         "/projects": 5,
         "/ai_agent/api/auth/login": 2,
         "/docs/api/cache/status": 1,
@@ -29,7 +29,7 @@
         "/docs/../../etc/passwd": 7,
         "/docs/devlog/../../server": 7,
         "/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 7,
-        "/ai_agent/login": 16,
+        "/ai_agent/login": 18,
         "/ai_agent/api/artifacts": 43,
         "/ai_agent/api/artifacts/save": 25,
         "/ai_agent/api/auth_demo": 16,
@@ -42,6 +42,7 @@
         "/ai_agent/api/projects/active": 18,
         "/ai_agent/api/set_api_key": 9,
         "/ai_agent/api/ui-config": 9,
-        "/ai_agent/api/user/subscription/set": 2
+        "/ai_agent/api/user/subscription/set": 2,
+        "/ai_agent/api/auth_submit": 1
     }
 }
