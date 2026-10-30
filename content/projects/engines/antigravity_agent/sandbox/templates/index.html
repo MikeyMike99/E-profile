@@ -1121,25 +1121,49 @@
             if (document.getElementById('login-overlay')) return;
             const overlay = document.createElement('div');
             overlay.id = 'login-overlay';
-            overlay.className = 'fixed inset-0 bg-slate-900/95 z-[9999] flex flex-col items-center justify-center backdrop-blur-sm';
+            overlay.className = 'fixed inset-0 bg-slate-900/95 z-[9999] flex flex-col items-center justify-center backdrop-blur-sm p-4';
             
             const msg = (data && data.expired) ? "Your session has expired." : "You must authenticate to access the development environment.";
             const icon = (data && data.expired) ? "fa-clock text-amber-500" : "fa-lock text-teal-500";
             
             overlay.innerHTML = `
-                <div class="bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-slate-700">
-                    <div class="text-center mb-6">
-                        <i class="fas ${icon} text-4xl mb-4"></i>
-                        <h2 class="text-2xl font-bold text-slate-200 mb-2">Access Required</h2>
-                        <p class="text-slate-400 text-sm">${msg}</p>
+                <div class="bg-slate-800 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md border border-slate-700">
+                    <div class="text-center mb-5">
+                        <i class="fas ${icon} text-4xl mb-3"></i>
+                        <h2 class="text-xl md:text-2xl font-bold text-slate-200 mb-1">Access Required</h2>
+                        <p class="text-slate-400 text-xs md:text-sm">${msg}</p>
                     </div>
+
+                    <!-- Instant Demo Testing Card -->
+                    <div class="mb-4 p-3.5 bg-gradient-to-r from-teal-950/90 to-slate-900 border border-teal-500/40 rounded-xl shadow-md text-left">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fas fa-bolt text-amber-300"></i> Instant Demo Testing</span>
+                            <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-teal-900 text-teal-300 border border-teal-600/40">100% Free</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 mb-2.5">Explore the agent immediately in a secure, sandboxed playground with zero setup.</p>
+                        <button type="button" onclick="handleDemoAuthenticate()" class="w-full py-2 px-3 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white rounded-lg font-bold text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer">
+                            <i class="fas fa-play text-[10px]"></i> Launch Free Demo
+                        </button>
+                        <div class="mt-2 text-[10px] text-slate-400 flex flex-wrap items-center justify-center gap-2 text-center">
+                            <span><i class="fas fa-shield-alt text-teal-400"></i> Zero Data Stored</span>
+                            <span>&bull;</span>
+                            <span><i class="fas fa-ban text-teal-400"></i> Zero Commitment / Charges</span>
+                        </div>
+                    </div>
+
+                    <div class="relative flex py-2 items-center mb-3">
+                        <div class="flex-grow border-t border-slate-700"></div>
+                        <span class="flex-shrink mx-3 text-slate-500 text-[10px] uppercase tracking-wider">or sign in with access key</span>
+                        <div class="flex-grow border-t border-slate-700"></div>
+                    </div>
+
                     <form onsubmit="handleAccessKeyLogin(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Enter Access Key</label>
-                            <input type="password" id="access-key-input" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono" placeholder="key-...">
+                            <input type="password" id="access-key-input" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono text-sm" placeholder="key-...">
                         </div>
-                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
-                            <i class="fas fa-sign-in-alt"></i> Authenticate
+                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-xs">
+                            <i class="fas fa-sign-in-alt"></i> Authenticate Key
                         </button>
                     </form>
                 </div>
@@ -2101,7 +2125,7 @@
                 announce(data.message, data.level === 'warning');
                 
                 // Play completion sound when a subagent goes idle or is killed
-                if (data.message && (data.message.includes("has gone idle") || data.message.includes("terminated") || data.message.includes("killed"))) {
+                if (data.message && (data.message.includes("has gone idle") || data.message.includes("Subagent terminated") || data.message.includes("Subagent killed"))) {
                     if (typeof playCompletedSound === 'function') {
                         playCompletedSound();
                     }
@@ -2390,9 +2414,10 @@
             }
             
             var isSteered = (status === 'STEERED');
+            var isSuccess = (status === 'SUCCESS');
 
-            // Play completed sound when task finishes (skip on intermediate steer transition)
-            if (!isSteered && typeof playCompletedSound === 'function') {
+            // Play completed sound strictly when task completes successfully (skip on error, cancellation, or steer)
+            if (!isSteered && !cancelled && isSuccess && typeof playCompletedSound === 'function') {
                 playCompletedSound();
             }
 
@@ -2426,6 +2451,14 @@
                     cancelNotice.innerText = "[Task cancelled by user]";
                     currentAgentArticle.querySelector('.agent-text').appendChild(cancelNotice);
                     announce("Task was cancelled.", true);
+                } else if (status === 'ERROR') {
+                    var elapStrErr = elapsed ? elapsed + 's' : '';
+                    if (statusBadge) {
+                        statusBadge.className = "text-[11px] text-rose-400 font-mono flex items-center gap-1";
+                        statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Interrupted ' + elapStrErr;
+                    }
+                    var responseTextErr = currentAgentArticle.dataset.rawMarkdown || "Process interrupted.";
+                    announce("Task interrupted in " + elapStrErr + ". " + (responseTextErr || "").replace(/<[^>]*>?/gm, '').trim(), true);
                 } else {
                     var elapStr = elapsed ? elapsed + 's' : '';
                     if (statusBadge) {
@@ -3213,6 +3246,8 @@
                     updateUserUI();
                     var modal = document.getElementById('login-modal');
                     if (modal && modal.open) modal.close();
+                    var overlay = document.getElementById('login-overlay');
+                    if (overlay) overlay.remove();
                     await initProjects();
                     await initConversations(10);
                     await loadChatHistory();
@@ -3247,6 +3282,8 @@
                     updateUserUI();
                     var modal = document.getElementById('login-modal');
                     if (modal && modal.open) modal.close();
+                    var overlay = document.getElementById('login-overlay');
+                    if (overlay) overlay.remove();
                     await initProjects();
                     await initConversations(10);
                     await loadChatHistory();
@@ -3614,12 +3651,23 @@
             <div class="p-3 bg-gradient-to-r from-teal-950/90 to-slate-800 border border-teal-500/40 rounded-xl shadow-md">
                 <div class="flex items-center justify-between mb-1">
                     <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fas fa-bolt text-amber-300"></i> Instant Demo Testing</span>
-                    <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-teal-900 text-teal-300 border border-teal-600/40">1-Click</span>
+                    <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-teal-900 text-teal-300 border border-teal-600/40">100% Free</span>
                 </div>
-                <p class="text-[11px] text-slate-300 mb-2">Instantly authenticate pre-authorized demo privileges and start chatting with the agent.</p>
+                <p class="text-[11px] text-slate-300 mb-2">Instantly authenticate pre-authorized demo privileges and start chatting with the agent in a sandboxed session.</p>
                 <button type="button" id="modal-demo-auth-btn" onclick="handleDemoAuthenticate()" class="w-full py-2 px-3 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white rounded-lg font-bold text-xs shadow flex items-center justify-center gap-1.5 transition focus:ring-2 focus:ring-teal-400 focus:outline-none cursor-pointer">
                     <i class="fas fa-play text-[10px]"></i> Authenticate Demo &amp; Start
                 </button>
+                <details class="text-[10px] text-slate-400 mt-2.5 border-t border-teal-800/40 pt-2">
+                    <summary class="cursor-pointer text-teal-400 hover:text-teal-300 font-semibold flex items-center justify-between select-none">
+                        <span><i class="fas fa-shield-alt text-teal-400 mr-1"></i> What happens to your data &amp; commitments?</span>
+                        <i class="fas fa-chevron-down text-[8px]"></i>
+                    </summary>
+                    <div class="mt-2 space-y-1.5 text-slate-300 text-[10px] bg-slate-950/60 p-2.5 rounded border border-slate-800 leading-relaxed">
+                        <div><strong class="text-teal-300">🔒 Data Privacy:</strong> Ephemeral in-memory guest token only. Zero database tracking, no access to your Google account, emails, or personal files. All demo prompts execute inside an isolated sandbox.</div>
+                        <div><strong class="text-teal-300">💳 Zero Commitment:</strong> 100% free demonstration. No credit card required, no recurring charges, and no account signup.</div>
+                        <div><strong class="text-teal-300">🚪 Instant Revocation:</strong> You can wipe your session at any time simply by clicking "Sign Out" or clearing your browser cookies.</div>
+                    </div>
+                </details>
             </div>
 
             <p class="text-xs text-slate-400">Quick-switch test accounts for role-based testing:</p>
