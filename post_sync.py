@@ -45,7 +45,18 @@ def main():
                 tmp_pack.unlink(missing_ok=True)
         (root / ".git" / "gc.log").unlink(missing_ok=True)
 
+        for lock_file in (root / ".git").rglob("*.lock"):
+            try:
+                lock_file.unlink(missing_ok=True)
+            except Exception:
+                pass
         submod_worktree = root / "content" / "projects" / "engines" / "antigravity_agent"
+        if (submod_worktree / ".git").is_dir():
+            for lock_file in (submod_worktree / ".git").rglob("*.lock"):
+                try:
+                    lock_file.unlink(missing_ok=True)
+                except Exception:
+                    pass
         token = ""
         token_file = root / "gethub_token.txt"
         if token_file.exists():
