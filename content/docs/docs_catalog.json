@@ -116,7 +116,7 @@
     "category": "eprofile",
     "title": "E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 6009,
+    "word_count": 6313,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -339,8 +339,26 @@
       {
         "id": "EPRF-PORT-LOG-SEC-16",
         "num": "18",
-        "title": "Chapter 10: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 10: Single Main Branch Unification, 512MB Cloud Quota Optimization & uWSGI Migration",
         "anchor": "#EPRF-PORT-LOG-SEC-16"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-19",
+        "num": "19",
+        "title": "Unifying Git Branches onto Canonical `main` & Submodule Decoupling",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-19"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-20",
+        "num": "20",
+        "title": "uWSGI Interpreter Binding & Seamless Auto-Migration",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-20"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-19",
+        "num": "21",
+        "title": "Chapter 11: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-19"
       }
     ],
     "topics": [
@@ -1194,7 +1212,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 29813,
+    "word_count": 32974,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2295,6 +2313,246 @@
         "num": "169",
         "title": "Verification & 35/35 Perfect Audit",
         "anchor": "#SIRA-DEV-DEVLOG-SEC-169"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-170",
+        "num": "170",
+        "title": "Chapter 80: Concentric Onion Defense-in-Depth & Domain Partitioning",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-170"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-171",
+        "num": "171",
+        "title": "Category: Defense in Depth | Architecture | Zero Trust",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-171"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-172",
+        "num": "172",
+        "title": "The 8 Concentric Rings of Defense",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-172"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-173",
+        "num": "173",
+        "title": "Domain Partitioning: Public Developer Domain vs Sensitive Study Vaults",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-173"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-174",
+        "num": "174",
+        "title": "Chapter 81: Accessibility-First Release Governance: The Accessible Admin Release Manager",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-174"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-175",
+        "num": "175",
+        "title": "Category: UI & Accessibility | Release Management | Pipeline",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-175"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-176",
+        "num": "176",
+        "title": "Eliminating UI Button Breakages and Inaccessible Modals",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-176"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-177",
+        "num": "177",
+        "title": "Synchronizing Release Timestamps Across the Workspace Pipeline",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-177"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-178",
+        "num": "178",
+        "title": "Chapter 82: Zero-Manual Quality Governance: Central SIEM Audit Registry & Token Dashboards",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-178"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-179",
+        "num": "179",
+        "title": "Category: SIEM Telemetry | Token Optimization | Architecture",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-179"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-180",
+        "num": "180",
+        "title": "Centralizing Documentation into the Central_Docs Vault",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-180"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-181",
+        "num": "181",
+        "title": "The Multi-Stage Security Audit Registry & Token Telemetry Dashboard",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-181"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-182",
+        "num": "182",
+        "title": "Chapter 83: The On-Demand Agent Knowledge Engine & Ephemeral Disk Caching",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-182"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-183",
+        "num": "183",
+        "title": "Category: Performance & Caching | Agent Orchestration | Docs Engine",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-183"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-184",
+        "num": "184",
+        "title": "The Token Trap of Monolithic Context Injection",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-184"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-185",
+        "num": "185",
+        "title": "Ephemeral Hybrid Disk Caching in Execution & Transcript Mixins",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-185"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-186",
+        "num": "186",
+        "title": "Chapter 84: 1-Click Zero-Friction Authentication & Root-Token Agent Execution",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-186"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-187",
+        "num": "187",
+        "title": "Category: Authentication & RBAC | Developer Experience | Security",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-187"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-188",
+        "num": "188",
+        "title": "Eliminating Demo Login Friction with 1-Click Instant Demo Access",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-188"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-189",
+        "num": "189",
+        "title": "The Direct Root-Token AGENT Button alongside SURGERY",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-189"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-190",
+        "num": "190",
+        "title": "Chapter 85: The Great Centralization: Unifying Siraugga in DevCore with Dual Local/Cloud Runtimes",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-190"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-191",
+        "num": "191",
+        "title": "Category: Code Deduplication | Dual Runtime | Architectural Unification",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-191"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-192",
+        "num": "192",
+        "title": "Eradicating Multi-Repo Code Duplication",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-192"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-193",
+        "num": "193",
+        "title": "Environment-Aware Dual Execution: Local Ollama GPU vs Cloud Daemon",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-193"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-194",
+        "num": "194",
+        "title": "Chapter 86: The PythonAnywhere Cloud Migration & 512MB Disk Quota Survival",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-194"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-195",
+        "num": "195",
+        "title": "Category: Cloud Migration | Infrastructure | Resource Optimization",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-195"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-196",
+        "num": "196",
+        "title": "The 512MB Disk Quota Wall on PythonAnywhere",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-196"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-197",
+        "num": "197",
+        "title": "Submodule Decoupling, Dependency Pruning, and uWSGI Post-Sync Hooks",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-197"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-198",
+        "num": "198",
+        "title": "Chapter 87: Full Loop Verification: Stage 7 Agent/Demo Routing Audit & Submodule Sync",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-198"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-199",
+        "num": "199",
+        "title": "Category: Verification & Auditing | CI/CD | Submodule Resilience",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-199"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-200",
+        "num": "200",
+        "title": "Restoring Submodule Synchronization Across Repositories",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-200"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-201",
+        "num": "201",
+        "title": "Implementing Stage 7: Automated Agent & Demo Route Verification",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-201"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-202",
+        "num": "202",
+        "title": "Chapter 88: Eliminating CLI OAuth Collision, Relative Root Traversal, and Intelligent Model Fallback",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-202"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-203",
+        "num": "203",
+        "title": "Category: OAuth & Authentication | Path Resolution | Fault Tolerance",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-203"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-204",
+        "num": "204",
+        "title": "The CLI OAuth vs Web Portal Template Collision",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-204"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-205",
+        "num": "205",
+        "title": "Resilient Relative Path Traversal and Multi-Tiered Model Fallbacks",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-205"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-206",
+        "num": "206",
+        "title": "Chapter 89: Root/Local CLI Credential Resolution & Gemini ModelProvider Normalization",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-206"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-207",
+        "num": "207",
+        "title": "Category: Credential Management | CLI Integration | Code Deduplication",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-207"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-208",
+        "num": "208",
+        "title": "Resolving Root vs Local User Credential Disconnects",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-208"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-209",
+        "num": "209",
+        "title": "Gemini ModelProvider Flag Normalization & Zero-Duplicate Central Truth",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-209"
       }
     ],
     "topics": [
@@ -2305,10 +2563,10 @@
     "order_score": 9999,
     "is_latest": true,
     "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
+    "is_proprietary": true,
+    "clearance": "proprietary",
     "base_sensitivity": 1,
-    "max_sensitivity": 3,
+    "max_sensitivity": 4,
     "rel_path": "story/DEVLOG.md",
     "cross_references": [
       {
@@ -4124,7 +4382,7 @@
     "category": "devlog",
     "title": "E-Profile Architecture & Cybersecurity Devlog",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 6009,
+    "word_count": 6313,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -4347,8 +4605,26 @@
       {
         "id": "EPRF-PORT-LOG-SEC-16",
         "num": "18",
-        "title": "Chapter 10: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 10: Single Main Branch Unification, 512MB Cloud Quota Optimization & uWSGI Migration",
         "anchor": "#EPRF-PORT-LOG-SEC-16"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-19",
+        "num": "19",
+        "title": "Unifying Git Branches onto Canonical `main` & Submodule Decoupling",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-19"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-20",
+        "num": "20",
+        "title": "uWSGI Interpreter Binding & Seamless Auto-Migration",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-20"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-19",
+        "num": "21",
+        "title": "Chapter 11: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-19"
       }
     ],
     "topics": [

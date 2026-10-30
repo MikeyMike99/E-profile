@@ -6,9 +6,9 @@
   "stage_status": "PUBLISHED",
   "release_overview": "JOSHY is a high-performance Windows audio playback system engineered specifically for blind and visually impaired users. It delivers zero-latency keyboard-driven media playback, rich acoustic earcons, deep Spotify desktop integration, and native screen-reader bridges for NVDA, JAWS, and Windows Narrator without requiring visual interaction.",
   "changelog": "High-performance accessible Windows audio playback and Spotify controller featuring dual-layer hardware trial hardening, self-healing NVDA/JAWS/SAPI client extraction, acoustic earcons, and direct Git distribution.",
-  "download_url": "https://github.com/MikeyMike99/JOSHY-downloads",
-  "git_repo_url": "https://github.com/MikeyMike99/JOSHY-downloads.git",
-  "git_web_url": "https://github.com/MikeyMike99/JOSHY-downloads",
+  "download_url": "https://github.com/MikeyMike99/JOSHY/releases/tag/v1.0.0",
+  "git_repo_url": "https://github.com/MikeyMike99/JOSHY.git",
+  "git_web_url": "https://github.com/MikeyMike99/JOSHY",
   "git_branch": "main",
   "scheduled_releases": [],
   "packages": {
@@ -23,7 +23,7 @@
       "size_formatted": "50.9 MB",
       "sha256": "50a78b0d7b5ee583659c006dd42b9abb5d9958af78f5a064f8304f499259fcf1",
       "download_url": "/downloads/get/installer",
-      "external_url": "https://github.com/MikeyMike99/JOSHY-downloads/releases/tag/v1.0.0",
+      "external_url": "https://github.com/MikeyMike99/JOSHY/releases/tag/v1.0.0",
       "downloads_count": 6,
       "last_synced": "2026-10-26 13:03:00"
     },
@@ -38,7 +38,7 @@
       "size_formatted": "143.0 MB",
       "sha256": "4d191427a7f968586230ff03d835ff56911d2eeeaaaae55d86c5bfed2c8b3127",
       "download_url": "/downloads/get/portable",
-      "external_url": "https://github.com/MikeyMike99/JOSHY-downloads/releases/tag/v1.0.0",
+      "external_url": "https://github.com/MikeyMike99/JOSHY/releases/tag/v1.0.0",
       "downloads_count": 3,
       "last_synced": "2026-10-26 13:02:00"
     },
@@ -53,8 +53,8 @@
       "size_formatted": "Git Tree",
       "sha256": "Git Commit HEAD",
       "download_url": "/downloads/get/git_source",
-      "external_url": "https://github.com/MikeyMike99/JOSHY-downloads",
-      "git_clone_cmd": "git clone https://github.com/MikeyMike99/JOSHY-downloads.git",
+      "external_url": "https://github.com/MikeyMike99/JOSHY",
+      "git_clone_cmd": "git clone https://github.com/MikeyMike99/JOSHY.git",
       "downloads_count": 5,
       "last_synced": "2026-10-26 13:49:00"
     }

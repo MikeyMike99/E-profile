@@ -1964,3 +1964,334 @@ We updated `tool_security_auditor.py` with Stage 5.11 to rigorously test the JIT
 The full 6-stage security audit suite completed with **35/35 checks passing**. The deadlock was broken cleanly—not by compromising the perimeter, but by elevating human agency through cryptographic governance.
 
 
+
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-165)
+## Chapter 80: Concentric Onion Defense-in-Depth & Domain Partitioning
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-165)
+### Category: Defense in Depth | Architecture | Zero Trust
+
+Following the breakthrough of the cryptographic Super Admin JIT Elevation token (Chapter 79), we stood before a mature, battle-tested security architecture. However, having proven that individual defensive layers could resist adversarial tampering, we faced a new imperative: formalizing our security posture into an immutable architectural standard. We needed a comprehensive reference model that defined exactly how our concentric defense rings operate in harmony to protect diverse workloads.
+
+This led to the authoring of the **Zero-Trust Concentric Onion Architecture** ([`DEFENSE_IN_DEPTH_ARCHITECTURE.md`](file://projects/siraugga_framework/DEFENSE_IN_DEPTH_ARCHITECTURE.md)), synthesizing our protections into eight distinct, sequential layers.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-166)
+### The 8 Concentric Rings of Defense
+
+In high-assurance computing, no single firewall or permission flag can be trusted alone. In our architecture, an adversary—whether an external attacker, an unprivileged third-party modder, an indirect prompt injection payload, or a coerced autonomous subagent—must peel through eight sequential rings:
+
+```
++-----------------------------------------------------------------------+
+| LAYER 0: Perimeter, Transport & Session Scoping                       |
+|   +-----------------------------------------------------------------+ |
+|   | LAYER 1: RBAC Tiers & Semantic Context Delimiters               | |
+|   |   +-----------------------------------------------------------+ | |
+|   |   | LAYER 2: Opaque VFS Resolution & 64-Bit Inode Anchoring   | | |
+|   |   |   +-----------------------------------------------------+ | | |
+|   |   |   | LAYER 3: Dual-Scope PreToolUse Agent Firewalls      | | | |
+|   |   |   |   +-----------------------------------------------+ | | | |
+|   |   |   |   | LAYER 4: In-Flight Static AST & Payload Gates | | | | |
+|   |   |   |   |   +-----------------------------------------+ | | | | |
+|   |   |   |   |   | LAYER 5: Air-Gapped DLP & Local Broker  | | | | | |
+|   |   |   |   |   |   +-----------------------------------+ | | | | | |
+|   |   |   |   |   |   | LAYER 6: Swarm Onion SIEM Logging | | | | | | |
+|   |   |   |   |   |   |   +-----------------------------+ | | | | | | |
+|   |   |   |   |   |   |   | LAYER 7: Hardware JIT Seed  | | | | | | | |
++---+---+---+---+---+---+---+---+-----------------------------+-+-+-+-+-+
+```
+
+1. **Layer 0 (Perimeter, Transport & Session Scoping)**: Enforces network hygiene via 4-second client keep-alives, monotonic sequence acknowledgments (`seq`/`ack`), strict CORS headers, and OWASP-compliant Content Security Policies.
+2. **Layer 1 (RBAC Tiers & Semantic Delimiters)**: Isolates roles into Tier 1 (Public/Guest), Tier 3 (Game Developer / Modder jailed to project directories), and Tier 5 (Super Admin).
+3. **Layer 2 (Opaque VFS Resolution & Inode Anchoring)**: Completely masks physical filesystem paths behind opaque virtual keys (`devcore.*`), anchoring files to 64-bit hardware filesystem inodes to defeat symlink or path-traversal escapes.
+4. **Layer 3 (Dual-Scope PreToolUse Agent Firewalls)**: Evaluates pre-execution hooks hierarchically across local workspace definitions and global user profiles, preventing agent tool-hopping or evasion.
+5. **Layer 4 (In-Flight Static AST & Payload Gates)**: Inspects candidate Python code in-flight using `ast.parse` syntax compilation and token scanning before bytes touch the filesystem.
+6. **Layer 5 (Air-Gapped DLP & Local Brain Broker)**: Enforces air-gapped isolation over sensitive study materials, routing all practice queries through local regex and cryptographic canaries.
+7. **Layer 6 (Swarm Onion SIEM Logging)**: Emits rotating, tamper-evident forensic JSON logs with a high-priority Master Alert Queue for immediate incident alerting.
+8. **Layer 7 (Hardware JIT Seed Authority)**: Derives 32-byte HMAC-SHA256 elevation tokens from host hardware keys, strictly bounding elevation to 300-second leases.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-167)
+### Domain Partitioning: Public Developer Domain vs Sensitive Study Vaults
+
+Crucially, the architecture partitions operations across two non-intersecting domains:
+- **The Public & Developer Domain**: Houses public web clients, documentation viewers, third-party modding sandboxes, and game script sandboxes. Here, speed, rich interactive feedback, and accessibility are maximized.
+- **The Sensitive & Core Engine Domain**: Encompasses backend Quart runtimes, Sensitive Study Vaults (`<sensitive_study_vault>`), master cryptography keys, and cloud-synced storage.
+
+By decoupling these domains, an autonomous agent working in the developer playground cannot be tricked or manipulated into reading, leaking, or altering protected educational vaults or engine internals.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-168)
+## Chapter 81: Accessibility-First Release Governance: The Accessible Admin Release Manager
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-168)
+### Category: UI & Accessibility | Release Management | Pipeline
+
+A security framework is only as effective as the humans who administer it. When managing hundreds of technical documents, devlog chapters, and architectural guides, administrative workflows must be as flawless and accessible as the security controls guarding them.
+
+In mid-October, we identified usability friction within our documentation staging interface: UI action buttons in complex data tables suffered from focus loss, and mouse-bound modal dialogs trapped blind administrators using screen readers. Furthermore, documents could inadvertently transition to published states without passing through strict pre-release validation.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-169)
+### Eliminating UI Button Breakages and Inaccessible Modals
+
+We undertook a comprehensive accessibility and functionality overhaul of the documentation release tools:
+1. **WCAG 2.1 AA Keyboard Trapping**: Modal dialogs were refactored with native focus containment. Opening an administrative modal immediately focuses the primary action control, traps `Tab` cycles within the modal container, and closes gracefully on `Escape`, returning focus to the trigger button.
+2. **Accessible Form Controls**: Standardized on high-contrast, keyboard-operable comboboxes with clear ARIA attributes (`role="combobox"`, `aria-expanded`, `aria-autocomplete="list"`), ensuring screen readers announce category changes seamlessly.
+3. **Draft State Reset & Verification**: As a protective measure against premature publishing, all candidate documentation chapters were reset to `draft` status in `release_schedule.json`. This established an auditable release gate where each chapter requires explicit administrative sign-off.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-170)
+### Synchronizing Release Timestamps Across the Workspace Pipeline
+
+This guarantees that documentation published on the web matches the exact version-controlled state in `Central_Docs` with zero manual copying.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-171)
+## Chapter 82: Zero-Manual Quality Governance: Central SIEM Audit Registry & Token Dashboards
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-171)
+### Category: SIEM Telemetry | Token Optimization | Architecture
+
+As DevCore grew into an enterprise platform, documentation and telemetry had become fragmented. Over 300 markdown files resided inside `DevCore/docs/`, duplicating content that belonged in `Central_Docs`. At the same time, auditing security compliance and measuring local model performance required executing fragmented shell scripts.
+
+We addressed both challenges in a sweeping architectural consolidation: centralizing documentation into `Central_Docs` and deploying a real-time, unified telemetry and audit system.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-172)
+### Centralizing Documentation into the Central_Docs Vault
+
+To enforce our "Single Source of Truth" invariant, we purged 395 obsolete and duplicate documentation files from `DevCore/docs/`. In their place, we established clean synchronization pointers linking directly to the centralized documentation vault at `Central_Docs/projects/siraugga_framework/`.
+
+All textbooks, devlogs, from-scratch creation guides, and architectural specifications now live exclusively within `Central_Docs`, eliminating divergence across repositories.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-173)
+### The Multi-Stage Security Audit Registry & Token Telemetry Dashboard
+
+Concurrently, we built the **Central Audit Registry and Token Telemetry Engine** directly into the DevCore engine:
+- **`core/audit_registry.py`**: Provides programmatic tracking of all 35 security verification stages, persisting audit manifests in `core/audits_manifest.json`.
+- **`core/token_telemetry.py`**: Monitors incremental token consumption across local LLMs, measuring prompt overhead, completion speed, and cache hit ratios.
+- **`core/network_auditor.py`**: Inspects network interface bindings, ensuring Quart services bind strictly to loopback (`127.0.0.1`) during secure development sessions.
+- **Web Dashboards (`templates/audits.html` & `templates/telemetry.html`)**: Integrated accessible, high-contrast dashboards allowing administrators to inspect live audit outcomes, AST parsing latency, and token economics without leaving the browser.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-174)
+## Chapter 83: The On-Demand Agent Knowledge Engine & Ephemeral Disk Caching
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-174)
+### Category: Performance & Caching | Agent Orchestration | Docs Engine
+
+One of the greatest hazards in autonomous AI development is **Token Bloat**. When an AI agent needs reference material—such as an architectural blueprint or a beginner tutorial—the standard approach is to stuff the entire document into the prompt context. This consumes thousands of tokens, increases inference latency, drains API quotas, and dilutes the model's focus on the actual task.
+
+We solved this with the **On-Demand Agent Documentation Engine** and an **Ephemeral Hybrid Disk Cache**.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-175)
+### The Token Trap of Monolithic Context Injection
+
+Injecting a 5,000-word guide into an agent prompt wastes context window space and risks catastrophic "attention fogging." Instead of monolithic injection, we engineered on-demand slicing:
+- Documents are parsed into discrete, semantically indexed sections anchored by unique `SECTION_ID` tags.
+- When an agent requests guidance on a specific subsystem (e.g., hot-patching or WebSocket streaming), the engine resolves only the requested AST block, reducing token overhead by more than 90%.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-176)
+### Ephemeral Hybrid Disk Caching in Execution & Transcript Mixins
+
+We integrated this engine into `core/local_model_service.py` and the core agent mixins ([`execution_mixin.py`](file://agents/mixins/execution_mixin.py), [`transcript_mixin.py`](file://agents/mixins/transcript_mixin.py)):
+1. **Memory-Mapped Slices**: Frequently accessed reference guides (such as `Antigravity_Beginners_Guide.md` and `.docx`) are compiled into fast, memory-mapped lookup structures.
+2. **Ephemeral Disk Caching**: On-demand documents generated during agent research are staged in an ephemeral disk cache (`.cache/ephemeral_docs/`).
+3. **Automatic Lifecycle Purge**: The cache automatically tracks file lifespans. As soon as an agent completes its task, temporary doc files are purged from disk, enforcing our Clean Workspace Protocol.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-177)
+## Chapter 84: 1-Click Zero-Friction Authentication & Root-Token Agent Execution
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-177)
+### Category: Authentication & RBAC | Developer Experience | Security
+
+Security should never compromise developer ergonomics. While testing and evaluating sandboxed game environments, entering credentials repeatedly created unnecessary friction for guest evaluators and developers. Furthermore, launching elevated agent tasks required tedious multi-step configuration.
+
+To streamline developer workflow without relaxing Zero-Trust controls, we introduced **1-Click Instant Demo Authentication** and the **Direct Root-Token AGENT Button**.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-178)
+### Eliminating Demo Login Friction with 1-Click Instant Demo Access
+
+In `core/routes/auth.py` and `sandbox/templates/login.html`, we implemented 1-click demo access:
+- **Instant Role-Scoped Tokens**: Clicking "Guest Demo" or "Dev Demo" automatically issues a cryptographically signed session token pre-scoped to Tier 1 or Tier 3 permissions.
+- **Isolated Session Storage**: The token is bound to an isolated session context in `core/session_manager.py`, preventing demo sessions from inspecting engine logs or accessing Tier 5 endpoints.
+- **Zero Hardcoded Secrets**: Demo credentials do not expose master keys; tokens expire automatically after inactivity.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-179)
+### The Direct Root-Token AGENT Button alongside SURGERY
+
+In the Projects management interface (`sandbox/templates/index.html`), we positioned a dedicated **`AGENT`** button directly adjacent to the **`SURGERY`** tool:
+- When clicked by an authenticated Tier 5 administrator, the portal launches an elevated agent task injected with root-level authorization tokens.
+- The button provides immediate visual and screen-reader state feedback, enabling administrators to initiate automated AST inspections, code fixes, and workspace audits with a single click.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-180)
+## Chapter 85: The Great Centralization: Unifying Siraugga in DevCore with Dual Local/Cloud Runtimes
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-180)
+### Category: Code Deduplication | Dual Runtime | Architectural Unification
+
+By late October, our ecosystem was running across two very different operational environments:
+1. **High-Performance Local Workstation**: Running under Linux WSL 2 with dedicated GPU acceleration, local Ollama models, and full tool integration.
+2. **Cloud Portfolio Node (PythonAnywhere)**: Running as a publicly accessible, headless web application showcasing our live portfolio and agent capabilities.
+
+This dichotomy had caused architectural drift: different scripts were running in different branches, and template code had duplicated between `ai_index.html` and `index.html`. We resolved this through **The Great Centralization**.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-181)
+### Eradicating Multi-Repo Code Duplication
+
+We consolidated the Siraugga framework strictly inside `DevCore` on the `main` branch:
+- All duplicate templates were merged into a single, modular template hierarchy.
+- Obsolete daemons were retired in favor of centralized services.
+- The entire codebase was deduplicated, ensuring that any fix or enhancement made in DevCore benefits both local and cloud deployments equally.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-182)
+### Environment-Aware Dual Execution: Local Ollama GPU vs Cloud Daemon
+
+In `ai_plugin.py` and `auth_daemon.py`, we engineered **Environment-Aware Dual Execution**:
+- **Local Workstation Detection**: The engine inspects environment variables and hardware endpoints (`http://127.0.0.1:11434` for Ollama, CUDA availability). If local hardware is detected, it routes agent inference directly to local GGUF/Ollama models with zero cloud latency.
+- **PythonAnywhere Cloud Fallback**: If running in a cloud container without GPU access, the system automatically detects the hosted environment, bypasses local hardware checks, and routes requests through headless HTTP proxy adapters and cloud-authorized API fallbacks.
+
+This allowed the exact same codebase to run seamlessly in both environments without modifying a single line of configuration.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-183)
+## Chapter 86: The PythonAnywhere Cloud Migration & 512MB Disk Quota Survival
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-183)
+### Category: Cloud Migration | Infrastructure | Resource Optimization
+
+Deploying DevCore and E-Profile to PythonAnywhere brought us face-to-face with a ruthless constraint: the platform's **strict 512MB disk storage ceiling**.
+
+When we first triggered a deployment sync, the build ground to an abrupt halt:
+```text
+OSError: [Errno 122] Disk quota exceeded
+fatal: cannot create directory at '.git/modules/DevCore': Disk quota exceeded
+```
+The entire git history of DevCore, combined with recursive submodules, pip wheel caches, and heavy NLP libraries (spaCy models and tokenizers), exceeded the disk allocation. We had to execute a surgical optimization to survive within the 512MB quota.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-184)
+### The 512MB Disk Quota Wall on PythonAnywhere
+
+We implemented a three-tier space reclamation strategy:
+1. **Submodule Checkout Disabling**: In `aad3a9a`, we configured git on PythonAnywhere to disable recursive checkout of the DevCore submodule. Instead of pulling gigabytes of repository history, the cloud node pulls only the lightweight runtime bridge.
+2. **Aggressive Dependency Pruning**: In `1d22980`, we pruned heavy NLP libraries, large language models, and cached `.whl` files from `~/.cache/pip`, recovering over 220MB of physical disk space.
+3. **Gitattributes & Line-Ending Normalization**: In `5324304`, we added `.gitattributes` to normalize all shell scripts and dotfiles to Unix line endings (`LF`). Windows `CRLF` characters had been causing silent script failures in PythonAnywhere's Bash environment.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-185)
+### Submodule Decoupling, Dependency Pruning, and uWSGI Post-Sync Hooks
+
+A subtle bug remained: upon completing a git synchronization, the PythonAnywhere web application failed to reload because the uWSGI post-sync hook was invoking system `/usr/bin/python` instead of the virtual environment's interpreter.
+
+In `6d587a2`, we updated the post-sync trigger:
+```python
+# Bind explicitly to the active virtual environment Python interpreter
+sys_python = Path(sys.executable)
+subprocess.run([str(sys_python), "scripts/post_sync_migrate.py"], check=True)
+```
+With this fix in place, pushing updates to GitHub automatically triggers an instantaneous, quota-compliant deployment on PythonAnywhere with zero manual intervention.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-186)
+## Chapter 87: Full Loop Verification: Stage 7 Agent/Demo Routing Audit & Submodule Sync
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-186)
+### Category: Verification & Auditing | CI/CD | Submodule Resilience
+
+Following the centralization of Siraugga and the PythonAnywhere deployment optimizations, we needed absolute certainty that all inter-repository connections remained solid. A broken submodule pointer or a misrouted demo endpoint could silently degrade system reliability.
+
+To eliminate this blind spot, we restored automated submodule synchronization and expanded our testing framework with **Stage 7 of the Security Audit Suite**.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-187)
+### Restoring Submodule Synchronization Across Repositories
+
+In commit `3b1a731`, we restored synchronized submodule tracking across `DevCore`, `Central_Docs`, and `e_profile`:
+- Added automated pre-commit integrity checks verifying that submodule HEAD commits point to valid, pushed remote commits.
+- Configured git ignore rules to prevent dirty submodule worktrees from stalling automated sync scripts.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-188)
+### Implementing Stage 7: Automated Agent & Demo Route Verification
+
+We added Stage 7 to [`tool_security_auditor.py`](file://security/tool_security_auditor.py) and integrated it into the unified workspace pipeline:
+1. **Agent Route Verification**: Simulates WebSocket handshakes and agent execution requests, verifying that requests route correctly through `ExecutionMixin` without dropping keep-alive pings.
+2. **Demo Route Verification**: Automatically tests the 1-click instant demo endpoints, confirming that demo sessions are properly sandboxed to safe workspaces.
+3. **Cross-Repo Health Check**: Confirms that documentation pointers in DevCore and Audio Suite resolve directly to `Central_Docs`.
+
+The complete audit suite now runs 37 automated checks with a 100% pass rate, providing total confidence in system integrity.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-189)
+## Chapter 88: Eliminating CLI OAuth Collision, Relative Root Traversal, and Intelligent Model Fallback
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-189)
+### Category: OAuth & Authentication | Path Resolution | Fault Tolerance
+
+In late October, we encountered an insidious edge case during developer onboarding: when authenticating via the CLI OAuth daemon, the user was unexpectedly redirected to the web portal's login page instead of the OAuth authorization screen.
+
+Simultaneously, scripts executed from nested subdirectories occasionally failed to locate master keys due to brittle relative path assumptions.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-190)
+### The CLI OAuth vs Web Portal Template Collision
+
+Investigation revealed a namespace collision between Quart's template resolution and the OAuth daemon. Both systems contained a `login.html` template. Depending on the import order, Quart would occasionally render the web portal's login form during the CLI OAuth flow, breaking the OAuth redirect loop.
+
+In `a663872`, we resolved the collision:
+- Segregated the CLI OAuth templates into a distinct namespace (`auth/cli_oauth.html`).
+- Refactored `auth_daemon.py` to route callbacks strictly to dedicated OAuth endpoints, completely isolating CLI authentication from web portal session management.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-191)
+### Resilient Relative Path Traversal and Multi-Tiered Model Fallbacks
+
+To ensure tools execute reliably regardless of the current working directory, we introduced dynamic ancestral root traversal:
+```python
+def _iter_relative_roots(base_dir):
+    current = Path(base_dir).resolve()
+    for _ in range(5):
+        yield current
+        if current.parent == current:
+            break
+        current = current.parent
+```
+This utility dynamically walks up the directory tree to discover configuration files (`.devcore_client_key.txt`, `gemini_api_key.txt`, `settings.json`), allowing scripts to run from anywhere in the workspace.
+
+Additionally, we implemented **Intelligent Model Fallback**: if a primary model experiences API rate limits (HTTP 429) or regional outages, the execution mixin automatically falls back to secondary authorized models without aborting the agent's active task.
+
+---
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-192)
+## Chapter 89: Root/Local CLI Credential Resolution & Gemini ModelProvider Normalization
+
+[//]: # (SECTION_ID: SIRA-DOC-LOG-SEC-192)
+### Category: Credential Management | CLI Integration | Code Deduplication
+
+Our final milestone addressed a subtle discrepancy between root-level background services and local developer user environments.
+
+When the `agy` CLI was invoked from background tasks running under administrative privilege, the subprocess searched `/root/` for authentication tokens rather than the local user directory (`~` / `$HOME`). Furthermore, inconsistent `modelProvider` settings occasionally caused Gemini API requests to be rejected due to mismatched configuration headers.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-193)
+### Resolving Root vs Local User Credential Disconnects
+
+In commit `ce71509`, we updated [`execution_mixin.py`](file://agents/mixins/execution_mixin.py) with unified credential discovery:
+1. **Ancestral Key Discovery**: The engine inspects ancestral search roots for `.devcore_client_key.txt` and `gemini_api_key.txt`.
+2. **Credential Precedence**: If OAuth tokens exist in user directories, they take precedence; if not, API keys are cleanly loaded into `safe_env`.
+3. **Cross-User Forwarding**: Environment variables are passed explicitly into subprocess environments, ensuring background processes resolve credentials correctly regardless of user context.
+
+[//]: # (SECTION_ID: SIRA-DEV-DEVLOG-SEC-194)
+### Gemini ModelProvider Flag Normalization & Zero-Duplicate Central Truth
+
+To eliminate configuration ambiguity when invoking Gemini models, we standardized model provider injection:
+```python
+if safe_env.get("GEMINI_API_KEY"):
+    cmd.extend(["--settings", '{"modelProvider":"gemini"}'])
+```
+This flag explicitly instructs the `agy` CLI to route requests to the Gemini endpoint, preventing provider misdetection.
+
+With this final enhancement, the entire system reached complete harmony. Every redundant script has been eliminated, all repositories are synchronized to a single source of truth, and the DevCore platform stands as a unified, accessible, zero-trust powerhouse.
