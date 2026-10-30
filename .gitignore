@@ -21,4 +21,8 @@ cache/
 .cache/
 *antigravity-oauth-token*
 *oauth-token*
+*.token
+*.key
 content/projects/**/antigravity-oauth-token
+content/projects/engines/antigravity_agent/
+

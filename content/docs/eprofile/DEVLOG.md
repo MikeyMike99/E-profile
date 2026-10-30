@@ -696,8 +696,37 @@ All 26 security checks consistently pass with 100% compliance in ~3.00 seconds.
 ---
 
 [//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-16)
-## Chapter 10: Conclusion & The Sovereignty Dividend
+## Chapter 10: Single Main Branch Unification, 512MB Cloud Quota Optimization & uWSGI Migration
 [//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-16)
+
+In late October 2026, the operational deployment of E-Profile reached a critical architectural turning point. Parallel development had produced divergent branches, while the physical deployment to our cloud platform (PythonAnywhere) collided with hard system constraints: a strict 512MB total disk quota and virtual environment interpreter collisions under uWSGI.
+
+To transform E-Profile into a truly resilient, automated cloud deployment, we executed a three-phase infrastructure overhaul.
+
+[//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-17)
+### Unifying Git Branches onto Canonical `main` & Submodule Decoupling
+
+Historically, E-Profile maintained separate tracking branches between local WSL development and remote production. In commits `3a6da95` and `7c53fe5`, we unified all workflows onto a single canonical `main` branch. 
+
+However, pulling the repository on PythonAnywhere immediately triggered disk quota exhaustion (`OSError: [Errno 122] Disk quota exceeded`) due to recursive cloning of the heavy DevCore submodule and lingering `.cache/pip` wheels. 
+
+We re-architected the deployment pipeline:
+1. **Submodule Decoupling**: Configured the cloud node to avoid recursive submodule initialization of DevCore, pulling only lightweight runtime bridges.
+2. **Aggressive Dependency Pruning**: Pruned redundant NLP packages and cleaned pip caches, reclaiming over 220MB of physical disk space.
+3. **LF Line-Ending Normalization**: Added `.gitattributes` to enforce Unix `LF` line endings across all shell scripts, preventing silent Bash syntax errors on Linux hosts.
+
+[//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-18)
+### uWSGI Interpreter Binding & Seamless Auto-Migration
+
+A subtle production failure occurred during post-sync automation: uWSGI reloaded using the host system Python binary (`/usr/bin/python`) instead of the virtual environment interpreter (`~/.virtualenvs/eprofile-venv/bin/python`), causing missing module exceptions.
+
+In commit `6d587a2`, we updated the post-sync trigger to dynamically resolve `sys.executable`, binding post-sync migration commands directly to the active virtualenv runtime. Now, every `git push` to `main` executes an automated, quota-compliant sync and graceful reload without administrator intervention.
+
+---
+
+[//]: # (SECTION_ID: EPRF-PORT-DEVLOG-SEC-19)
+## Chapter 11: Conclusion & The Sovereignty Dividend
+[//]: # (SECTION_ID: EPRF-PORT-LOG-SEC-19)
 
 The evolution of E-Profile from a 153-line prototype into a zero-trust, screen-reader-sovereign fortress proves that cybersecurity and accessibility are complementary engineering disciplines.
 
