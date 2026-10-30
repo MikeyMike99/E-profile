@@ -320,19 +320,48 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    # 3. Pre-clean pip cache on server to prevent disk quota exhaustion before git operations
     if os.name != 'nt':
         shutil.rmtree(Path.home() / ".cache" / "pip", ignore_errors=True)
+        pack_dir = target / ".git" / "objects" / "pack"
+        if pack_dir.is_dir():
+            for tmp_pack in pack_dir.glob("tmp_*"):
+                tmp_pack.unlink(missing_ok=True)
+        (target / ".git" / "gc.log").unlink(missing_ok=True)
 
-    # 4. Ensure git identity
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
+    subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'], cwd=str(target))
 
-    # Commit any local uncommitted work first so branch switching or pulling doesn't conflict
+    gi_path = target / ".gitignore"
+    if gi_path.exists():
+        try:
+            gi_text = gi_path.read_text(encoding="utf-8", errors="replace")
+            if "*antigravity-oauth-token*" not in gi_text:
+                gi_path.write_text(gi_text.rstrip() + "\n*antigravity-oauth-token*\n*oauth-token*\ncontent/projects/**/antigravity-oauth-token\n", encoding="utf-8")
+        except Exception:
+            pass
+
+    for token_pat in ['*antigravity-oauth-token*', '*oauth-token*']:
+        for rogue_f in target.glob(f"**/{token_pat}"):
+            if rogue_f.is_file():
+                try:
+                    rogue_f.unlink()
+                except Exception:
+                    pass
+
+    run_git_cmd(['rm', '-r', '--cached', '--ignore-unmatch', '*antigravity-oauth-token*'])
+
+    try:
+        log_check = subprocess.run(['git', 'log', f'origin/{target_branch}..HEAD', '--name-only'], cwd=str(target), capture_output=True, text=True)
+        if 'antigravity-oauth-token' in (log_check.stdout or ''):
+            output_log += "[Security] Blocked unpushed secret detected in local commit history. Resetting to origin...\n"
+            run_git_cmd(['reset', f'origin/{target_branch}'])
+    except Exception:
+        pass
+
     run_git_cmd(['add', '.'])
     run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
 
-    # 4. Enforce single-branch ('main') checkout and prune legacy branches
     if local_branch != 'main':
         run_git_cmd(['checkout', '-B', 'main'])
         if local_branch == 'clean-main':
@@ -340,33 +369,28 @@ def git_sync():
             run_git_cmd(['push', authenticated_url, '--delete', 'clean-main'])
         local_branch = 'main'
 
-    # 5. Environment-Specific Logic
     is_windows = (os.name == 'nt')
 
     if is_windows:
-        # --- LOCAL WINDOWS ENVIRONMENT ---
         output_log += f"[System] Local Windows environment detected (Branch: {target_branch})...\n"
-        
-        # Merge strategy to prevent conflict markers locally
-        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '-X', 'ours'])
+        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--no-recurse-submodules', '-X', 'ours'])
         if local_branch == target_branch:
             run_git_cmd(['push', authenticated_url, target_branch])
         else:
             run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
 
     else:
-        # --- PYTHONANYWHERE SERVER ENVIRONMENT ---
         output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
-        
         run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '--no-recurse-submodules', '-X', 'ours'])
         run_git_cmd(['checkout', '--theirs', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['submodule', 'sync'])
-        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git'])
+        submod_url = f'https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git' if token else 'https://github.com/MikeyMike99/DevCore.git'
+        run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.url', submod_url])
         run_git_cmd(['config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'])
         run_git_cmd(['submodule', 'update', '--init', '--remote', '--force'])
         run_git_cmd(['add', 'content/projects/engines/antigravity_agent'])
         run_git_cmd(['commit', '-m', f'Auto-sync DevCore submodule ({target_branch})'])
-        
+
         if local_branch == 'master' and target_branch == 'main':
             run_git_cmd(['push', authenticated_url, 'master:main'])
         elif local_branch == target_branch:

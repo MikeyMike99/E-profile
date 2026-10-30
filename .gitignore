@@ -19,3 +19,6 @@ cache/
 *credentials*.json
 .gemini/
 .cache/
+*antigravity-oauth-token*
+*oauth-token*
+content/projects/**/antigravity-oauth-token
