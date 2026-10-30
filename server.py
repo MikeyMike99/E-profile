@@ -28,7 +28,7 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=timedelta(days=1)
+    PERMANENT_SESSION_LIFETIME=timedelta(days=365)
 )
 
 # --- GLOBAL CONTEXT PROCESSOR ---
@@ -378,6 +378,8 @@ def login():
             session['admin'] = True
             session['is_admin'] = True
             session['is_employer'] = False
+            session['agent_token_scope'] = 'root'
+            session['agent_authenticated'] = True
             sys_log.info(f"System Initialized. Profile '{username}' created as {label}.")
             return redirect(url_for('admin'))
             
@@ -398,6 +400,9 @@ def login():
                 session['admin'] = is_admin
                 session['is_admin'] = is_admin
                 session['is_employer'] = is_employer
+                if is_admin:
+                    session['agent_token_scope'] = 'root'
+                    session['agent_authenticated'] = True
                 sys_log.info(f"Login success: {username} ({label})")
                 
                 if is_admin:
