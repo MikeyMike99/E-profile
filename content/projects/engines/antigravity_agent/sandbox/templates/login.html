@@ -21,15 +21,46 @@
             </div>
         </header>
 
-        <div id="statusBanner" class="mb-6 p-4 rounded-xl border border-slate-800 bg-slate-950/70 flex items-center justify-between text-xs sm:text-sm" role="status" aria-live="polite">
-            <div class="flex items-center gap-2.5">
-                <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
-                <span id="statusText" class="text-slate-300 font-medium">Checking agent status...</span>
-            </div>
-            <a id="dashboardBtn" href="/ai_agent" class="hidden px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-medium transition text-xs flex items-center gap-1.5 shrink-0">
-                Workspace <i class="fas fa-arrow-right text-[10px]"></i>
-            </a>
+        <!-- Target CLI Scope Selection -->
+        <div class="mb-5 flex rounded-xl bg-slate-900/90 border border-slate-800 p-1 text-xs font-semibold" role="tablist" aria-label="Target CLI Scope">
+            <button id="scopeRootBtn" type="button" onclick="setLoginScope('root')" role="tab" aria-selected="true" class="flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer bg-teal-600 text-white shadow">
+                <i class="fas fa-crown text-amber-300"></i> Root Agent CLI
+            </button>
+            <button id="scopeDemoBtn" type="button" onclick="setLoginScope('demo')" role="tab" aria-selected="false" class="flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200">
+                <i class="fas fa-flask text-teal-400"></i> Demo Chamber CLI
+            </button>
         </div>
+
+        <div id="statusBanner" class="mb-6 p-4 rounded-xl border border-slate-800 bg-slate-950/70 flex items-center justify-between text-xs sm:text-sm gap-2" role="status" aria-live="polite">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                <span id="statusText" class="text-slate-300 font-medium truncate">Checking agent status...</span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="button" id="reauthBtn" onclick="checkInitialStatus(true)" class="hidden px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1 cursor-pointer" title="Re-authorize or connect a different Google Account">
+                    <i class="fas fa-arrows-rotate text-[10px]"></i> Re-authorize CLI
+                </button>
+                <a id="dashboardBtn" href="/ai_agent" class="hidden px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-medium transition text-xs flex items-center gap-1.5">
+                    Workspace <i class="fas fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+
+        <section id="rootRestoreSection" class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-950 border border-amber-500/50 shadow-xl space-y-2.5" role="region" aria-label="Root Super Admin Access">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-400 text-lg" aria-hidden="true">👑</span>
+                    <h2 class="text-sm font-bold text-white tracking-wide uppercase">Root Super Admin Authority</h2>
+                </div>
+                <span class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-900/80 text-amber-200 border border-amber-600/50">Owner Access</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Restore full root administrator permissions and enter the workspace with permanent owner credentials.
+            </p>
+            <button type="button" onclick="handleRootRestore()" class="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 active:scale-[0.99] text-white font-bold py-2.5 px-4 rounded-xl transition duration-150 shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 text-xs focus:ring-4 focus:ring-amber-700/50 cursor-pointer">
+                <i class="fas fa-unlock text-white text-xs"></i> <span>Restore Root Super Admin (1-Click)</span>
+            </button>
+        </section>
 
         <section id="demoQuickLaunchSection" class="hidden mb-6 p-5 rounded-2xl bg-gradient-to-r from-teal-950/80 via-slate-900 to-slate-950 border border-teal-500/40 shadow-xl space-y-3" role="region" aria-label="1-Click Demo Evaluation">
             <div class="flex items-center justify-between">
@@ -163,12 +194,98 @@
     <script>
         const basePath = window.location.pathname.replace(/\/login\/?$/, '');
         const urlParams = new URLSearchParams(window.location.search);
-        let activeScope = (urlParams.get('demo') === '1' || urlParams.get('mode') === 'demo') ? 'demo' : (urlParams.get('demo') === '0' || urlParams.get('mode') === 'root' ? 'root' : '');
-        const scopeQuery = activeScope === 'demo' ? 'demo=1' : (activeScope === 'root' ? 'demo=0' : '');
-        const authCheckUrl = (basePath ? basePath + '/api/auth_check' : 'api/auth_check') + (scopeQuery ? '?' + scopeQuery : '');
+        let activeScope = (urlParams.get('demo') === '1' || urlParams.get('mode') === 'demo' || urlParams.get('scope') === 'demo') ? 'demo' : 'root';
+
+        async function handleRootRestore() {
+            try {
+                const ep1 = basePath ? basePath + '/api/auth/restore-root' : '/api/auth/restore-root';
+                const ep2 = basePath ? basePath + '/api/auth/login' : '/api/auth/login';
+                let res = await fetch(ep1, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_key: 'SUPER_ADMIN_AUTO' })
+                });
+                if (!res.ok) {
+                    res = await fetch(ep2, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ access_key: 'SUPER_ADMIN_AUTO' })
+                    });
+                }
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem('agy_auth_token', data.token);
+                    localStorage.setItem('agy_user', JSON.stringify(data.user));
+                    sessionStorage.removeItem('agy_manual_logout');
+                    window.location.href = basePath ? basePath + '/' : '/';
+                } else {
+                    alert('Could not restore root admin credentials: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Root restore error: ' + (e.message || e));
+            }
+        }
+
+        function getAuthCheckUrl(force = false) {
+            const base = basePath ? basePath + '/api/auth_check' : 'api/auth_check';
+            const params = new URLSearchParams();
+            params.set('scope', activeScope);
+            if (activeScope === 'demo') params.set('demo', '1');
+            if (force) params.set('force', '1');
+            return `${base}?${params.toString()}`;
+        }
+
         const authSubmitUrl = basePath ? basePath + '/api/auth_submit' : 'api/auth_submit';
         const setApiKeyUrl = basePath ? basePath + '/api/set_api_key' : 'api/set_api_key';
-        const returnUrl = (basePath || '.') + '/' + (activeScope === 'demo' ? '?demo=1' : '?mode=root');
+
+        function updateReturnUrls() {
+            const returnUrl = (basePath || '.') + '/' + (activeScope === 'demo' ? '?demo=1' : '?mode=root');
+            const dBtn = document.getElementById('dashboardBtn');
+            const cBtn = document.getElementById('continueBtn');
+            if (dBtn) dBtn.href = returnUrl;
+            if (cBtn) cBtn.href = returnUrl;
+        }
+
+        function setLoginScope(scope) {
+            activeScope = scope;
+            updateScopeUI();
+            updateReturnUrls();
+            checkInitialStatus(false);
+        }
+
+        function updateScopeUI() {
+            const rootBtn = document.getElementById('scopeRootBtn');
+            const demoBtn = document.getElementById('scopeDemoBtn');
+            const demoSec = document.getElementById('demoQuickLaunchSection');
+            const mainH = document.getElementById('portalMainHeading');
+            const subH = document.getElementById('portalSubHeading');
+
+            if (activeScope === 'demo') {
+                if (demoBtn) {
+                    demoBtn.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer bg-teal-600 text-white shadow';
+                    demoBtn.setAttribute('aria-selected', 'true');
+                }
+                if (rootBtn) {
+                    rootBtn.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200';
+                    rootBtn.setAttribute('aria-selected', 'false');
+                }
+                if (demoSec) demoSec.classList.remove('hidden');
+                if (mainH) mainH.innerText = 'Demo Agent Authentication';
+                if (subH) subH.innerText = 'Launch demo workspace immediately or connect Google credentials';
+            } else {
+                if (rootBtn) {
+                    rootBtn.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer bg-teal-600 text-white shadow';
+                    rootBtn.setAttribute('aria-selected', 'true');
+                }
+                if (demoBtn) {
+                    demoBtn.className = 'flex-1 py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200';
+                    demoBtn.setAttribute('aria-selected', 'false');
+                }
+                if (demoSec) demoSec.classList.add('hidden');
+                if (mainH) mainH.innerText = 'Root Agent Authentication';
+                if (subH) subH.innerText = 'Connect Google credentials or Gemini API key for full host access';
+            }
+        }
 
         document.getElementById('dashboardBtn').href = returnUrl;
         document.getElementById('continueBtn').href = returnUrl;
@@ -264,14 +381,18 @@
             countdownInterval = setInterval(tick, 1000);
         }
 
-        function updateStatus(authenticated, oauthUrl, remaining, scope, hasExisting) {
+        function updateStatus(authenticated, oauthUrl, remaining, scope, hasExisting, account, authMethod, expiry) {
             if (scope) activeScope = scope;
+            updateScopeUI();
+            updateReturnUrls();
+
             const dot = document.getElementById('statusDot');
             const text = document.getElementById('statusText');
             const dashBtn = document.getElementById('dashboardBtn');
+            const reauthBtn = document.getElementById('reauthBtn');
             const oauthBtn = document.getElementById('oauthLinkBtn');
             const badge = document.getElementById('step1Badge');
-            const scopeLabel = activeScope === 'demo' ? ' [Demo Storage: projects/demo • 7d TTL]' : ' [Root Storage]';
+            const scopeLabel = activeScope === 'demo' ? ' [Demo Storage • 7d TTL]' : ' [Root Storage]';
 
             if (activeScope === 'demo') {
                 const demoSec = document.getElementById('demoQuickLaunchSection');
@@ -301,14 +422,17 @@
             if (authenticated) {
                 if (countdownInterval) clearInterval(countdownInterval);
                 dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-                text.innerText = 'Agent Authenticated & Active' + scopeLabel;
+                const acctInfo = account ? ` (${account})` : '';
+                text.innerHTML = `<strong>CLI Connected:</strong> <span class="text-teal-300">${acctInfo || 'Active'}</span> <span class="text-slate-400">${scopeLabel}</span>`;
                 dashBtn.classList.remove('hidden');
+                if (reauthBtn) reauthBtn.classList.remove('hidden');
                 badge.innerText = 'Connected';
                 badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/40';
             } else {
                 dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0';
                 text.innerText = 'Authentication Required' + scopeLabel;
                 dashBtn.classList.add('hidden');
+                if (reauthBtn) reauthBtn.classList.add('hidden');
                 if (remaining !== undefined && remaining > 0) {
                     startCountdown(remaining);
                 } else {
@@ -323,20 +447,31 @@
 
         async function checkInitialStatus(force = false) {
             const refreshBtn = document.getElementById('refreshLinkBtn');
-            if (force && refreshBtn) {
-                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px]"></i> Refreshing...';
+            const reauthBtn = document.getElementById('reauthBtn');
+            if (force) {
+                if (refreshBtn) refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px]"></i> Refreshing...';
+                if (reauthBtn) reauthBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px]"></i> Refreshing...';
             }
             try {
-                const sep = authCheckUrl.includes('?') ? '&' : '?';
-                const targetUrl = force ? `${authCheckUrl}${sep}force=1` : authCheckUrl;
+                const targetUrl = getAuthCheckUrl(force);
                 const res = await fetch(targetUrl);
                 const data = await res.json();
-                updateStatus(Boolean(data.authenticated), data.url, data.remaining, data.scope, Boolean(data.has_existing));
+                updateStatus(
+                    Boolean(data.authenticated),
+                    data.url,
+                    data.remaining,
+                    data.scope,
+                    Boolean(data.has_existing),
+                    data.account,
+                    data.auth_method,
+                    data.expiry
+                );
             } catch (err) {
                 updateStatus(false);
             } finally {
-                if (force && refreshBtn) {
-                    refreshBtn.innerHTML = '<i class="fas fa-arrows-rotate text-[10px]"></i> Refresh Link';
+                if (force) {
+                    if (refreshBtn) refreshBtn.innerHTML = '<i class="fas fa-arrows-rotate text-[10px]"></i> Refresh Link';
+                    if (reauthBtn) reauthBtn.innerHTML = '<i class="fas fa-arrows-rotate text-[10px]"></i> Re-authorize CLI';
                 }
             }
         }
@@ -348,10 +483,19 @@
                 const origHtml = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin text-base"></i> Generating Fresh Link...';
                 try {
-                    const sep = authCheckUrl.includes('?') ? '&' : '?';
-                    const res = await fetch(`${authCheckUrl}${sep}force=1`);
+                    const targetUrl = getAuthCheckUrl(true);
+                    const res = await fetch(targetUrl);
                     const data = await res.json();
-                    updateStatus(Boolean(data.authenticated), data.url, data.remaining, data.scope, Boolean(data.has_existing));
+                    updateStatus(
+                        Boolean(data.authenticated),
+                        data.url,
+                        data.remaining,
+                        data.scope,
+                        Boolean(data.has_existing),
+                        data.account,
+                        data.auth_method,
+                        data.expiry
+                    );
                     if (data.url && data.url !== '#') {
                         window.open(data.url, '_blank');
                     }
@@ -475,7 +619,8 @@
             }
         }
 
-        checkInitialStatus();
+        const isReauth = urlParams.get('reauth') === '1' || urlParams.get('force') === '1' || urlParams.get('reset') === '1';
+        checkInitialStatus(isReauth);
     </script>
 </body>
 </html>
