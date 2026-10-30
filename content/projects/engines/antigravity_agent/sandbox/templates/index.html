@@ -328,10 +328,11 @@
             <div id="user-pill" class="flex flex-col gap-2 bg-slate-900/80 border border-slate-700/80 rounded-lg px-2.5 py-2 text-sm">
                 <span id="user-role-badge" class="px-1.5 py-0.5 rounded text-xs font-bold bg-teal-900 text-teal-300 w-fit">SUPER_ADMIN</span>
                 <span id="user-display-name" class="font-medium text-slate-200">Guest</span>
-                <div class="flex gap-2 mt-1">
-                    <button type="button" onclick="handleDemoAuthenticate()" class="flex-1 text-xs text-white font-bold bg-teal-700 hover:bg-teal-600 px-2 py-1.5 rounded border border-teal-500/50 flex items-center justify-center gap-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"><span class="text-amber-300">⚡</span> Demo Auth</button>
-                    <button type="button" onclick="toggleLoginModal()" id="login-btn" class="flex-1 text-xs text-teal-400 hover:text-teal-200 font-bold bg-slate-800 px-2 py-1.5 rounded border border-teal-800/50 focus:ring-2 focus:ring-teal-500 focus:outline-none">Login</button>
-                    <button type="button" onclick="logout()" id="logout-btn" class="hidden flex-1 text-xs text-rose-400 hover:text-rose-200 font-bold bg-slate-800 px-2 py-1.5 rounded border border-rose-800/50 focus:ring-2 focus:ring-rose-500 focus:outline-none">Logout</button>
+                <div class="flex gap-1.5 mt-1">
+                    <button type="button" onclick="handleDemoAuthenticate()" class="flex-1 text-[11px] text-white font-bold bg-teal-700 hover:bg-teal-600 px-1.5 py-1.5 rounded border border-teal-500/50 flex items-center justify-center gap-1 focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"><span class="text-amber-300">⚡</span> Demo</button>
+                    <button type="button" id="restore-root-btn" onclick="restoreSuperAdmin()" class="flex-1 text-[11px] text-amber-300 hover:text-amber-100 font-bold bg-amber-950/80 px-1.5 py-1.5 rounded border border-amber-600/60 flex items-center justify-center gap-1 focus:ring-2 focus:ring-amber-500 focus:outline-none cursor-pointer" title="Resume Root Super Admin"><i class="fas fa-crown text-[9px]"></i> Root</button>
+                    <button type="button" onclick="toggleLoginModal()" id="login-btn" class="flex-1 text-[11px] text-teal-400 hover:text-teal-200 font-bold bg-slate-800 px-1.5 py-1.5 rounded border border-teal-800/50 focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">Login</button>
+                    <button type="button" onclick="logout()" id="logout-btn" class="hidden flex-1 text-[11px] text-rose-400 hover:text-rose-200 font-bold bg-slate-800 px-1.5 py-1.5 rounded border border-rose-800/50 focus:ring-2 focus:ring-rose-500 focus:outline-none cursor-pointer">Logout</button>
                 </div>
             </div>
 
@@ -842,9 +843,10 @@
             try {
                 const sysRes = await fetch('/api/auth/system-status');
                 const sysData = await sysRes.json();
+                window._isSuperAdminHost = Boolean(sysData && sysData.super_admin);
                 
                 let token = localStorage.getItem('agy_auth_token') || '';
-                if (!token && sysData.super_admin && !sessionStorage.getItem('agy_manual_logout')) {
+                if ((!token || token.startsWith('sec-demo-')) && sysData.super_admin && !window.location.search.includes('demo=1') && !sessionStorage.getItem('agy_manual_logout')) {
                     try {
                         const autoRes = await fetch('/api/auth/login', {
                             method: 'POST',
@@ -3169,6 +3171,15 @@
             }
             var loginBtn = document.getElementById('login-btn');
             var logoutBtn = document.getElementById('logout-btn');
+            var restoreBtn = document.getElementById('restore-root-btn');
+            if (restoreBtn) {
+                var isDemoOrGuest = (currentUser && (currentUser.token_scope === 'demo' || currentUser.role === 'guest' || currentUser.role === 'demo' || currentUser.role !== 'super_admin'));
+                if (window._isSuperAdminHost || isDemoOrGuest) {
+                    restoreBtn.classList.remove('hidden');
+                } else {
+                    restoreBtn.classList.add('hidden');
+                }
+            }
             if (loginBtn && logoutBtn) {
                 loginBtn.classList.remove('hidden');
                 if (authToken) {
@@ -3181,6 +3192,42 @@
             }
         }
         updateUserUI();
+
+        async function restoreSuperAdmin() {
+            try {
+                sessionStorage.removeItem('agy_manual_logout');
+                let res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_key: 'SUPER_ADMIN_AUTO' })
+                });
+                const data = await res.json();
+                if (data.token) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('agy_auth_token', authToken);
+                    localStorage.setItem('agy_user', JSON.stringify(currentUser));
+                    updateUserUI();
+                    var modal = document.getElementById('login-modal');
+                    if (modal && modal.open) modal.close();
+                    var overlay = document.getElementById('login-overlay');
+                    if (overlay) overlay.remove();
+                    await initProjects();
+                    await initConversations(10);
+                    await loadChatHistory();
+                    if (typeof renderToast === 'function') {
+                        renderToast('Root Admin privileges successfully restored!', 'success');
+                    } else {
+                        alert('Root Admin privileges successfully restored!');
+                    }
+                    if (window.location.search.includes('demo=') || window.location.search.includes('mode=')) {
+                        window.location.href = window.location.pathname;
+                    }
+                }
+            } catch (e) {
+                alert('Failed to restore super admin: ' + e);
+            }
+        }
 
         function toggleLoginModal() {
             var modal = document.getElementById('login-modal');
@@ -3668,6 +3715,18 @@
                         <div><strong class="text-teal-300">🚪 Instant Revocation:</strong> You can wipe your session at any time simply by clicking "Sign Out" or clearing your browser cookies.</div>
                     </div>
                 </details>
+            </div>
+
+            <!-- Super Admin Quick-Restore Card -->
+            <div id="super-admin-restore-card" class="p-3 bg-gradient-to-r from-red-950/80 to-slate-900 border border-red-500/40 rounded-xl shadow-md">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fas fa-crown text-amber-400"></i> Root Super Admin</span>
+                    <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-red-900 text-red-300 border border-red-600/40">Owner Authority</span>
+                </div>
+                <p class="text-[11px] text-slate-300 mb-2">Instantly exit demo mode and restore full root administrator privileges.</p>
+                <button type="button" onclick="restoreSuperAdmin()" class="w-full py-2 px-3 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white rounded-lg font-bold text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <i class="fas fa-unlock text-[10px]"></i> Restore Root Admin Privileges
+                </button>
             </div>
 
             <p class="text-xs text-slate-400">Quick-switch test accounts for role-based testing:</p>
