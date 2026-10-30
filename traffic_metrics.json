@@ -1,41 +1,15 @@
 {
-    "total_views": 367,
+    "total_views": 88,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719"
     ],
     "paths": {
-        "/ai_agent/api/stream": 60,
-        "/ai_agent/": 38,
-        "/favicon.ico": 4,
-        "/": 4,
-        "/ai_agent/login": 13,
-        "/projects": 1,
-        "/docs/api/admin/schedule": 12,
-        "/docs/api/admin/save": 18,
-        "/docs/api/admin/create": 12,
-        "/docs/api/admin/delete": 12,
-        "/docs": 12,
-        "/docs/api/chapter/../../../../etc/passwd/test": 6,
-        "/docs/api/chapter/devlog/../../server": 6,
-        "/docs/../../etc/passwd": 6,
-        "/docs/devlog/../../server": 6,
-        "/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 6,
-        "/ai_agent/api/artifacts": 30,
-        "/ai_agent/api/artifacts/save": 18,
-        "/ai_agent/api/auth_demo": 13,
-        "/ai_agent/api/auth/logout": 6,
-        "/ai_agent/api/auth/me": 12,
-        "/ai_agent/api/auth/system-status": 6,
-        "/ai_agent/api/conversations": 6,
-        "/ai_agent/api/conversations/test-conv-001/rename": 6,
-        "/ai_agent/api/conversations/test-conv-001": 6,
-        "/ai_agent/api/projects/active/conversations": 6,
-        "/ai_agent/api/kill": 6,
-        "/ai_agent/api/projects": 6,
-        "/ai_agent/api/projects/active": 12,
-        "/ai_agent/api/set_api_key": 6,
-        "/ai_agent/api/chat": 6,
-        "/ai_agent/api/ui-config": 6
+        "/ai_agent/api/stream": 73,
+        "/ai_agent/": 2,
+        "/favicon.ico": 5,
+        "/": 5,
+        "/ai_agent/login": 1,
+        "/projects": 2
     }
 }
