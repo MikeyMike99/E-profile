@@ -117,7 +117,7 @@
     "category": "eprofile",
     "title": "E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 6313,
+    "word_count": 6881,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -358,8 +358,38 @@
       {
         "id": "EPRF-PORT-LOG-SEC-19",
         "num": "21",
-        "title": "Chapter 11: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 11: Lazy On-Demand Documentation Caching, TTL Eviction & Bootstrap Auto-Sync",
         "anchor": "#EPRF-PORT-LOG-SEC-19"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-22",
+        "num": "22",
+        "title": "The Cloud Storage Quota Wall & Dual-Mode Metadata Synchronization",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-22"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-23",
+        "num": "23",
+        "title": "On-Demand Fetching, Proxy Traversal & Content Sanitization",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-23"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-24",
+        "num": "24",
+        "title": "Untouched File Eviction (TTL) & LRU Storage Reclamation",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-24"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-25",
+        "num": "25",
+        "title": "Automated Git Pull Synchronization & Worker Startup Self-Healing",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-25"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-24",
+        "num": "26",
+        "title": "Chapter 12: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-24"
       }
     ],
     "topics": [
@@ -787,120 +817,6 @@
     "release_date": null
   },
   {
-    "slug": "CRYPTOGRAPHIC_ARCHITECTURE",
-    "category": "encrypt_me",
-    "title": "The encrypt_me (v3.0) Cryptographic Architecture",
-    "summary": "* **Developer:** Michael Robberts",
-    "word_count": 604,
-    "project": "encrypt_me",
-    "project_label": "EncryptMe Multi-User Vault",
-    "project_code": "ENCR",
-    "collection_code": "VAULT",
-    "doc_id": "ENCR-VAULT-CRYPTOGRAPHIC_ARCH",
-    "version": "v1.1",
-    "canonical_id": "ENCR-VAULT-CRYPTOGRAPHIC_ARCH",
-    "versioned_id": "ENCR-VAULT-CRYPTOGRAPHIC_ARCH@v1.1",
-    "sections": [
-      {
-        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-1",
-        "num": "1",
-        "title": "Overview & Classification",
-        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-1"
-      },
-      {
-        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-2",
-        "num": "2",
-        "title": "Core Cryptographic Specifications",
-        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-2"
-      },
-      {
-        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-3",
-        "num": "3",
-        "title": "The Identity-Gated Administrative Recovery (IGAR)",
-        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-3"
-      },
-      {
-        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-4",
-        "num": "4",
-        "title": "Integration into the Antigravity Engine",
-        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-4"
-      },
-      {
-        "id": "ENCR-VAULT-CRYPTOGRAPHIC_-SEC-5",
-        "num": "5",
-        "title": "Cross-References & System Parallels",
-        "anchor": "#ENCR-VAULT-CRYPTOGRAPHIC_-SEC-5"
-      }
-    ],
-    "topics": [
-      "security",
-      "cryptography",
-      "workflow",
-      "changelog"
-    ],
-    "order_score": 13000,
-    "is_latest": true,
-    "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
-    "base_sensitivity": 1,
-    "max_sensitivity": 3,
-    "rel_path": "encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE.md",
-    "github_path": "projects/encrypt_me/CRYPTOGRAPHIC_ARCHITECTURE.md",
-    "cross_references": [
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "devlog",
-        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
-        "title": "The Origin Architecture: Echoes of the World",
-        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
-      },
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "manifesto",
-        "slug": "01_Echoes_in_the_Void",
-        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
-        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
-      },
-      {
-        "project": "eprofile",
-        "project_label": "E-Profile Portal",
-        "category": "eprofile",
-        "slug": "DEVLOG",
-        "title": "E-Profile Architecture & Forensic Devlog",
-        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "SECURITY",
-        "title": "Siraugga Framework Security Specification",
-        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
-        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
-        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "manifesto",
-        "slug": "03_The_Forge_of_Sovereignty",
-        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
-        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
-      }
-    ],
-    "publish_status": "draft",
-    "release_date": null
-  },
-  {
     "slug": "DEVLOG",
     "category": "encrypt_me",
     "title": "encrypt_me Engineering Development Log",
@@ -945,207 +861,6 @@
     "max_sensitivity": 3,
     "rel_path": "encrypt_me/DEVLOG.md",
     "github_path": "projects/encrypt_me/DEVLOG.md",
-    "cross_references": [
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "devlog",
-        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
-        "title": "The Origin Architecture: Echoes of the World",
-        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
-      },
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "manifesto",
-        "slug": "01_Echoes_in_the_Void",
-        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
-        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
-      },
-      {
-        "project": "eprofile",
-        "project_label": "E-Profile Portal",
-        "category": "eprofile",
-        "slug": "DEVLOG",
-        "title": "E-Profile Architecture & Forensic Devlog",
-        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "SECURITY",
-        "title": "Siraugga Framework Security Specification",
-        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
-        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
-        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "manifesto",
-        "slug": "03_The_Forge_of_Sovereignty",
-        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
-        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
-      }
-    ],
-    "publish_status": "draft",
-    "release_date": null
-  },
-  {
-    "slug": "DEVLOG",
-    "category": "encrypt_me",
-    "title": "encrypt_me Engineering Development Log",
-    "summary": "* **Date:** Sunday, 01 February 2026 (18:00 \u2013 20:29)",
-    "word_count": 221,
-    "project": "encrypt_me",
-    "project_label": "EncryptMe Multi-User Vault",
-    "project_code": "ENCR",
-    "collection_code": "VAULT",
-    "doc_id": "ENCR-VAULT-DEVLOG",
-    "version": "v1.2",
-    "canonical_id": "ENCR-VAULT-DEVLOG",
-    "versioned_id": "ENCR-VAULT-DEVLOG@v1.2",
-    "sections": [
-      {
-        "id": "ENCR-VAULT-LOG-SEC-1",
-        "num": "1",
-        "title": "Sprint 1: Security Hardening & Social Engineering Defense",
-        "anchor": "#ENCR-VAULT-LOG-SEC-1"
-      },
-      {
-        "id": "ENCR-VAULT-LOG-SEC-2",
-        "num": "2",
-        "title": "Sprint 2: Market Analysis & Cryptographic Landscape",
-        "anchor": "#ENCR-VAULT-LOG-SEC-2"
-      }
-    ],
-    "topics": [
-      "security",
-      "cryptography",
-      "infrastructure",
-      "workflow",
-      "origin_story",
-      "changelog"
-    ],
-    "order_score": 13000,
-    "is_latest": true,
-    "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
-    "base_sensitivity": 1,
-    "max_sensitivity": 3,
-    "rel_path": "encrypt_me/DEVLOG.md",
-    "github_path": "projects/encrypt_me/DEVLOG.md",
-    "cross_references": [
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "devlog",
-        "slug": "04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD",
-        "title": "The Origin Architecture: Echoes of the World",
-        "relation": "Genesis Blueprint: Mathematical Coordinates & Screen Reader Sovereignty"
-      },
-      {
-        "project": "echoes",
-        "project_label": "Echoes of the World (Audio Game)",
-        "category": "manifesto",
-        "slug": "01_Echoes_in_the_Void",
-        "title": "The Manifesto: Chapter 1 \u2014 Echoes in the Void",
-        "relation": "Personal Genesis: Sight Loss, Optima College, NVDA DLL & 3D Math"
-      },
-      {
-        "project": "eprofile",
-        "project_label": "E-Profile Portal",
-        "category": "eprofile",
-        "slug": "DEVLOG",
-        "title": "E-Profile Architecture & Forensic Devlog",
-        "relation": "Zero-Downtime Hot-Patching, AST Surgery & Lockout Paradox"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "SECURITY",
-        "title": "Siraugga Framework Security Specification",
-        "relation": "Zero-Trust RBAC Tiers & Sensitive Vault Mantrap Isolation"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "guides",
-        "slug": "RAUGUS_RESOLVER_MCP_ARCHITECTURE",
-        "title": "Raugus Resolver Opaque Key-Only VFS Broker",
-        "relation": "Granular AST Symbol Extraction & Pathless Tool Security"
-      },
-      {
-        "project": "siraugga",
-        "project_label": "Siraugga / DevCore Core",
-        "category": "manifesto",
-        "slug": "03_The_Forge_of_Sovereignty",
-        "title": "The Manifesto: Chapter 3 \u2014 The Forge of Sovereignty",
-        "relation": "Origins of e_profile AST Surgery, encrypt_me & Scanners"
-      }
-    ],
-    "publish_status": "draft",
-    "release_date": null
-  },
-  {
-    "slug": "README",
-    "category": "encrypt_me",
-    "title": "encrypt_me (v3.0) User & System Guide",
-    "summary": "* **Developer:** Michael Robberts",
-    "word_count": 248,
-    "project": "encrypt_me",
-    "project_label": "EncryptMe Multi-User Vault",
-    "project_code": "ENCR",
-    "collection_code": "VAULT",
-    "doc_id": "ENCR-VAULT-README",
-    "version": "v1.1",
-    "canonical_id": "ENCR-VAULT-README",
-    "versioned_id": "ENCR-VAULT-README@v1.1",
-    "sections": [
-      {
-        "id": "ENCR-VAULT-README-SEC-1",
-        "num": "1",
-        "title": "Project Overview",
-        "anchor": "#ENCR-VAULT-README-SEC-1"
-      },
-      {
-        "id": "ENCR-VAULT-README-SEC-2",
-        "num": "2",
-        "title": "Security Specifications",
-        "anchor": "#ENCR-VAULT-README-SEC-2"
-      },
-      {
-        "id": "ENCR-VAULT-README-SEC-3",
-        "num": "3",
-        "title": "User Guide & Team Operations",
-        "anchor": "#ENCR-VAULT-README-SEC-3"
-      }
-    ],
-    "topics": [
-      "security",
-      "cryptography",
-      "infrastructure",
-      "workflow",
-      "changelog"
-    ],
-    "order_score": 13000,
-    "is_latest": true,
-    "is_origin": false,
-    "is_proprietary": false,
-    "clearance": "public",
-    "base_sensitivity": 1,
-    "max_sensitivity": 3,
-    "rel_path": "encrypt_me/README.md",
-    "github_path": "projects/encrypt_me/README.md",
     "cross_references": [
       {
         "project": "echoes",
@@ -1535,7 +1250,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 32974,
+    "word_count": 33498,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2876,6 +2591,42 @@
         "num": "209",
         "title": "Gemini ModelProvider Flag Normalization & Zero-Duplicate Central Truth",
         "anchor": "#SIRA-DEV-DEVLOG-SEC-209"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-210",
+        "num": "210",
+        "title": "Chapter 90: Option 2 Lazy On-Demand Docs Caching, TTL Eviction & Bootstrap Auto-Sync Architecture",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-210"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-211",
+        "num": "211",
+        "title": "Category: Resource Optimization | Remote Fetching | Auto-Healing Deployment",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-211"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-212",
+        "num": "212",
+        "title": "Reconciling Comprehensive Documentation with Cloud Quota Envelopes",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-212"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-213",
+        "num": "213",
+        "title": "On-Demand Fetching, PythonAnywhere Proxy Traversal & Content Sanitization",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-213"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-214",
+        "num": "214",
+        "title": "Touch-Based TTL Inactivity Eviction & LRU Storage Reclamation",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-214"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-215",
+        "num": "215",
+        "title": "Automated Git Pull Synchronization & Worker Startup Self-Healing",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-215"
       }
     ],
     "topics": [
@@ -4717,7 +4468,7 @@
     "category": "devlog",
     "title": "E-Profile Architecture & Cybersecurity Devlog",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 6313,
+    "word_count": 6881,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -4958,8 +4709,38 @@
       {
         "id": "EPRF-PORT-LOG-SEC-19",
         "num": "21",
-        "title": "Chapter 11: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 11: Lazy On-Demand Documentation Caching, TTL Eviction & Bootstrap Auto-Sync",
         "anchor": "#EPRF-PORT-LOG-SEC-19"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-22",
+        "num": "22",
+        "title": "The Cloud Storage Quota Wall & Dual-Mode Metadata Synchronization",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-22"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-23",
+        "num": "23",
+        "title": "On-Demand Fetching, Proxy Traversal & Content Sanitization",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-23"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-24",
+        "num": "24",
+        "title": "Untouched File Eviction (TTL) & LRU Storage Reclamation",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-24"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-25",
+        "num": "25",
+        "title": "Automated Git Pull Synchronization & Worker Startup Self-Healing",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-25"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-24",
+        "num": "26",
+        "title": "Chapter 12: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-24"
       }
     ],
     "topics": [

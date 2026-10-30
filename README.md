@@ -34,13 +34,14 @@ This platform employs a rigid, multi-tiered security model built on a custom ses
 The System Admin profile has access to the `/admin` routing panel (`manage_profiles.html`), providing the following core functionalities:
 - **Identity Provisioning**: Generate new magic links, assign access PINs, and designate `Employer` or `Admin` privileges to new users.
 - **Profile Management**: Reset passwords, edit access permissions, or permanently terminate profiles. 
-- **Git Synchronization**: The backend utilizes a built-in file synchronization tool to check local disk mismatches, quarantine modified agent files, and execute `git commit` / `git pull` updates directly from the UI without touching the CLI.
+- **Git Synchronization**: The backend utilizes a built-in file synchronization tool to check local disk mismatches, quarantine modified agent files, and execute `git commit` / `git pull` updates directly from the UI without touching the CLI. Additionally, `bootstrap.py` executes automated, thread-safe self-healing Git pulls (`auto_sync_git`) upon worker startup, purges stale `.lock` files, cleans corrupt pack objects, preserves dynamic traffic analytics (`traffic_metrics.json`), and features an emergency re-sync retry loop on import exceptions.
+- **Documentation Cache Control**: Dedicated Zero-Trust REST endpoints (`/docs/api/cache/status` and `/docs/api/cache/cleanup`) provide real-time diagnostic reporting on cached markdown documents and allow instantaneous manual or threshold-based cache eviction.
 - **System Health Monitor**: Track data stream logs and active user login attempts in real-time. 
 
 ## 🛠️ Technology Stack
 - **Backend**: Python 3.10+, Flask, Werkzeug, Pathlib 
 - **Frontend**: Native HTML5, Custom CSS3 Variables, Vanilla JS, Jinja2 Templating
-- **Content Engine**: Python `markdown` library (Dynamic file-parsing instead of a traditional SQL database)
+- **Content Engine**: Python `markdown` library with **Option 2 Lazy On-Demand Caching** (`.cache/`), automated untouched file eviction (7-day TTL), LRU capacity reclamation (50 files / 25MB threshold), and remote GitHub Raw fallback via PythonAnywhere proxy traversal.
 
 ## 🧠 AI Integration (Siraugga)
 This application hosts a fully embedded, Zero-Trust AI assistant designed to serve as both an interactive demo for visitors and a root-level developer tool for the system administrator. 
