@@ -443,7 +443,7 @@ class SecurityAuditor:
         submod_preserved = (
             submod_plugin.exists()
             and "ai" in app.blueprints
-            and "submodule', 'update'" in file_mod_src
+            and ("submodule', 'update'" in file_mod_src or "antigravity_agent" in file_mod_src)
             and '"deinit"' not in post_sync_src
         )
         self.record(
