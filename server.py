@@ -858,6 +858,26 @@ def admin_impersonate(token_hash):
     flash(f"Impersonating {target.get('username')}.", "info")
     return redirect(url_for('dynamic_route', path='home'))
 
+@app.route('/api/sounds/<sound_name>', methods=['GET'])
+def serve_sound(sound_name):
+    sounds_dirs = [
+        config.ROOT_DIR / "content" / "projects" / "engines" / "antigravity_agent" / "sandbox" / "static" / "sounds",
+        config.ROOT_DIR.parent / "DevCore" / "sandbox" / "static" / "sounds",
+        config.STATIC_DIR / "sounds",
+    ]
+    for s_dir in sounds_dirs:
+        for ext in ('.wav', '.mp3', '.ogg'):
+            sf = s_dir / f"{sound_name}{ext}"
+            if sf.is_file():
+                mt = "audio/x-wav" if ext == ".wav" else ("audio/ogg" if ext == ".ogg" else "audio/mpeg")
+                return send_file(str(sf), mimetype=mt)
+    if sound_name == "notification":
+        for s_dir in sounds_dirs:
+            sf = s_dir / "incoming.wav"
+            if sf.is_file():
+                return send_file(str(sf), mimetype="audio/x-wav")
+    return jsonify({"error": f"Sound {sound_name} not found"}), 404
+
 @app.route('/api/toggle_exclusion', methods=['POST'])
 def toggle_exclusion():
     if not session.get('impersonator_token'):
