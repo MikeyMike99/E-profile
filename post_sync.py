@@ -38,25 +38,46 @@ def main():
             for p in venv_dir.iterdir():
                 _ensure_lf(p)
 
-        shutil.rmtree(home / ".cache" / "pip", ignore_errors=True)
-        pack_dir = root / ".git" / "objects" / "pack"
-        if pack_dir.is_dir():
-            for tmp_pack in pack_dir.glob("tmp_*"):
-                tmp_pack.unlink(missing_ok=True)
-        (root / ".git" / "gc.log").unlink(missing_ok=True)
+        shutil.rmtree(home / ".cache", ignore_errors=True)
+        shutil.rmtree(home / ".npm", ignore_errors=True)
+        shutil.rmtree(home / ".local" / "share" / "Trash", ignore_errors=True)
 
-        for lock_file in (root / ".git").rglob("*.lock"):
-            try:
-                lock_file.unlink(missing_ok=True)
-            except Exception:
-                pass
-        submod_worktree = root / "content" / "projects" / "engines" / "antigravity_agent"
-        if (submod_worktree / ".git").is_dir():
-            for lock_file in (submod_worktree / ".git").rglob("*.lock"):
-                try:
-                    lock_file.unlink(missing_ok=True)
-                except Exception:
-                    pass
+        try:
+            subprocess.run(
+                [
+                    py_bin, "-m", "pip", "uninstall", "-y",
+                    "spacy", "presidio-analyzer", "presidio-anonymizer",
+                    "thinc", "blis", "spacy-legacy", "spacy-loggers"
+                ],
+                cwd=str(root),
+                capture_output=True,
+                timeout=15
+            )
+        except Exception:
+            pass
+
+        for git_root in [root / ".git", home / ".git"]:
+            if git_root.is_dir():
+                pack_dir = git_root / "objects" / "pack"
+                if pack_dir.is_dir():
+                    for tmp_pack in pack_dir.glob("tmp_*"):
+                        tmp_pack.unlink(missing_ok=True)
+                (git_root / "gc.log").unlink(missing_ok=True)
+
+                obj_dir = git_root / "objects"
+                if obj_dir.is_dir():
+                    for obj in obj_dir.glob("*/*"):
+                        try:
+                            if obj.is_file() and obj.stat().st_size == 0:
+                                obj.unlink(missing_ok=True)
+                        except Exception:
+                            pass
+
+                for lock_file in git_root.rglob("*.lock"):
+                    try:
+                        lock_file.unlink(missing_ok=True)
+                    except Exception:
+                        pass
         token = ""
         token_file = root / "gethub_token.txt"
         if token_file.exists():
