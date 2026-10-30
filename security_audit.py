@@ -586,6 +586,71 @@ class SecurityAuditor:
             "Verified CLI model fallback retry, agent_done output payload, and non-destructive since_seq cursor polling",
         )
 
+        import io
+        import unittest
+        import test_ai_agent
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_ai_agent.TestEProfileAIAgent)
+        stream = io.StringIO()
+        runner = unittest.TextTestRunner(stream=stream)
+        res = runner.run(suite)
+        test_suite_ok = (res.wasSuccessful() and res.testsRun >= 20)
+        self.record(
+            "Stage 7",
+            "AGENT-09",
+            "Automated unit test suite test_ai_agent.py passes with zero errors or regressions",
+            test_suite_ok,
+            f"Executed {res.testsRun} tests, failures={len(res.failures)}, errors={len(res.errors)}",
+        )
+
+        r_auth_demo = self.client.post("/ai_agent/api/auth_demo")
+        demo_data = r_auth_demo.get_json() or {}
+        demo_mint_ok = (
+            r_auth_demo.status_code == 200
+            and demo_data.get("success") is True
+            and demo_data.get("scope") == "demo"
+            and demo_data.get("user", {}).get("role") == "gamedev"
+            and bool(demo_data.get("token"))
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-10",
+            "Demo visitor authentication & token minting (/ai_agent/api/auth_demo) isolates role to gamedev",
+            demo_mint_ok,
+            f"HTTP {r_auth_demo.status_code}, role={demo_data.get("user", {}).get("role")}",
+        )
+
+        r_stream = self.client.get("/ai_agent/api/stream?since_seq=0")
+        stream_data = r_stream.get_json() or {}
+        stream_api_ok = (
+            r_stream.status_code == 200
+            and "messages" in stream_data
+            and "last_seq" in stream_data
+            and isinstance(stream_data["messages"], list)
+        )
+        self.record(
+            "Stage 7",
+            "AGENT-11",
+            "Sequence-cursor stream API (/ai_agent/api/stream?since_seq=N) returns valid packet payload and cursor",
+            stream_api_ok,
+            f"HTTP {r_stream.status_code}, last_seq={stream_data.get("last_seq")}",
+        )
+
+        with self.client.session_transaction() as sess:
+            sess.clear()
+            sess["admin"] = False
+            sess["is_admin"] = False
+            sess["agent_token_scope"] = "demo"
+        r_art_get = self.client.get("/ai_agent/api/artifacts?path=test.md")
+        r_art_save = self.client.post("/ai_agent/api/artifacts/save", json={"path": "test.md", "content": "x"})
+        art_rbac_ok = (r_art_get.status_code == 403 and r_art_save.status_code == 403)
+        self.record(
+            "Stage 7",
+            "AGENT-12",
+            "Artifact API endpoints (/api/artifacts, /api/artifacts/save) reject unprivileged visitors with HTTP 403",
+            art_rbac_ok,
+            f"GET={r_art_get.status_code}, POST={r_art_save.status_code}",
+        )
+
     # =========================================================================
     # CLEANUP HOOK (Clean Workspace Protocol)
     # =========================================================================
