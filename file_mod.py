@@ -401,13 +401,6 @@ def git_sync():
         except Exception:
             pass
 
-    for token_pat in ['*antigravity-oauth-token*', '*oauth-token*']:
-        for rogue_f in target.glob(f"**/{token_pat}"):
-            if rogue_f.is_file():
-                try:
-                    rogue_f.unlink()
-                except Exception:
-                    pass
 
     run_git_cmd(['rm', '-r', '--cached', '--ignore-unmatch', '*antigravity-oauth-token*'])
 

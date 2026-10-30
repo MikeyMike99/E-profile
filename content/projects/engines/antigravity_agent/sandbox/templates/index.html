@@ -870,6 +870,12 @@
                 });
                 const authData = await authRes.json();
                 
+                if (!currentUser && sysData && sysData.super_admin) {
+                    currentUser = { username: 'Michael (Admin)', role: 'super_admin', name: 'Michael (Admin)' };
+                    localStorage.setItem('agy_user', JSON.stringify(currentUser));
+                    if (typeof updateUserUI === 'function') updateUserUI();
+                }
+
                 if (authData.authenticated === false) {
                     if (authData.url && authData.url !== "#") {
                         // AI Engine Needs Google OAuth Deployment Token
@@ -879,7 +885,7 @@
                     } else {
                         showLoginOverlay(authData);
                     }
-                } else if (authData.authenticated === true && (currentUser.role === 'super_admin' || currentUser.role === 'admin' || currentUser.role === 'Tier5_SysAdmin')) {
+                } else if (authData.authenticated === true && currentUser && (currentUser.role === 'super_admin' || currentUser.role === 'admin' || currentUser.role === 'Tier5_SysAdmin')) {
                     injectAdminDashboardButton();
                 }
             } catch (e) {
