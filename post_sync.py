@@ -28,6 +28,7 @@ def _find_agy_bin(root: Path):
 def main():
     root = Path(__file__).resolve().parent
     py_bin = shutil.which("python3") or "python3"
+    submod_worktree = root / "content" / "projects" / "engines" / "antigravity_agent"
 
     if os.name != "nt":
         home = Path.home()
@@ -80,7 +81,7 @@ def main():
                         pass
         shutil.rmtree(root / ".git" / "modules", ignore_errors=True)
         (root / ".gitmodules").unlink(missing_ok=True)
-        (root / "content" / "projects" / "engines" / "antigravity_agent" / ".git").unlink(missing_ok=True)
+        (submod_worktree / ".git").unlink(missing_ok=True)
 
         agy_bin = _find_agy_bin(root)
         if agy_bin:
@@ -132,7 +133,7 @@ def main():
             capture_output=True,
             text=True
         )
-        print("[post_sync] Enforced LF on shell profiles, verified Siraugga submodule, synced CLI models, cleaned pip cache, and pruned unused NLP packages.")
+        print("[post_sync] Enforced LF on shell profiles, verified engine workspace, synced CLI models, cleaned pip cache, and pruned unused NLP packages.")
 
 
 if __name__ == "__main__":
