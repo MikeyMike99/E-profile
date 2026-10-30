@@ -332,6 +332,33 @@ def git_sync():
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
     subprocess.run(['git', 'config', 'submodule.content/projects/engines/antigravity_agent.ignore', 'dirty'], cwd=str(target))
 
+    gi_path = target / ".gitignore"
+    if gi_path.exists():
+        try:
+            gi_text = gi_path.read_text(encoding="utf-8", errors="replace")
+            if "*antigravity-oauth-token*" not in gi_text:
+                gi_path.write_text(gi_text.rstrip() + "\n*antigravity-oauth-token*\n*oauth-token*\ncontent/projects/**/antigravity-oauth-token\n", encoding="utf-8")
+        except Exception:
+            pass
+
+    for token_pat in ['*antigravity-oauth-token*', '*oauth-token*']:
+        for rogue_f in target.glob(f"**/{token_pat}"):
+            if rogue_f.is_file():
+                try:
+                    rogue_f.unlink()
+                except Exception:
+                    pass
+
+    run_git_cmd(['rm', '-r', '--cached', '--ignore-unmatch', '*antigravity-oauth-token*'])
+
+    try:
+        log_check = subprocess.run(['git', 'log', f'origin/{target_branch}..HEAD', '--name-only'], cwd=str(target), capture_output=True, text=True)
+        if 'antigravity-oauth-token' in (log_check.stdout or ''):
+            output_log += "[Security] Blocked unpushed secret detected in local commit history. Resetting to origin...\n"
+            run_git_cmd(['reset', f'origin/{target_branch}'])
+    except Exception:
+        pass
+
     run_git_cmd(['add', '.'])
     run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
 
