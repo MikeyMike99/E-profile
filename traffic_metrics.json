@@ -1,19 +1,20 @@
 {
-    "total_views": 2268,
+    "total_views": 2534,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d"
     ],
     "paths": {
-        "/ai_agent/api/stream": 2250,
-        "/ai_agent/": 1,
-        "/ai_agent/api/projects": 2,
-        "/ai_agent/api/conversations": 3,
-        "/ai_agent/api/user/subscription/status": 2,
-        "/ai_agent/api/auth/system-status": 1,
-        "/favicon.ico": 3,
-        "/ai_agent/api/auth_check": 1,
-        "/": 3,
-        "/ai_agent/api/chat": 1,
-        "/projects": 1
+        "/ai_agent/api/stream": 2499,
+        "/ai_agent/": 2,
+        "/ai_agent/api/projects": 5,
+        "/ai_agent/api/conversations": 6,
+        "/ai_agent/api/user/subscription/status": 4,
+        "/ai_agent/api/auth/system-status": 2,
+        "/favicon.ico": 5,
+        "/ai_agent/api/auth_check": 2,
+        "/": 5,
+        "/ai_agent/api/chat": 2,
+        "/projects": 1,
+        "/ai_agent/api/auth/login": 1
     }
 }
