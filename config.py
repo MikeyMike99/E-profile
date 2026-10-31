@@ -22,6 +22,11 @@ class Config:
     USER_KEY = os.environ.get("USER_KEY", "USER")
     EMPLOYER_KEY = os.environ.get("EMPLOYER_KEY", "SECURE_EMPLOYER_KEY_HERE")
 
+    # --- AI Brain Credentials (Claude) ---
+    # Single named surface for the host; env is the one source of truth.
+    ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+    ANTHROPIC_AUTH_TOKEN = os.environ.get("ANTHROPIC_AUTH_TOKEN")
+
     # --- Email Service Configuration ---
     MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "local")  # 'local', 'smtp'
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")

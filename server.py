@@ -63,14 +63,10 @@ app.register_blueprint(newsletter_bp)
 from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
 app.register_blueprint(diagnostics_bp)
 import sys
-_app_dir = Path(__file__).resolve().parent
-_ai_candidates = [
-    _app_dir / "content" / "projects" / "engines" / "antigravity_agent",
-    _app_dir.parent / "DevCore",
-]
-ai_path = str(next((p for p in _ai_candidates if (p / "ai_plugin.py").is_file()), _ai_candidates[0]))
-if ai_path not in sys.path:
-    sys.path.insert(0, ai_path)
+import devcore_locator
+# DevCore discovery is centralized in devcore_locator (single source of truth).
+_devcore_dir = devcore_locator.mount() or devcore_locator.resolve_devcore()
+ai_path = str(_devcore_dir)
 
 try:
     from ai_plugin import ai_bp
@@ -879,7 +875,7 @@ def admin_impersonate(token_hash):
 @app.route('/api/sounds/<sound_name>', methods=['GET'])
 def serve_sound(sound_name):
     sounds_dirs = [
-        config.ROOT_DIR / "content" / "projects" / "engines" / "antigravity_agent" / "sandbox" / "static" / "sounds",
+        Path(ai_path) / "sandbox" / "static" / "sounds",
         config.ROOT_DIR.parent / "DevCore" / "sandbox" / "static" / "sounds",
         config.STATIC_DIR / "sounds",
     ]
