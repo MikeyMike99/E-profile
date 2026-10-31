@@ -216,6 +216,25 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
             _git(["fetch", authenticated_url, "main", "--prune"], timeout=25)
             _git(["merge", "origin/main", "--no-edit", "-m", "Auto-merge main updates", "-X", "ours"], timeout=20)
 
+        import devcore_locator
+        # Discovery centralized in devcore_locator; clone target stays explicit below.
+        devcore_dir = devcore_locator.find_devcore(require_marker=False) or devcore_locator.default_clone_target()
+
+        if token:
+            devcore_auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git"
+            if not devcore_dir.is_dir():
+                target_clone = base_dir.parent / "DevCore"
+                _git(["clone", "--depth", "1", devcore_auth_url, str(target_clone)], timeout=45)
+            elif (devcore_dir / ".git").is_dir():
+                def _git_dc(args, timeout=30):
+                    cmd = [git_bin, "-c", "credential.helper="] + args
+                    try:
+                        res = subprocess.run(cmd, cwd=str(devcore_dir), capture_output=True, text=True, timeout=timeout)
+                        return res.returncode == 0
+                    except Exception:
+                        return False
+                _git_dc(["pull", devcore_auth_url, "main", "--no-edit", "-X", "ours"], timeout=30)
+
         post_sync_script = base_dir / "post_sync.py"
         if post_sync_script.exists():
             py_bin = shutil.which("python3") or sys.executable
