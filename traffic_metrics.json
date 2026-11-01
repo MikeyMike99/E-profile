@@ -1,5 +1,5 @@
 {
-    "total_views": 11870,
+    "total_views": 11874,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -19,9 +19,9 @@
         "/ai_agent/api/conversations": 50,
         "/ai_agent/api/user/subscription/status": 23,
         "/ai_agent/api/auth/system-status": 28,
-        "/favicon.ico": 70,
+        "/favicon.ico": 71,
         "/ai_agent/api/auth_check": 19,
-        "/": 88,
+        "/": 90,
         "/ai_agent/api/chat": 15,
         "/projects": 11,
         "/ai_agent/api/auth/login": 2,
@@ -52,7 +52,7 @@
         "/ai_agent/api/ui-config": 9,
         "/ai_agent/api/user/subscription/set": 2,
         "/ai_agent/api/auth_submit": 2,
-        "/usage": 3,
+        "/usage": 4,
         "/robots.txt": 4,
         "/login": 8,
         "/newsletter": 1,
