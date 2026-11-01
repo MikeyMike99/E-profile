@@ -1,5 +1,5 @@
 {
-  "updated_at": 1793486427.090025,
+  "updated_at": 1793548178.8182209,
   "models": [
     "\\n  Gemini 3.8 Flash (High)\\n  Gemini 3.8 Flash (Medium)\\n  Gemini 3.8 Flash (Low)\\n  Claude Opus 5.5 (Low)\\n  Claude Opus 5.5 (Medium)\\n  Claude Opus 5.5 (High)\\n  Claude Sonnet 5.5 (Low)\\n  Claude Sonnet 5.5 (Medium)\\n  Claude Sonnet 5.5 (High)\\n  GPT-OSS 120B (Medium)\",\"duration_seconds\":0,\"num_turns\":0,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}}",
     "error: invalid model selection (--model \"__probe_available_models__\" --effort \"\"): model __probe_available_models__ is not recognized as a known model or custom model in settings",
