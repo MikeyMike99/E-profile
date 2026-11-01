@@ -1,5 +1,5 @@
 {
-    "total_views": 11908,
+    "total_views": 12018,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -13,16 +13,16 @@
         "e67133c26404e028a7c6271d7529bba1"
     ],
     "paths": {
-        "/ai_agent/api/stream": 11131,
-        "/ai_agent/": 62,
-        "/ai_agent/api/projects": 35,
-        "/ai_agent/api/conversations": 53,
-        "/ai_agent/api/user/subscription/status": 24,
-        "/ai_agent/api/auth/system-status": 30,
-        "/favicon.ico": 79,
-        "/ai_agent/api/auth_check": 20,
-        "/": 102,
-        "/ai_agent/api/chat": 15,
+        "/ai_agent/api/stream": 11224,
+        "/ai_agent/": 63,
+        "/ai_agent/api/projects": 37,
+        "/ai_agent/api/conversations": 55,
+        "/ai_agent/api/user/subscription/status": 25,
+        "/ai_agent/api/auth/system-status": 32,
+        "/favicon.ico": 82,
+        "/ai_agent/api/auth_check": 21,
+        "/": 105,
+        "/ai_agent/api/chat": 16,
         "/projects": 14,
         "/ai_agent/api/auth/login": 2,
         "/docs/api/cache/status": 1,
@@ -61,6 +61,7 @@
         "/logout": 2,
         "/access/cdbd8f06-32a7-43e4-a584-51b700a98025": 1,
         "/bio": 1,
-        "/edit_profile": 1
+        "/edit_profile": 1,
+        "/ai_agent/api/auth/restore-root": 1
     }
 }
