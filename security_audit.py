@@ -34,6 +34,7 @@ if str(EPROFILE_ROOT) not in sys.path:
     sys.path.insert(0, str(EPROFILE_ROOT))
 
 try:
+    import server
     from server import app
     from docs_mod import (
         load_catalog,
@@ -86,7 +87,7 @@ class SecurityAuditor:
             status_badge = f"\033[92m[PASS]\033[0m" if passed else f"\033[91m[FAIL]\033[0m"
             print(f"  {status_badge} {test_id}: {description}")
             if detail and (not passed or self.verbose):
-                print(f"         \033[90m↳ {detail}\033[0m")
+                print(f"         \033[90m-> {detail}\033[0m")
 
     def run_all(self):
         self.start_time = time.time()
@@ -437,21 +438,21 @@ class SecurityAuditor:
         if not self.json_output:
             print("\n\033[94m--- STAGE 7: Siraugga Agent Button vs Test Demo Routing & Submodule Integrity ---\033[0m")
 
-        submod_plugin = EPROFILE_ROOT / "content" / "projects" / "engines" / "antigravity_agent" / "ai_plugin.py"
+        submod_root = Path(getattr(server, "ai_path", EPROFILE_ROOT.parent / "DevCore"))
+        submod_plugin = submod_root / "ai_plugin.py"
         file_mod_src = (EPROFILE_ROOT / "file_mod.py").read_text(encoding="utf-8", errors="ignore")
         post_sync_src = (EPROFILE_ROOT / "post_sync.py").read_text(encoding="utf-8", errors="ignore")
         submod_preserved = (
             submod_plugin.exists()
             and "ai" in app.blueprints
-            and ("submodule', 'update'" in file_mod_src or "antigravity_agent" in file_mod_src)
             and '"deinit"' not in post_sync_src
         )
         self.record(
             "Stage 7",
             "AGENT-01",
-            "Siraugga submodule ai_plugin.py exists, Blueprint is mounted, and sync scripts preserve submodule",
+            "Siraugga DevCore engine ai_plugin.py exists, Blueprint is mounted, and engine is centrally managed",
             submod_preserved,
-            f"submod_plugin={submod_plugin.exists()}, ai_bp={'ai' in app.blueprints}",
+            f"submod_plugin={submod_plugin.exists()}, ai_bp={'ai' in app.blueprints}, engine_path={submod_root}",
         )
 
         with self.client.session_transaction() as sess:
@@ -553,7 +554,7 @@ class SecurityAuditor:
             "Verified projects.html, projects.js, and server.py dynamic_route guard",
         )
 
-        submod_root = EPROFILE_ROOT / "content" / "projects" / "engines" / "antigravity_agent"
+        submod_root = Path(getattr(server, "ai_path", EPROFILE_ROOT.parent / "DevCore"))
         ai_plugin_src = (submod_root / "ai_plugin.py").read_text(encoding="utf-8", errors="ignore")
         index_tpl_src = (submod_root / "sandbox" / "templates" / "index.html").read_text(encoding="utf-8", errors="ignore")
         exec_mixin_src = (submod_root / "agents" / "mixins" / "execution_mixin.py").read_text(encoding="utf-8", errors="ignore")

@@ -15,7 +15,7 @@ def _ensure_lf(path: Path):
 
 
 def _find_agy_bin(root: Path):
-    for base in (root, root / "content" / "projects" / "engines" / "antigravity_agent", Path.home()):
+    for base in (root, root.parent / "DevCore", Path.home() / "DevCore", root / "content" / "projects" / "engines" / "antigravity_agent", Path.home()):
         for rel in (Path(".local/bin/agy_real"), Path(".local/bin/agy"), Path("agy_real"), Path("agy"), Path("bin/agy")):
             cand = base / rel
             if cand.is_file() and cand.stat().st_size > 50:
@@ -46,6 +46,7 @@ def main():
     root = Path(__file__).resolve().parent
     py_bin = shutil.which("python3") or "python3"
     submod_worktree = root / "content" / "projects" / "engines" / "antigravity_agent"
+    engine_root = root.parent / "DevCore" if (root.parent / "DevCore").is_dir() else (Path.home() / "DevCore" if (Path.home() / "DevCore").is_dir() else submod_worktree)
 
     if is_production_server():
         home = Path.home()
@@ -131,8 +132,9 @@ def main():
                         if line.startswith("{"):
                             break
                         models.append(line)
-                    if models and (submod_worktree / "core").is_dir():
-                        cache_file = submod_worktree / "core" / ".available_models_cache.json"
+                    target_core = engine_root if (engine_root / "core").is_dir() else submod_worktree
+                    if models and (target_core / "core").is_dir():
+                        cache_file = target_core / "core" / ".available_models_cache.json"
                         cache_file.write_text(
                             json.dumps({"updated_at": time.time(), "models": models}, indent=2),
                             encoding="utf-8",

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>E-PROFILE | Notifications (Admin Only)</title>
+    <style>
+        :root {
+            --bg-base: #070a0f;
+            --panel: rgba(10, 14, 20, 0.94);
+            --cyan: #00e5ff;
+            --magenta: #ff2d8d;
+            --green: #00ff88;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --border: rgba(0, 229, 255, 0.3);
+            --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 24px; background: var(--bg-base); color: var(--text-main); font-family: var(--font-mono); }
+        main { max-width: 960px; margin: 0 auto; }
+        section { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        h1 { color: var(--cyan); font-size: 1.6rem; }
+        h2 { color: var(--cyan); font-size: 1.2rem; margin-top: 0; }
+        a { color: var(--cyan); }
+        label, legend { display: block; margin-bottom: 6px; }
+        input[type="email"] { width: 100%; max-width: 420px; padding: 8px; background: #000; color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; font: inherit; }
+        fieldset { border: 1px solid var(--border); border-radius: 4px; margin: 12px 0; }
+        button { background: var(--cyan); color: #000; border: none; border-radius: 4px; padding: 8px 16px; font: inherit; font-weight: bold; cursor: pointer; }
+        button.danger { background: var(--magenta); color: #fff; }
+        button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .dim { color: var(--text-dim); }
+        #status { min-height: 1.5em; color: var(--green); font-weight: bold; }
+        #status.error { color: var(--magenta); }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Notifications (admin only)</h1>
+    <p class="dim">
+        {% if admin_only %}Development mode: only admins can see this page, and download thank-you emails are sent only for admin downloads.{% else %}Public mode: download thank-you emails are sent for every download.{% endif %}
+        <a href="{{ url_for('admin_mailbox') }}">Open the admin mailbox</a> to see every email sent.
+    </p>
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <section aria-labelledby="add-heading">
+        <h2 id="add-heading">Add a subscriber</h2>
+        <form id="add-form">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+            <fieldset>
+                <legend>Topics</legend>
+                {% for topic in topics %}
+                <label><input type="checkbox" name="topics" value="{{ topic }}" checked> {{ topic|capitalize }}</label>
+                {% endfor %}
+            </fieldset>
+            <button type="submit">Subscribe</button>
+        </form>
+    </section>
+
+    <section aria-labelledby="list-heading">
+        <h2 id="list-heading">Subscribers ({{ subscribers|length }})</h2>
+        {% if subscribers %}
+        <table>
+            <caption class="dim" style="text-align: left;">Everyone who receives notifications</caption>
+            <thead>
+                <tr><th scope="col">Email</th><th scope="col">Topics</th><th scope="col">Added</th><th scope="col">Action</th></tr>
+            </thead>
+            <tbody>
+                {% for sub in subscribers %}
+                <tr>
+                    <td>{{ sub.email }}</td>
+                    <td>{{ (sub.topics or [])|join(', ') }}</td>
+                    <td>{{ sub.added_at }}</td>
+                    <td><button type="button" class="danger remove-btn" data-email="{{ sub.email }}" aria-label="Remove {{ sub.email }}">Remove</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="dim">No subscribers yet.</p>
+        {% endif %}
+    </section>
+
+    <section aria-labelledby="release-heading">
+        <h2 id="release-heading">Release notices</h2>
+        <p>Active release: <strong>v{{ releases.version }}</strong>, {{ releases.release_title }}.</p>
+        <p>Status: {{ releases.stage_status }}{% if not release_public %}, not public yet (scheduled for {{ releases.scheduled_date or 'an unset date' }}){% endif %}.
+            {% if releases.version in announced_versions %}Already announced.{% else %}Not announced yet. It will be announced automatically when it goes public.{% endif %}</p>
+        <button type="button" class="send-btn" data-kind="release" data-confirm="Send a release notice for v{{ releases.version }} to release subscribers now?">Send release notice now</button>
+    </section>
+
+    <section aria-labelledby="newsletter-heading">
+        <h2 id="newsletter-heading">Cyber newsletter</h2>
+        <p>Active digest: {{ manifest['items']|length }} stories, generated {{ manifest.dispatched_at }}.
+            <a href="{{ url_for('newsletter.newsletter_index') }}">Review the digest</a> before sending.</p>
+        <button type="button" class="send-btn" data-kind="newsletter" data-confirm="Send the current digest to newsletter subscribers now?">Send digest to newsletter subscribers</button>
+    </section>
+</main>
+<script>
+(function () {
+    const status = document.getElementById('status');
+    const pending = sessionStorage.getItem('notifyStatus');
+    if (pending) {
+        status.textContent = pending;
+        sessionStorage.removeItem('notifyStatus');
+    }
+
+    function announce(message, isError) {
+        status.classList.toggle('error', Boolean(isError));
+        status.textContent = message;
+    }
+
+    async function post(url, payload) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify(payload || {})
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.error || ('Request failed with status ' + response.status));
+        }
+        return data;
+    }
+
+    function reloadWith(message) {
+        sessionStorage.setItem('notifyStatus', message);
+        window.location.reload();
+    }
+
+    document.getElementById('add-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const topics = Array.from(this.querySelectorAll('input[name="topics"]:checked')).map(box => box.value);
+        try {
+            const data = await post('{{ url_for("notify.admin_add_subscriber") }}', { email: this.email.value, topics: topics });
+            reloadWith(data.message);
+        } catch (err) {
+            announce(err.message, true);
+        }
+    });
+
+    document.querySelectorAll('.remove-btn').forEach(function (button) {
+        button.addEventListener('click', async function () {
+            if (!confirm('Remove ' + button.dataset.email + '?')) return;
+            try {
+                const data = await post('{{ url_for("notify.admin_remove_subscriber") }}', { email: button.dataset.email });
+                reloadWith(data.message);
+            } catch (err) {
+                announce(err.message, true);
+            }
+        });
+    });
+
+    document.querySelectorAll('.send-btn').forEach(function (button) {
+        button.addEventListener('click', async function () {
+            if (!confirm(button.dataset.confirm)) return;
+            button.disabled = true;
+            announce('Sending...');
+            try {
+                const data = await post('/admin/notify/send/' + button.dataset.kind, {});
+                announce(data.message);
+            } catch (err) {
+                announce(err.message, true);
+            } finally {
+                button.disabled = false;
+            }
+        });
+    });
+})();
+</script>
+</body>
+</html>
