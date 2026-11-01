@@ -238,45 +238,15 @@ def terminal_command():
 
 @file_manager_bp.route('/git_sync', methods=['POST'])
 def git_sync():
-    """Two-way sync: Clean environment separation preventing local fetch drops with dynamic branch support."""
+    """Two-way sync: Clean environment separation enforcing strict single-branch ('main') architecture."""
     if not (session.get('admin', False) or session.get('is_admin', False)):
-        return jsonify({"output": "ACCESS_DENIED"}), 403
+        return jsonify({"success": False, "output": "ACCESS_DENIED"}), 403
 
     target = config.ROOT_DIR
-    output_log = "[System] Starting 2-Way Git Sync...\n"
-    
-    # 1. Parse request parameters (JSON body, query params, or form data)
-    data = request.get_json(silent=True) or {}
-    requested_branch = (
-        data.get('branch') 
-        or request.args.get('branch') 
-        or request.form.get('branch') 
-        or ""
-    ).strip()
-
-    # Determine current checked-out local branch
-    def get_current_branch():
-        try:
-            res = subprocess.run(
-                ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
-                cwd=str(target),
-                capture_output=True,
-                text=True
-            )
-            if res.returncode == 0:
-                b = res.stdout.strip()
-                if b and b != 'HEAD':
-                    return b
-        except Exception:
-            pass
-        return 'main'
-
-    local_branch = get_current_branch()
-
-    # Single-branch architecture: always enforce 'main'
+    output_log = "[System] Starting Single-Branch (main) Git Sync...\n"
     target_branch = 'main'
 
-    # 2. Load token
+    # Load authentication token
     token = ""
     token_file = target / "gethub_token.txt"
     if not token_file.exists():
@@ -386,7 +356,17 @@ def git_sync():
             output_log += f"EXCEPTION: {err_msg}\n"
             return False
 
-    emergency_quota_relief()
+    try:
+        from bootstrap import is_production_server
+        is_server = is_production_server()
+    except Exception:
+        is_server = ("PYTHONANYWHERE_DOMAIN" in os.environ or Path("/var/www").exists()) and not (Path("/mnt/c").exists() or os.name == "nt")
+
+    if is_server:
+        output_log += "[System] Production environment detected (PythonAnywhere)...\n"
+        emergency_quota_relief()
+    else:
+        output_log += "[System] Local development environment detected...\n"
 
     subprocess.run(['git', 'config', 'user.name', 'MikeyMike99'], cwd=str(target))
     subprocess.run(['git', 'config', 'user.email', 'mikeymike@server.local'], cwd=str(target))
@@ -401,71 +381,69 @@ def git_sync():
         except Exception:
             pass
 
-
     run_git_cmd(['rm', '-r', '--cached', '--ignore-unmatch', '*antigravity-oauth-token*'])
 
     try:
-        log_check = subprocess.run(['git', 'log', f'origin/{target_branch}..HEAD', '--name-only'], cwd=str(target), capture_output=True, text=True)
+        log_check = subprocess.run(['git', 'log', 'origin/main..HEAD', '--name-only'], cwd=str(target), capture_output=True, text=True)
         if 'antigravity-oauth-token' in (log_check.stdout or ''):
-            output_log += "[Security] Blocked unpushed secret detected in local commit history. Resetting to origin...\n"
-            run_git_cmd(['reset', f'origin/{target_branch}'])
+            output_log += "[Security] Blocked unpushed secret detected in local commit history. Resetting to origin/main...\n"
+            run_git_cmd(['reset', 'origin/main'])
     except Exception:
         pass
 
     subprocess.run(['git', 'merge', '--abort'], cwd=str(target), capture_output=True)
     subprocess.run(['git', 'rebase', '--abort'], cwd=str(target), capture_output=True)
 
-    run_git_cmd(['add', '.'])
-    run_git_cmd(['commit', '-m', f'Auto-sync update ({target_branch})'])
+    # Strictly verify branch is 'main'
+    def get_current_branch():
+        try:
+            res = subprocess.run(
+                ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                cwd=str(target),
+                capture_output=True,
+                text=True
+            )
+            if res.returncode == 0:
+                b = res.stdout.strip()
+                if b and b != 'HEAD':
+                    return b
+        except Exception:
+            pass
+        return 'main'
 
-    if local_branch != 'main':
-        run_git_cmd(['checkout', '-B', 'main'])
-        if local_branch == 'clean-main':
-            run_git_cmd(['branch', '-D', 'clean-main'])
-            run_git_cmd(['push', authenticated_url, '--delete', 'clean-main'])
-        local_branch = 'main'
+    if get_current_branch() != 'main':
+        run_git_cmd(['checkout', 'main'])
 
-    try:
-        from bootstrap import is_production_server
-        is_server = is_production_server()
-    except Exception:
-        is_server = ("PYTHONANYWHERE_DOMAIN" in os.environ or Path("/var/www").exists()) and not (Path("/mnt/c").exists() or os.name == "nt")
+    # Stage and commit any dirty changes
+    status_p = subprocess.run(['git', 'status', '--porcelain'], cwd=str(target), capture_output=True, text=True)
+    if status_p.stdout.strip():
+        run_git_cmd(['add', '.'])
+        run_git_cmd(['commit', '-m', 'Auto-sync update (main)'])
 
-    if not is_server:
-        output_log += f"[System] Local development environment detected (Branch: {target_branch})...\n"
-        run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--no-recurse-submodules', '-X', 'ours'])
-        if local_branch == target_branch:
-            run_git_cmd(['push', authenticated_url, target_branch])
-        else:
-            run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
-
-    else:
-        output_log += f"[System] PythonAnywhere server environment detected (Branch: {target_branch})...\n"
-        emergency_quota_relief()
-        pull_ok = run_git_cmd(['pull', authenticated_url, target_branch, '--no-edit', '--allow-unrelated-histories', '-X', 'ours'])
-        if not pull_ok:
-            output_log += "[System] Pull encountered conflicts or corrupt objects. Purging corrupt objects & retrying...\n"
-            run_git_cmd(['merge', '--abort'])
+    # Pull & merge remote main
+    output_log += "[System] Pulling changes from GitHub main...\n"
+    pull_ok = run_git_cmd(['pull', authenticated_url, 'main', '--no-edit', '--no-recurse-submodules', '-X', 'ours'])
+    if not pull_ok:
+        output_log += "[System] Pull encountered conflicts. Auto-resolving against GitHub main...\n"
+        run_git_cmd(['merge', '--abort'])
+        if is_server:
             emergency_quota_relief()
-            run_git_cmd(['fetch', authenticated_url, target_branch, '--prune'])
-            run_git_cmd(['merge', f'origin/{target_branch}', '--no-edit', '-m', f'Auto-merge {target_branch} updates', '-X', 'ours'])
+        run_git_cmd(['fetch', authenticated_url, 'main', '--prune'])
+        run_git_cmd(['merge', 'FETCH_HEAD', '--no-edit', '-m', 'Auto-merge GitHub main into local', '-X', 'ours'])
 
-        push_ok = False
-        if local_branch == 'master' and target_branch == 'main':
-            push_ok = run_git_cmd(['push', authenticated_url, 'master:main'])
-        elif local_branch == target_branch:
-            push_ok = run_git_cmd(['push', authenticated_url, target_branch])
-        else:
-            push_ok = run_git_cmd(['push', authenticated_url, f'{local_branch}:{target_branch}'])
-
-        if not push_ok:
-            output_log += "[System] Push rejected (non-fast-forward). Syncing remote changes before push retry...\n"
+    # Push to remote main
+    output_log += "[System] Pushing merged main to GitHub...\n"
+    push_ok = run_git_cmd(['push', authenticated_url, 'main'])
+    if not push_ok:
+        output_log += "[System] Push rejected (non-fast-forward). Re-fetching latest remote main and merging...\n"
+        if is_server:
             emergency_quota_relief()
-            run_git_cmd(['fetch', authenticated_url, target_branch])
-            run_git_cmd(['merge', f'origin/{target_branch}', '--no-edit', '-m', f'Auto-merge origin/{target_branch} into local', '-X', 'ours'])
-            purge_git_locks()
-            run_git_cmd(['push', authenticated_url, target_branch])
-        
+        run_git_cmd(['fetch', authenticated_url, 'main'])
+        run_git_cmd(['merge', 'FETCH_HEAD', '--no-edit', '-m', 'Auto-merge latest GitHub main into local', '-X', 'ours'])
+        purge_git_locks()
+        push_ok = run_git_cmd(['push', authenticated_url, 'main'])
+
+    if is_server:
         req_changed = False
         try:
             diff_p = subprocess.run(['git', 'diff', 'HEAD@{1}', 'HEAD', '--name-only'], cwd=str(target), capture_output=True, text=True, timeout=10)
@@ -474,13 +452,12 @@ def git_sync():
         except Exception:
             req_changed = True
 
-        import sys
         py_bin = shutil.which('python3') or (sys.executable if not Path(sys.executable).name.lower().startswith('uwsgi') else 'python3')
 
         if req_changed:
             output_log += "[System] Dependencies updated. Auto-installing requirements...\n"
             try:
-                pip_p = subprocess.run([py_bin, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True, timeout=90)
+                subprocess.run([py_bin, '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=str(target), capture_output=True, text=True, timeout=90)
                 shutil.rmtree(Path.home() / ".cache", ignore_errors=True)
                 output_log += "[System] pip requirements verified.\n"
             except Exception as e:
@@ -516,4 +493,5 @@ def git_sync():
         except Exception as e:
             output_log += f"[System] Error touching WSGI: {e}\n"
 
-    return jsonify({"output": output_log, "branch": target_branch, "local_branch": local_branch})
+    output_log += f"\n[System] Git Sync finished. Push status: {'SUCCESS' if push_ok else 'FAILED'}\n"
+    return jsonify({"success": push_ok, "output": output_log, "branch": "main"})
