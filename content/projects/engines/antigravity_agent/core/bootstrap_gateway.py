@@ -38,6 +38,9 @@ PROTECTED_FIREWALL_BASENAMES = {
     "raugus_map.json",
     "generate_raugusmap.py",
     "tool_security_auditor.py",
+    "agent_identity.py",
+    "raugus_access.py",
+    "raugus_access.json",
 }
 
 DEFAULT_ENGINE_REL_PATHS = [
