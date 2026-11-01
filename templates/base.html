@@ -284,7 +284,7 @@
     <a href="/logout" class="hero-logout">LOG_OUT</a>
     {% endif %}
     {% if is_admin %}
-    <button id="btn-sync" onclick="syncGit(event)" class="hero-sync" title="Sync current branch (Shift+Click to specify branch)">GIT_SYNC</button>
+    <button id="btn-sync" onclick="syncGit(event)" class="hero-sync" title="Sync repository with GitHub (main)">GIT_SYNC</button>
     {% endif %}
 
     {% if session.get('impersonator_token') %}
@@ -362,37 +362,30 @@
         async function syncGit(event) {
             const btn = document.getElementById('btn-sync');
             if (!btn) return;
-            
-            let targetBranch = null;
-            if (event && event.shiftKey) {
-                targetBranch = prompt("Enter Git branch to sync with:", "main");
-                if (!targetBranch) return;
-            }
 
             const originalText = btn.innerText;
-            btn.innerText = targetBranch ? `SYNCING (${targetBranch})...` : "SYNCING...";
+            btn.innerText = "SYNCING...";
             btn.style.color = "#00f3ff";
             
-            announceToScreenReader("Syncing with GitHub. Please wait.");
+            announceToScreenReader("Syncing with GitHub main. Please wait.");
             
             try {
-                const reqBody = targetBranch ? JSON.stringify({ branch: targetBranch.trim() }) : JSON.stringify({});
                 const response = await fetch('/api/projects/explorer_logic/git_sync', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: reqBody
+                    body: JSON.stringify({})
                 });
                 const data = await response.json();
                 
-                if (response.ok && data.output && !data.output.includes("EXCEPTION:")) {
+                if (response.ok && data.success === true) {
                     btn.innerText = "SYNC_OK";
                     btn.style.color = "#00ff88";
-                    announceToScreenReader("Git Sync Successful. " + data.output);
+                    announceToScreenReader("Git Sync Successful. Repository is in sync with GitHub main.");
                 } else {
                     btn.innerText = "SYNC_ERR";
                     btn.style.color = "#ff4d4d";
-                    const errText = "Git Sync Error: " + (data.output || "Unknown error");
-                    announceToScreenReader(errText);
+                    const errDetail = data.output ? (data.output.split('\n').filter(Boolean).pop() || "Sync failed") : "Unknown error";
+                    announceToScreenReader("Git Sync Error: " + errDetail);
                 }
             } catch (err) {
                 btn.innerText = "SYNC_ERR";
