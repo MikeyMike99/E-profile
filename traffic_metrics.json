@@ -1,5 +1,5 @@
 {
-    "total_views": 12055,
+    "total_views": 12115,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -13,16 +13,16 @@
         "e67133c26404e028a7c6271d7529bba1"
     ],
     "paths": {
-        "/ai_agent/api/stream": 11242,
+        "/ai_agent/api/stream": 11297,
         "/ai_agent/": 64,
         "/ai_agent/api/projects": 38,
         "/ai_agent/api/conversations": 61,
         "/ai_agent/api/user/subscription/status": 26,
         "/ai_agent/api/auth/system-status": 34,
-        "/favicon.ico": 83,
+        "/favicon.ico": 84,
         "/ai_agent/api/auth_check": 22,
-        "/": 106,
-        "/ai_agent/api/chat": 16,
+        "/": 107,
+        "/ai_agent/api/chat": 17,
         "/projects": 14,
         "/ai_agent/api/auth/login": 2,
         "/docs/api/cache/status": 1,
@@ -46,7 +46,7 @@
         "/ai_agent/api/conversations/test-conv-001/rename": 9,
         "/ai_agent/api/conversations/test-conv-001": 9,
         "/ai_agent/api/projects/active/conversations": 9,
-        "/ai_agent/api/kill": 14,
+        "/ai_agent/api/kill": 16,
         "/ai_agent/api/projects/active": 18,
         "/ai_agent/api/set_api_key": 9,
         "/ai_agent/api/ui-config": 9,
