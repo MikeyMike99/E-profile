@@ -62,6 +62,9 @@ app.register_blueprint(audio_suite_bp)
 from newsletter_mod import newsletter_bp
 app.register_blueprint(newsletter_bp)
 
+from notify_mod import notify_bp
+app.register_blueprint(notify_bp)
+
 from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
 app.register_blueprint(diagnostics_bp)
 import sys
