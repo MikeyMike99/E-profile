@@ -32,15 +32,17 @@ app.config.update(
 )
 
 # --- GLOBAL CONTEXT PROCESSOR ---
+# NOTE: `global_blogs` is consumed ONLY by the admin panel (manage_profiles.html).
+# Computing it here used to call get_blog_data() -- a Markdown + bleach render of
+# every blog post -- on EVERY page request (projects, home, blog, ...). Profiling
+# showed that single call was ~90% of those pages' server time and the main cause
+# of the slow / unresponsive feel (amplified on PythonAnywhere's throttled CPU).
+# The admin route now passes global_blogs itself, reusing the blog data it already
+# loads, so this processor only supplies harmless empty defaults for any template
+# that references the names on a non-admin page.
 @app.context_processor
 def inject_global_blogs():
-    try:
-        from blog_mod import get_blog_data
-        blogs, logs = get_blog_data()
-        return dict(global_blogs=blogs, global_blog_logs=logs)
-    except Exception as e:
-        app.logger.error(f"Context Processor Error: {e}")
-        return dict(global_blogs=[], global_blog_logs=[f"CRITICAL ERROR in Context Processor: {e}"])
+    return dict(global_blogs=[], global_blog_logs=[])
 
 # --- 3. BLUEPRINT REGISTRATION ---
 app.register_blueprint(blog_bp)
@@ -484,8 +486,9 @@ def admin():
     analytics_data = get_analytics()
     diagnostics_data = get_system_diagnostic_summary()
 
-    return render_template('manage_profiles.html', 
+    return render_template('manage_profiles.html',
         profiles=profiles,
+        global_blogs=all_blogs,
         dyn_tabs=dyn_tabs,
         dyn_blogs=dyn_blogs,
         dyn_certs=dyn_certs,

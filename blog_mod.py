@@ -14,7 +14,30 @@ def get_slug(text):
     return re.sub(r'[\s-]+', '_', slug)
 
 # --- THE BLOG DATA HANDLER ---
+import time as _time
+# get_blog_data() renders Markdown + bleach for every post. It is called by the
+# home, blog and admin routes; cache the rendered result briefly so repeated page
+# loads don't re-render. Blog write routes call invalidate_blog_cache().
+_BLOG_CACHE = {"ts": 0.0, "result": None}
+_BLOG_CACHE_TTL = 60.0
+
+
+def invalidate_blog_cache():
+    _BLOG_CACHE["result"] = None
+    _BLOG_CACHE["ts"] = 0.0
+
+
 def get_blog_data():
+    now = _time.monotonic()
+    if _BLOG_CACHE["result"] is not None and (now - _BLOG_CACHE["ts"]) < _BLOG_CACHE_TTL:
+        return _BLOG_CACHE["result"]
+    result = _get_blog_data_impl()
+    _BLOG_CACHE["result"] = result
+    _BLOG_CACHE["ts"] = now
+    return result
+
+
+def _get_blog_data_impl():
     from flask import current_app
     import traceback
     
@@ -122,6 +145,7 @@ def set_blog_priority():
     new_order = {filename: i + 1 for i, filename in enumerate(current_sequence)}
     if 'latest_filename' in order_data: new_order['latest_filename'] = order_data['latest_filename']
     order_file.write_text(json.dumps(new_order, indent=4))
+    invalidate_blog_cache()
     return jsonify({"status": "success"})
 
 @blog_bp.route("/save_blog", methods=["POST"])
@@ -140,6 +164,7 @@ def save_blog():
             except: pass
         order_data['latest_filename'] = filename
         order_file.write_text(json.dumps(order_data, indent=4))
+        invalidate_blog_cache()
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"error": f"FILE_WRITE_ERROR: {str(e)}"}), 500
@@ -160,6 +185,7 @@ def delete_blog(filename):
                         order_data['latest_filename'] = ""
                         order_file.write_text(json.dumps(order_data, indent=4))
                 except: pass
+            invalidate_blog_cache()
             return jsonify({"status": "success"})
         except Exception as e:
             return jsonify({"error": f"FILE_DELETE_ERROR: {str(e)}"}), 500

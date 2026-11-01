@@ -11,7 +11,31 @@ config = Config()
 CERT_DIR = config.CONTENT_DIR / "certifications" / "digital badges and certificates"
 ORDER_FILE = config.CONTENT_DIR / "certifications" / "order.json"
 
+import time as _time
+# Rendering certifications means an rglob over the whole badge tree plus a
+# Markdown + bleach pass per described cert -- profiled at ~130 ms on the admin
+# panel and paid on every load. The set changes only when the admin edits/reorders
+# certs, so cache the rendered list briefly; writes call invalidate_cert_cache().
+_CERT_CACHE = {"ts": 0.0, "data": None}
+_CERT_CACHE_TTL = 120.0
+
+
+def invalidate_cert_cache():
+    _CERT_CACHE["data"] = None
+    _CERT_CACHE["ts"] = 0.0
+
+
 def get_certifications_data():
+    now = _time.monotonic()
+    if _CERT_CACHE["data"] is not None and (now - _CERT_CACHE["ts"]) < _CERT_CACHE_TTL:
+        return _CERT_CACHE["data"]
+    data = _get_certifications_data_impl()
+    _CERT_CACHE["data"] = data
+    _CERT_CACHE["ts"] = now
+    return data
+
+
+def _get_certifications_data_impl():
     if not CERT_DIR.exists():
         CERT_DIR.mkdir(parents=True, exist_ok=True)
         
@@ -95,6 +119,7 @@ def reorder_certs():
     order_list = request.json.get('order', [])
     try:
         ORDER_FILE.write_text(json.dumps(order_list, indent=4), encoding='utf-8')
+        invalidate_cert_cache()
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
