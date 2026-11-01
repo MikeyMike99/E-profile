@@ -96,6 +96,18 @@ class TestSubscriptionGuard(unittest.TestCase):
         self.assertIn("host billing bleed", reason)
         self.assertIsNone(sub)
 
+    def test_demo_scope_bypass_allowed(self):
+        demo_user = {
+            "username": "demo_guest",
+            "role": "gamedev",
+            "name": "Demo Guest",
+            "token_scope": "demo"
+        }
+        allowed, reason, sub = assert_user_execution_quota(demo_user, base_dir=self.test_dir)
+        self.assertTrue(allowed)
+        self.assertEqual(reason, "Demo scope sandbox allowed")
+        self.assertIsNone(sub)
+
     def test_admin_fallback_allowed_when_no_byos_configured(self):
         admin_user = {
             "username": "Michael (Admin)",

@@ -1,6 +1,7 @@
 import json
 import mimetypes
 import os
+import socket
 import time
 import uuid
 
@@ -79,13 +80,11 @@ class SecurityManager:
         "Zip-Files", "Offline_Crack_Lab", "Online_Brute_Lab"
     }
 
+    # Low-privilege fixture logins for local testing only. Disabled unless
+    # DEVCORE_ENABLE_TEST_USERS=1, since their passwords are public. There is
+    # deliberately no admin test user: admin access comes from an access key or
+    # the host-owner login (master key + loopback request).
     TEST_USERS = {
-        "admin": {
-            "password": "admin",
-            "role": ROLE_ADMIN,
-            "name": "Michael (Admin)",
-            "allowed_projects": ["*"]
-        },
         "dev": {
             "password": "dev",
             "role": ROLE_GAMEDEV,
@@ -111,6 +110,138 @@ class SecurityManager:
             "allowed_projects": ["game_demo"]
         }
     }
+
+    OWNER_KEY_ID = "owner"
+    OWNER_USER = {
+        "username": "Michael (Admin)",
+        "role": "super_admin",
+        "name": "Michael (Admin)",
+        "allowed_projects": ["*"],
+        "token_scope": "root",
+        "key_id": "owner",
+    }
+    SESSION_TTL_SECONDS = {"admin": 7 * 86400, "user": 7 * 86400, "demo": 86400}
+
+    _LOOPBACK_PREFIXES = ("127.", "::1", "::ffff:127.")
+    _FORWARD_HEADERS = ("X-Forwarded-For", "Forwarded", "X-Real-IP", "CF-Connecting-IP", "True-Client-IP")
+    _host_ip_cache = None  # (set_of_ips, expires_at)
+
+    @classmethod
+    def _host_local_ips(cls) -> set:
+        """This machine's own IP addresses. A request whose source address is one
+        of these is coming *from this host* even when it was aimed at the LAN IP
+        (e.g. http://172.29.x.x:5000) rather than loopback. Cached for 60s because
+        resolution touches the network stack. A different machine on the LAN has a
+        different source IP and is still rejected."""
+        now = time.time()
+        if cls._host_ip_cache and cls._host_ip_cache[1] > now:
+            return cls._host_ip_cache[0]
+        ips = set()
+        try:
+            hostname = socket.gethostname()
+            for fam in (socket.AF_INET, socket.AF_INET6):
+                try:
+                    for info in socket.getaddrinfo(hostname, None, fam):
+                        ip = info[4][0].split("%")[0]  # strip IPv6 zone id
+                        if ip:
+                            ips.add(ip)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        cls._host_ip_cache = (ips, now + 60.0)
+        return ips
+
+    @staticmethod
+    def _is_wsl() -> bool:
+        if os.environ.get("WSL_DISTRO_NAME") or os.environ.get("WSL_INTEROP"):
+            return True
+        try:
+            with open("/proc/version", "r", encoding="utf-8", errors="ignore") as f:
+                return "microsoft" in f.read().lower()
+        except Exception:
+            return False
+
+    @classmethod
+    def _wsl_host_gateway_ips(cls) -> set:
+        """When the server runs inside WSL, the Windows host (the owner's actual
+        machine) reaches it through the WSL NAT and always arrives as the default
+        gateway address. Trusting that gateway lets owner auto-login work from the
+        Windows browser without a hardcoded, reboot-fragile IP. Empty off WSL, so
+        a real LAN gateway/router is never implicitly trusted."""
+        if not cls._is_wsl():
+            return set()
+        gws = set()
+        try:
+            # /proc/net/route: default route has Destination 00000000; Gateway is
+            # a little-endian hex IPv4.
+            with open("/proc/net/route", "r", encoding="utf-8") as f:
+                next(f, None)  # header
+                for line in f:
+                    parts = line.split()
+                    if len(parts) > 2 and parts[1] == "00000000":
+                        g = int(parts[2], 16)
+                        gws.add("%d.%d.%d.%d" % (g & 0xff, (g >> 8) & 0xff, (g >> 16) & 0xff, (g >> 24) & 0xff))
+        except Exception:
+            pass
+        return gws
+
+    @classmethod
+    def is_trusted_local_request(cls, remote_addr, headers=None) -> bool:
+        """True only for a direct connection from this machine, with no proxy
+        forwarding headers. The master key proves the *server* is the owner's
+        machine; this proves the *client* is too. Both of the host's own entry
+        points count: loopback (127.x / ::1 / localhost) AND the machine's own
+        LAN IP addresses. Extra trusted addresses can be listed in
+        DEVCORE_TRUSTED_HOST_IPS (comma-separated)."""
+        addr = str(remote_addr or "").strip()
+        if not addr:
+            return False
+        if headers is not None:
+            for h in cls._FORWARD_HEADERS:
+                try:
+                    if headers.get(h):
+                        return False
+                except Exception:
+                    return False
+        if addr == "localhost" or addr.startswith(cls._LOOPBACK_PREFIXES):
+            return True
+        extra = {a.strip() for a in os.environ.get("DEVCORE_TRUSTED_HOST_IPS", "").split(",") if a.strip()}
+        if addr in extra:
+            return True
+        # Normalise an IPv4-mapped IPv6 source (::ffff:172.29.x.x) to its v4 form.
+        bare = addr[7:] if addr.startswith("::ffff:") else addr
+        host_ips = cls._host_local_ips() | cls._wsl_host_gateway_ips()
+        return addr in host_ips or bare in host_ips
+
+    def is_host_owner_request(self, remote_addr, headers=None) -> bool:
+        """Master key present on the server AND the request comes from this machine."""
+        return self.is_trusted_local_request(remote_addr, headers) and self.check_master_signature()
+
+    def create_session(self, user: dict, kind: str = "user") -> dict:
+        """Issue a fresh random bearer token for `user`. Only the SHA-256 of the
+        token is stored, so sessions.json never holds a usable credential."""
+        import hashlib
+        token = "sec-" + uuid.uuid4().hex + uuid.uuid4().hex
+        now = time.time()
+        is_admin = self.is_admin_user(user)
+        ttl = self.SESSION_TTL_SECONDS.get(kind) or self.SESSION_TTL_SECONDS["user"]
+        session_data = {
+            "username": user.get("username") or user.get("name", "Unknown"),
+            "role": user.get("role", "guest"),
+            "name": user.get("name", "Unknown"),
+            "allowed_projects": user.get("allowed_projects", []),
+            "key_id": user.get("key_id") or ("test-" + str(user.get("name", "user"))),
+            "created_at": now,
+            "expires_at": now + ttl,
+            "token_scope": "demo" if kind == "demo" else ("root" if is_admin else "user"),
+        }
+        self.sessions[hashlib.sha256(token.encode()).hexdigest()] = session_data
+        self._save_sessions()
+        return {"token": token, "user": dict(session_data)}
+
+    def create_owner_session(self) -> dict:
+        return self.create_session(dict(self.OWNER_USER), kind="admin")
 
     def __init__(self, base_dir=None):
         import sys
@@ -145,13 +276,27 @@ class SecurityManager:
                 self._local_sec = Dummy()
         return self._local_sec
 
+    @staticmethod
+    def _is_hashed_session_key(k: str) -> bool:
+        return isinstance(k, str) and len(k) == 64 and all(c in "0123456789abcdef" for c in k)
+
     def _load_sessions(self):
         if os.path.exists(self.sessions_file):
             try:
                 with open(self.sessions_file, "r", encoding="utf-8") as f:
-                    self.sessions = json.load(f)
+                    loaded = json.load(f)
             except Exception:
-                self.sessions = {}
+                loaded = {}
+            # Drop legacy raw-token sessions (incl. the old shared
+            # 'sec-root-owner-permanent' admin token) and anything expired.
+            now = time.time()
+            self.sessions = {
+                k: v for k, v in (loaded or {}).items()
+                if self._is_hashed_session_key(k) and isinstance(v, dict)
+                and float(v.get("expires_at") or 0) > now
+            }
+            if len(self.sessions) != len(loaded or {}):
+                self._save_sessions()
 
     def _save_sessions(self):
         try:
@@ -187,35 +332,21 @@ class SecurityManager:
                 self.delete_key(user.get("hashed_key_ref", access_key))
                 return None
         
-        if not user and ":" in access_key:
+        if (not user and access_key and ":" in access_key
+                and os.environ.get("DEVCORE_ENABLE_TEST_USERS") == "1"):
             username, password = access_key.split(":", 1)
             test_user = self.TEST_USERS.get(username)
             if test_user and test_user["password"] == password:
-                user = test_user
+                user = dict(test_user)
                 user["key_id"] = "test-" + username
-        
-        if (access_key in ("SUPER_ADMIN_AUTO", "sec-root-owner-permanent") or (access_key and str(access_key).startswith("sec-root"))):
-            user = {
-                "role": "super_admin",
-                "name": "Michael (Admin)",
-                "allowed_projects": ["*"]
-            }
 
+        # NOTE: no magic access keys. 'SUPER_ADMIN_AUTO' / 'sec-root…' used to log
+        # anyone in as super-admin; the host-owner login now lives in the route
+        # layer, where the client address can be checked (create_owner_session).
         if not user:
             return None
 
-        token = "sec-root-owner-permanent" if user.get("role") in ("super_admin", "admin") else ("sec-" + uuid.uuid4().hex)
-        session_data = {
-            "username": user.get("name", "Unknown"),
-            "role": user["role"],
-            "name": user["name"],
-            "allowed_projects": user.get("allowed_projects", []),
-            "created_at": time.time(),
-            "token_scope": "root" if user.get("role") in ("super_admin", "admin") else "user"
-        }
-        self.sessions[token] = session_data
-        self._save_sessions()
-        return {"token": token, "user": session_data}
+        return self.create_session(user, kind="admin" if self.is_admin_user(user) else "user")
 
     def _load_keys(self):
         if os.path.exists(self.keys_file):
@@ -227,6 +358,29 @@ class SecurityManager:
                 self.keys = {}
         else:
             self.keys = {}
+        # Every key needs a stable, non-secret id so access grants can name it.
+        changed = False
+        for meta in self.keys.values():
+            if isinstance(meta, dict) and not meta.get("key_id"):
+                meta["key_id"] = "kid-" + uuid.uuid4().hex[:12]
+                changed = True
+        if changed:
+            self._save_keys()
+
+    def list_principals(self) -> list:
+        """Non-secret view of access keys, for the grant UI."""
+        out = []
+        for meta in self.keys.values():
+            if not isinstance(meta, dict):
+                continue
+            out.append({
+                "key_id": meta.get("key_id"),
+                "name": meta.get("name"),
+                "role": meta.get("role"),
+                "created_at": meta.get("created_at"),
+                "expires_in_days": meta.get("expires_in_days"),
+            })
+        return out
 
     def _save_keys(self):
         try:
@@ -252,7 +406,8 @@ class SecurityManager:
             "allowed_projects": allowed_projects,
             "created_at": time.time(),
             "expires_in_days": expires_in_days,
-            "hashed_key_ref": hashed_key
+            "hashed_key_ref": hashed_key,
+            "key_id": "kid-" + uuid.uuid4().hex[:12],
         }
         self._save_keys()
         return new_key
@@ -267,29 +422,22 @@ class SecurityManager:
     def get_all_keys(self):
         return self.keys
 
-    def get_user_from_token(self, token):
-        if not token:
-            if self.check_master_signature():
-                return {
-                    "username": "Michael (Admin)",
-                    "role": "super_admin",
-                    "name": "Michael (Admin)",
-                    "allowed_projects": ["*"],
-                    "token_scope": "root"
-                }
-            return None
-        if token in ("sec-root-owner-permanent", "SUPER_ADMIN_AUTO") or (token and str(token).startswith("sec-root")):
-            return {
-                "username": "Michael (Admin)",
-                "role": "super_admin",
-                "name": "Michael (Admin)",
-                "allowed_projects": ["*"],
-                "token_scope": "root"
-            }
-        hashed_session = __import__("hashlib").sha256(token.encode()).hexdigest()
-        user = self.sessions.get(hashed_session)
-        if not user:
-            user = self.sessions.get(token)
+    def get_user_from_token(self, token, remote_addr=None, headers=None):
+        """Resolve a bearer token to its session. With no valid token, falls back to
+        the host owner ONLY for a direct loopback request on the master-key machine
+        (pass remote_addr/headers); otherwise returns None."""
+        user = None
+        if token:
+            hashed_session = __import__("hashlib").sha256(str(token).encode()).hexdigest()
+            sess = self.sessions.get(hashed_session)
+            if sess and float(sess.get("expires_at") or 0) > time.time():
+                user = dict(sess)
+            elif sess:
+                self.sessions.pop(hashed_session, None)
+                self._save_sessions()
+        if not user and remote_addr is not None and self.is_host_owner_request(remote_addr, headers):
+            user = dict(self.OWNER_USER)
+            user["auth_method"] = "host_owner"
         return user
 
     def logout(self, token):

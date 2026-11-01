@@ -355,7 +355,8 @@ def assert_user_execution_quota(
         return True, "Demo scope sandbox allowed", None
 
     user_id = user.get("username") or user.get("name") or user.get("key_id") or "guest"
-    is_admin = user_role in ("admin", "super_admin", "super admin", "tier5_sysadmin")
+    from core.roles import ADMIN_ROLES  # canonical, single source
+    is_admin = user_role in ADMIN_ROLES
 
     sub = get_user_subscription(user_id, base_dir=base_dir, include_decrypted=True)
 

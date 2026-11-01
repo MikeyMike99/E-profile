@@ -227,6 +227,17 @@ def sync_path(target_path: str, root_dir: str = DEVCORE_ROOT, remove: bool = Fal
     if not os.path.exists(MAP_PATH):
         return {"synced": False, "reason": "raugus_map.json not found"}
 
+    # Files in registered external roots get their own key prefix.
+    _abs = os.path.abspath(target_path)
+    _rel = os.path.relpath(_abs, os.path.abspath(root_dir))
+    _brain = os.path.abspath(os.path.expanduser("~/.gemini/antigravity-cli/brain"))
+    if (_rel == ".." or _rel.startswith(".." + os.sep)) and not _abs.startswith(_brain + os.sep):
+        try:
+            from security.raugus_access import sync_external_path
+            return sync_external_path(target_path, remove=remove)
+        except Exception as e:
+            return {"synced": False, "reason": f"external sync failed: {e}"}
+
     try:
         with open(MAP_PATH, "r", encoding="utf-8") as f:
             r_map = json.load(f)

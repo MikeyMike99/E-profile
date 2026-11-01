@@ -25,6 +25,9 @@ PROTECTED_FIREWALL_BASENAMES = {
     "raugus_map.json",
     "generate_raugusmap.py",
     "tool_security_auditor.py",
+    "agent_identity.py",
+    "raugus_access.py",
+    "raugus_access.json",
 }
 
 def _is_jit_active() -> bool:
@@ -255,6 +258,12 @@ async def execute_hot_patch_sequence(app_obj=None, manual_trigger=False, fast_co
                 ('/api/audits/results/<audit_id>', 'system_bp.api_audit_result', api_audit_result, ['GET']),
             ]
             if auth_mod:
+                reset_auth_fn = getattr(auth_mod, 'reset_auth_session', None)
+                if reset_auth_fn:
+                    dynamic_endpoints.append(('/api/auth/reset', 'auth_bp.reset_auth_session', reset_auth_fn, ['POST']))
+                restore_root_fn = getattr(auth_mod, 'restore_root', None)
+                if restore_root_fn:
+                    dynamic_endpoints.append(('/api/auth/restore-root', 'auth_bp.restore_root', restore_root_fn, ['GET', 'POST']))
                 sub_set_fn = getattr(auth_mod, 'set_user_subscription_route', None)
                 sub_status_fn = getattr(auth_mod, 'get_user_subscription_status', None)
                 sub_del_fn = getattr(auth_mod, 'delete_user_subscription_route', None)
@@ -394,7 +403,7 @@ async def api_jit_status():
 async def api_jit_elevate():
     user = get_current_user()
     has_master_sig = current_app.security_mgr.check_master_signature()
-    if not has_master_sig or (user and user.get("role") not in ["super_admin", "admin", "Tier5_SysAdmin"]):
+    if not has_master_sig or not (user and current_app.security_mgr.is_admin_user(user)):
         return jsonify({"success": False, "error": "Access Denied: Super Admin hardware signature & authorization required."}), 403
 
     try:
@@ -457,7 +466,7 @@ async def api_jit_elevate():
 async def api_jit_revoke():
     user = get_current_user()
     has_master_sig = current_app.security_mgr.check_master_signature()
-    if not has_master_sig or (user and user.get("role") not in ["super_admin", "admin", "Tier5_SysAdmin"]):
+    if not has_master_sig or not (user and current_app.security_mgr.is_admin_user(user)):
         return jsonify({"success": False, "error": "Access Denied: Super Admin authorization required."}), 403
 
     try:
@@ -497,6 +506,18 @@ async def api_token_telemetry():
         force = request.args.get("force", "false").lower() == "true"
         data = await asyncio.to_thread(engine.get_telemetry_data, requested_timeframe=tf, force_refresh=force)
         return jsonify(data)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@system_bp.route('/api/telemetry/models', methods=['GET'])
+async def api_model_telemetry():
+    """Per-brain usage (Claude, Gemini/agy, Ollama, local, ...) from the SwarmFlow log."""
+    try:
+        from security.swarm_telemetry import SwarmFlowLogger
+        tf = request.args.get("timeframe", "all")
+        data = await asyncio.to_thread(SwarmFlowLogger.get_model_usage, tf)
+        return jsonify({"success": True, **data})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
