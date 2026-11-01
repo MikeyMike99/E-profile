@@ -1,5 +1,5 @@
 {
-    "total_views": 12314,
+    "total_views": 12409,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -13,15 +13,15 @@
         "e67133c26404e028a7c6271d7529bba1"
     ],
     "paths": {
-        "/ai_agent/api/stream": 11490,
-        "/ai_agent/": 64,
-        "/ai_agent/api/projects": 38,
-        "/ai_agent/api/conversations": 61,
-        "/ai_agent/api/user/subscription/status": 26,
-        "/ai_agent/api/auth/system-status": 34,
-        "/favicon.ico": 86,
-        "/ai_agent/api/auth_check": 22,
-        "/": 109,
+        "/ai_agent/api/stream": 11574,
+        "/ai_agent/": 65,
+        "/ai_agent/api/projects": 39,
+        "/ai_agent/api/conversations": 62,
+        "/ai_agent/api/user/subscription/status": 27,
+        "/ai_agent/api/auth/system-status": 36,
+        "/favicon.ico": 88,
+        "/ai_agent/api/auth_check": 23,
+        "/": 111,
         "/ai_agent/api/chat": 18,
         "/projects": 15,
         "/ai_agent/api/auth/login": 2,
