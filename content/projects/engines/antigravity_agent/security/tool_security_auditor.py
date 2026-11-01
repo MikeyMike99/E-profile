@@ -539,16 +539,37 @@ def run_tool_audit(target_filter: str = "all", clean_logs: bool = True) -> dict:
         sys.path.insert(0, mcp_plugin_dir)
     import server as raugus_mcp_srv
 
-    mcp_search = raugus_mcp_srv.search_keys("system.py", entry_type="all", user_tier=5, limit=10)
-    mcp_list = raugus_mcp_srv.list_module_keys("devcore.core.routes.system.py", user_tier=5)
-    mcp_read_sym = raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::api_bootstrap_preflight", user_tier=5)
-    mcp_read_var = raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::PROTECTED_FIREWALL_BASENAMES", user_tier=5)
-    mcp_read_t3 = json.loads(raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::reload_system", user_tier=3))
-    sens_key = next(k for k, v in r_map.items() if v.get('sensitive') is True)
-    mcp_read_vault = raugus_mcp_srv.read_by_key(sens_key, user_tier=5)
-    mcp_write_guard = json.loads(raugus_mcp_srv.write_by_key("devcore.security.raugus_resolver.py", "x = 1\n", user_tier=5))
-    mcp_write_ro = json.loads(raugus_mcp_srv.write_by_key("devcore.README.md", "hi", user_tier=5))
-    mcp_write_syn = json.loads(raugus_mcp_srv.write_by_key("devcore.core.routes.system.py::api_bootstrap_preflight", "def broken(:\n", user_tier=5))
+    # Resolver tools take their identity from the signed agent credential in the
+    # environment (never from a tool argument). Run each probe as a specific agent.
+    from security.agent_identity import mint_agent_credential, ENV_VAR as _CRED_ENV
+    _saved_cred = os.environ.get(_CRED_ENV)
+
+    def _as_role(role):
+        os.environ[_CRED_ENV] = mint_agent_credential(
+            {"role": role, "username": AUDIT_MARKER, "key_id": f"audit-{role}"}, agent_kind="audit", ttl_seconds=120)
+
+    try:
+        os.environ.pop(_CRED_ENV, None)
+        mcp_no_ident = json.loads(raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::reload_system"))
+        os.environ[_CRED_ENV] = "rac1.forged.signature"
+        mcp_forged = json.loads(raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::reload_system"))
+        _as_role("super_admin")
+        mcp_search = raugus_mcp_srv.search_keys("system.py", entry_type="all", limit=10)
+        mcp_list = raugus_mcp_srv.list_module_keys("devcore.core.routes.system.py")
+        mcp_read_sym = raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::api_bootstrap_preflight")
+        mcp_read_var = raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::PROTECTED_FIREWALL_BASENAMES")
+        sens_key = next(k for k, v in r_map.items() if v.get('sensitive') is True)
+        mcp_read_vault = raugus_mcp_srv.read_by_key(sens_key)
+        mcp_write_guard = json.loads(raugus_mcp_srv.write_by_key("devcore.security.raugus_resolver.py", "x = 1\n"))
+        mcp_write_ro = json.loads(raugus_mcp_srv.write_by_key("devcore.README.md", "hi"))
+        mcp_write_syn = json.loads(raugus_mcp_srv.write_by_key("devcore.core.routes.system.py::api_bootstrap_preflight", "def broken(:\n"))
+        _as_role("gamedev")
+        mcp_read_t3 = json.loads(raugus_mcp_srv.read_by_key("devcore.core.routes.system.py::reload_system"))
+    finally:
+        if _saved_cred is None:
+            os.environ.pop(_CRED_ENV, None)
+        else:
+            os.environ[_CRED_ENV] = _saved_cred
 
     combined_mcp_payloads = mcp_search + mcp_list + mcp_read_sym + mcp_read_var + mcp_read_vault
     zero_path_leak = ("/mnt/c" not in combined_mcp_payloads) and ("real_path" not in combined_mcp_payloads)
@@ -558,6 +579,8 @@ def run_tool_audit(target_filter: str = "all", clean_logs: bool = True) -> dict:
         and "def api_bootstrap_preflight" in json.loads(mcp_read_sym).get("result", "")
         and json.loads(mcp_read_var).get("status") == "GRANTED"
         and mcp_read_t3.get("status") == "DENIED"
+        and mcp_no_ident.get("status") == "DENIED_NO_IDENTITY"
+        and mcp_forged.get("status") == "DENIED_NO_IDENTITY"
         and json.loads(mcp_read_vault).get("status") == "GRANTED_SANITIZED_DIGEST_ONLY"
         and mcp_write_guard.get("status") == "DENIED_SELF_PROTECTION"
         and mcp_write_ro.get("status") == "DENIED_READ_ONLY"

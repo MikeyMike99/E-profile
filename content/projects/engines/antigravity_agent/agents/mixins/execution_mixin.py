@@ -11,6 +11,7 @@ import logging
 import subprocess
 import signal
 from pathlib import Path
+from core.roles import is_admin_role
 
 
 def _iter_relative_roots(base_dir: str):
@@ -87,6 +88,54 @@ def _save_available_models_cache(base_dir: str, models: list):
         )
     except Exception:
         pass
+
+
+def _sweep_orphaned_git_locks(base_dir: str, workspace_dir: str = None) -> list:
+    removed_locks = []
+    roots = set()
+    if workspace_dir:
+        roots.add(Path(workspace_dir))
+    for r in _iter_relative_roots(base_dir):
+        roots.add(r)
+    
+    b_path = Path(base_dir).resolve()
+    parent_dir = b_path.parent
+    if parent_dir.is_dir():
+        for sibling_name in ("DevCore", "e_profile", "Central_Docs", "Audio_pllayback_suite"):
+            sib = parent_dir / sibling_name
+            if (sib / ".git").is_dir():
+                roots.add(sib)
+
+    now = time.time()
+    direct_locks = (
+        "index.lock", "gc.pid", "HEAD.lock", "config.lock", "shallow.lock", "packed-refs.lock"
+    )
+    for root in roots:
+        try:
+            dot_git = root / ".git"
+            if not dot_git.is_dir():
+                continue
+            for lock_name in direct_locks:
+                lp = dot_git / lock_name
+                try:
+                    if lp.is_file() and (now - lp.stat().st_mtime) > 5.0:
+                        lp.unlink(missing_ok=True)
+                        removed_locks.append(str(lp))
+                except Exception:
+                    pass
+            pack_dir = dot_git / "objects" / "pack"
+            if pack_dir.is_dir():
+                try:
+                    for tmp_pack in pack_dir.iterdir():
+                        if tmp_pack.name.startswith("tmp_pack_") and tmp_pack.is_file():
+                            if (now - tmp_pack.stat().st_mtime) > 30.0:
+                                tmp_pack.unlink(missing_ok=True)
+                                removed_locks.append(str(tmp_pack))
+                except Exception:
+                    pass
+        except Exception:
+            continue
+    return removed_locks
 
 
 class ExecutionMixin:
@@ -205,7 +254,7 @@ class ExecutionMixin:
             })
             return
         env_override = os.environ.get("ADMIN_OVERRIDE", "false").lower() == "true"
-        is_admin = bool(user and user.get("role") in ("admin", "super_admin", "super admin", "Tier5_SysAdmin")) or env_override
+        is_admin = bool(user and is_admin_role(user.get("role"))) or env_override
         admin_override = is_admin
         self.active_task_owner = user.get("username") if user else None
         self.last_user = user
@@ -287,7 +336,7 @@ class ExecutionMixin:
         except asyncio.CancelledError:
             pass
 
-    async def _execute_agent(self, prompt: str, model: str, task_time: float, conversation_id: str, user: dict = None, admin_override: bool = False, _from_steer_or_queue: bool = False, _model_retry: bool = False):
+    async def _execute_agent(self, prompt: str, model: str, task_time: float, conversation_id: str, user: dict = None, admin_override: bool = False, _from_steer_or_queue: bool = False, _model_retry: bool = False, _recovery_retry: int = 0, _skip_timeout_flag: bool = False):
         hb_task = asyncio.create_task(self._heartbeat_worker(task_time))
         raw_user_prompt = prompt
         model_aliases = {
@@ -320,13 +369,14 @@ class ExecutionMixin:
             try:
                 cached_data = json.loads(cache_file.read_text(encoding="utf-8"))
                 avail_list = cached_data.get("models") or []
-                if avail_list and model not in avail_list and not model.lower().startswith(("local ", "ollama:")):
+                if avail_list and model not in avail_list and not model.lower().startswith(("local ", "ollama:")) and "claude" not in model.lower():
                     fallback_m = "Gemini 3.8 Flash (High)" if "Gemini 3.8 Flash (High)" in avail_list else avail_list[0]
                     model = fallback_m
                     self.current_model = fallback_m
             except Exception:
                 pass
 
+        is_claude = isinstance(model, str) and "claude" in model.lower()
         is_local_model = (
             model == "Local Qwen 2.5 (Offline)"
             or (isinstance(model, str) and (
@@ -338,7 +388,9 @@ class ExecutionMixin:
                 or "llama" in model.lower()
             ))
         )
-        if is_local_model:
+        # Claude runs through the in-process brain (core.local_model_service),
+        # not the agy CLI, so route it the same way as the local brains.
+        if is_local_model or is_claude:
             try:
                 from core.local_model_service import execute_local_agent_task
                 await execute_local_agent_task(self, prompt, model, task_time, conversation_id, user=user, is_admin=admin_override)
@@ -356,6 +408,10 @@ class ExecutionMixin:
                 workspace_dir = self.project_manager.get_active_workspace_path()
             if not workspace_dir:
                 workspace_dir = base_dir
+            try:
+                _sweep_orphaned_git_locks(base_dir, workspace_dir)
+            except Exception:
+                pass
             auto_rollover_enabled = os.environ.get("ENABLE_AUTO_SESSION_ROLLOVER", "true").lower() == "true"
             is_ongoing_midconversation = _from_steer_or_queue or bool(getattr(self, "queued_prompts", []))
 
@@ -446,6 +502,23 @@ class ExecutionMixin:
                 safe_env["HOME"] = str(Path.home())
             safe_env["PYTHONUNBUFFERED"] = "1"
             safe_env["PYTHONIOENCODING"] = "utf-8"
+            # Agent identity: the CLI agent (and the Raugus Resolver MCP it spawns,
+            # which inherits this env) acts with exactly this user's tier/grants.
+            safe_env.pop("DEVCORE_AGENT_CREDENTIAL", None)
+            _cred_user = user
+            if not _cred_user and admin_override:
+                try:
+                    from security.security_manager import SecurityManager
+                    _cred_user = dict(SecurityManager.OWNER_USER)
+                except Exception:
+                    _cred_user = None
+            if _cred_user:
+                try:
+                    from security.agent_identity import mint_agent_credential
+                    safe_env["DEVCORE_AGENT_CREDENTIAL"] = mint_agent_credential(
+                        _cred_user, conversation_id=conversation_id, agent_kind="agy", ttl_seconds=3900)
+                except Exception:
+                    pass
 
             is_pa = False
             try:
@@ -474,31 +547,32 @@ class ExecutionMixin:
 
             real_agy = _find_agy_executable(base_dir)
             env_override = os.environ.get("ADMIN_OVERRIDE", "false").lower() == "true"
-            is_admin = (bool(user and user.get("role") in ("admin", "super_admin", "super admin", "Tier5_SysAdmin")) or env_override) and (token_scope != "demo")
+            is_admin = (bool(user and is_admin_role(user.get("role"))) or env_override) and (token_scope != "demo")
 
             user_id = (user.get("username") if isinstance(user, dict) else None) or (user.get("name") if isinstance(user, dict) else None) or "guest"
             byos_data = None
-            try:
-                from security.subscription_guard import assert_user_execution_quota, get_user_runtime_chamber
-                byos_ok, byos_reason, byos_data = assert_user_execution_quota(user, base_dir=base_dir)
-                if not byos_ok:
-                    halt_msg = f"⛔ **Personal Subscription Required (Strict Halt)**\n\n{byos_reason}"
-                    self.output_buffer.append(halt_msg)
-                    await self.broadcast({"type": "agent_chunk", "chunk": halt_msg})
-                    await self.broadcast({
-                        "type": "agent_done",
-                        "exit_code": 1,
-                        "elapsed": 0.1,
-                        "status": "HALTED",
-                        "output": halt_msg,
-                        "cancelled": False
-                    })
-                    hb_task.cancel()
-                    self.active_task = None
-                    self.start_time = None
-                    return
-            except Exception as e:
-                logging.warning(f"[ExecutionMixin] Subscription guard warning: {e}")
+            if token_scope != "demo":
+                try:
+                    from security.subscription_guard import assert_user_execution_quota, get_user_runtime_chamber
+                    byos_ok, byos_reason, byos_data = assert_user_execution_quota(user, base_dir=base_dir)
+                    if not byos_ok:
+                        halt_msg = f"⛔ **Personal Subscription Required (Strict Halt)**\n\n{byos_reason}"
+                        self.output_buffer.append(halt_msg)
+                        await self.broadcast({"type": "agent_chunk", "chunk": halt_msg})
+                        await self.broadcast({
+                            "type": "agent_done",
+                            "exit_code": 1,
+                            "elapsed": 0.1,
+                            "status": "HALTED",
+                            "output": halt_msg,
+                            "cancelled": False
+                        })
+                        hb_task.cancel()
+                        self.active_task = None
+                        self.start_time = None
+                        return
+                except Exception as e:
+                    logging.warning(f"[ExecutionMixin] Subscription guard warning: {e}")
 
             if byos_data and byos_data.get("credential"):
                 user_chamber = get_user_runtime_chamber(user_id)
@@ -602,32 +676,8 @@ class ExecutionMixin:
                             except Exception:
                                 pass
             else:
-                found_oauth = None
-                for root in _iter_relative_roots(base_dir):
-                    for rel_tok in (
-                        Path(".gemini/antigravity-cli/antigravity-oauth-token"),
-                        Path("antigravity-oauth-token"),
-                    ):
-                        cand_tok = root / rel_tok
-                        if cand_tok.is_file() and cand_tok.stat().st_size > 8:
-                            found_oauth = cand_tok
-                            break
-                    if found_oauth:
-                        break
-
-                home_oauth = Path.home() / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
-                if found_oauth and not home_oauth.exists():
-                    try:
-                        home_oauth.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(found_oauth, home_oauth)
-                    except Exception:
-                        pass
-
-                if (found_oauth and found_oauth.exists()) or (home_oauth.exists() and home_oauth.stat().st_size > 8):
-                    safe_env.pop("GEMINI_API_KEY", None)
-                    safe_env.pop("GOOGLE_API_KEY", None)
-                    safe_env.pop("GEMINI_BASE_URL", None)
-                else:
+                existing_key = safe_env.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
+                if not existing_key:
                     for root in _iter_relative_roots(base_dir):
                         for kname in (".devcore_client_key.txt", "gemini_api_key.txt"):
                             kp = root / kname
@@ -635,12 +685,62 @@ class ExecutionMixin:
                                 try:
                                     kval = kp.read_text(encoding="utf-8").strip()
                                     if kval:
-                                        safe_env["GEMINI_API_KEY"] = kval
+                                        existing_key = kval
                                         break
                                 except Exception:
                                     pass
-                        if "GEMINI_API_KEY" in safe_env:
+                        if existing_key:
                             break
+
+                if not existing_key:
+                    user_prof = os.environ.get("USERPROFILE")
+                    search_homes = [Path.home()]
+                    if user_prof:
+                        search_homes.append(Path(user_prof))
+                    for home_root in search_homes:
+                        for kname in (".devcore_client_key.txt", "gemini_api_key.txt"):
+                            kp = home_root / kname
+                            if kp.is_file():
+                                try:
+                                    kval = kp.read_text(encoding="utf-8").strip()
+                                    if kval:
+                                        existing_key = kval
+                                        break
+                                except Exception:
+                                    pass
+                        if existing_key:
+                            break
+
+                if existing_key:
+                    safe_env["GEMINI_API_KEY"] = existing_key
+                    safe_env.pop("GOOGLE_API_KEY", None)
+                    safe_env.pop("GEMINI_BASE_URL", None)
+                else:
+                    found_oauth = None
+                    for root in _iter_relative_roots(base_dir):
+                        for rel_tok in (
+                            Path(".gemini/antigravity-cli/antigravity-oauth-token"),
+                            Path("antigravity-oauth-token"),
+                        ):
+                            cand_tok = root / rel_tok
+                            if cand_tok.is_file() and cand_tok.stat().st_size > 8:
+                                found_oauth = cand_tok
+                                break
+                        if found_oauth:
+                            break
+
+                    home_oauth = Path.home() / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
+                    if found_oauth and not home_oauth.exists():
+                        try:
+                            home_oauth.parent.mkdir(parents=True, exist_ok=True)
+                            shutil.copy2(found_oauth, home_oauth)
+                        except Exception:
+                            pass
+
+                    if (found_oauth and found_oauth.exists()) or (home_oauth.exists() and home_oauth.stat().st_size > 8):
+                        safe_env.pop("GEMINI_API_KEY", None)
+                        safe_env.pop("GOOGLE_API_KEY", None)
+                        safe_env.pop("GEMINI_BASE_URL", None)
 
             for root in _iter_relative_roots(base_dir):
                 bin_cand = root / ".local" / "bin"
@@ -701,8 +801,9 @@ class ExecutionMixin:
             cmd.extend([
                 "--model", model,
                 "--output-format", "stream-json",
-                "--print-timeout", "3600s"
             ])
+            if not _skip_timeout_flag:
+                cmd.extend(["--print-timeout", "3600s"])
             if conversation_id:
                 cmd.extend(["--conversation", conversation_id])
             cmd.extend(["--print", prompt])
@@ -1196,8 +1297,88 @@ class ExecutionMixin:
                     admin_override=admin_override,
                     _from_steer_or_queue=_from_steer_or_queue,
                     _model_retry=True,
+                    _recovery_retry=_recovery_retry,
+                    _skip_timeout_flag=_skip_timeout_flag,
                 )
                 return
+
+            # --- SELF-HEALING RECOVERY GATEWAY ---
+            was_steered = bool(getattr(self, "_steering_interrupt", False))
+            was_cancelled = False
+            has_valid_output = bool("".join(self.output_buffer).strip())
+
+            if proc.returncode != 0 and not was_steered and _recovery_retry < 2:
+                err_text = "\n".join(non_json_lines).strip()
+                is_code_2 = (proc.returncode == 2)
+                is_startup_failure = (not has_valid_output and proc.returncode != -9)
+                timeout_flag_issue = ("--print-timeout" in err_text or "unrecognized" in err_text.lower())
+                
+                if is_code_2 or is_startup_failure:
+                    swept_locks = _sweep_orphaned_git_locks(base_dir, workspace_dir)
+                    if swept_locks:
+                        logging.info(f"[ExecutionMixin] Swept {len(swept_locks)} git locks during recovery: {swept_locks}")
+
+                    next_conv_id = None
+                    recovered_prompt = raw_user_prompt
+                    if conversation_id:
+                        try:
+                            sm_inst = self._get_session_mgr()
+                            briefing = sm_inst.generate_continuation_briefing(conversation_id, workspace_dir)
+                            if briefing:
+                                recovered_prompt = briefing + "\n\n" + raw_user_prompt
+                        except Exception as e:
+                            logging.warning(f"[ExecutionMixin] Recovery briefing error: {e}")
+
+                    next_skip_timeout = _skip_timeout_flag or timeout_flag_issue or is_code_2
+
+                    diag_hint = "CLI argument desync" if is_code_2 else f"Process exit (Code {proc.returncode})"
+                    recovery_msg = (
+                        f"🔄 **Auto-Recovering Session**: System resolved an unexpected {diag_hint}. "
+                        "Purging stale session locks and resuming execution with preserved context..."
+                    )
+                    await self.broadcast({
+                        "type": "system",
+                        "level": "info",
+                        "message": recovery_msg
+                    })
+                    await self.broadcast({
+                        "type": "agent_chunk",
+                        "chunk": f"\n\n_{recovery_msg}_\n\n"
+                    })
+
+                    hb_task.cancel()
+                    if 'watchdog_task' in locals() and not watchdog_task.done():
+                        watchdog_task.cancel()
+                    if hasattr(self, "transcript_watcher_task") and self.transcript_watcher_task:
+                        self.transcript_watcher_task.cancel()
+
+                    self.output_buffer = []
+                    self.current_conversation_id = None
+
+                    try:
+                        from security.central_logger import log_siem_event
+                        log_siem_event(
+                            level="WARNING",
+                            message=f"[SELF_HEALING_RECOVERY] Auto-recovered from Code {proc.returncode} exit (attempt {_recovery_retry + 1}/2). Continuing task smoothly.",
+                            module_name="execution_mixin",
+                            logger_name="agent.recovery"
+                        )
+                    except Exception:
+                        pass
+
+                    await self._execute_agent(
+                        recovered_prompt,
+                        model,
+                        task_time,
+                        next_conv_id,
+                        user=user,
+                        admin_override=admin_override,
+                        _from_steer_or_queue=_from_steer_or_queue,
+                        _model_retry=_model_retry,
+                        _recovery_retry=_recovery_retry + 1,
+                        _skip_timeout_flag=next_skip_timeout
+                    )
+                    return
 
             elapsed = round(time.time() - task_time, 1)
             was_steered = bool(getattr(self, "_steering_interrupt", False))
@@ -1476,8 +1657,8 @@ class ExecutionMixin:
                 prompt.strip(),
                 model=model or getattr(self, "current_model", "Gemini 3.8 Flash (Low)"),
                 conversation_id=conversation_id or getattr(self, "current_conversation_id", None),
-                user=user if user is not None else getattr(self, "last_user", None),
-                admin_override=admin_override or getattr(self, "last_admin_override", False),
+                user=user,
+                admin_override=admin_override,
                 _from_steer_or_queue=True,
                 queued_user_prompt=prompt.strip(),
             )
@@ -1488,8 +1669,8 @@ class ExecutionMixin:
             "prompt": prompt.strip(),
             "model": model or getattr(self, "current_model", "Gemini 3.8 Flash (Low)"),
             "conversation_id": conversation_id or getattr(self, "current_conversation_id", None),
-            "user": user if user is not None else getattr(self, "last_user", None),
-            "admin_override": admin_override or getattr(self, "last_admin_override", False),
+            "user": user,
+            "admin_override": admin_override,
             "timestamp": time.time(),
         }
         self.queued_prompts.append(item)
@@ -1527,10 +1708,21 @@ class ExecutionMixin:
         )
 
     async def _drain_queued_prompts(self):
+        """Run only the leading run of queued items that share one owner; the rest stay queued so prompts from different users are never merged under a single identity."""
         if not getattr(self, "queued_prompts", None) or self.is_running():
             return
-        items = list(self.queued_prompts)
-        self.queued_prompts = []
+        pending = list(self.queued_prompts)
+
+        def _owner(item):
+            item_user = item.get("user")
+            return item_user.get("username") if isinstance(item_user, dict) else None
+
+        first_owner = _owner(pending[0])
+        split = 1
+        while split < len(pending) and _owner(pending[split]) == first_owner:
+            split += 1
+        items = pending[:split]
+        self.queued_prompts = pending[split:]
         await self._broadcast_queue_state()
 
         prompts = [it["prompt"] for it in items if it.get("prompt")]
@@ -1543,8 +1735,8 @@ class ExecutionMixin:
             combined,
             model=last_item.get("model") or getattr(self, "current_model", "Gemini 3.8 Flash (Low)"),
             conversation_id=conv_id,
-            user=last_item.get("user") if last_item.get("user") is not None else getattr(self, "last_user", None),
-            admin_override=last_item.get("admin_override", False) or getattr(self, "last_admin_override", False),
+            user=last_item.get("user"),
+            admin_override=last_item.get("admin_override", False),
             _from_steer_or_queue=True,
             display_prompt=f"📥 Queued Follow-Up: {prompts[0][:80]}",
             queued_user_prompt=combined,
@@ -1559,13 +1751,31 @@ class ExecutionMixin:
         admin_override: bool = False,
         _from_promote: bool = False,
     ):
+        """Only the owner of the running task may steer it; anyone else is queued. Only the requester's own queued items are folded into the steer."""
         if not hasattr(self, "_steer_lock") or self._steer_lock is None:
             self._steer_lock = asyncio.Lock()
 
+        requester = user.get("username") if isinstance(user, dict) else None
+
+        def _owner(item):
+            item_user = item.get("user")
+            return item_user.get("username") if isinstance(item_user, dict) else None
+
         async with self._steer_lock:
-            queued_items_objs = list(getattr(self, "queued_prompts", []) or [])
+            if self.is_running() and requester != getattr(self, "active_task_owner", None):
+                await self.queue_prompt(
+                    new_prompt,
+                    model=model,
+                    conversation_id=conversation_id,
+                    user=user,
+                    admin_override=admin_override,
+                )
+                return
+
+            pending = list(getattr(self, "queued_prompts", []) or [])
+            queued_items_objs = [q for q in pending if _owner(q) == requester]
             queued_texts = [q.get("prompt", "").strip() for q in queued_items_objs if q.get("prompt", "").strip()]
-            self.queued_prompts = []
+            self.queued_prompts = [q for q in pending if _owner(q) != requester]
             if queued_items_objs:
                 await self._broadcast_queue_state()
 
@@ -1576,8 +1786,8 @@ class ExecutionMixin:
 
             combined_updates_text = "\n".join(f"- {u}" for u in all_updates) if len(all_updates) > 1 else all_updates[0]
             effective_model = model or getattr(self, "current_model", "Gemini 3.8 Flash (Low)")
-            effective_user = user if user is not None else getattr(self, "last_user", None)
-            effective_override = admin_override or getattr(self, "last_admin_override", False)
+            effective_user = user
+            effective_override = admin_override
             active_conv_id = getattr(self, "current_conversation_id", None) or conversation_id
 
             if not self.is_running():
