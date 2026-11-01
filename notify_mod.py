@@ -79,7 +79,7 @@ def load_subscribers() -> list:
         return _read_json(SUBSCRIBERS_FILE, [])
 
 
-def add_subscriber(email: str, topics) -> dict:
+def add_subscriber(email: str, topics, merge: bool = True) -> dict:
     address = (email or "").strip().lower()
     if len(address) > 254 or not EMAIL_PATTERN.match(address):
         raise ValueError("Enter a valid email address.")
@@ -90,9 +90,13 @@ def add_subscriber(email: str, topics) -> dict:
         subscribers = _read_json(SUBSCRIBERS_FILE, [])
         entry = next((s for s in subscribers if s.get("email") == address), None)
         if entry is None:
-            entry = {"email": address, "token": secrets.token_urlsafe(24), "added_at": _now()}
+            entry = {"email": address, "token": secrets.token_urlsafe(24), "added_at": _now(), "topics": []}
             subscribers.append(entry)
-        entry["topics"] = chosen
+        if merge and "topics" in entry:
+            merged = set(entry.get("topics", [])) | set(chosen)
+            entry["topics"] = sorted(merged)
+        else:
+            entry["topics"] = chosen
         entry["status"] = "active"
         entry["updated_at"] = _now()
         _write_json(SUBSCRIBERS_FILE, subscribers)
@@ -334,3 +338,66 @@ def admin_send_notification(kind: str):
     else:
         abort(404)
     return jsonify({"success": True, **result})
+
+
+@notify_bp.route("/api/subscribe", methods=["POST"])
+def public_subscribe():
+    """Public subscription endpoint for visitors on the Newsletter and Downloads tabs."""
+    data = request.get_json(silent=True) or request.form.to_dict() or {}
+    email = str(data.get("email", "")).strip()
+
+    # Honeypot spam trap (hidden input named 'website')
+    if data.get("website"):
+        return jsonify({"success": True, "message": "Thank you for subscribing!"})
+
+    topics_raw = data.get("topics")
+    if not topics_raw:
+        topics = ["newsletter"]
+    elif isinstance(topics_raw, str):
+        topics = [t.strip().lower() for t in topics_raw.split(",") if t.strip()]
+    elif isinstance(topics_raw, list):
+        topics = [str(t).strip().lower() for t in topics_raw if str(t).strip()]
+    else:
+        topics = ["newsletter"]
+
+    try:
+        entry = add_subscriber(email, topics, merge=True)
+    except ValueError as exc:
+        return jsonify({"success": False, "error": str(exc)}), 400
+
+    # Dispatch welcome/confirmation email asynchronously
+    try:
+        from email_engine import build_email_template, send_email
+        topics_str = ", ".join(t.capitalize() for t in entry["topics"])
+        subject = f"Subscription Confirmed: E-Profile ({topics_str})"
+        title = "Subscription Confirmed"
+        body_html = f"""
+        <p>Hello,</p>
+        <p>You have successfully subscribed to <strong>{html.escape(topics_str)}</strong> updates on the Michael Robberts E-Profile Platform.</p>
+        <p>You will receive email notifications as soon as new digests or software builds are released.</p>
+        <p style="margin-top: 20px; font-size: 13px; color: #888;">If you did not request this update, you can safely disregard this email.</p>
+        """
+        target_url = url_for("newsletter.newsletter_index", _external=True) if "newsletter" in entry["topics"] else url_for("audio_suite.downloads_view", _external=True)
+        html_content = build_email_template(
+            title=title,
+            body_html=body_html,
+            action_url=target_url,
+            action_label="Explore E-Profile"
+        )
+        threading.Thread(
+            target=send_email,
+            kwargs={
+                "to_address": entry["email"],
+                "subject": subject,
+                "html_content": html_content
+            },
+            daemon=True
+        ).start()
+    except Exception as exc:
+        current_app.logger.warning("Failed to dispatch confirmation email: %s", exc)
+
+    formatted_topics = " & ".join(t.capitalize() for t in entry["topics"])
+    return jsonify({
+        "success": True,
+        "message": f"Successfully subscribed to {formatted_topics} updates!"
+    })

@@ -32,6 +32,54 @@
         </div>
     </header>
 
+    <!-- Newsletter Subscription Section -->
+    <section aria-labelledby="newsletter-sub-heading" style="background: linear-gradient(135deg, rgba(13, 17, 23, 0.95), rgba(8, 28, 36, 0.95)); border: 1px solid rgba(25, 230, 255, 0.35); border-radius: 10px; padding: 22px 24px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 1.5rem;" aria-hidden="true">📬</span>
+                <div>
+                    <h3 id="newsletter-sub-heading" style="margin: 0; color: #19e6ff; font-size: 1.2rem; font-family: monospace; letter-spacing: 0.5px; text-transform: uppercase;">
+                        Subscribe to Threat Intelligence Digests
+                    </h3>
+                    <p style="margin: 4px 0 0 0; color: rgba(234, 242, 255, 0.75); font-size: 0.88rem;">
+                        Receive curated security advisories, vulnerability analyses, and defensive playbooks directly in your inbox.
+                    </p>
+                </div>
+            </div>
+
+            <form id="newsletter-subscribe-form" onsubmit="handleNewsletterSubscribe(event)" style="margin-top: 8px;">
+                <!-- Anti-bot honeypot -->
+                <input type="text" name="website" tabindex="-1" autocomplete="off" style="display: none !important;">
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <div style="flex: 1; min-width: 250px; max-width: 480px;">
+                        <label for="newsletter-sub-email" class="sr-only">Your email address</label>
+                        <input type="email" id="newsletter-sub-email" name="email" required placeholder="Enter your email (e.g. security@domain.com)"
+                               style="width: 100%; background: rgba(5, 7, 10, 0.9); border: 1px solid rgba(25, 230, 255, 0.4); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.92rem; font-family: inherit; box-sizing: border-box;">
+                    </div>
+                    
+                    <button type="submit" id="newsletter-sub-btn"
+                            style="background: #19e6ff; color: #000; font-weight: bold; font-family: monospace; text-transform: uppercase; font-size: 0.85rem; padding: 11px 20px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.5px;">
+                        ⚡ Subscribe Now
+                    </button>
+                </div>
+                
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 18px; font-size: 0.8rem; color: rgba(234, 242, 255, 0.65); font-family: monospace;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="topic-newsletter-fixed" checked disabled style="accent-color: #19e6ff;">
+                        Cyber Newsletter
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="topic-releases-opt" style="accent-color: #19e6ff;">
+                        Also notify on Software Releases
+                    </label>
+                </div>
+                
+                <div id="newsletter-sub-feedback" role="status" aria-live="polite" style="margin-top: 10px; font-size: 0.88rem; font-family: monospace; display: none;"></div>
+            </form>
+        </div>
+    </section>
+
     {% if items and items|length > 0 %}
     <section aria-label="Threat Advisories Feed" class="advisory-grid" id="advisory-list" style="display: flex; flex-direction: column; gap: 20px;">
         {% for item in items %}
@@ -112,6 +160,60 @@ function filterAdvisories(query) {
     const announcer = document.getElementById('newsletter-live-announcer');
     if (announcer) {
         announcer.textContent = `Showing ${visibleCount} threat advisories.`;
+    }
+}
+
+async function handleNewsletterSubscribe(event) {
+    event.preventDefault();
+    const form = event.target;
+    const emailInput = document.getElementById('newsletter-sub-email');
+    const feedback = document.getElementById('newsletter-sub-feedback');
+    const btn = document.getElementById('newsletter-sub-btn');
+    const email = emailInput.value.trim();
+    const alsoReleases = document.getElementById('topic-releases-opt')?.checked;
+
+    if (!email) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Subscribing...';
+    feedback.style.display = 'block';
+    feedback.style.color = '#19e6ff';
+    feedback.textContent = 'Registering subscription...';
+
+    const topics = ['newsletter'];
+    if (alsoReleases) topics.push('releases');
+
+    try {
+        const res = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: email,
+                topics: topics,
+                website: form.querySelector('input[name="website"]').value
+            })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+            feedback.style.color = '#00ff88';
+            feedback.textContent = '✓ ' + (data.message || 'Successfully subscribed!');
+            emailInput.value = '';
+            btn.textContent = 'Subscribed!';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = '⚡ Subscribe Now';
+            }, 3000);
+        } else {
+            feedback.style.color = '#ff4d4d';
+            feedback.textContent = '✗ ' + (data.error || 'Failed to subscribe. Please try again.');
+            btn.disabled = false;
+            btn.textContent = '⚡ Subscribe Now';
+        }
+    } catch (err) {
+        feedback.style.color = '#ff4d4d';
+        feedback.textContent = '✗ Connection error. Please try again.';
+        btn.disabled = false;
+        btn.textContent = '⚡ Subscribe Now';
     }
 }
 </script>
