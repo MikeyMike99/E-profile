@@ -9,24 +9,33 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h2 style="font-size: 1.8rem; margin: 0 0 8px 0; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px;">
-                    🛡️ Cyber Intelligence Newsletter
+                    🛡️ Cyber Intelligence Feed & Incident Stories
                 </h2>
                 <p style="color: rgba(234, 242, 255, 0.7); margin: 0; font-size: 0.95rem;">
-                    Active threat digest dispatched: <strong style="color: #fff;">{{ manifest.dispatched_at }}</strong>
+                    Active threat digest dispatched: <strong style="color: #fff;">{{ manifest.dispatched_at }}</strong> · 
+                    <span style="color: #00ff88;">Quota-Safe Real-Time Feed</span> (Newest releases always on top)
                 </p>
             </div>
-            <div style="background: rgba(25, 230, 255, 0.08); border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 8px 16px; font-family: monospace; font-size: 0.85rem;">
-                <span style="color: #19e6ff;">⚡ DISK CACHE ACTIVE</span>: 
-                <span style="color: #fff;">{{ cached_count }} Dossiers Cached</span>
-                <span style="color: rgba(234, 242, 255, 0.5);"> (RAM-Clean)</span>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div style="background: rgba(25, 230, 255, 0.08); border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 8px 16px; font-family: monospace; font-size: 0.85rem;">
+                    <span style="color: #19e6ff;">⚡ DISK CACHE ACTIVE</span>: 
+                    <span style="color: #fff;">{{ cached_count }} Cached</span>
+                    <span style="color: rgba(234, 242, 255, 0.5);"> (RAM-Clean)</span>
+                </div>
+                {% if is_admin %}
+                <button onclick="refreshThreatFeed()" id="btn-refresh-feed"
+                        style="padding: 8px 14px; background: rgba(0, 255, 136, 0.15); border: 1px solid #00ff88; color: #00ff88; font-family: monospace; font-size: 0.85rem; border-radius: 6px; cursor: pointer; transition: background 0.2s;">
+                    🔄 Refresh Threat Feed
+                </button>
+                {% endif %}
             </div>
         </div>
 
         <div style="margin-top: 20px;">
             <label for="newsletter-search-input" style="font-size: 0.85rem; font-family: monospace; color: #19e6ff; display: block; margin-bottom: 6px;">
-                SEARCH THREAT ADVISORIES (TITLE, CVE, SEVERITY):
+                SEARCH THREAT ADVISORIES (TITLE, CVE, SEVERITY, ADVERSARY):
             </label>
-            <input type="text" id="newsletter-search-input" placeholder="e.g. CVE-2024, CRITICAL, Linux, SSH..." 
+            <input type="text" id="newsletter-search-input" placeholder="e.g. VOLTA, CVE-2026, CRITICAL, Infostealer, Ivanti..." 
                    style="width: 100%; max-width: 600px; background: rgba(5, 7, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.95rem;"
                    oninput="filterAdvisories(this.value)">
         </div>
@@ -88,9 +97,15 @@
         {% set cves = item.cves|default([]) %}
         
         <article class="advisory-card" data-search="{{ item.title }} {{ cves|join(' ') }} {{ threat_level }} {{ item.source }}"
-                 style="background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-left: 4px solid {% if score >= 90 %}#ff4d4d{% elif score >= 75 %}#ffaa00{% else %}#19e6ff{% endif %}; border-radius: 8px; padding: 20px; transition: border-color 0.2s;">
+                 style="background: #0d1117; border: 1px solid {% if item.is_latest %}rgba(25, 230, 255, 0.5){% else %}rgba(255, 255, 255, 0.1){% endif %}; border-left: 4px solid {% if item.is_latest %}#19e6ff{% elif score >= 90 %}#ff4d4d{% elif score >= 75 %}#ffaa00{% else %}#19e6ff{% endif %}; border-radius: 8px; padding: 20px; transition: border-color 0.2s; position: relative;">
+            
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    {% if item.is_latest %}
+                    <span style="font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: rgba(25, 230, 255, 0.25); color: #19e6ff; border: 1px solid #19e6ff; box-shadow: 0 0 10px rgba(25, 230, 255, 0.4);">
+                        ⚡ LATEST RELEASE
+                    </span>
+                    {% endif %}
                     <span style="font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: {% if score >= 90 %}rgba(255, 77, 77, 0.2){% elif score >= 75 %}rgba(255, 170, 0, 0.2){% else %}rgba(25, 230, 255, 0.2){% endif %}; color: {% if score >= 90 %}#ff7878{% elif score >= 75 %}#ffc04d{% else %}#19e6ff{% endif %}; border: 1px solid currentColor;">
                         SCORE {{ score }}/100 · {{ threat_level }}
                     </span>
@@ -102,8 +117,8 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                <span style="font-size: 0.8rem; color: rgba(234, 242, 255, 0.5); font-family: monospace;">
-                    Source: {{ item.source }} ({{ item.date|default('Recent') }})
+                <span style="font-size: 0.8rem; color: rgba(234, 242, 255, 0.6); font-family: monospace;">
+                    {{ item.source }} · <strong style="color: #fff;">{{ item.display_date|default(item.date)|default('Recent') }}</strong>
                 </span>
             </div>
 
@@ -117,8 +132,37 @@
                 {{ item.summary }}
             </p>
 
+            <!-- Story Appetites Quick Selector -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <span style="font-size: 0.8rem; font-family: monospace; color: #19e6ff; font-weight: bold;">
+                    🎭 STORY APPETITES:
+                </span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=cyber_thriller" 
+                       style="padding: 4px 10px; background: rgba(255, 170, 0, 0.15); border: 1px solid #ffaa00; border-radius: 4px; color: #ffc04d; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        🍿 Thriller
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=deep_dive" 
+                       style="padding: 4px 10px; background: rgba(25, 230, 255, 0.15); border: 1px solid #19e6ff; border-radius: 4px; color: #19e6ff; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        🔬 Deep Dive
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=defense_playbook" 
+                       style="padding: 4px 10px; background: rgba(0, 255, 136, 0.15); border: 1px solid #00ff88; border-radius: 4px; color: #00ff88; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        🛡️ Playbook
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=executive_espresso" 
+                       style="padding: 4px 10px; background: rgba(179, 136, 255, 0.15); border: 1px solid #b388ff; border-radius: 4px; color: #d1b3ff; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        ☕ Espresso
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=snarky_hacker" 
+                       style="padding: 4px 10px; background: rgba(255, 120, 120, 0.15); border: 1px solid #ff7878; border-radius: 4px; color: #ff9999; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        💻 Snarky Hacker
+                    </a>
+                </div>
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-                <div style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.6);">
+                <div style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.6); max-width: 70%;">
                     <strong>Actionable Defense:</strong> {{ item.remediation|default('Enforce security boundaries and apply vendor patches.') }}
                 </div>
                 <a href="/newsletter/story/{{ item.story_id }}" 
@@ -133,9 +177,9 @@
     </section>
     {% else %}
     <div style="background: #0d1117; border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 40px; text-align: center;">
-        <h3 style="color: #19e6ff; margin: 0 0 10px 0;">No Active Email Digest Registered Yet</h3>
+        <h3 style="color: #19e6ff; margin: 0 0 10px 0;">No Active Threat Advisories Loaded Yet</h3>
         <p style="color: rgba(234, 242, 255, 0.7); max-width: 500px; margin: 0 auto 20px auto;">
-            Run <code>python main.py --export-email</code> in the <code>cyber_news</code> workspace to generate an email digest and populate the Cyber Newsletter feed automatically.
+            The feed will automatically populate on next scheduled scan, or you can trigger an immediate scan.
         </p>
     </div>
     {% endif %}
@@ -148,7 +192,7 @@ function filterAdvisories(query) {
     let visibleCount = 0;
 
     cards.forEach(card => {
-        const text = card.getAttribute('data-search').toLowerCase();
+        const text = (card.getAttribute('data-search') || '').toLowerCase();
         if (!q || text.includes(q)) {
             card.style.display = 'block';
             visibleCount++;
@@ -159,7 +203,7 @@ function filterAdvisories(query) {
 
     const announcer = document.getElementById('newsletter-live-announcer');
     if (announcer) {
-        announcer.textContent = `Showing ${visibleCount} threat advisories.`;
+        announcer.textContent = `Showing ${visibleCount} threat advisories for search "${query}".`;
     }
 }
 

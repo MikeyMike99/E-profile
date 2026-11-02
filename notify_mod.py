@@ -36,6 +36,11 @@ SUBSCRIBERS_FILE = CACHE_DIR / "subscribers.json"
 SUPPRESSION_FILE = CACHE_DIR / "suppression_list.json"
 NOTIFY_STATE_FILE = CACHE_DIR / "notify_state.json"
 TOPICS = ("releases", "downloads", "newsletter")
+VALID_FORMATS = ("hybrid_brief", "full_story_daily", "quick_threat_wire", "weekly_digest")
+VALID_APPETITES = ("cyber_thriller", "deep_dive", "defense_playbook", "executive_espresso", "snarky_hacker")
+VALID_TOPICS = ("zero_days", "ransomware", "cisa_kev", "supply_chain", "cloud_infra")
+METRICS_FILE = config.ROOT_DIR / "traffic_metrics.json"
+
 EMAIL_PATTERN = re.compile(r"^[^@\s<>\"']+@[^@\s<>\"']+\.[^@\s<>\"']+$")
 RELEASE_ENDPOINTS = {"audio_suite.schedule_publish_now", "audio_suite.stage_update_release"}
 DOWNLOAD_ENDPOINTS = {"audio_suite.downloads_view", "audio_suite.download_package"}
@@ -220,7 +225,62 @@ def add_subscriber(email: str, topics, status: str = "pending", merge: bool = Tr
             entry["verify_expires_at"] = (datetime.now() + timedelta(hours=48)).strftime("%Y-%m-%d %H:%M:%S")
 
         entry["updated_at"] = _now()
+        normalize_subscriber(entry)
         _write_json(SUBSCRIBERS_FILE, subscribers)
+    return entry
+
+
+def subscribe_newsletter(
+    email: str,
+    delivery_format: str = "hybrid_brief",
+    primary_appetite: str = "cyber_thriller",
+    topics: list = None,
+    engagement_modules: dict = None
+) -> dict:
+    address = (email or "").strip().lower()
+    if len(address) > 254 or not EMAIL_PATTERN.match(address):
+        raise ValueError("Enter a valid email address.")
+
+    chosen_format = delivery_format if delivery_format in VALID_FORMATS else "hybrid_brief"
+    chosen_appetite = primary_appetite if primary_appetite in VALID_APPETITES else "cyber_thriller"
+    chosen_topics = [t for t in (topics or ["zero_days", "cisa_kev"]) if t in VALID_TOPICS] or ["zero_days", "cisa_kev"]
+
+    default_engagement = {"alt_appetite_teaser": True, "audio_link": True, "zero_day_radar": True}
+    if isinstance(engagement_modules, dict):
+        for k in default_engagement:
+            if k in engagement_modules:
+                default_engagement[k] = bool(engagement_modules[k])
+
+    with _store_lock:
+        subscribers = _read_json(SUBSCRIBERS_FILE, [])
+        entry = next((s for s in subscribers if s.get("email") == address), None)
+        if entry is None:
+            entry = {
+                "subscriber_id": f"sub_{secrets.token_hex(6)}",
+                "email": address,
+                "token": secrets.token_urlsafe(24),
+                "created_at": _now()
+            }
+            subscribers.append(entry)
+
+        entry["status"] = "active"
+        entry["last_active_at"] = _now()
+        entry["delivery"] = {
+            "format": chosen_format,
+            "cadence": "weekly" if chosen_format == "weekly_digest" else "daily"
+        }
+        entry["content"] = {
+            "primary_appetite": chosen_appetite,
+            "topics": chosen_topics
+        }
+        entry["engagement_modules"] = default_engagement
+        existing_topics = set(entry.get("topics") or [])
+        existing_topics.add("newsletter")
+        entry["topics"] = sorted(existing_topics)
+        entry["updated_at"] = _now()
+        normalize_subscriber(entry)
+        _write_json(SUBSCRIBERS_FILE, subscribers)
+
     return entry
 
 
@@ -406,39 +466,71 @@ def notify_download(package_id: str) -> int:
     )
 
 
-def notify_newsletter() -> dict:
-    """Emails the active digest. Every story field is escaped because the manifest can be
-    replaced through /api/newsletter/new-digest, which has no authentication."""
+def notify_newsletter(base_url: str = None) -> dict:
+    """Dispatches personalized threat intelligence briefs to all active subscribers.
+    
+    Generates tailored multi-cadence emails with subscriber-selected appetites,
+    safe alt-appetite curiosity teasers, audio CTA hooks, and zero-day radar cards.
+    """
     from newsletter_mod import load_active_manifest
+    from email_engine import build_personalized_newsletter_email, send_email
 
     manifest = load_active_manifest()
     items = manifest.get("items", [])
     if not items:
         return {"sent": 0, "message": "The active digest has no stories."}
-    sections = []
-    for item in items:
-        story_id = str(item.get("story_id", "")).strip()
-        title = html.escape(str(item.get("title") or story_id or "Untitled advisory"))
-        if story_id:
-            link = html.escape(url_for("newsletter.newsletter_story", story_id=story_id, _external=True))
-            title = f'<a href="{link}" style="color: #00f3ff;">{title}</a>'
-        section = f'<h3 style="color: #ffffff; margin-bottom: 4px;">{title}</h3>'
-        if item.get("threat_level"):
-            section += f"<p style=\"margin: 0;\"><strong>Threat level:</strong> {html.escape(str(item['threat_level']))}</p>"
-        if item.get("summary"):
-            section += f"<p>{html.escape(str(item['summary']))}</p>"
-        sections.append(section)
-    dispatched = html.escape(str(manifest.get("dispatched_at", "")))
-    body = f"<p>{len(items)} advisories in this digest ({dispatched}).</p>" + "".join(sections)
-    sent = _dispatch(
-        "newsletter",
-        "Cyber Threat Newsletter",
-        "Cyber Threat Newsletter",
-        body,
-        url_for("newsletter.newsletter_index", _external=True),
-        "Read on the website",
-    )
-    return {"sent": sent, "message": f"Sent the digest to {sent} newsletter subscriber(s)."}
+
+    subscribers = [
+        s for s in load_subscribers()
+        if s.get("email") and s.get("status") == "active"
+    ]
+    if not subscribers:
+        return {"sent": 0, "message": "No active newsletter subscribers found."}
+
+    if not base_url:
+        try:
+            base_url = request.host_url.rstrip("/")
+        except Exception:
+            base_url = getattr(config, "BASE_URL", "http://127.0.0.1:5001")
+
+    sent_count = 0
+    errors = []
+
+    for sub in subscribers:
+        try:
+            subject, html_body, text_body, headers = build_personalized_newsletter_email(
+                subscriber=sub,
+                manifest=manifest,
+                base_url=base_url
+            )
+            ok, msg, _ = send_email(
+                to_address=sub["email"],
+                subject=subject,
+                html_content=html_body,
+                text_content=text_body,
+                headers=headers
+            )
+            if ok:
+                sent_count += 1
+                record_newsletter_send(
+                    sub.get("delivery", {}).get("format", "hybrid_brief"),
+                    sub.get("content", {}).get("primary_appetite", "cyber_thriller")
+                )
+            else:
+                errors.append(f"{sub['email']}: {msg}")
+        except Exception as exc:
+            errors.append(f"{sub['email']}: {str(exc)}")
+
+    status_msg = f"Dispatched {sent_count} personalized threat briefs."
+    if errors:
+        status_msg += f" ({len(errors)} failed)"
+
+    return {
+        "sent": sent_count,
+        "total_active": len(subscribers),
+        "message": status_msg,
+        "errors": errors
+    }
 
 
 def _download_succeeded(response) -> bool:

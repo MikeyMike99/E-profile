@@ -37,6 +37,11 @@ class Config:
     ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
     ANTHROPIC_AUTH_TOKEN = os.environ.get("ANTHROPIC_AUTH_TOKEN")
 
+    # --- Threat Intelligence Feeds ---
+    OTX_API_KEY = os.environ.get("OTX_API_KEY", "")
+    TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "")
+    THREAT_FEED_REFRESH_HOURS = int(os.environ.get("THREAT_FEED_REFRESH_HOURS", 6))
+
     # --- Email Service Configuration ---
     MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "local")  # 'local', 'smtp'
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
