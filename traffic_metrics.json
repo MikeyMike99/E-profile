@@ -1,5 +1,5 @@
 {
-    "total_views": 13595,
+    "total_views": 13632,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -11,18 +11,23 @@
         "d3f5d1a7e639d59e24bc1dbc86a60a1c",
         "b931deb2fdd65369f856857ad055c3ef",
         "e67133c26404e028a7c6271d7529bba1",
-        "e8ff646a857c4d354bf80358496b335f"
+        "e8ff646a857c4d354bf80358496b335f",
+        "34d7dda6fc8ca481e5c866bd31fd10a4",
+        "43367b7ed8e949e6f6b641b369f31768",
+        "46ecb797cfd5da2e8cca5f3f53be7050",
+        "bc4718d81da184266d0e3e03e764e33a",
+        "7b77d8556af48fedddc6b8b0f7b8c978"
     ],
     "paths": {
-        "/ai_agent/api/stream": 12602,
+        "/ai_agent/api/stream": 12630,
         "/ai_agent/": 79,
         "/ai_agent/api/projects": 53,
         "/ai_agent/api/conversations": 78,
         "/ai_agent/api/user/subscription/status": 41,
         "/ai_agent/api/auth/system-status": 64,
-        "/favicon.ico": 113,
+        "/favicon.ico": 114,
         "/ai_agent/api/auth_check": 37,
-        "/": 138,
+        "/": 143,
         "/ai_agent/api/chat": 22,
         "/projects": 16,
         "/ai_agent/api/auth/login": 2,
@@ -54,7 +59,7 @@
         "/ai_agent/api/user/subscription/set": 2,
         "/ai_agent/api/auth_submit": 2,
         "/usage": 4,
-        "/robots.txt": 4,
+        "/robots.txt": 6,
         "/login": 8,
         "/newsletter": 2,
         "/downloads": 2,
@@ -63,6 +68,7 @@
         "/access/cdbd8f06-32a7-43e4-a584-51b700a98025": 1,
         "/bio": 1,
         "/edit_profile": 1,
-        "/ai_agent/api/auth/restore-root": 1
+        "/ai_agent/api/auth/restore-root": 1,
+        "/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH": 1
     }
 }
