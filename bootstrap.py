@@ -140,8 +140,31 @@ def _run_agy_command(base_dir: Path, cmd_or_args, timeout: int = 90) -> tuple[in
     elif "PATH" not in env:
         env["PATH"] = local_bin
 
+    # Ensure headless auto-approvals in settings.json
+    try:
+        agy_settings_dir = Path.home() / ".gemini" / "antigravity-cli"
+        agy_settings_dir.mkdir(parents=True, exist_ok=True)
+        agy_settings_file = agy_settings_dir / "settings.json"
+        settings_data = {}
+        if agy_settings_file.exists():
+            try:
+                settings_data = json.loads(agy_settings_file.read_text(encoding="utf-8"))
+            except Exception:
+                settings_data = {}
+        perms = settings_data.setdefault("permissions", {})
+        allow_list = perms.setdefault("allow", [])
+        for tool_rule in ["read_file()", "run_command()", "search_web()"]:
+            if tool_rule not in allow_list:
+                allow_list.append(tool_rule)
+        agy_settings_file.write_text(json.dumps(settings_data, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
     if isinstance(cmd_or_args, list):
-        full_cmd = [str(agy_bin)] + cmd_or_args
+        args = list(cmd_or_args)
+        if "--print" in args and "--dangerously-skip-permissions" not in args:
+            args = ["--dangerously-skip-permissions"] + args
+        full_cmd = [str(agy_bin)] + args
         shell = False
     else:
         raw_cmd = str(cmd_or_args).strip()
@@ -150,7 +173,7 @@ def _run_agy_command(base_dir: Path, cmd_or_args, timeout: int = 90) -> tuple[in
             sub = parts[1].strip() if len(parts) > 1 else ""
             std_cmds = {"agent", "agents", "models", "mcp", "plugin", "plugins", "help", "--help", "-h", "version", "--version", "update", "changelog", "doctor"}
             if sub and not sub.startswith("-") and sub.split()[0] not in std_cmds:
-                raw_cmd = f"{shlex.quote(str(agy_bin))} --print {shlex.quote(sub)}"
+                raw_cmd = f"{shlex.quote(str(agy_bin))} --dangerously-skip-permissions --print {shlex.quote(sub)}"
             elif not sub:
                 raw_cmd = f"{shlex.quote(str(agy_bin))} --help"
             else:
@@ -1911,7 +1934,7 @@ def render_bootstrap_response(
             sub_arg = parts[1].strip() if len(parts) > 1 else ""
             std_cmds = {"agent", "agents", "models", "mcp", "plugin", "plugins", "help", "--help", "-h", "version", "--version", "update", "changelog", "doctor"}
             if sub_arg and not sub_arg.startswith("-") and sub_arg.split()[0] not in std_cmds:
-                cmd_to_run = f"agy --print {shlex.quote(sub_arg)}"
+                cmd_to_run = f"agy --dangerously-skip-permissions --print {shlex.quote(sub_arg)}"
             elif not sub_arg:
                 cmd_to_run = "agy --help"
 
