@@ -1,110 +1,20 @@
 {
-    "total_views": 13482,
-    "unique_visitors": [
-        "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
-        "f74ef4742a4aa81fd82c7aeeeda83719",
-        "b076da5978817a33aa9f2855c1d68299",
-        "651bf5110c820642a003fe7aeb5b4c0d",
-        "7c705b0a14314c2fe073da02eb964193",
-        "4f0f374c3d049ae0251993291f04011d",
-        "07ddfff5bec4e55459f5c786cc7dbcb2",
-        "d3f5d1a7e639d59e24bc1dbc86a60a1c",
-        "b931deb2fdd65369f856857ad055c3ef",
-        "e67133c26404e028a7c6271d7529bba1",
-        "e8ff646a857c4d354bf80358496b335f",
-        "46197d323d5f6ddfa527cee6ca22e6f7"
-    ],
-    "paths": {
-        "/ai_agent/api/stream": 11510,
-        "/ai_agent/": 181,
-        "/ai_agent/api/projects": 65,
-        "/ai_agent/api/conversations": 88,
-        "/ai_agent/api/user/subscription/status": 26,
-        "/ai_agent/api/auth/system-status": 61,
-        "/favicon.ico": 85,
-        "/ai_agent/api/auth_check": 22,
-        "/": 123,
-        "/ai_agent/api/chat": 44,
-        "/projects": 46,
-        "/ai_agent/api/auth/login": 2,
-        "/docs/api/cache/status": 1,
-        "/docs/api/cache/cleanup": 1,
-        "/docs/api/admin/schedule": 38,
-        "/docs/api/admin/save": 57,
-        "/docs/api/admin/create": 38,
-        "/docs/api/admin/delete": 38,
-        "/docs": 46,
-        "/docs/api/chapter/../../../../etc/passwd/test": 19,
-        "/docs/api/chapter/devlog/../../server": 19,
-        "/docs/../../etc/passwd": 19,
-        "/docs/devlog/../../server": 19,
-        "/docs/devlog/04_26_THE_ORIGIN_ARCHITECTURE_ECHOES_OF_THE_WORLD": 19,
-        "/ai_agent/login": 57,
-        "/ai_agent/api/artifacts": 163,
-        "/ai_agent/api/artifacts/save": 91,
-        "/ai_agent/api/auth_demo": 55,
-        "/ai_agent/api/auth/logout": 37,
-        "/ai_agent/api/auth/me": 59,
-        "/ai_agent/api/conversations/test-conv-001/rename": 36,
-        "/ai_agent/api/conversations/test-conv-001": 36,
-        "/ai_agent/api/projects/active/conversations": 36,
-        "/ai_agent/api/kill": 43,
-        "/ai_agent/api/projects/active": 72,
-        "/ai_agent/api/set_api_key": 36,
-        "/ai_agent/api/ui-config": 36,
-        "/ai_agent/api/user/subscription/set": 2,
-        "/ai_agent/api/auth_submit": 2,
-        "/usage": 4,
-        "/robots.txt": 4,
-        "/login": 20,
-        "/newsletter": 17,
-        "/downloads": 4,
-        "/downloads/get/portable": 2,
-        "/logout": 2,
-        "/access/cdbd8f06-32a7-43e4-a584-51b700a98025": 1,
-        "/bio": 7,
-        "/edit_profile": 11,
-        "/ai_agent/api/auth/restore-root": 1,
-        "/reset_pin": 10,
-        "/change_password": 15,
-        "/delete_profile": 10,
-        "/access/employer-uuid-002": 6,
-        "/certifications": 20,
-        "/blog": 7,
-        "/terms": 5,
-        "/terms-and-conditions": 1,
-        "/newsletter/unsubscribe": 3,
-        "/newsletter/story/new-volta-infostealer-uses-claude-gemini-and-": 1,
-        "/home": 1,
-        "/echos": 1,
-        "/newsletter/story/test-story-id": 1
+  "total_views": 100,
+  "unique_visitors": [
+    "v1"
+  ],
+  "paths": {
+    "/": 100
+  },
+  "newsletter": {
+    "sends": {
+      "total": 0,
+      "by_format": {},
+      "by_appetite": {}
     },
-    "newsletter": {
-        "sends": {
-            "total": 2,
-            "by_format": {
-                "hybrid_brief": 2,
-                "full_story_daily": 0,
-                "quick_threat_wire": 0,
-                "weekly_digest": 0
-            },
-            "by_appetite": {
-                "cyber_thriller": 2,
-                "deep_dive": 0,
-                "defense_playbook": 0,
-                "executive_espresso": 0,
-                "snarky_hacker": 0
-            }
-        },
-        "clicks": {
-            "total": 0,
-            "by_slot": {
-                "featured_story": 0,
-                "headlines": 0,
-                "alt_teaser": 0,
-                "audio": 0,
-                "zero_day_radar": 0
-            }
-        }
+    "clicks": {
+      "total": 0,
+      "by_slot": {}
     }
+  }
 }

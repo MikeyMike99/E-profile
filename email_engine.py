@@ -1017,3 +1017,222 @@ def build_personalized_newsletter_email(
     return subject, master_html, plain_text, headers
 
 
+def build_welcome_subscription_email(
+    subscriber: Dict[str, Any],
+    base_url: str = ""
+) -> Tuple[str, str, str, Dict[str, str]]:
+    """
+    Constructs a responsive dark-themed welcome and subscription confirmation email.
+    
+    Informs the recipient of their subscription to Cyber Threat Intelligence, asks if
+    they intended to subscribe, provides immediate access to their personal Preference Center,
+    and features a prominent, immediate 1-Click Unsubscribe & Purge button to relieve their
+    inbox immediately if it was not them.
+    
+    Returns:
+      (subject: str, html_content: str, text_content: str, headers: Dict[str, str])
+    """
+    import html as html_lib
+
+    clean_base = (base_url or "").rstrip("/")
+    if not clean_base:
+        clean_base = getattr(config, "BASE_URL", "https://mikeymike.pythonanywhere.com").rstrip("/")
+
+    email = subscriber.get("email", "")
+    token = subscriber.get("token") or "token"
+    delivery = subscriber.get("delivery") or {}
+    content_pref = subscriber.get("content") or {}
+    
+    chosen_format = delivery.get("format", "hybrid_brief")
+    chosen_appetite = content_pref.get("primary_appetite", "cyber_thriller")
+    
+    format_label = chosen_format.replace("_", " ").title()
+    appetite_label = chosen_appetite.replace("_", " ").title()
+
+    unsub_url = f"{clean_base}/newsletter/unsubscribe?token={token}&purge=1"
+    pref_url = f"{clean_base}/newsletter/preferences?token={token}"
+    portal_url = f"{clean_base}/newsletter"
+    terms_url = f"{clean_base}/terms"
+
+    subject = "Welcome to Cyber Threat Intelligence – Did you subscribe?"
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{html_lib.escape(subject)}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0a0a0b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e0e0e0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0a0a0b; padding: 25px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" style="max-width: 640px; background-color: #10141d; border: 1px solid rgba(25, 230, 255, 0.25); border-radius: 8px; padding: 24px; text-align: left;">
+                    <!-- Masthead -->
+                    <tr>
+                        <td style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 16px;">
+                            <span style="font-size: 18px; font-weight: bold; color: #00f3ff; letter-spacing: 1.5px; font-family: monospace;">
+                                E-PROFILE INTELLIGENCE SYSTEM
+                            </span>
+                            <span style="float: right; font-size: 11px; font-family: monospace; color: #00ff88; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); padding: 3px 8px; border-radius: 4px;">
+                                ACTIVE VERIFICATION
+                            </span>
+                        </td>
+                    </tr>
+
+                    <!-- Welcome Heading -->
+                    <tr>
+                        <td style="padding-top: 20px;">
+                            <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
+                                📬 SUBSCRIPTION CONFIRMATION & WELCOME
+                            </div>
+                            <h2 style="color: #ffffff; font-size: 22px; margin: 0 0 14px 0; font-weight: 700;">
+                                Welcome to Cyber Threat Intelligence!
+                            </h2>
+                            <p style="font-size: 15px; color: #d0d8e8; line-height: 1.6; margin: 0 0 20px 0;">
+                                We received a subscription request for <strong style="color: #19e6ff;">{html_lib.escape(email)}</strong> to receive Cyber Threat Intelligence feeds, zero-day telemetry, and vulnerability advisories from Michael Robberts E-Profile.
+                            </p>
+
+                            <!-- Did you subscribe? Card -->
+                            <div style="background: rgba(0, 243, 255, 0.04); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; padding: 18px; margin-bottom: 20px;">
+                                <h3 style="color: #00f3ff; font-size: 16px; margin: 0 0 8px 0;">
+                                    ✅ Did you subscribe?
+                                </h3>
+                                <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; margin: 0 0 12px 0;">
+                                    If this was you, you're all set! You will receive tailored intelligence updates according to your selected format (<strong>{html_lib.escape(format_label)}</strong>) and primary appetite (<strong>{html_lib.escape(appetite_label)}</strong>).
+                                </p>
+                                <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin: 0 0 14px 0;">
+                                    You can fine-tune your threat topics, delivery frequency, or audio briefing preferences at any time in your private Preference Center:
+                                </p>
+                                <div>
+                                    <a href="{pref_url}" style="background-color: #00f3ff; color: #000000; padding: 10px 20px; text-decoration: none; font-weight: bold; font-size: 13px; font-family: monospace; border-radius: 4px; display: inline-block;">
+                                        ⚙️ Manage Preferences & Confirm Settings →
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Accidental Subscription Notice & Pretty Unsubscribe Button -->
+                            <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.35); border-radius: 8px; text-align: center;">
+                                <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ff7878; text-transform: uppercase; margin-bottom: 6px;">
+                                    ⚠️ ACCIDENTAL SUBSCRIPTION OR NOT YOU?
+                                </div>
+                                <h3 style="color: #ffffff; font-size: 16px; margin: 0 0 8px 0;">
+                                    Was this not you?
+                                </h3>
+                                <p style="margin: 0 0 14px 0; font-size: 13px; color: #f1f5f9; line-height: 1.45; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                    If you did not subscribe, or if someone else entered your email, click the button below to cancel immediately and permanently purge all records from our registry:
+                                </p>
+                                <a href="{unsub_url}" style="display: inline-block; background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%); color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-family: monospace, -apple-system, sans-serif; font-weight: bold; border-radius: 6px; border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4); letter-spacing: 0.5px;">
+                                    🚫 1-Click Unsubscribe & Purge Data
+                                </a>
+                                <div style="margin-top: 10px; font-size: 11px; color: #ff9999; font-family: monospace;">
+                                    Immediately and completely purges your email address from our local registry.
+                                </div>
+                            </div>
+
+                            <!-- Subscription Activity Requirement Card -->
+                            <div style="margin: 0 0 20px 0; padding: 14px 16px; background: rgba(255, 170, 0, 0.07); border: 1px solid rgba(255, 170, 0, 0.28); border-radius: 6px;">
+                                <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ffaa00; text-transform: uppercase; margin-bottom: 4px;">
+                                    ⏱️ Subscription Activity Requirement
+                                </div>
+                                <p style="margin: 0 0 8px 0; font-size: 12px; color: #d0d8e8; line-height: 1.45;">
+                                    To ensure our local registry remains clean and intentional, we require subscribers to visit the site from time to time to keep their subscription active. If you do not visit the website from the emails you receive, we will consider that you did not subscribe to the service, and your records will be automatically purged.
+                                </p>
+                                <div style="text-align: right;">
+                                    <a href="{portal_url}" style="color: #ffaa00; font-family: monospace; font-size: 12px; font-weight: bold; text-decoration: underline;">
+                                        🌐 Visit Live Threat Feed →
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px; font-size: 11px; color: #64748b; text-align: center; line-height: 1.6;">
+                                <p style="margin: 0 0 6px 0;">
+                                    Michael Robberts E-Profile Platform · Automated Notification Dispatched via Secure SMTP
+                                </p>
+                                <p style="margin: 0 0 8px 0;">
+                                    <a href="{pref_url}" style="color: #19e6ff; text-decoration: underline; margin-right: 10px;">⚙️ Manage Preferences</a>
+                                    ·
+                                    <a href="{terms_url}" style="color: #94a3b8; text-decoration: underline; margin: 0 10px;">📄 Terms & Conditions</a>
+                                    ·
+                                    <a href="{unsub_url}" style="color: #ff7878; text-decoration: underline; margin-left: 10px;">🚫 One-Click Purge</a>
+                                </p>
+                                <div style="font-size: 10px; color: #475569; font-family: monospace;">
+                                    RFC 8058 Compliant · Zero-Database Local Storage Architecture
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"""
+
+    plain_text = f"""============================================================
+CYBER THREAT INTELLIGENCE · SUBSCRIPTION CONFIRMATION
+============================================================
+
+Hello,
+
+We received a subscription request for {email} to receive Cyber Threat Intelligence feeds and advisories from Michael Robberts E-Profile.
+
+------------------------------------------------------------
+DID YOU SUBSCRIBE?
+------------------------------------------------------------
+If this was you, you're all set! You will receive tailored threat intelligence dispatches according to your selected format ({format_label}) and primary appetite ({appetite_label}).
+
+Manage Preferences & Confirm Settings:
+{pref_url}
+
+------------------------------------------------------------
+WAS THIS NOT YOU?
+------------------------------------------------------------
+If you did not subscribe, or if someone else entered your email, click the link below to cancel immediately and permanently purge your email from our records:
+
+1-Click Unsubscribe & Purge Data:
+{unsub_url}
+
+------------------------------------------------------------
+SUBSCRIPTION ACTIVITY REQUIREMENT:
+------------------------------------------------------------
+We require subscribers to visit the site from time to time to keep their subscription active.
+If you do not visit the website from the emails you receive, we will consider that you did not subscribe to the service, and your records will be automatically purged.
+
+Visit Live Threat Feed:
+{portal_url}
+
+------------------------------------------------------------
+Terms and Conditions: {terms_url}
+RFC 8058 Compliant · Zero-Database Local Storage Architecture
+"""
+
+    headers = {
+        "List-Unsubscribe": f"<{unsub_url}>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+    }
+
+    return subject, html_content, plain_text, headers
+
+
+def send_welcome_email(
+    subscriber: Dict[str, Any],
+    base_url: str = ""
+) -> Tuple[bool, str, Dict[str, Any]]:
+    """Builds and delivers a welcome confirmation email to a new subscriber.
+    
+    Returns:
+        (success: bool, status_message: str, email_metadata: dict)
+    """
+    subject, html_content, text_content, headers = build_welcome_subscription_email(subscriber, base_url=base_url)
+    return send_email(
+        to_address=subscriber["email"],
+        subject=subject,
+        html_content=html_content,
+        text_content=text_content,
+        headers=headers
+    )
+
+
+

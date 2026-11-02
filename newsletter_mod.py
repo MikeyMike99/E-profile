@@ -320,7 +320,15 @@ def api_new_digest():
 
 # --- BACKWARDS-COMPATIBILITY REDIRECTS & ALIASES ---
 
+@newsletter_bp.route('/subscribe', methods=['GET', 'POST'])
+def web_subscribe():
+    if request.method == 'GET':
+        return redirect(url_for('newsletter.newsletter_index'))
+    return api_newsletter_subscribe()
+
+
 @newsletter_bp.route('/api/newsletter/subscribe', methods=['POST'])
+@newsletter_bp.route('/api/subscribe', methods=['POST'])
 def api_newsletter_subscribe():
     from notify_mod import subscribe_newsletter
     data = request.get_json(silent=True) or request.form.to_dict() or {}
@@ -332,17 +340,21 @@ def api_newsletter_subscribe():
         topics = [t.strip() for t in topics.split(",") if t.strip()]
     engagement_modules = data.get("engagement_modules")
 
+    if not email:
+        return jsonify({"status": "error", "message": "Please enter a valid email address."}), 400
+
     try:
         sub = subscribe_newsletter(
             email=email,
             delivery_format=delivery_format,
             primary_appetite=primary_appetite,
             topics=topics,
-            engagement_modules=engagement_modules
+            engagement_modules=engagement_modules,
+            send_welcome=True
         )
         return jsonify({
             "status": "success",
-            "message": f"Successfully subscribed {sub['email']} to Cyber Threat Intelligence.",
+            "message": f"Successfully subscribed {sub['email']} to Cyber Threat Intelligence. A welcome confirmation message has been dispatched to your inbox.",
             "subscriber_id": sub.get("subscriber_id"),
             "token": sub.get("token")
         })
@@ -350,6 +362,7 @@ def api_newsletter_subscribe():
         return jsonify({"status": "error", "message": str(exc)}), 400
     except Exception as exc:
         return jsonify({"status": "error", "message": f"Subscription failed: {str(exc)}"}), 500
+
 
 
 @newsletter_bp.route('/newsletter/preferences', methods=['GET'])

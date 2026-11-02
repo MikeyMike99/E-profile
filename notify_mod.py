@@ -163,12 +163,42 @@ def add_subscriber(email: str, topics) -> dict:
     return entry
 
 
+def dispatch_welcome_email(subscriber: dict, base_url: str = None, sync: bool = False) -> None:
+    """Dispatches the welcome confirmation email with an immediate 1-click unsubscribe option."""
+    from email_engine import send_welcome_email
+    resolved_base = base_url
+    if not resolved_base:
+        try:
+            resolved_base = request.host_url.rstrip("/")
+        except Exception:
+            resolved_base = getattr(config, "BASE_URL", "https://mikeymike.pythonanywhere.com").rstrip("/")
+
+    def deliver():
+        try:
+            ok, msg, _ = send_welcome_email(subscriber, base_url=resolved_base)
+            if not ok:
+                current_app.logger.warning("Welcome email to %s failed: %s", subscriber.get("email"), msg)
+        except Exception as exc:
+            try:
+                current_app.logger.warning("Exception sending welcome email to %s: %s", subscriber.get("email"), exc)
+            except Exception:
+                pass
+
+    if sync:
+        deliver()
+    else:
+        threading.Thread(target=deliver, name=f"welcome-{subscriber.get('subscriber_id', 'sub')}", daemon=True).start()
+
+
 def subscribe_newsletter(
     email: str,
     delivery_format: str = "hybrid_brief",
     primary_appetite: str = "cyber_thriller",
     topics: list = None,
-    engagement_modules: dict = None
+    engagement_modules: dict = None,
+    send_welcome: bool = False,
+    base_url: str = None,
+    sync_welcome: bool = False
 ) -> dict:
     address = (email or "").strip().lower()
     if len(address) > 254 or not EMAIL_PATTERN.match(address):
@@ -214,7 +244,11 @@ def subscribe_newsletter(
         normalize_subscriber(entry)
         _write_json(SUBSCRIBERS_FILE, subscribers)
 
+    if send_welcome:
+        dispatch_welcome_email(entry, base_url=base_url, sync=sync_welcome)
+
     return entry
+
 
 
 def get_subscriber_by_token(token: str):
