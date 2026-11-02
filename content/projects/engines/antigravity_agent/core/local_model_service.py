@@ -22,6 +22,7 @@ from security.local_brain_broker import offline_scrub_pii, read_target_documents
 import security.local_brain_broker as _lbb_module
 from security.swarm_telemetry import SwarmFlowLogger
 from security.subscription_guard import encrypt_credential, decrypt_credential
+from core.digest_pipeline import DigestPipeline, DigestError
 
 LLAMA_CLI = os.path.expanduser("~/.local/llama-cpp/llama-cli")
 MODEL_PATH = os.path.expanduser("~/.local/models/qwen2.5-1.5b-instruct-q4_k_m.gguf")
@@ -388,6 +389,8 @@ def run_claude_model(
     is_admin: bool = False,
     user: dict = None,
     conversation_id: str = None,
+    history: str = "",
+    on_event: callable = None,
 ) -> str:
     """Claude brain entry point. Auto-selects the backend so the app is
     deployment-ready with zero per-call configuration:
@@ -402,13 +405,25 @@ def run_claude_model(
     False so any caller that omits it gets the locked-down brain (no Raugus
     Resolver tools).
 
+    `history` is the rendered prior-turn transcript. The API path is stateless
+    and always gets it; the CLI path drops it when it resumes a session that
+    already holds those turns.
+
     Returns the model's text, or a [LOCAL_BRAIN_*] marker the portal renders as a
     clean status message.
     """
     if get_anthropic_credential():
-        return _run_claude_api(system_prompt, user_prompt, model_label, max_tokens, target_label)
+        return _run_claude_api(system_prompt, _with_history(user_prompt, history),
+                               model_label, max_tokens, target_label)
     return run_claude_cli_model(system_prompt, user_prompt, model_label, max_tokens, target_label,
-                                is_admin=is_admin, user=user, conversation_id=conversation_id)
+                                is_admin=is_admin, user=user, conversation_id=conversation_id,
+                                history=history, on_event=on_event)
+
+
+def _with_history(user_prompt: str, history: str) -> str:
+    if not history:
+        return user_prompt
+    return f"PREVIOUS CONVERSATION HISTORY:\n{history}\n\nCURRENT REQUEST:\n{user_prompt}"
 
 
 def _run_claude_api(
@@ -528,6 +543,8 @@ _RESOLVER_TOOLS = [
     "mcp__raugus-resolver__write_by_key",
     "mcp__raugus-resolver__create_by_key",
     "mcp__raugus-resolver__delete_by_key",
+    "mcp__raugus-resolver__digest_file",
+    "mcp__raugus-resolver__read_chunk",
 ]
 
 
@@ -544,7 +561,7 @@ def _brain_read_scopes(identity: dict) -> list:
         scopes = [DEVCORE_ROOT] if int(identity.get("tier", 0)) >= 5 else []
     tier = int(identity.get("tier", 0))
     if tier < 5:
-        low = ["static", "templates"] + (["docs", "sandbox", "playground"] if tier >= 3 else [])
+        low = ["static", "templates", "demo"] + (["docs", "sandbox", "playground"] if tier >= 3 else [])
         scopes += [os.path.join(DEVCORE_ROOT, d) for d in low if os.path.isdir(os.path.join(DEVCORE_ROOT, d))]
     return sorted(set(scopes))
 
@@ -676,6 +693,8 @@ def run_claude_cli_model(
     is_admin: bool = False,
     user: dict = None,
     conversation_id: str = None,
+    history: str = "",
+    on_event: callable = None,
 ) -> str:
     """Bring-your-own-subscription path: drives the authenticated `claude` CLI
     (Claude Code) via `claude -p`. No API key required; it uses the existing
@@ -704,7 +723,6 @@ def run_claude_cli_model(
         )
 
     model_id = _resolve_claude_model_id(model_label)
-    prompt = f"{system_prompt}\n\n{user_prompt}" if system_prompt else user_prompt
 
     try:
         _timeout = max(60, int(os.environ.get("DEVCORE_CLAUDE_CLI_TIMEOUT", "7200")))
@@ -782,8 +800,13 @@ def run_claude_cli_model(
     # private folder and can read only the scopes allowed above.
     import tempfile
     _jail = None
+    _is_demo = bool(user and (user.get("token_scope") == "demo" or user.get("role") == "gamedev"))
+    demo_workspace = os.path.join(DEVCORE_ROOT, "demo")
+    os.makedirs(demo_workspace, exist_ok=True)
     if identity and int(identity.get("tier", 0)) >= 5 and os.path.isdir(DEVCORE_ROOT):
         _cwd = DEVCORE_ROOT
+    elif _is_demo:
+        _cwd = demo_workspace
     else:
         _jail = tempfile.mkdtemp(prefix="devcore-brain-")
         os.chmod(_jail, 0o700)
@@ -823,6 +846,12 @@ def run_claude_cli_model(
         if not _add_dirs:
             _add_dirs = ["/mnt", "/home"]
         cmd += ["--add-dir", *_add_dirs]
+    elif _is_demo:
+        cmd += ["--permission-mode", "acceptEdits"]
+        cmd += ["--add-dir", demo_workspace]
+        allowed += [f"Read(/{demo_workspace.lstrip('/')}/**)", f"Edit(/{demo_workspace.lstrip('/')}/**)",
+                    f"Write(/{demo_workspace.lstrip('/')}/**)", f"Glob(/{demo_workspace.lstrip('/')}/**)",
+                    f"Grep(/{demo_workspace.lstrip('/')}/**)", "Bash(*)"]
 
     # --- Session roll-over ---------------------------------------------------
     # Without a session id, `claude -p` starts a COLD session every message, so
@@ -836,6 +865,7 @@ def run_claude_cli_model(
     # session transcript file already exists under ~/.claude/projects/. Enabled
     # only when the working dir is stable (Tier 5 runs from the repo root) --
     # jailed runs get a fresh cwd each turn, which a resume could not match.
+    _resuming = False
     if conversation_id and _jail is None:
         try:
             import glob as _glob
@@ -844,10 +874,18 @@ def run_claude_cli_model(
                 os.path.join("~", ".claude", "projects", "*", _sess_id + ".jsonl"))
             if _glob.glob(_sess_glob):
                 cmd += ["--resume", _sess_id]
+                _resuming = True
             else:
                 cmd += ["--session-id", _sess_id]
         except Exception:
             pass
+
+    # A resumed session already holds every prior turn (with its tool calls), so
+    # re-sending the transcript would give the model the history twice. Cold
+    # sessions (first turn, jailed runs) still need it.
+    if not _resuming:
+        user_prompt = _with_history(user_prompt, history)
+    prompt = f"{system_prompt}\n\n{user_prompt}" if system_prompt else user_prompt
 
     state = {"last": time.monotonic(), "result": None, "is_error": False, "text": []}
     stderr_lines = []
@@ -863,13 +901,62 @@ def run_claude_cli_model(
             except ValueError:
                 state["text"].append(line)
                 continue
-            if evt.get("type") == "result":
+            evt_type = evt.get("type")
+            if evt_type == "result":
                 state["result"] = evt.get("result") or ""
                 state["is_error"] = bool(evt.get("is_error"))
-            elif evt.get("type") == "assistant":
+            elif evt_type == "assistant":
                 for block in (evt.get("message") or {}).get("content") or []:
-                    if isinstance(block, dict) and block.get("type") == "text":
-                        state["text"].append(block.get("text", ""))
+                    if isinstance(block, dict):
+                        b_type = block.get("type")
+                        if b_type == "text":
+                            txt = block.get("text", "")
+                            if txt:
+                                state["text"].append(txt)
+                                if on_event:
+                                    try:
+                                        on_event({"type": "agent_chunk", "chunk": txt})
+                                    except Exception:
+                                        pass
+                        elif b_type == "tool_use":
+                            tid = block.get("id") or str(uuid.uuid4())[:8]
+                            tname = block.get("name") or "tool"
+                            tinp = block.get("input") or {}
+                            if on_event:
+                                try:
+                                    on_event({
+                                        "type": "action_start",
+                                        "action": {
+                                            "id": tid, "tool": tname, "params": tinp,
+                                            "status": "running", "friendly_name": tname,
+                                            "thought": f"Executing {tname}",
+                                            "announcement": f"Executing {tname}..."
+                                        }
+                                    })
+                                except Exception:
+                                    pass
+            elif evt_type == "user":
+                for block in (evt.get("message") or {}).get("content") or []:
+                    if isinstance(block, dict) and block.get("type") == "tool_result":
+                        tid = block.get("tool_use_id") or ""
+                        is_err = bool(block.get("is_error"))
+                        c_raw = block.get("content", "")
+                        if isinstance(c_raw, list):
+                            c_str = "\n".join([b.get("text", "") for b in c_raw if isinstance(b, dict) and b.get("type") == "text"])
+                        else:
+                            c_str = str(c_raw)
+                        if on_event:
+                            try:
+                                on_event({
+                                    "type": "action_done",
+                                    "action": {
+                                        "id": tid, "status": "error" if is_err else "done",
+                                        "output": c_str[:2000], "friendly_name": "Completed",
+                                        "announcement": "Action complete."
+                                    }
+                                })
+                            except Exception:
+                                pass
 
     def _read_stderr(pipe):
         for line in pipe:
@@ -1269,6 +1356,38 @@ def run_dynamic_local_qwen(
         return f"[LOCAL_BRAIN_ERROR] {str(e)}"
 
 
+def _distill_chunks_in_memory(instruction: str, chunks: list, context_label: str) -> str:
+    """Fallback map phase when the on-disk digest pipeline is unavailable."""
+    chunk_distillations = []
+    total_chunks = len(chunks)
+
+    for idx, chunk in enumerate(chunks):
+        clean_chunk = offline_scrub_pii(chunk, stage=f"chunk_{idx}")
+        sys_p = (
+            "You are an analytical distillation sub-engine running locally. "
+            "Extract all facts, key points, data structures, and rules from this document section "
+            "that are relevant to fulfilling the user's instruction. Be factual, dense, and concise."
+        )
+        u_p = (
+            f"DOCUMENT SECTION {idx + 1} OF {total_chunks}:\n{clean_chunk}\n\n"
+            f"USER INSTRUCTION: {instruction}\n\n"
+            "Key points and data from this section relevant to the instruction:"
+        )
+
+        distilled = run_dynamic_local_qwen(
+            system_prompt=sys_p,
+            user_prompt=u_p,
+            max_tokens=450,
+            target_label=f"{context_label}:chunk_{idx + 1}_of_{total_chunks}",
+        )
+        if distilled and not distilled.startswith("[LOCAL_BRAIN_"):
+            chunk_distillations.append(f"--- Section {idx + 1} Findings ---\n{distilled}")
+
+        time.sleep(0.2)
+
+    return "\n\n".join(chunk_distillations)
+
+
 def process_large_context_progressive(
     instruction: str,
     context_text: str,
@@ -1297,34 +1416,19 @@ def process_large_context_progressive(
             target_label=context_label,
         )
 
-    chunk_distillations = []
-    total_chunks = len(chunks)
-
-    for idx, chunk in enumerate(chunks):
-        clean_chunk = offline_scrub_pii(chunk, stage=f"chunk_{idx}")
-        sys_p = (
-            "You are an analytical distillation sub-engine running locally. "
-            "Extract all facts, key points, data structures, and rules from this document section "
-            "that are relevant to fulfilling the user's instruction. Be factual, dense, and concise."
+    # Tier 1+2: resumable, content-hashed digest on disk. Re-asking about the
+    # same document reuses it instead of re-summarizing every chunk.
+    try:
+        result = DigestPipeline().run(context_text, source_ref=context_label)
+        combined_findings = result.summary
+    except (DigestError, OSError) as e:
+        log_siem_event(
+            level="WARNING",
+            message=f"[DIGEST] Pipeline failed for '{context_label}', using in-memory distillation: {e}",
+            module_name="local_model_service",
+            logger_name="agent.local_model_service",
         )
-        u_p = (
-            f"DOCUMENT SECTION {idx + 1} OF {total_chunks}:\n{clean_chunk}\n\n"
-            f"USER INSTRUCTION: {instruction}\n\n"
-            "Key points and data from this section relevant to the instruction:"
-        )
-
-        distilled = run_dynamic_local_qwen(
-            system_prompt=sys_p,
-            user_prompt=u_p,
-            max_tokens=450,
-            target_label=f"{context_label}:chunk_{idx + 1}_of_{total_chunks}",
-        )
-        if distilled and not distilled.startswith("[LOCAL_BRAIN_"):
-            chunk_distillations.append(f"--- Section {idx + 1} Findings ---\n{distilled}")
-
-        time.sleep(0.2)
-
-    combined_findings = "\n\n".join(chunk_distillations) if chunk_distillations else context_text[:8000]
+        combined_findings = _distill_chunks_in_memory(instruction, chunks, context_label) or context_text[:8000]
 
     final_sys_p = (
         "You are the DevCore Local AI Assistant running offline on the user's machine (Qwen2.5-1.5B). "
@@ -2806,6 +2910,105 @@ def clean_local_model_display_text(response: str) -> str:
     return cleaned.strip()
 
 
+# Above these sizes, attached file text is replaced by its on-disk digest
+# before it reaches the model. Online models have large windows; the local
+# 1.5B model does not.
+DIGEST_HANDOFF_ONLINE_CHARS = int(os.environ.get("DEVCORE_DIGEST_ONLINE_CHARS", "120000"))
+DIGEST_HANDOFF_LOCAL_CHARS = int(os.environ.get("DEVCORE_DIGEST_LOCAL_CHARS", "12000"))
+_DIGESTIBLE_BLOCK = re.compile(r"^--- (?:File|Symbol/Section): (.+?) ---\n")
+
+
+def _head_tail(text: str, budget: int) -> str:
+    """Last-resort fallback when a digest cannot be built."""
+    if len(text) <= budget:
+        return text
+    half = budget // 2
+    return (f"{text[:half]}\n\n[... {len(text) - budget} chars omitted: digest unavailable ...]\n\n"
+            f"{text[-half:]}")
+
+
+async def _digest_oversized_context(agent_mgr, blocks: list, online: bool, user: dict = None) -> tuple:
+    """Replace the largest file blocks with their digests until the attached
+    context fits the backend's budget. Returns (blocks, action_log_lines).
+
+    Digests are built offline (local model + PII scrub), cached by content
+    hash, and resumable, so only the summary ever reaches an online model."""
+    limit = DIGEST_HANDOFF_ONLINE_CHARS if online else DIGEST_HANDOFF_LOCAL_CHARS
+    total = sum(len(b) for b in blocks)
+    if total <= limit:
+        return blocks, []
+
+    owner = (user or {}).get("key_id") or (user or {}).get("username") or ""
+    loop = asyncio.get_running_loop()
+    pipeline = DigestPipeline()
+    blocks, log_lines = list(blocks), []
+    order = sorted(range(len(blocks)), key=lambda i: len(blocks[i]), reverse=True)
+    for i in order:
+        if total <= limit:
+            break
+        m = _DIGESTIBLE_BLOCK.match(blocks[i])
+        body = blocks[i][m.end():] if m else ""
+        if not m or len(body) < limit // 4:
+            continue
+        label = m.group(1).strip()
+        started = time.time()
+        act_id = str(uuid.uuid4())[:8]
+        action = {"id": act_id, "tool": "digest_file", "params": {"path": label, "chars": len(body)},
+                  "friendly_name": "Digest File"}
+        await agent_mgr.broadcast({"type": "action_start", "action": {
+            **action, "status": "running",
+            "thought": f"'{label}' is {len(body):,} chars; building a chunked digest offline",
+            "announcement": f"Digesting {label}...",
+        }})
+
+        def _progress(ev, _label=label, _started=started):
+            if ev.get("stage") == "chunk":
+                msg = f"Digesting {_label}: chunk {ev['index']}/{ev['total']}"
+            elif ev.get("stage") == "merge":
+                msg = f"Digesting {_label}: merging level {ev['level']} ({ev['group']}/{ev['groups']})"
+            else:
+                return
+            asyncio.ensure_future(agent_mgr.broadcast({
+                "type": "heartbeat", "status": "running", "elapsed": round(time.time() - _started, 1),
+                "current_action": msg, "message": msg, "context": msg, "progress_tick": True,
+            }))
+
+        cb = lambda ev: loop.call_soon_threadsafe(_progress, ev)
+        try:
+            result = await loop.run_in_executor(None, functools.partial(
+                pipeline.run, body, source_ref=label, persist_source=True, owner=owner, on_progress=cb))
+            note = (f"DIGESTED: {len(body):,} chars, {result.chunk_count} chunks, "
+                    f"digest_id {result.digest_id}; raw text withheld")
+            if result.fallback_chunks:
+                note += f"; {result.fallback_chunks} chunk(s) extractive only"
+            new_block = (f"--- File: {label} ({note}) ---\n{result.digest_text}\n"
+                         f"[To read a chunk verbatim, call read_chunk(digest_id=\"{result.digest_id}\", "
+                         f"chunk=<n>) if the raugus-resolver tools are available.]")
+            status, output = "done", f"{result.chunk_count} chunks -> {len(result.digest_text):,} char digest"
+            if result.cached:
+                output += " (cached)"
+            log_lines.append(f"> 🗜️ **File Digested:** `{label}` ({len(body):,} → {len(result.digest_text):,} chars)")
+        except Exception as e:
+            log_siem_event(
+                level="WARNING",
+                message=f"[DIGEST] Handoff digest failed for '{label}', truncating instead: {e}",
+                module_name="local_model_service",
+                logger_name="agent.local_model_service",
+            )
+            budget = max(4000, limit // max(1, len(blocks)))
+            new_block = (f"--- File: {label} (TRUNCATED: digest unavailable) ---\n"
+                         f"{offline_scrub_pii(_head_tail(body, budget), stage='digest_fallback')}")
+            status, output = "error", f"Digest failed ({type(e).__name__}); sent head/tail excerpt instead"
+        total += len(new_block) - len(blocks[i])
+        blocks[i] = new_block
+        await agent_mgr.broadcast({"type": "action_done", "action": {
+            **action, "status": status, "output": output,
+            "duration": round(time.time() - started, 2),
+            "announcement": f"Completed digesting {label}.",
+        }})
+    return blocks, log_lines
+
+
 async def execute_local_agent_task(
     agent_mgr,
     prompt: str,
@@ -3063,6 +3266,12 @@ async def execute_local_agent_task(
         executed_actions_log.append(f"> ✅ **File Written:** `{prompt_target_file}` ({len(prompt_target_content)} bytes)")
         file_context_blocks.append(f"--- Action Executed: Successfully created/wrote file '{prompt_target_file}' ({len(prompt_target_content)} bytes) ---")
 
+    is_claude = isinstance(model, str) and "claude" in model.lower()
+    if file_context_blocks:
+        file_context_blocks, digest_log = await _digest_oversized_context(
+            agent_mgr, file_context_blocks, online=is_claude, user=user)
+        executed_actions_log.extend(digest_log)
+
     dialogue_lines = []
     if prior_turns:
         for t in prior_turns:
@@ -3103,15 +3312,37 @@ async def execute_local_agent_task(
     if is_admin:
         system_prompt = system_prompt + ROOT_ACCESS_ADDENDUM
 
-    if history_str:
-        query_payload = f"PREVIOUS CONVERSATION HISTORY:\n{history_str}\n\nCURRENT REQUEST:\n{query_payload}"
+    # Claude gets the history separately: a resumed CLI session already holds it.
+    if not is_claude:
+        query_payload = _with_history(query_payload, history_str)
 
     loop = asyncio.get_running_loop()
-    is_claude = isinstance(model, str) and "claude" in model.lower()
     is_ollama = isinstance(model, str) and (model.lower().startswith("ollama:") or "ollama" in model.lower())
     active_gguf = resolve_gguf_model_path(model)
 
+    streamed_any_chunks = False
     if is_claude:
+        def _forward_claude_event(evt):
+            nonlocal streamed_any_chunks
+            e_type = evt.get("type")
+            if e_type == "action_start":
+                act = evt.get("action", {})
+                if hasattr(agent_mgr, "actions") and isinstance(agent_mgr.actions, list):
+                    agent_mgr.actions.append(act)
+            elif e_type == "action_done":
+                act = evt.get("action", {})
+                if hasattr(agent_mgr, "actions") and isinstance(agent_mgr.actions, list):
+                    for a in agent_mgr.actions:
+                        if a.get("id") == act.get("id"):
+                            a["status"] = act.get("status", "done")
+                            a["output"] = act.get("output", "")
+            elif e_type == "agent_chunk":
+                chunk = evt.get("chunk", "")
+                if hasattr(agent_mgr, "output_buffer") and isinstance(agent_mgr.output_buffer, list):
+                    agent_mgr.output_buffer.append(chunk)
+                streamed_any_chunks = True
+            asyncio.run_coroutine_threadsafe(agent_mgr.broadcast(evt), loop)
+
         response = await loop.run_in_executor(
             None,
             functools.partial(
@@ -3124,8 +3355,78 @@ async def execute_local_agent_task(
                 is_admin,
                 user=user,
                 conversation_id=conversation_id,
+                history=history_str,
+                on_event=_forward_claude_event,
             ),
         )
+
+        clean_display_response = (
+            response if (response.startswith("[LOCAL_BRAIN_") or not streamed_any_chunks or not getattr(agent_mgr, "output_buffer", None))
+            else "".join(agent_mgr.output_buffer).strip()
+        )
+        if executed_actions_log:
+            actions_summary = "\n".join(executed_actions_log)
+            clean_display_response = f"{actions_summary}\n\n{clean_display_response}".strip()
+        if not is_admin and sec_mgr:
+            clean_display_response = sec_mgr.scrub_text(clean_display_response)
+
+        in_tok = max(1, (len(clean_prompt) + len(history_str) + len(file_context_str)) // 4)
+        out_tok = max(1, len(clean_display_response) // 4)
+        est_tokens = in_tok + out_tok
+        usage_payload = {
+            "input_tokens": in_tok,
+            "output_tokens": out_tok,
+            "total_tokens": est_tokens,
+            "cache_read_tokens": 0,
+            "is_local": False,
+            "local_tokens_offloaded": est_tokens,
+            "model": model,
+        }
+        _append_planner_response(transcript_path, next_step_idx, clean_display_response, usage_payload)
+        try:
+            sm_inst = agent_mgr._get_session_mgr()
+            proj_name = agent_mgr.project_manager.active_project if getattr(agent_mgr, "project_manager", None) else None
+            username = user.get("username") if user else "admin"
+            sm_inst.register_session_owner(conversation_id, username, proj_name)
+            sm_inst._conv_meta_cache.pop(conversation_id, None)
+        except Exception:
+            pass
+
+        if not streamed_any_chunks:
+            agent_mgr.output_buffer.append(clean_display_response)
+            await agent_mgr.broadcast({"type": "agent_chunk", "chunk": clean_display_response})
+
+        elapsed = round(time.time() - task_time, 1)
+        modder_id = user.get("username", "LocalUser") if user else "LocalUser"
+        SwarmFlowLogger.log_tuple(
+            modder_id=modder_id,
+            agent_id=conversation_id,
+            target_namespace="web_portal_chat",
+            model_tier=model,
+            token_volume=est_tokens,
+        )
+        await agent_mgr.broadcast({
+            "type": "token_telemetry",
+            "usage": usage_payload,
+            "conversation_id": conversation_id,
+        })
+        agent_mgr.last_completed_task = {
+            "prompt": prompt,
+            "model": model,
+            "actions": getattr(agent_mgr, "actions", []),
+            "output": clean_display_response,
+            "elapsed": elapsed,
+            "status": "SUCCESS",
+            "timestamp": time.time(),
+        }
+        await agent_mgr.broadcast({
+            "type": "agent_done",
+            "exit_code": 0,
+            "elapsed": elapsed,
+            "status": "SUCCESS",
+            "cancelled": False,
+        })
+        return
     elif is_ollama:
         response = await loop.run_in_executor(
             None,

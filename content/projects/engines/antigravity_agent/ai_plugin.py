@@ -138,22 +138,29 @@ def _get_ui_config() -> dict:
         except Exception:
             supported_set = None
 
-    try:
-        local_entries = discover_local_models()
-    except Exception:
-        local_entries = []
-    local_values = {e["value"] for e in local_entries}
     if "header" in ui_cfg and isinstance(ui_cfg["header"].get("models"), list):
         static_models = ui_cfg["header"]["models"]
         if supported_set:
             supported_models = [m for m in static_models if m.get("value") in supported_set]
             if supported_models:
                 static_models = supported_models
-        filtered = [m for m in static_models if m.get("value") not in local_values]
-        # Claude cloud brains: always selectable (they work in cloud-hosted envs).
-        claude_entries = [m for m in get_claude_models() if m.get("value") not in local_values]
-        extra = list(local_entries) + claude_entries
-        ui_cfg["header"]["models"] = ([filtered[0]] + extra + filtered[1:]) if filtered else list(extra)
+        # Exclude local/offline/qwen/llama models - they are too big for the web portal
+        filtered = [
+            m for m in static_models
+            if not any(x in m.get("value", "").lower() for x in ("local", "offline", "qwen", "llama"))
+        ]
+        claude_entries = [
+            m for m in get_claude_models()
+            if not any(x in m.get("value", "").lower() for x in ("local", "offline", "qwen", "llama"))
+        ]
+        seen_vals = set()
+        combined_models = []
+        for m in filtered + claude_entries:
+            v = m.get("value")
+            if v and v not in seen_vals:
+                seen_vals.add(v)
+                combined_models.append(m)
+        ui_cfg["header"]["models"] = combined_models
     return ui_cfg
 
 
@@ -1262,16 +1269,18 @@ def get_stream():
                 messages.append(msg_obj)
                 if seq_val > max_seq:
                     max_seq = seq_val
-        return jsonify({"messages": messages, "last_seq": max_seq})
+        return jsonify({"messages": messages, "last_seq": max_seq, "is_running": agent_mgr.is_running()})
 
     messages = []
-    while agent_mgr.message_queue:
-        popped = agent_mgr.message_queue.pop(0)
-        msg_obj = dict(popped.get("msg", {}))
-        if "seq" in popped:
-            msg_obj["seq"] = popped["seq"]
+    max_seq = 0
+    for item in queue_items:
+        msg_obj = dict(item.get("msg", {}))
+        if "seq" in item:
+            msg_obj["seq"] = item["seq"]
+            if item["seq"] > max_seq:
+                max_seq = item["seq"]
         messages.append(msg_obj)
-    return jsonify({"messages": messages})
+    return jsonify({"messages": messages, "last_seq": max_seq, "is_running": agent_mgr.is_running()})
 
 
 @ai_bp.route("/api/kill", methods=["POST"])
