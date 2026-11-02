@@ -1,11 +1,21 @@
 import os
+import sys
 from pathlib import Path
-from dotenv import load_dotenv
 
 ROOT_DIR = Path(__file__).resolve().parent
 
-# Load environment variables from .env file if present
-load_dotenv(ROOT_DIR / ".env")
+# Inject local user packages if present
+local_lib = Path.home() / '.local' / 'lib'
+if local_lib.exists():
+    for p in local_lib.glob('python*/site-packages'):
+        if p.exists() and str(p) not in sys.path:
+            sys.path.insert(0, str(p))
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT_DIR / ".env")
+except ImportError:
+    pass
 
 class Config:
     # 1. Base Paths

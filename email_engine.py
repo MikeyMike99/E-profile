@@ -98,7 +98,14 @@ def _append_to_local_mailbox(record: Dict[str, Any]) -> bool:
             return False
 
 
-def build_email_template(title: str, body_html: str, action_url: Optional[str] = None, action_label: Optional[str] = None) -> str:
+def build_email_template(
+    title: str,
+    body_html: str,
+    action_url: Optional[str] = None,
+    action_label: Optional[str] = None,
+    unsubscribe_url: Optional[str] = None,
+    recipient_email: Optional[str] = None
+) -> str:
     """Builds a responsive, accessible dark-themed HTML email adhering to E-Profile branding."""
     button_html = ""
     if action_url and action_label:
@@ -107,6 +114,15 @@ def build_email_template(title: str, body_html: str, action_url: Optional[str] =
             <a href="{action_url}" style="background-color: #00f3ff; color: #000; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">
                 {action_label}
             </a>
+        </div>
+        """
+
+    footer_extra = ""
+    if unsubscribe_url:
+        footer_extra = f"""
+        <div style="margin-top: 10px; font-size: 11px; color: #888899;">
+            You received this notification because this email was registered for updates on E-Profile.<br>
+            <a href="{unsubscribe_url}" style="color: #00f3ff; text-decoration: underline;">One-Click Unsubscribe</a>
         </div>
         """
 
@@ -141,6 +157,7 @@ def build_email_template(title: str, body_html: str, action_url: Optional[str] =
                         <td style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px; font-size: 12px; color: #666; text-align: center;">
                             Automated notification dispatched from Michael Robberts E-Profile Platform.<br>
                             Access restricted under Role-Based Access Control (RBAC).
+                            {footer_extra}
                         </td>
                     </tr>
                 </table>
@@ -156,7 +173,8 @@ def send_email(
     subject: str,
     html_content: str,
     text_content: Optional[str] = None,
-    sender: Optional[str] = None
+    sender: Optional[str] = None,
+    list_unsubscribe_url: Optional[str] = None
 ) -> Tuple[bool, str, Dict[str, Any]]:
     """
     Dispatches an email through the configured backend ('local' or 'smtp').
@@ -203,6 +221,10 @@ def send_email(
             msg["Subject"] = subject
             msg["From"] = sender
             msg["To"] = to_address
+
+            if list_unsubscribe_url:
+                msg["List-Unsubscribe"] = f"<{list_unsubscribe_url}>"
+                msg["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
 
             part1 = MIMEText(text_content, "plain", "utf-8")
             part2 = MIMEText(html_content, "html", "utf-8")

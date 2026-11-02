@@ -497,6 +497,7 @@
         <a href="#git-section" class="skip-nav-link">Skip to Direct Git Distribution</a>
         <a href="#requirements-section" class="skip-nav-link">Skip to System Requirements</a>
         <a href="#hotkeys-section" class="skip-nav-link">Skip to Keyboard Shortcuts</a>
+        <a href="#notify-section" class="skip-nav-link">Skip to Release Notifications</a>
         {% if is_admin %}
         <a href="#staging-section" class="skip-nav-link">Skip to Staging Manager</a>
         <a href="#schedule-queue-section" class="skip-nav-link">Skip to Scheduled Rollout Queue</a>
@@ -517,6 +518,54 @@
             {% endif %}
         </div>
     </header>
+
+    <!-- Release & Software Updates Subscription Section -->
+    <section id="notify-section" aria-labelledby="notify-heading" class="suite-notify-card" style="background: linear-gradient(135deg, rgba(13, 17, 23, 0.95), rgba(20, 15, 30, 0.95)); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 10px; padding: 22px 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <span style="font-size: 1.6rem;" aria-hidden="true">🔔</span>
+                <div>
+                    <h2 id="notify-heading" style="margin: 0; color: #c084fc; font-size: 1.2rem; font-family: monospace; letter-spacing: 0.5px; text-transform: uppercase;">
+                        Get Notified on Releases & Updates
+                    </h2>
+                    <p style="margin: 4px 0 0 0; color: var(--text-dim); font-size: 0.88rem;">
+                        Subscribe to receive instant email notifications when new builds, feature updates, and verified binaries go live for the Accessible Audio Playback Suite.
+                    </p>
+                </div>
+            </div>
+
+            <form id="downloads-subscribe-form" onsubmit="handleDownloadsSubscribe(event)" style="margin-top: 8px;">
+                <!-- Anti-bot honeypot -->
+                <input type="text" name="website" tabindex="-1" autocomplete="off" style="display: none !important;">
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <div style="flex: 1; min-width: 250px; max-width: 480px;">
+                        <label for="downloads-sub-email" class="sr-only">Your email address</label>
+                        <input type="email" id="downloads-sub-email" name="email" required placeholder="Enter your email (e.g. user@domain.com)"
+                               style="width: 100%; background: rgba(5, 7, 10, 0.9); border: 1px solid rgba(192, 132, 252, 0.4); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.92rem; font-family: inherit; box-sizing: border-box;">
+                    </div>
+                    
+                    <button type="submit" id="downloads-sub-btn"
+                            style="background: #a78bfa; color: #000; font-weight: bold; font-family: monospace; text-transform: uppercase; font-size: 0.85rem; padding: 11px 20px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.5px;">
+                        🔔 Subscribe to Releases
+                    </button>
+                </div>
+                
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 18px; font-size: 0.8rem; color: var(--text-dim); font-family: monospace;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="topic-releases-fixed" checked disabled style="accent-color: #a78bfa;">
+                        Release & Build Announcements
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="topic-newsletter-opt" style="accent-color: #a78bfa;">
+                        Also include Cyber Threat Newsletter
+                    </label>
+                </div>
+                
+                <div id="downloads-sub-feedback" role="status" aria-live="polite" style="margin-top: 10px; font-size: 0.88rem; font-family: monospace; display: none;"></div>
+            </form>
+        </div>
+    </section>
 
     {% if is_admin and not is_released %}
     <div class="admin-notice-bar" role="alert">
@@ -1090,5 +1139,59 @@
         }
     }
     {% endif %}
+
+    async function handleDownloadsSubscribe(event) {
+        event.preventDefault();
+        const form = event.target;
+        const emailInput = document.getElementById('downloads-sub-email');
+        const feedback = document.getElementById('downloads-sub-feedback');
+        const btn = document.getElementById('downloads-sub-btn');
+        const email = emailInput.value.trim();
+        const alsoNewsletter = document.getElementById('topic-newsletter-opt')?.checked;
+
+        if (!email) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Subscribing...';
+        feedback.style.display = 'block';
+        feedback.style.color = '#c084fc';
+        feedback.textContent = 'Registering notification request...';
+
+        const topics = ['releases'];
+        if (alsoNewsletter) topics.push('newsletter');
+
+        try {
+            const res = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    topics: topics,
+                    website: form.querySelector('input[name="website"]').value
+                })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                feedback.style.color = '#00ff88';
+                feedback.textContent = '✓ ' + (data.message || 'Confirmation link sent! Please check your inbox.');
+                emailInput.value = '';
+                btn.textContent = 'Link Sent!';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.textContent = '🔔 Subscribe to Releases';
+                }, 4000);
+            } else {
+                feedback.style.color = '#ff4d4d';
+                feedback.textContent = '✗ ' + (data.error || 'Failed to subscribe. Please try again.');
+                btn.disabled = false;
+                btn.textContent = '🔔 Subscribe to Releases';
+            }
+        } catch (err) {
+            feedback.style.color = '#ff4d4d';
+            feedback.textContent = '✗ Network error. Please check your connection and try again.';
+            btn.disabled = false;
+            btn.textContent = '🔔 Subscribe to Releases';
+        }
+    }
 </script>
 {% endblock %}

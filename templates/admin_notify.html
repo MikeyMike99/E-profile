@@ -67,12 +67,20 @@
         <table>
             <caption class="dim" style="text-align: left;">Everyone who receives notifications</caption>
             <thead>
-                <tr><th scope="col">Email</th><th scope="col">Topics</th><th scope="col">Added</th><th scope="col">Action</th></tr>
+                <tr><th scope="col">Email (Protected)</th><th scope="col">Status</th><th scope="col">Topics</th><th scope="col">Added</th><th scope="col">Action</th></tr>
             </thead>
             <tbody>
                 {% for sub in subscribers %}
                 <tr>
-                    <td>{{ sub.email }}</td>
+                    <td>
+                        <span class="email-display" data-full="{{ sub.email }}" data-masked="{{ sub.email_masked }}">{{ sub.email_masked }}</span>
+                        <button type="button" class="reveal-btn" style="background: none; border: 1px solid var(--border); color: var(--cyan); padding: 2px 6px; font-size: 0.72rem; margin-left: 6px; cursor: pointer;" onclick="toggleEmailReveal(this)" title="Toggle reveal email">👁️</button>
+                    </td>
+                    <td>
+                        <span style="padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; {% if sub.status == 'active' %}background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid #00ff88;{% elif sub.status == 'pending' %}background: rgba(255,176,0,0.15); color: #ffb000; border: 1px solid #ffb000;{% else %}background: rgba(255,255,255,0.1); color: #94a3b8; border: 1px solid #94a3b8;{% endif %}">
+                            {{ sub.status or 'active' }}
+                        </span>
+                    </td>
                     <td>{{ (sub.topics or [])|join(', ') }}</td>
                     <td>{{ sub.added_at }}</td>
                     <td><button type="button" class="danger remove-btn" data-email="{{ sub.email }}" aria-label="Remove {{ sub.email }}">Remove</button></td>
@@ -170,7 +178,16 @@
                 button.disabled = false;
             }
         });
-    });
+    window.toggleEmailReveal = function(btn) {
+        const span = btn.previousElementSibling;
+        if (span.textContent === span.dataset.masked) {
+            span.textContent = span.dataset.full;
+            btn.textContent = '🔒';
+        } else {
+            span.textContent = span.dataset.masked;
+            btn.textContent = '👁️';
+        }
+    };
 })();
 </script>
 </body>
