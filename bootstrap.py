@@ -28,9 +28,7 @@ REQUIRED_PACKAGES = {
     'Werkzeug': 'werkzeug',
     'python-dotenv': 'dotenv',
     'bleach': 'bleach',
-    'libcst': 'libcst',
-    'requests': 'requests',
-    'flask-socketio': 'flask_socketio'
+    'requests': 'requests'
 }
 
 # Required files/directories (Added sync_mod.py to pre-flight checks)
@@ -98,13 +96,181 @@ def is_production_server() -> bool:
     )
 
 
+def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
+    """Automated storage recovery & quota optimization protocol for PythonAnywhere (512MB limit).
+    Purges pip caches, system caches, stale git packfiles/reflogs in e_profile,
+    unneeded heavy dependencies, bytecode caches, and temporary files.
+    """
+    home = Path.home()
+    report = {
+        "actions_taken": [],
+        "freed_estimate_mb": 0.0,
+        "errors": []
+    }
+
+    if os.name == "nt":
+        if verbose:
+            print("[cleanup] Storage cleanup protocol skipped on Windows development host.")
+        return report
+
+    def _log(msg):
+        report["actions_taken"].append(msg)
+        if verbose:
+            print(f"🧹 {msg}")
+
+    # 1. Purge pip cache via CLI and direct filesystem removal
+    for py_cmd in ["python3.9", "python3", sys.executable]:
+        try:
+            res = subprocess.run([py_cmd, "-m", "pip", "cache", "purge"], capture_output=True, text=True, timeout=15)
+            if res.returncode == 0 and "Files removed" in (res.stdout or ""):
+                _log(f"Purged pip cache via {py_cmd}")
+                break
+        except Exception:
+            pass
+
+    for cache_sub in [home / ".cache", home / ".npm", home / ".local" / "share" / "Trash"]:
+        if cache_sub.exists():
+            try:
+                shutil.rmtree(cache_sub, ignore_errors=True)
+                _log(f"Removed cache directory: ~/{cache_sub.relative_to(home)}")
+            except Exception as e:
+                report["errors"].append(str(e))
+
+    # 2. Incompatible Python 3.10 directory cleanup (PythonAnywhere runs 3.9)
+    bad_py310 = home / ".local" / "lib" / "python3.10"
+    if bad_py310.exists():
+        try:
+            shutil.rmtree(bad_py310, ignore_errors=True)
+            _log("Removed incompatible ~/.local/lib/python3.10 directory")
+        except Exception as e:
+            report["errors"].append(str(e))
+
+    # 3. Uninstall unneeded heavy packages if present
+    heavy_pkgs = [
+        "spacy", "presidio-analyzer", "presidio-anonymizer",
+        "thinc", "blis", "spacy-legacy", "spacy-loggers",
+        "libcst", "flask-socketio", "watchdog"
+    ]
+    for py_cmd in ["python3.9", "python3", sys.executable]:
+        try:
+            res = subprocess.run([py_cmd, "-m", "pip", "uninstall", "-y"] + heavy_pkgs, capture_output=True, text=True, timeout=20)
+            if res.returncode == 0 and "Successfully uninstalled" in (res.stdout or ""):
+                _log(f"Pruned unneeded heavy packages via {py_cmd}")
+                break
+        except Exception:
+            pass
+
+    # 4. Safe Git Garbage Collection strictly on e_profile
+    git_bin = shutil.which("git") or "/usr/bin/git"
+    g_dir = base_dir / ".git"
+    if g_dir.is_dir():
+        for lock_file in g_dir.rglob("*.lock"):
+            try:
+                lock_file.unlink(missing_ok=True)
+            except Exception:
+                pass
+
+        pack_dir = g_dir / "objects" / "pack"
+        if pack_dir.is_dir():
+            now_epoch = time.time()
+            for tmp_pack in pack_dir.glob("tmp_*"):
+                try:
+                    if (now_epoch - tmp_pack.stat().st_mtime) > 3600:
+                        tmp_pack.unlink(missing_ok=True)
+                except Exception:
+                    pass
+        (g_dir / "gc.log").unlink(missing_ok=True)
+
+        obj_dir = g_dir / "objects"
+        if obj_dir.is_dir():
+            for obj in obj_dir.glob("*/*"):
+                try:
+                    if obj.is_file() and obj.stat().st_size == 0:
+                        obj.unlink(missing_ok=True)
+                except Exception:
+                    pass
+
+        shutil.rmtree(base_dir / ".git" / "modules", ignore_errors=True)
+        (base_dir / ".gitmodules").unlink(missing_ok=True)
+
+        for cmd_args in [
+            ["reflog", "expire", "--expire=now", "--all"],
+            ["prune"],
+            ["gc", "--prune=now"]
+        ]:
+            try:
+                subprocess.run([git_bin, "-c", "credential.helper="] + cmd_args, cwd=str(base_dir), capture_output=True, timeout=30)
+            except Exception:
+                pass
+        _log("Pruned git reflogs & compressed packfiles for e_profile")
+
+    # 5. Ephemeral workspace & bytecode caches
+    pyc_count = 0
+    for p in base_dir.rglob("__pycache__"):
+        if p.is_dir():
+            try:
+                shutil.rmtree(p, ignore_errors=True)
+                pyc_count += 1
+            except Exception:
+                pass
+    for p in base_dir.rglob("*.py[co]"):
+        try:
+            p.unlink(missing_ok=True)
+            pyc_count += 1
+        except Exception:
+            pass
+    if pyc_count > 0:
+        _log(f"Cleared {pyc_count} cached bytecode objects")
+
+    temp_docs = base_dir / "cache" / "temp_docs"
+    if temp_docs.is_dir():
+        doc_count = 0
+        for f in temp_docs.glob("*.json"):
+            try:
+                f.unlink(missing_ok=True)
+                doc_count += 1
+            except Exception:
+                pass
+        if doc_count > 0:
+            _log(f"Evicted {doc_count} transient story cache files from cache/temp_docs")
+
+    shutil.rmtree(base_dir / ".backup", ignore_errors=True)
+
+    # 6. Quota status measurement
+    try:
+        usage = shutil.disk_usage(str(home))
+        used_mb = (usage.total - usage.free) / (1024 * 1024)
+        total_mb = usage.total / (1024 * 1024)
+        pct = (used_mb / total_mb) * 100 if total_mb else 0
+        report["disk_used_mb"] = round(used_mb, 1)
+        report["disk_total_mb"] = round(total_mb, 1)
+        report["disk_pct"] = round(pct, 1)
+        if verbose:
+            print(f"📊 Storage Status: {round(used_mb, 1)} MB used / {round(total_mb, 1)} MB total ({round(pct, 1)}%)")
+    except Exception:
+        pass
+
+    return report
+
+
 def trigger_background_sync(base_dir: Path, force: bool = False) -> None:
     """Spawns git sync in a detached background daemon thread so incoming WSGI
     requests are served immediately in milliseconds without blocking on network I/O.
+    Enforces a persistent cooldown to prevent infinite restart loops.
     """
     global _SYNC_THREAD_STARTED
     if not is_production_server() and not force:
         return
+
+    sync_stamp_file = base_dir / "cache" / ".last_sync_timestamp"
+    if not force:
+        try:
+            if sync_stamp_file.exists():
+                last_ts = float(sync_stamp_file.read_text(encoding="utf-8").strip())
+                if (time.time() - last_ts) < 14400:  # 4-hour cooldown
+                    return
+        except Exception:
+            pass
 
     with _SYNC_THREAD_LOCK:
         if _SYNC_THREAD_STARTED and not force:
@@ -121,7 +287,7 @@ def trigger_background_sync(base_dir: Path, force: bool = False) -> None:
 
 
 def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
-    """Synchronizes repository with origin/main on worker startup or reload."""
+    """Synchronizes repository with origin/main."""
     global _GIT_SYNC_DONE
     if _GIT_SYNC_DONE and not force:
         return True
@@ -144,37 +310,13 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
             _GIT_SYNC_DONE = True
             return False
 
-        for base in (git_dir, Path.home() / ".git"):
-            if base.is_dir():
-                for lock_file in base.rglob("*.lock"):
-                    try:
-                        lock_file.unlink(missing_ok=True)
-                    except Exception:
-                        pass
-
-        if os.name != "nt":
-            home = Path.home()
-            shutil.rmtree(home / ".cache", ignore_errors=True)
-            shutil.rmtree(home / ".npm", ignore_errors=True)
-            shutil.rmtree(home / ".local" / "share" / "Trash", ignore_errors=True)
-            shutil.rmtree(base_dir / ".git" / "modules", ignore_errors=True)
-            (base_dir / ".gitmodules").unlink(missing_ok=True)
-            (base_dir / "content" / "projects" / "engines" / "antigravity_agent" / ".git").unlink(missing_ok=True)
-
-            pack_dir = git_dir / "objects" / "pack"
-            if pack_dir.is_dir():
-                for tmp_pack in pack_dir.glob("tmp_*"):
-                    tmp_pack.unlink(missing_ok=True)
-            (git_dir / "gc.log").unlink(missing_ok=True)
-
-            obj_dir = git_dir / "objects"
-            if obj_dir.is_dir():
-                for obj in obj_dir.glob("*/*"):
-                    try:
-                        if obj.is_file() and obj.stat().st_size == 0:
-                            obj.unlink(missing_ok=True)
-                    except Exception:
-                        pass
+        # Record attempt timestamp immediately to prevent retry hammering
+        try:
+            sync_stamp_file = base_dir / "cache" / ".last_sync_timestamp"
+            sync_stamp_file.parent.mkdir(parents=True, exist_ok=True)
+            sync_stamp_file.write_text(str(time.time()), encoding="utf-8")
+        except Exception:
+            pass
 
         token = ""
         token_file = base_dir / "gethub_token.txt"
@@ -210,14 +352,23 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
 
         _git(["checkout", "-B", "main"])
 
+        # Capture commit hash BEFORE pulling
+        old_ok, old_head, _ = _git(["rev-parse", "HEAD"])
+        old_head = old_head.strip() if old_ok else ""
+
         pull_ok, out, err = _git(["pull", authenticated_url, "main", "--no-edit", "--allow-unrelated-histories", "-X", "ours"], timeout=35)
         if not pull_ok:
             _git(["merge", "--abort"])
             _git(["fetch", authenticated_url, "main", "--prune"], timeout=25)
             _git(["merge", "origin/main", "--no-edit", "-m", "Auto-merge main updates", "-X", "ours"], timeout=20)
 
+        # Capture commit hash AFTER pulling (locale-independent)
+        new_ok, new_head, _ = _git(["rev-parse", "HEAD"])
+        new_head = new_head.strip() if new_ok else ""
+
+        has_new_commits = bool(old_head and new_head and old_head != new_head)
+
         import devcore_locator
-        # Discovery centralized in devcore_locator; clone target stays explicit below.
         devcore_dir = devcore_locator.find_devcore(require_marker=False) or devcore_locator.default_clone_target()
 
         if token:
@@ -243,17 +394,27 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
             except Exception:
                 pass
 
-        try:
-            wsgi_dir = Path("/var/www/")
-            if wsgi_dir.exists():
-                for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
-                    wsgi_file.touch()
-        except Exception:
-            pass
+        # CRITICAL ANTI-LOOP GUARD: Only touch WSGI file if new commits were actually pulled!
+        # Touching WSGI on "Already up to date" causes an infinite restart loop that crashes PythonAnywhere!
+        if has_new_commits:
+            try:
+                req_file = base_dir / "requirements.txt"
+                if req_file.exists():
+                    py_bin = shutil.which("python3.9") or shutil.which("python3") or sys.executable
+                    subprocess.run([py_bin, "-m", "pip", "install", "--no-cache-dir", "--user", "-r", str(req_file)], capture_output=True, timeout=40)
+            except Exception:
+                pass
+
+            try:
+                wsgi_dir = Path("/var/www/")
+                if wsgi_dir.exists():
+                    for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                        wsgi_file.touch()
+            except Exception:
+                pass
 
         _GIT_SYNC_DONE = True
         return True
-
 def _parse_bootstrap_request(environ):
     method = environ.get("REQUEST_METHOD", "GET").upper()
     query_string = environ.get("QUERY_STRING", "")
@@ -834,10 +995,42 @@ def application(environ, start_response):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bootstrap and Maintenance Utility")
     parser.add_argument('--undo', '--rollback', action='store_true', help='Revert file renames using rename_history.json')
+    parser.add_argument('--cleanup', '--quota-rescue', action='store_true', help='Execute storage cleanup and quota recovery')
+    parser.add_argument('--sync', '--pull', action='store_true', help='Force git sync and quota optimization')
+    parser.add_argument('--status', action='store_true', help='Print disk quota and dependency health status')
     args = parser.parse_args()
 
+    BASE_DIR = Path(__file__).resolve().parent
+
+    if args.cleanup:
+        print("🚀 Starting automated storage recovery and quota optimization...")
+        res = cleanup_storage(BASE_DIR, verbose=True)
+        print("✅ Storage optimization completed.")
+        sys.exit(0)
+
+    if args.sync:
+        print("🚀 Forcing git sync and storage optimization...")
+        print("1. Freeing disk quota before pull...")
+        cleanup_storage(BASE_DIR, verbose=True)
+        print("2. Pulling repository updates...")
+        auto_sync_git(BASE_DIR, force=True)
+        print("3. Finalizing storage state...")
+        cleanup_storage(BASE_DIR, verbose=False)
+        print("✅ Sync and cleanup completed successfully.")
+        sys.exit(0)
+
+    if args.status:
+        home = Path.home()
+        try:
+            usage = shutil.disk_usage(str(home))
+            used_mb = (usage.total - usage.free) / (1024 * 1024)
+            total_mb = usage.total / (1024 * 1024)
+            print(f"📊 Disk Usage: {used_mb:.1f} MB / {total_mb:.1f} MB ({(used_mb/total_mb)*100:.1f}%)")
+        except Exception as e:
+            print(f"Could not read disk usage: {e}")
+        sys.exit(0)
+
     if args.undo:
-        BASE_DIR = Path(__file__).resolve().parent
         history_file = BASE_DIR / "rename_history.json"
         cert_dir = BASE_DIR / "content" / "certifications" / "digital badges and certificates"
         
@@ -885,4 +1078,4 @@ if __name__ == "__main__":
             
         sys.exit(0)
         
-    print("This is a WSGI bootstrap file. Use --undo to rollback renames.")
+    print("This is a WSGI bootstrap file. Use --cleanup to recover quota, --sync to pull updates, or --undo to rollback renames.")

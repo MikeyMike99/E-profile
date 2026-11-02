@@ -1,6 +1,11 @@
 import os
 import textwrap
-import libcst as cst
+try:
+    import libcst as cst
+    _CST_BASE = cst.CSTTransformer
+except ImportError:
+    cst = None
+    _CST_BASE = object
 import re
 from pathlib import Path
 from flask import Blueprint, request, jsonify, session
@@ -26,11 +31,16 @@ def get_project_path(project_name):
     return base.resolve()
 
 # --- CLASS 1: THE SURGICAL TRANSFORMER ---
-class SurgicalTransformer(cst.CSTTransformer):
+class SurgicalTransformer(_CST_BASE):
     def __init__(self, target_label, new_code_str):
         self.target_label = target_label.upper().replace("START_", "").replace("END_", "")
         self.new_statements = []
         
+        if cst is None:
+            self.in_target_block = False
+            self.patch_applied = False
+            return
+
         cleaned_code = textwrap.dedent(new_code_str).strip()
         try:
             parsed = cst.parse_module(cleaned_code)
@@ -42,10 +52,11 @@ class SurgicalTransformer(cst.CSTTransformer):
         self.patch_applied = False
 
     def _is_marker(self, node, prefix):
+        if cst is None:
+            return False
         code_str = cst.Module([]).code_for_node(node).strip()
         expected = f"{prefix}_{self.target_label}"
         return expected in code_str and ("#" in code_str or '"' in code_str or "'" in code_str)
-
     def leave_Module(self, original_node, updated_node):
         new_body = []
         for stmt in updated_node.body:
@@ -153,6 +164,8 @@ def apply_patch():
         if not target:
             path.write_text(new_code, encoding='utf-8')
             return jsonify({"status": "success", "message": "FULL_FILE_REWRITTEN"})
+        if cst is None:
+            return jsonify({"status": "error", "message": "libcst is not installed on this environment"}), 501
         source_tree = cst.parse_module(source_code)
         transformer = SurgicalTransformer(target, new_code)
         modified_tree = source_tree.visit(transformer)

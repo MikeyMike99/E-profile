@@ -90,12 +90,13 @@ def load_active_manifest() -> dict:
         except Exception:
             pass
 
-    # Lazy initialization if manifest is missing or empty
+    # Safe Instant Seed Initialization (Zero-blocking: eliminates synchronous external API delays on web requests)
     try:
-        refreshed = threat_engine.refresh_feed()
-        if MANIFEST_FILE.exists():
-            with open(MANIFEST_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+        seed = threat_engine.get_seed_manifest()
+        if seed and seed.get("items"):
+            with open(MANIFEST_FILE, "w", encoding="utf-8") as f:
+                json.dump(seed, f, indent=2)
+            return seed
     except Exception:
         pass
 

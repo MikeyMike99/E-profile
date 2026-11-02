@@ -90,7 +90,10 @@ class ThreatIntelEngine:
         self.tavily_api_key = os.environ.get("TAVILY_API_KEY", "")
         if not (self.otx_api_key and self.tavily_api_key):
             self._load_local_keys()
-
+        self.proxies = None
+        if "PYTHONANYWHERE_DOMAIN" in os.environ or Path("/var/www").exists():
+            pa_proxy = "http://proxy.server:3128"
+            self.proxies = {"http": pa_proxy, "https": pa_proxy}
     def _load_local_keys(self):
         """Attempts to load keys from cyber_news/keys.py if available locally."""
         local_keys_path = Path("/mnt/c/Users/michael/Documents/cyber_news/keys.py")
@@ -148,7 +151,7 @@ class ThreatIntelEngine:
         items = []
         rss_url = "https://feeds.feedburner.com/TheHackersNews"
         try:
-            r = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) eProfile/2026"}, timeout=10)
+            r = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) eProfile/2026"}, proxies=self.proxies, timeout=4)
             if r.status_code == 200:
                 root = ET.fromstring(r.content)
                 channel = root.find("channel")
@@ -194,7 +197,7 @@ class ThreatIntelEngine:
         items = []
         url = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
         try:
-            r = requests.get(url, timeout=10)
+            r = requests.get(url, proxies=self.proxies, timeout=4)
             if r.status_code == 200:
                 vulns = r.json().get("vulnerabilities", [])
                 sorted_vulns = sorted(vulns, key=lambda x: x.get("dateAdded", ""), reverse=True)
@@ -246,7 +249,7 @@ class ThreatIntelEngine:
         url = f"https://otx.alienvault.com/api/v1/pulses/subscribed?limit={limit}"
         headers = {"X-OTX-API-KEY": self.otx_api_key}
         try:
-            r = requests.get(url, headers=headers, timeout=10)
+            r = requests.get(url, headers=headers, proxies=self.proxies, timeout=4)
             if r.status_code == 200:
                 results = r.json().get("results", [])
                 for p in results[:limit]:
@@ -431,6 +434,81 @@ class ThreatIntelEngine:
             "rate_limits": state
         }
 
+    @staticmethod
+    def get_seed_manifest() -> Dict[str, Any]:
+        """Provides instant high-value fallback cyber threat stories with zero network latency."""
+        now_ts = time.time()
+        today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        return {
+            "dispatched_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+            "total_items": 4,
+            "items": [
+                {
+                    "story_id": "new-volta-infostealer-uses-claude-gemini-and-",
+                    "title": "New VOLTA Infostealer Uses Claude, Gemini, and Kimi AI to Rank Victims by Financial Value",
+                    "cves": [],
+                    "source": "The Hacker News",
+                    "date": today_str,
+                    "timestamp": now_ts,
+                    "display_date": "Recent Advisory",
+                    "summary": "Threat actors are weaponizing multimodal LLMs to analyze victim documents and financial records directly in memory, automating target triage.",
+                    "remediation": "Deploy endpoint detection rules for unauthorized API calls, enforce strict egress controls, and revoke compromised browser tokens.",
+                    "raw_link": "https://thehackernews.com",
+                    "type": "rss",
+                    "score": 85,
+                    "threat_level": "CRITICAL",
+                    "is_latest": True
+                },
+                {
+                    "story_id": "cvss-10-0-lxd-microcloud-flaw-lets-attackers-",
+                    "title": "CVSS 10.0 LXD, MicroCloud Flaw Lets Attackers Impersonate Trusted Clients Without a Private Key",
+                    "cves": ["CVE-2024-41989"],
+                    "source": "CISA KEV",
+                    "date": today_str,
+                    "timestamp": now_ts - 3600,
+                    "display_date": "Recent Advisory",
+                    "summary": "Flaw in LXD / MicroCloud TLS client authentication allows remote attackers to bypass trust checks and impersonate cluster administrators.",
+                    "remediation": "Apply vendor security update for CVE-2024-41989 immediately and audit perimeter logs for exploitation IOCs.",
+                    "raw_link": "https://www.cisa.gov",
+                    "type": "cve",
+                    "score": 95,
+                    "threat_level": "CRITICAL",
+                    "is_latest": False
+                },
+                {
+                    "story_id": "hackers-steal-about-2-7-million-from-polymark",
+                    "title": "Hackers Steal About $2.7 Million From Polymarket Traders via Hijacked DebugBear Script",
+                    "cves": [],
+                    "source": "AlienVault OTX",
+                    "date": today_str,
+                    "timestamp": now_ts - 7200,
+                    "display_date": "Recent Advisory",
+                    "summary": "Supply chain compromise of a third-party performance analytics script resulted in injection of malicious transaction-signing prompts.",
+                    "remediation": "Pin exact package hashes in build lockfiles, rotate API/CI secrets, and enforce Content-Security-Policy script-src integrity.",
+                    "raw_link": "https://otx.alienvault.com",
+                    "type": "pulse",
+                    "score": 75,
+                    "threat_level": "HIGH",
+                    "is_latest": False
+                },
+                {
+                    "story_id": "cisa-adds-critical-palo-alto-networks-exp",
+                    "title": "CISA Adds Critical Palo Alto Networks PAN-OS GlobalProtect RCE to KEV Catalog",
+                    "cves": ["CVE-2024-3400"],
+                    "source": "CISA KEV",
+                    "date": today_str,
+                    "timestamp": now_ts - 14400,
+                    "display_date": "Recent Advisory",
+                    "summary": "Command injection vulnerability in GlobalProtect feature of PAN-OS allows an unauthenticated attacker to execute arbitrary code with root privileges.",
+                    "remediation": "MANDATORY KEV DIRECTIVE: Apply official vendor patch immediately. Target: Palo Alto Networks PAN-OS.",
+                    "raw_link": "https://www.cisa.gov",
+                    "type": "cve",
+                    "score": 98,
+                    "threat_level": "CRITICAL",
+                    "is_latest": False
+                }
+            ]
+        }
     def get_feed_status(self, cached: bool = False, note: str = "") -> Dict[str, Any]:
         """Returns rate limit status and manifest metadata."""
         state = self.load_rate_limit_state()

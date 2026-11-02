@@ -252,20 +252,19 @@ def dynamic_route(path):
                 permissions=perms
             )
     
-    # Retrieve content sections
-    projects_list = get_projects_data() if path in ['projects', 'home'] else []
-    certs_data = get_certifications_data() if path in ['certifications', 'home'] else []
+    # Retrieve content sections only for tabs that actually display them
+    projects_list = get_projects_data() if path == 'projects' else []
+    certs_data = get_certifications_data() if path == 'certifications' else []
     
     # Load Blog Data explicitly
     blog_list = []
     latest_shortcut = None
-    if path in ['blog', 'home']:
+    if path == 'blog':
         from blog_mod import get_blog_data
         blog_list, _ = get_blog_data()
         latest = next((b for b in blog_list if b.get('is_latest')), None)
         if latest:
             latest_shortcut = latest
-
     if path == 'blog':
         template = 'blog.html'
     elif path == 'projects':
