@@ -2,8 +2,14 @@ import os
 import textwrap
 try:
     import libcst as cst
-    _CST_BASE = cst.CSTTransformer
-except ImportError:
+    if hasattr(cst, "CSTTransformer"):
+        _CST_BASE = cst.CSTTransformer
+    elif hasattr(cst, "visitor") and hasattr(cst.visitor, "CSTTransformer"):
+        _CST_BASE = cst.visitor.CSTTransformer
+    else:
+        cst = None
+        _CST_BASE = object
+except Exception:
     cst = None
     _CST_BASE = object
 import re
