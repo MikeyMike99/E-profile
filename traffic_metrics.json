@@ -1,5 +1,5 @@
 {
-    "total_views": 14108,
+    "total_views": 14317,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -20,15 +20,15 @@
         "5829748185109fb705dce84956471dae"
     ],
     "paths": {
-        "/ai_agent/api/stream": 13049,
-        "/ai_agent/": 83,
-        "/ai_agent/api/projects": 58,
-        "/ai_agent/api/conversations": 84,
-        "/ai_agent/api/user/subscription/status": 45,
-        "/ai_agent/api/auth/system-status": 72,
-        "/favicon.ico": 121,
-        "/ai_agent/api/auth_check": 41,
-        "/": 151,
+        "/ai_agent/api/stream": 13234,
+        "/ai_agent/": 86,
+        "/ai_agent/api/projects": 60,
+        "/ai_agent/api/conversations": 86,
+        "/ai_agent/api/user/subscription/status": 47,
+        "/ai_agent/api/auth/system-status": 76,
+        "/favicon.ico": 124,
+        "/ai_agent/api/auth_check": 43,
+        "/": 154,
         "/ai_agent/api/chat": 24,
         "/projects": 17,
         "/ai_agent/api/auth/login": 2,
@@ -62,7 +62,7 @@
         "/usage": 4,
         "/robots.txt": 7,
         "/login": 8,
-        "/newsletter": 1,
+        "/newsletter": 2,
         "/downloads": 2,
         "/downloads/get/portable": 2,
         "/logout": 2,
@@ -72,7 +72,7 @@
         "/ai_agent/api/auth/restore-root": 2,
         "/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH": 1,
         "/docs/manifesto/00_Foreword": 1,
-        "/ai_agent/api/ai/status": 4,
+        "/ai_agent/api/ai/status": 6,
         "/ai_agent/api/ai/login/start": 1
     }
 }
