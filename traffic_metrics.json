@@ -1,5 +1,5 @@
 {
-    "total_views": 13908,
+    "total_views": 13911,
     "unique_visitors": [
         "c8f0bd7fc13fc50a6988d2cfdd5b5c1d",
         "f74ef4742a4aa81fd82c7aeeeda83719",
@@ -16,7 +16,8 @@
         "43367b7ed8e949e6f6b641b369f31768",
         "46ecb797cfd5da2e8cca5f3f53be7050",
         "bc4718d81da184266d0e3e03e764e33a",
-        "7b77d8556af48fedddc6b8b0f7b8c978"
+        "7b77d8556af48fedddc6b8b0f7b8c978",
+        "5829748185109fb705dce84956471dae"
     ],
     "paths": {
         "/ai_agent/api/stream": 12894,
@@ -27,7 +28,7 @@
         "/ai_agent/api/auth/system-status": 66,
         "/favicon.ico": 116,
         "/ai_agent/api/auth_check": 38,
-        "/": 145,
+        "/": 146,
         "/ai_agent/api/chat": 22,
         "/projects": 17,
         "/ai_agent/api/auth/login": 2,
@@ -59,7 +60,7 @@
         "/ai_agent/api/user/subscription/set": 2,
         "/ai_agent/api/auth_submit": 2,
         "/usage": 4,
-        "/robots.txt": 6,
+        "/robots.txt": 7,
         "/login": 8,
         "/newsletter": 1,
         "/downloads": 2,
@@ -69,6 +70,7 @@
         "/bio": 1,
         "/edit_profile": 1,
         "/ai_agent/api/auth/restore-root": 1,
-        "/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH": 1
+        "/docs/devlog/05_28_NVDA_DLL_COORDINATE_AUDIO_ENGINE_FROM_SCRATCH": 1,
+        "/docs/manifesto/00_Foreword": 1
     }
 }
