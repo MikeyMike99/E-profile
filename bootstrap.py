@@ -11,6 +11,8 @@ import shutil
 import threading
 import hashlib
 import urllib.parse
+import time
+import shlex
 
 # --- BULLETPROOF PATH INJECTION ---
 local_lib = Path.home() / '.local' / 'lib'
@@ -96,10 +98,102 @@ def is_production_server() -> bool:
     )
 
 
+def _find_agy_binary() -> Path | None:
+    """Discovers the Antigravity (agy) CLI binary and ensures it is executable."""
+    candidates = [
+        Path.home() / ".local" / "bin" / "agy",
+        Path("/home/MikeyMike/.local/bin/agy"),
+        Path.home() / "bin" / "agy",
+    ]
+    for p in candidates:
+        if p.is_file():
+            try:
+                if not os.access(str(p), os.X_OK):
+                    os.chmod(str(p), 0o755)
+            except Exception:
+                pass
+            return p
+
+    which_agy = shutil.which("agy")
+    if which_agy:
+        p = Path(which_agy)
+        try:
+            if not os.access(str(p), os.X_OK):
+                os.chmod(str(p), 0o755)
+        except Exception:
+            pass
+        return p
+
+    return None
+
+
+def _run_agy_command(base_dir: Path, cmd_or_args, timeout: int = 90) -> tuple[int, str, str]:
+    """Safely executes agy CLI operations in a properly configured subshell."""
+    agy_bin = _find_agy_binary()
+    if not agy_bin:
+        return -1, "", "Antigravity CLI binary (agy) not found in ~/.local/bin/agy or PATH."
+
+    env = os.environ.copy()
+    local_bin = str(Path.home() / ".local" / "bin")
+    if "PATH" in env and local_bin not in env["PATH"]:
+        env["PATH"] = f"{local_bin}:{env['PATH']}"
+    elif "PATH" not in env:
+        env["PATH"] = local_bin
+
+    if isinstance(cmd_or_args, list):
+        full_cmd = [str(agy_bin)] + cmd_or_args
+        shell = False
+    else:
+        raw_cmd = str(cmd_or_args).strip()
+        if raw_cmd.startswith("agy ") or raw_cmd == "agy":
+            parts = raw_cmd.split(maxsplit=1)
+            sub = parts[1].strip() if len(parts) > 1 else ""
+            std_cmds = {"agent", "agents", "models", "mcp", "plugin", "plugins", "help", "--help", "-h", "version", "--version", "update", "changelog", "doctor"}
+            if sub and not sub.startswith("-") and sub.split()[0] not in std_cmds:
+                raw_cmd = f"{shlex.quote(str(agy_bin))} --print {shlex.quote(sub)}"
+            elif not sub:
+                raw_cmd = f"{shlex.quote(str(agy_bin))} --help"
+            else:
+                raw_cmd = f"{shlex.quote(str(agy_bin))} {sub}"
+        full_cmd = raw_cmd
+        shell = True
+
+    try:
+        res = subprocess.run(full_cmd, shell=shell, cwd=str(base_dir), capture_output=True, text=True, timeout=timeout, env=env)
+        return res.returncode, res.stdout or "", res.stderr or ""
+    except subprocess.TimeoutExpired:
+        return -1, "", f"Operation timed out after {timeout} seconds."
+    except Exception as e:
+        return -1, "", str(e)
+
+
+_LAST_STORAGE_CHECK_EPOCH = 0.0
+_STORAGE_CHECK_LOCK = threading.Lock()
+
+
+def auto_enforce_storage_limits(base_dir: Path, force: bool = False) -> dict:
+    """Automatic background and startup storage sentinel.
+    Ensures .git repo, caches, and temp files never exceed quota limits.
+    Guarantees agy binary in ~/.local/bin/agy is preserved and protected.
+    """
+    global _LAST_STORAGE_CHECK_EPOCH
+    if not is_production_server() and not force:
+        return {}
+
+    now = time.time()
+    with _STORAGE_CHECK_LOCK:
+        if not force and (now - _LAST_STORAGE_CHECK_EPOCH) < 1800:
+            return {}
+        _LAST_STORAGE_CHECK_EPOCH = now
+
+    return cleanup_storage(base_dir, verbose=False)
+
+
 def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
     """Automated storage recovery & quota optimization protocol for PythonAnywhere (512MB limit).
     Purges pip caches, system caches, stale git packfiles/reflogs in e_profile,
     unneeded heavy dependencies, bytecode caches, and temporary files.
+    Strictly preserves the essential agy binary (~/.local/bin/agy).
     """
     home = Path.home()
     report = {
@@ -163,6 +257,7 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
     # 4. Safe Git Garbage Collection strictly on e_profile
     git_bin = shutil.which("git") or "/usr/bin/git"
     g_dir = base_dir / ".git"
+    git_size_mb = 0.0
     if g_dir.is_dir():
         for lock_file in g_dir.rglob("*.lock"):
             try:
@@ -170,13 +265,13 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
             except Exception:
                 pass
 
+        # Unconditionally wipe ALL orphaned tmp_* pack files from interrupted/failed repacks
         pack_dir = g_dir / "objects" / "pack"
         if pack_dir.is_dir():
-            now_epoch = time.time()
             for tmp_pack in pack_dir.glob("tmp_*"):
                 try:
-                    if (now_epoch - tmp_pack.stat().st_mtime) > 3600:
-                        tmp_pack.unlink(missing_ok=True)
+                    tmp_pack.unlink(missing_ok=True)
+                    _log(f"Evicted orphaned pack artifact: {tmp_pack.name}")
                 except Exception:
                     pass
         (g_dir / "gc.log").unlink(missing_ok=True)
@@ -193,16 +288,45 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
         shutil.rmtree(base_dir / ".git" / "modules", ignore_errors=True)
         (base_dir / ".gitmodules").unlink(missing_ok=True)
 
+        # Measure current git directory size
+        try:
+            total_b = sum(f.stat().st_size for f in g_dir.rglob("*") if f.is_file())
+            git_size_mb = round(total_b / (1024 * 1024), 1)
+        except Exception:
+            pass
+
+        # Expire reflogs and prune dead objects without running quota-risky repack
         for cmd_args in [
             ["reflog", "expire", "--expire=now", "--all"],
-            ["prune"],
-            ["gc", "--prune=now"]
+            ["prune", "--expire=now"]
         ]:
             try:
-                subprocess.run([git_bin, "-c", "credential.helper="] + cmd_args, cwd=str(base_dir), capture_output=True, timeout=30)
+                subprocess.run([git_bin, "-c", "credential.helper="] + cmd_args, cwd=str(base_dir), capture_output=True, timeout=25)
             except Exception:
                 pass
-        _log("Pruned git reflogs & compressed packfiles for e_profile")
+        _log(f"Pruned git reflogs & unreachable objects (current .git: {git_size_mb} MB)")
+
+        # Enforce shallow history boundary if .git exceeds 30 MB
+        if git_size_mb > 30.0:
+            token = ""
+            token_file = base_dir / "gethub_token.txt"
+            if not token_file.exists():
+                token_file = home / "gethub_token.txt"
+            if token_file.exists():
+                try:
+                    token = token_file.read_text(encoding="utf-8").strip()
+                except Exception:
+                    pass
+            if not token:
+                token = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GIT_TOKEN", "").strip()
+            auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
+            try:
+                subprocess.run([git_bin, "-c", "credential.helper=", "fetch", "--depth", "1", auth_url, "main"], cwd=str(base_dir), capture_output=True, timeout=35)
+                subprocess.run([git_bin, "-c", "credential.helper=", "reflog", "expire", "--expire=now", "--all"], cwd=str(base_dir), capture_output=True, timeout=20)
+                subprocess.run([git_bin, "-c", "credential.helper=", "prune", "--expire=now"], cwd=str(base_dir), capture_output=True, timeout=20)
+                _log(f"Enforced --depth 1 shallow boundary on .git (reduced from {git_size_mb} MB)")
+            except Exception as e:
+                report["errors"].append(f"Git shallow truncate error: {e}")
 
     # 5. Ephemeral workspace & bytecode caches
     pyc_count = 0
@@ -236,7 +360,17 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
 
     shutil.rmtree(base_dir / ".backup", ignore_errors=True)
 
-    # 6. Quota status measurement
+    # 6. Verify and protect AGY CLI binary
+    agy_bin = _find_agy_binary()
+    if agy_bin:
+        try:
+            if not os.access(str(agy_bin), os.X_OK):
+                os.chmod(str(agy_bin), 0o755)
+            _log(f"Verified AGY CLI binary preserved & executable: {agy_bin}")
+        except Exception:
+            pass
+
+    # 7. Quota status measurement
     try:
         usage = shutil.disk_usage(str(home))
         used_mb = (usage.total - usage.free) / (1024 * 1024)
@@ -356,11 +490,15 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
         old_ok, old_head, _ = _git(["rev-parse", "HEAD"])
         old_head = old_head.strip() if old_ok else ""
 
-        pull_ok, out, err = _git(["pull", authenticated_url, "main", "--no-edit", "--allow-unrelated-histories", "-X", "ours"], timeout=35)
+        pull_ok, out, err = _git(["pull", "--depth", "1", authenticated_url, "main", "--no-edit", "--allow-unrelated-histories", "-X", "ours"], timeout=35)
         if not pull_ok:
             _git(["merge", "--abort"])
-            _git(["fetch", authenticated_url, "main", "--prune"], timeout=25)
+            _git(["fetch", "--depth", "1", authenticated_url, "main", "--prune"], timeout=25)
             _git(["merge", "origin/main", "--no-edit", "-m", "Auto-merge main updates", "-X", "ours"], timeout=20)
+
+        # Immediate shallow maintenance to prevent pack and reflog bloat
+        _git(["reflog", "expire", "--expire=now", "--all"], timeout=15)
+        _git(["prune", "--expire=now"], timeout=15)
 
         # Capture commit hash AFTER pulling (locale-independent)
         new_ok, new_head, _ = _git(["rev-parse", "HEAD"])
@@ -680,6 +818,15 @@ def _gather_system_status(base_dir: Path, error_msg: str, traceback_str: str, mi
     except Exception:
         pass
 
+    agy_bin = _find_agy_binary()
+    agy_data = {
+        "installed": agy_bin is not None,
+        "path": str(agy_bin) if agy_bin else "Not Found (~/.local/bin/agy)",
+        "size_mb": round(agy_bin.stat().st_size / (1024 * 1024), 1) if agy_bin else 0.0,
+        "executable": os.access(str(agy_bin), os.X_OK) if agy_bin else False,
+        "status_label": "Ready / Active" if agy_bin else "Offline / Missing"
+    }
+
     return {
         "status": "ok",
         "server_state": "crashed" if error_msg else "healthy_standby",
@@ -691,6 +838,7 @@ def _gather_system_status(base_dir: Path, error_msg: str, traceback_str: str, mi
             "status": git_status
         },
         "quota": quota,
+        "agy": agy_data,
         "python_version": sys.version,
         "missing_packages": missing_pkgs or {},
         "missing_files": missing_files or {}
@@ -838,7 +986,8 @@ def generate_breakglass_dashboard_html(
     server_logs: str = "",
     alert_msg: str = "",
     alert_type: str = "info",
-    admin_name: str = "Administrator"
+    admin_name: str = "Administrator",
+    agy_output: str = ""
 ) -> bytes:
     """Generates the full Break-Glass Disaster Recovery & Management Web Dashboard."""
     file_list = file_list or []
@@ -858,6 +1007,7 @@ def generate_breakglass_dashboard_html(
     tb = status_data.get("traceback", "None")
     git_info = status_data.get("git", {})
     quota = status_data.get("quota", {})
+    agy_info = status_data.get("agy", {})
     missing_pkgs = status_data.get("missing_packages", {})
     missing_files = status_data.get("missing_files", {})
     is_crashed = status_data.get("server_state") == "crashed"
@@ -1193,6 +1343,11 @@ def generate_breakglass_dashboard_html(
                     <input type="hidden" name="action" value="pull_and_restart">
                     <button type="submit" class="btn" title="Git Pull origin/main & Reload">⚡ 2-Way Git Sync</button>
                 </form>
+                <form method="POST" style="margin:0;">
+                    <input type="hidden" name="action" value="agy_diagnose">
+                    <input type="hidden" name="tab" value="agy">
+                    <button type="submit" class="btn" style="border-color:var(--cyan); color:var(--cyan);" title="Run AI Diagnostics using AGY CLI">🤖 AGY Diagnose</button>
+                </form>
                 <form method="POST" style="margin:0;" onsubmit="return confirm('Rollback to HEAD~1 and reload?');">
                     <input type="hidden" name="action" value="rollback">
                     <button type="submit" class="btn btn-magenta" title="Instant Git Revert">⏪ Git Rollback (HEAD~1)</button>
@@ -1219,6 +1374,7 @@ def generate_breakglass_dashboard_html(
             <a href="?action=ls&tab=files&path={norm_path}" class="tab-btn {'active' if active_tab == 'files' else ''}">[02] FILE EXPLORER & EDITOR</a>
             <a href="?action=status&tab=terminal" class="tab-btn {'active' if active_tab == 'terminal' else ''}">[03] EMERGENCY TERMINAL</a>
             <a href="?action=logs&tab=logs" class="tab-btn {'active' if active_tab == 'logs' else ''}">[04] RECOVERY LOGS</a>
+            <a href="?action=agy_view&tab=agy" class="tab-btn {'active' if active_tab == 'agy' else ''}">[05] AGY AI COPILOT</a>
         </div>
 
         <!-- TAB 1: DIAGNOSTICS -->
@@ -1231,6 +1387,12 @@ def generate_breakglass_dashboard_html(
                 <div class="metric-card">
                     <div class="metric-label">Disk Storage Quota</div>
                     <div class="metric-val">{quota.get("used_mb", 0)} MB / {quota.get("total_mb", 0)} MB ({quota.get("pct", 0)}%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">AGY AI Copilot</div>
+                    <div class="metric-val" style="color:{'var(--cyan)' if agy_info.get('installed') else 'var(--magenta)'};">
+                        {'ONLINE (READY)' if agy_info.get('installed') else 'OFFLINE'}
+                    </div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-label">Operator Tier</div>
@@ -1326,6 +1488,8 @@ def generate_breakglass_dashboard_html(
                     <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="python3 -m pip list"><button type="submit" class="btn-sm">pip list</button></form>
                     <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="df -h ~"><button type="submit" class="btn-sm">df -h ~</button></form>
                     <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="python3 -c 'import server; print(\"server ok\")'"><button type="submit" class="btn-sm">test server.py</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="agy --help"><button type="submit" class="btn-sm" style="color:var(--cyan); border-color:var(--cyan);">agy --help</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="agy --version"><button type="submit" class="btn-sm" style="color:var(--cyan); border-color:var(--cyan);">agy --version</button></form>
                 </div>
 
                 <div class="terminal-screen">{terminal_output or "$ Ready for emergency commands."}</div>
@@ -1340,6 +1504,86 @@ def generate_breakglass_dashboard_html(
                     <form method="POST" style="margin:0;"><input type="hidden" name="action" value="logs"><input type="hidden" name="tab" value="logs"><button type="submit" class="btn-sm">Refresh Logs</button></form>
                 </div>
                 <pre style="max-height: 500px; overflow-y: auto;">{server_logs or "No logs fetched yet. Click 'Refresh Logs' above."}</pre>
+            </div>
+        </div>
+
+        <!-- TAB 5: AGY AI COPILOT & DIAGNOSTICS -->
+        <div class="tab-content {'active' if active_tab == 'agy' else ''}">
+            <div class="box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <div>
+                        <h2>🤖 Antigravity AI Copilot & Diagnostics (AGY)</h2>
+                        <p style="font-size:12px; color:var(--text-muted); margin-top:3px;">
+                            Autonomous diagnostic reasoning engine powered by Google Antigravity CLI binary.
+                        </p>
+                    </div>
+                    <span class="status-pill" style="border-color:{'var(--cyan)' if agy_info.get('installed') else 'var(--magenta)'}; color:{'var(--cyan)' if agy_info.get('installed') else 'var(--magenta)'};">
+                        {'● AGY ONLINE' if agy_info.get('installed') else '○ AGY OFFLINE'}
+                    </span>
+                </div>
+
+                <div class="metric-grid" style="margin-bottom:16px;">
+                    <div class="metric-card">
+                        <div class="metric-label">AGY Binary Location</div>
+                        <div class="metric-val" style="font-size:13px; word-break:break-all;">{agy_info.get('path', 'Not found')}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Binary Size / Executable</div>
+                        <div class="metric-val">{agy_info.get('size_mb', 0.0)} MB / {'Yes (0755)' if agy_info.get('executable') else 'No'}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Engine Status</div>
+                        <div class="metric-val" style="color:var(--cyan);">{agy_info.get('status_label', 'Ready')}</div>
+                    </div>
+                </div>
+
+                <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:6px; padding:16px; margin-bottom:18px;">
+                    <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--cyan); margin-bottom:10px;">One-Click AI Diagnostics</div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <form method="POST" style="margin:0;">
+                            <input type="hidden" name="action" value="agy_diagnose">
+                            <input type="hidden" name="tab" value="agy">
+                            <button type="submit" class="btn" style="border-color:var(--cyan); color:var(--cyan);">🩺 Diagnose Server Crash</button>
+                        </form>
+                        <form method="POST" style="margin:0;">
+                            <input type="hidden" name="action" value="agy_cmd">
+                            <input type="hidden" name="tab" value="agy">
+                            <input type="hidden" name="cmd" value="agy --help">
+                            <button type="submit" class="btn-sm">agy --help</button>
+                        </form>
+                        <form method="POST" style="margin:0;">
+                            <input type="hidden" name="action" value="agy_cmd">
+                            <input type="hidden" name="tab" value="agy">
+                            <input type="hidden" name="cmd" value="agy --version">
+                            <button type="submit" class="btn-sm">agy --version</button>
+                        </form>
+                        <form method="POST" style="margin:0;">
+                            <input type="hidden" name="action" value="agy_cmd">
+                            <input type="hidden" name="tab" value="agy">
+                            <input type="hidden" name="cmd" value="agy doctor">
+                            <button type="submit" class="btn-sm">agy doctor</button>
+                        </form>
+                        <form method="POST" style="margin:0;">
+                            <input type="hidden" name="action" value="agy_prompt">
+                            <input type="hidden" name="tab" value="agy">
+                            <input type="hidden" name="prompt" value="Inspect git status, recent commits, and storage quota. Recommend optimizations.">
+                            <button type="submit" class="btn-sm">Audit Git & Storage</button>
+                        </form>
+                    </div>
+                </div>
+
+                <form method="POST" style="margin-bottom:16px;">
+                    <input type="hidden" name="action" value="agy_prompt">
+                    <input type="hidden" name="tab" value="agy">
+                    <label style="display:block; font-size:12px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">Custom AGY Diagnostic Prompt / Instruction</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" name="prompt" placeholder="Ask AGY to diagnose an error, inspect server code, or recommend a fix..." style="flex:1; background:rgba(0,0,0,0.5); border:1px solid var(--border); color:#fff; padding:10px 14px; border-radius:4px; font-size:13px;" required>
+                        <button type="submit" class="btn" style="border-color:var(--cyan); color:var(--cyan); white-space:nowrap;">Run with AGY 🚀</button>
+                    </div>
+                </form>
+
+                <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">AGY Execution Console Output</div>
+                <div class="terminal-screen" style="white-space:pre-wrap; max-height:450px; overflow-y:auto;">{agy_output or "$ Antigravity Agent ready. Run a preset or submit an instruction above."}</div>
             </div>
         </div>
     </div>
@@ -1654,8 +1898,25 @@ def render_bootstrap_response(
             start_response("200 OK", resp_headers)
             return [generate_breakglass_dashboard_html(status_data, active_tab="terminal", alert_msg=msg, alert_type="error", admin_name=admin_name)]
 
+        env = os.environ.copy()
+        local_bin = str(Path.home() / ".local" / "bin")
+        if "PATH" in env and local_bin not in env["PATH"]:
+            env["PATH"] = f"{local_bin}:{env['PATH']}"
+        elif "PATH" not in env:
+            env["PATH"] = local_bin
+
+        cmd_to_run = cmd.strip()
+        if cmd_to_run.startswith("agy ") or cmd_to_run == "agy":
+            parts = cmd_to_run.split(maxsplit=1)
+            sub_arg = parts[1].strip() if len(parts) > 1 else ""
+            std_cmds = {"agent", "agents", "models", "mcp", "plugin", "plugins", "help", "--help", "-h", "version", "--version", "update", "changelog", "doctor"}
+            if sub_arg and not sub_arg.startswith("-") and sub_arg.split()[0] not in std_cmds:
+                cmd_to_run = f"agy --print {shlex.quote(sub_arg)}"
+            elif not sub_arg:
+                cmd_to_run = "agy --help"
+
         try:
-            res = subprocess.run(cmd, shell=True, cwd=str(base_dir), capture_output=True, text=True, timeout=35)
+            res = subprocess.run(cmd_to_run, shell=True, cwd=str(base_dir), capture_output=True, text=True, timeout=60, env=env)
             out = f"$ {cmd}\n[Exit Code: {res.returncode}]\n"
             if res.stdout:
                 out += f"--- STDOUT ---\n{res.stdout}\n"
@@ -1788,6 +2049,76 @@ def render_bootstrap_response(
         start_response("200 OK", resp_headers)
         return [generate_breakglass_dashboard_html(status_data, active_tab="logs", server_logs=logs_content, admin_name=admin_name)]
 
+    # 12. Action: AGY VIEW
+    elif action == "agy_view":
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="agy", admin_name=admin_name)]
+
+    # 13. Action: AGY DIAGNOSE
+    elif action == "agy_diagnose":
+        crash_summary = (
+            f"Server State: {status_data.get('server_state')}\n"
+            f"Error: {status_data.get('error_msg')}\n"
+            f"Traceback:\n{status_data.get('traceback')}\n"
+            f"Git Branch/Commit: {status_data.get('git', {}).get('branch')} @ {status_data.get('git', {}).get('commit')}\n"
+            f"Quota: {status_data.get('quota', {}).get('used_mb')}MB used ({status_data.get('quota', {}).get('pct')}%)\n"
+            f"Missing Packages: {status_data.get('missing_packages')}\n"
+            f"Missing Files: {status_data.get('missing_files')}"
+        )
+        prompt = (
+            f"You are the Antigravity Diagnostic Agent for Michael Robberts' portfolio server running on PythonAnywhere.\n"
+            f"The server is in Break-Glass recovery mode with the following diagnostics:\n"
+            f"```\n{crash_summary}\n```\n"
+            f"Analyze the root cause and provide:\n"
+            f"1. Clear explanation of why the crash occurred.\n"
+            f"2. Precise file and code corrections needed.\n"
+            f"3. Concrete commands to restore normal operation."
+        )
+        code, stdout, stderr = _run_agy_command(base_dir, ["--print", prompt], timeout=90)
+        out = stdout or stderr or f"[AGY returned code {code} with no output]"
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok" if code == 0 else "error", "output": out, "exit_code": code}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="agy", agy_output=out, admin_name=admin_name)]
+
+    # 14. Action: AGY RUN COMMAND
+    elif action == "agy_cmd":
+        cmd_str = (post_params.get("cmd") or params.get("cmd") or ["agy --help"])[0].strip()
+        code, stdout, stderr = _run_agy_command(base_dir, cmd_str, timeout=60)
+        out = f"$ {cmd_str}\n[Exit Code: {code}]\n"
+        if stdout: out += f"--- STDOUT ---\n{stdout}\n"
+        if stderr: out += f"--- STDERR ---\n{stderr}\n"
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok" if code == 0 else "error", "output": out, "exit_code": code}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="agy", agy_output=out, admin_name=admin_name)]
+
+    # 15. Action: AGY PROMPT
+    elif action == "agy_prompt":
+        user_prompt = (post_params.get("prompt") or params.get("prompt") or [""])[0].strip()
+        if not user_prompt:
+            user_prompt = "Diagnose system health and recommend any optimizations."
+        code, stdout, stderr = _run_agy_command(base_dir, ["--print", user_prompt], timeout=90)
+        out = f"$ agy --print \"{user_prompt}\"\n[Exit Code: {code}]\n\n"
+        out += (stdout or stderr or "[No output returned from agy]")
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok" if code == 0 else "error", "output": out, "exit_code": code}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="agy", agy_output=out, admin_name=admin_name)]
+
     # Fallback to status
     resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
     start_response("200 OK", resp_headers)
@@ -1802,6 +2133,9 @@ def application(environ, start_response):
         if str(BASE_DIR) not in sys.path:
             sys.path.insert(0, str(BASE_DIR))
         os.chdir(str(BASE_DIR))
+
+        # Enforce storage limits and prevent quota bloat at startup
+        auto_enforce_storage_limits(BASE_DIR)
 
         # Step 1.5: Break-Glass Emergency Interceptor (accessible anytime on demand)
         req_path = environ.get("PATH_INFO", "")
@@ -1900,6 +2234,7 @@ def application(environ, start_response):
                         except Exception:
                             pass
 
+            auto_enforce_storage_limits(BASE_DIR, force=True)
             missing_files[str(import_err).split("'")[-1]] = 'MISSING (Import Failed)'
             return render_bootstrap_response(
                 environ, start_response, BASE_DIR,
