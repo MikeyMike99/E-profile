@@ -415,18 +415,80 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
 
         _GIT_SYNC_DONE = True
         return True
+import time
+import datetime
+
+
+def _format_size(num_bytes: int) -> str:
+    """Formats bytes into human-readable string."""
+    for unit in ['B', 'KB', 'MB', 'GB']:
+        if num_bytes < 1024.0:
+            return f"{num_bytes:.1f} {unit}" if unit != 'B' else f"{num_bytes} B"
+        num_bytes /= 1024.0
+    return f"{num_bytes:.1f} TB"
+
+
+def _load_dotenv_raw(base_dir: Path) -> dict:
+    """Zero-dependency parser for .env files."""
+    env_vars = {}
+    env_path = base_dir / ".env"
+    if env_path.is_file():
+        try:
+            for line in env_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                k, v = line.split("=", 1)
+                k = k.strip()
+                v = v.strip().strip("'\"")
+                env_vars[k] = v
+        except Exception:
+            pass
+    return env_vars
+
+
 def _parse_bootstrap_request(environ):
+    """Zero-dependency parser for incoming WSGI requests (Query, Form, JSON, Multipart)."""
     method = environ.get("REQUEST_METHOD", "GET").upper()
     query_string = environ.get("QUERY_STRING", "")
     params = urllib.parse.parse_qs(query_string)
 
     post_params = {}
+    content_type = environ.get("CONTENT_TYPE", "")
+    
     if method == "POST":
         try:
             content_length = int(environ.get("CONTENT_LENGTH", 0) or 0)
-            if 0 < content_length < 65536:
+            if 0 < content_length < 25 * 1024 * 1024:
                 raw_body = environ["wsgi.input"].read(content_length)
-                post_params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
+                if "application/json" in content_type.lower():
+                    try:
+                        parsed_json = json.loads(raw_body.decode("utf-8", errors="replace"))
+                        if isinstance(parsed_json, dict):
+                            for k, v in parsed_json.items():
+                                post_params[k] = [str(v)] if not isinstance(v, list) else [str(x) for x in v]
+                    except Exception:
+                        pass
+                elif "multipart/form-data" in content_type.lower() and "boundary=" in content_type:
+                    boundary = content_type.split("boundary=")[1].strip().strip('"').encode("utf-8")
+                    parts = raw_body.split(b"--" + boundary)
+                    for part in parts:
+                        if not part or part == b"--\r\n" or part == b"--":
+                            continue
+                        if b"\r\n\r\n" in part:
+                            header_bytes, body_bytes = part.split(b"\r\n\r\n", 1)
+                            body_clean = body_bytes.rstrip(b"\r\n")
+                            header_text = header_bytes.decode("utf-8", errors="replace")
+                            if 'name="' in header_text:
+                                field_name = header_text.split('name="')[1].split('"')[0]
+                                if 'filename="' in header_text:
+                                    fname = header_text.split('filename="')[1].split('"')[0]
+                                    post_params["upload_filename"] = [fname]
+                                    post_params["upload_content"] = [body_clean.decode("utf-8", errors="replace")]
+                                else:
+                                    post_params[field_name] = [body_clean.decode("utf-8", errors="replace")]
+                else:
+                    post_params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
         except Exception:
             pass
 
@@ -442,11 +504,16 @@ def _parse_bootstrap_request(environ):
 
 
 def authenticate_bootstrap_admin(base_dir: Path, params: dict, post_params: dict, cookies: dict, environ: dict) -> tuple[bool, str, tuple | None]:
+    """Authenticates admin access across env variables, .env, master keys, tokens, and profiles."""
     token = (
         (post_params.get("admin_token") or [""])[0].strip()
         or (post_params.get("token") or [""])[0].strip()
+        or (post_params.get("secret") or [""])[0].strip()
+        or (post_params.get("key") or [""])[0].strip()
         or (params.get("admin_token") or [""])[0].strip()
         or (params.get("token") or [""])[0].strip()
+        or (params.get("secret") or [""])[0].strip()
+        or (params.get("key") or [""])[0].strip()
     )
 
     auth_header = environ.get("HTTP_AUTHORIZATION", "")
@@ -454,10 +521,18 @@ def authenticate_bootstrap_admin(base_dir: Path, params: dict, post_params: dict
         bearer = auth_header[7:].strip()
         if bearer:
             token = bearer
+    elif environ.get("HTTP_X_BREAKGLASS_SECRET"):
+        token = environ.get("HTTP_X_BREAKGLASS_SECRET", "").strip()
+    elif environ.get("HTTP_X_SYNC_SECRET"):
+        token = environ.get("HTTP_X_SYNC_SECRET", "").strip()
+    elif environ.get("HTTP_X_ADMIN_KEY"):
+        token = environ.get("HTTP_X_ADMIN_KEY", "").strip()
 
     cookie_hash = cookies.get("bootstrap_admin_session", "").strip()
 
     admin_hashes = {}
+    env_vars = _load_dotenv_raw(base_dir)
+
     profiles_path = base_dir / "profiles.json"
     if profiles_path.exists():
         try:
@@ -468,9 +543,21 @@ def authenticate_bootstrap_admin(base_dir: Path, params: dict, post_params: dict
         except Exception:
             pass
 
-    sync_secret = os.environ.get("SYNC_SECRET", "").strip()
-    if sync_secret:
-        admin_hashes[hashlib.sha256(sync_secret.encode("utf-8")).hexdigest()] = "Root (SYNC_SECRET)"
+    for s in [os.environ.get("SYNC_SECRET", "").strip(), env_vars.get("SYNC_SECRET", "").strip()]:
+        if s:
+            admin_hashes[hashlib.sha256(s.encode("utf-8")).hexdigest()] = "Root (SYNC_SECRET)"
+
+    for s in [os.environ.get("ADMIN_KEY", "").strip(), env_vars.get("ADMIN_KEY", "").strip()]:
+        if s:
+            admin_hashes[hashlib.sha256(s.encode("utf-8")).hexdigest()] = "Root (ADMIN_KEY)"
+
+    for s in [os.environ.get("BREAK_GLASS_KEY", "").strip(), env_vars.get("BREAK_GLASS_KEY", "").strip()]:
+        if s:
+            admin_hashes[hashlib.sha256(s.encode("utf-8")).hexdigest()] = "Root (BREAK_GLASS_KEY)"
+
+    for s in [os.environ.get("GITHUB_TOKEN", "").strip(), env_vars.get("GITHUB_TOKEN", "").strip(), env_vars.get("GIT_TOKEN", "").strip()]:
+        if s and not s.startswith("INSERT_"):
+            admin_hashes[hashlib.sha256(s.encode("utf-8")).hexdigest()] = "Root (GitHub Token)"
 
     token_file = base_dir / "gethub_token.txt"
     if not token_file.exists():
@@ -504,20 +591,129 @@ def authenticate_bootstrap_admin(base_dir: Path, params: dict, post_params: dict
     return False, "", None
 
 
-def generate_secure_holding_html(login_failed: bool = False) -> bytes:
+def _safe_resolve_path(base_dir: Path, rel_path: str) -> tuple[Path | None, str]:
+    """Safely resolves path within base_dir, home, or /var/www while blocking traversal escapes."""
+    clean = rel_path.strip().lstrip("/")
+    if not clean:
+        return base_dir.resolve(), ""
+    raw_path = Path(rel_path.strip())
+    if raw_path.is_absolute():
+        target = raw_path.resolve()
+    else:
+        target = (base_dir / clean).resolve()
+
+    base_resolved = base_dir.resolve()
+    home_resolved = Path.home().resolve()
+    allowed = False
+    try:
+        if base_resolved in target.parents or target == base_resolved:
+            allowed = True
+        elif home_resolved in target.parents or target == home_resolved:
+            allowed = True
+        elif Path("/var/www").resolve() in target.parents or target == Path("/var/www").resolve():
+            allowed = True
+        elif Path("/var/log").resolve() in target.parents or target == Path("/var/log").resolve():
+            allowed = True
+    except Exception:
+        pass
+    if not allowed:
+        return None, "Access denied: Path resolves outside authorized directories."
+    return target, ""
+
+
+def _read_server_logs(base_dir: Path, max_lines: int = 150) -> str:
+    """Reads latest error and application logs from system and repository."""
+    log_candidates = []
+    for p in Path("/var/log").glob("*error*.log"):
+        log_candidates.append(p)
+    for p in Path("/var/www").glob("*error*.log"):
+        log_candidates.append(p)
+    logs_dir = base_dir / "logs"
+    if logs_dir.is_dir():
+        for p in logs_dir.glob("*.log"):
+            log_candidates.append(p)
+    for p in [base_dir / "server_stdout.log", base_dir / "server_stderr.log"]:
+        if p.exists():
+            log_candidates.append(p)
+
+    out = []
+    for lp in log_candidates:
+        try:
+            if lp.is_file() and lp.stat().st_size > 0:
+                lines = lp.read_text(encoding="utf-8", errors="replace").splitlines()
+                recent = "\n".join(lines[-max_lines:])
+                out.append(f"=== [LOG: {lp} (last {min(len(lines), max_lines)} lines)] ===\n{recent}\n")
+        except Exception:
+            pass
+    if not out:
+        return "No persistent log files located in /var/log, /var/www, or local logs/ directory."
+    return "\n".join(out)
+
+
+def _gather_system_status(base_dir: Path, error_msg: str, traceback_str: str, missing_pkgs: dict, missing_files: dict) -> dict:
+    """Collects server telemetry, git status, and storage quotas."""
+    git_bin = shutil.which("git") or "/usr/bin/git"
+    git_branch = "unknown"
+    git_commit = "unknown"
+    git_status = "clean"
+    try:
+        res = subprocess.run([git_bin, "rev-parse", "--abbrev-ref", "HEAD"], cwd=str(base_dir), capture_output=True, text=True, timeout=5)
+        if res.returncode == 0:
+            git_branch = res.stdout.strip()
+        res = subprocess.run([git_bin, "rev-parse", "HEAD"], cwd=str(base_dir), capture_output=True, text=True, timeout=5)
+        if res.returncode == 0:
+            git_commit = res.stdout.strip()
+        res = subprocess.run([git_bin, "status", "-s"], cwd=str(base_dir), capture_output=True, text=True, timeout=5)
+        if res.returncode == 0:
+            git_status = res.stdout.strip() or "clean"
+    except Exception:
+        pass
+
+    quota = {"used_mb": 0.0, "total_mb": 0.0, "pct": 0.0}
+    try:
+        usage = shutil.disk_usage(str(Path.home()))
+        used_mb = (usage.total - usage.free) / (1024 * 1024)
+        total_mb = usage.total / (1024 * 1024)
+        quota["used_mb"] = round(used_mb, 1)
+        quota["total_mb"] = round(total_mb, 1)
+        quota["pct"] = round((used_mb / total_mb) * 100, 1) if total_mb else 0.0
+    except Exception:
+        pass
+
+    return {
+        "status": "ok",
+        "server_state": "crashed" if error_msg else "healthy_standby",
+        "error_msg": error_msg or "None (Clean State)",
+        "traceback": traceback_str or "No unhandled exceptions recorded.",
+        "git": {
+            "branch": git_branch,
+            "commit": git_commit,
+            "status": git_status
+        },
+        "quota": quota,
+        "python_version": sys.version,
+        "missing_packages": missing_pkgs or {},
+        "missing_files": missing_files or {}
+    }
+
+
+def generate_secure_holding_html(login_failed: bool = False, alert_text: str = "") -> bytes:
     """Renders a zero-disclosure maintenance page with an admin authentication gate."""
-    alert_html = """
-    <div style="background: rgba(255, 0, 85, 0.15); border: 1px solid #ff0055; color: #ff80a0; padding: 10px 14px; margin-bottom: 18px; border-radius: 6px; font-size: 13px; text-align: left;">
-        Access denied. Invalid administrator token.
-    </div>
-    """ if login_failed else ""
+    alert_html = ""
+    if login_failed or alert_text:
+        msg = alert_text or "Access denied. Invalid administrator token."
+        alert_html = f'''
+        <div style="background: rgba(255, 0, 85, 0.15); border: 1px solid #ff0055; color: #ff80a0; padding: 10px 14px; margin-bottom: 18px; border-radius: 6px; font-size: 13px; text-align: left;">
+            {msg}
+        </div>
+        '''
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Unavailable | Maintenance Mode</title>
+    <title>Service Unavailable | Break-Glass Gate</title>
     <style>
         :root {{
             --bg: #090a10;
@@ -527,8 +723,8 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
             --accent-cyan: #00e5ff;
             --accent-magenta: #ff0055;
             --border-color: rgba(255, 255, 255, 0.08);
-            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --mono: "SFMono-Regular", Consolas, Menlo, monospace;
         }}
         * {{ box-sizing: border-box; margin: 0; padding: 0; }}
         body {{
@@ -548,7 +744,7 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
             max-width: 480px;
             width: 100%;
             padding: 36px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(12px);
             text-align: center;
         }}
@@ -576,39 +772,12 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
             border-radius: 50%;
             box-shadow: 0 0 8px var(--accent-cyan);
         }}
-        h1 {{
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }}
-        p {{
-            color: var(--text-muted);
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }}
-        .divider {{
-            height: 1px;
-            background: var(--border-color);
-            margin: 24px 0;
-        }}
-        .admin-section {{
-            text-align: left;
-        }}
-        .admin-label {{
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }}
-        .input-group {{
-            display: flex;
-            gap: 8px;
-        }}
+        h1 {{ font-size: 22px; font-weight: 700; margin-bottom: 10px; }}
+        p {{ color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }}
+        .divider {{ height: 1px; background: var(--border-color); margin: 24px 0; }}
+        .admin-section {{ text-align: left; }}
+        .admin-label {{ display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }}
+        .input-group {{ display: flex; gap: 8px; }}
         input[type="password"] {{
             flex: 1;
             background: rgba(0, 0, 0, 0.4);
@@ -619,11 +788,8 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
             font-size: 13px;
             padding: 10px 14px;
             outline: none;
-            transition: border-color 0.2s;
         }}
-        input[type="password"]:focus {{
-            border-color: var(--accent-cyan);
-        }}
+        input[type="password"]:focus {{ border-color: var(--accent-cyan); }}
         button {{
             background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
             border: none;
@@ -633,7 +799,6 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
             font-size: 13px;
             font-weight: 600;
             padding: 10px 16px;
-            transition: opacity 0.2s;
         }}
         button:hover {{ opacity: 0.92; }}
     </style>
@@ -642,17 +807,16 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
     <div class="card">
         <div class="status-badge">System Status: Standby</div>
         <h1>Service Temporarily Unavailable</h1>
-        <p>The application server is currently updating or undergoing maintenance. Please check back shortly.</p>
-        
+        <p>The application server is undergoing maintenance or recovery. Please check back shortly.</p>
         <div class="divider"></div>
-        
         <div class="admin-section">
-            <span class="admin-label">Administrator Terminal Access</span>
+            <span class="admin-label">Break-Glass Administrator Terminal Access</span>
             {alert_html}
             <form method="POST">
+                <input type="hidden" name="action" value="status">
                 <div class="input-group">
-                    <input type="password" name="admin_token" placeholder="Enter Admin Token / PIN" autocomplete="off" required>
-                    <button type="submit">Unlock</button>
+                    <input type="password" name="admin_token" placeholder="Enter Admin Secret / Key / PIN" autocomplete="off" required>
+                    <button type="submit">Unlock Console</button>
                 </div>
             </form>
         </div>
@@ -662,227 +826,972 @@ def generate_secure_holding_html(login_failed: bool = False) -> bytes:
     return html.encode("utf-8")
 
 
-def generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files, admin_name="Administrator"):
-    """Generates an authenticated diagnostic dashboard for administrators."""
-    html = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BOOTSTRAP | SYSTEM_DIAGNOSTICS</title>
-        <style>
-            :root {{
-                --bg: #0a0a0f;
-                --text: #e0e0e0;
-                --cyan: #00e5ff;
-                --magenta: #ff0055;
-                --panel: rgba(20, 20, 25, 0.95);
-                --font: 'Consolas', monospace;
-            }}
-            body {{
-                background-color: var(--bg);
-                color: var(--text);
-                font-family: var(--font);
-                padding: 30px;
-                margin: 0;
-            }}
-            .container {{
-                max-width: 950px;
-                margin: 0 auto;
-                background: var(--panel);
-                border: 1px solid var(--magenta);
-                padding: 30px;
-                box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
-                border-radius: 8px;
-            }}
-            .top-bar {{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: rgba(0, 229, 255, 0.08);
-                border: 1px solid rgba(0, 229, 255, 0.2);
-                padding: 10px 16px;
-                margin-bottom: 20px;
-                border-radius: 4px;
-                font-size: 13px;
-            }}
-            .operator {{
-                color: var(--cyan);
-                font-weight: bold;
-            }}
-            .actions {{
-                display: flex;
-                gap: 10px;
-            }}
-            .btn {{
-                background: rgba(0, 229, 255, 0.15);
-                border: 1px solid var(--cyan);
-                color: var(--cyan);
-                padding: 6px 12px;
-                border-radius: 4px;
-                font-family: var(--font);
-                font-size: 12px;
-                cursor: pointer;
-                transition: all 0.2s;
-            }}
-            .btn:hover {{
-                background: var(--cyan);
-                color: #000;
-            }}
-            .btn-danger {{
-                background: rgba(255, 0, 85, 0.15);
-                border-color: var(--magenta);
-                color: var(--magenta);
-            }}
-            .btn-danger:hover {{
-                background: var(--magenta);
-                color: #fff;
-            }}
-            h1 {{
-                color: var(--magenta);
-                text-transform: uppercase;
-                letter-spacing: 2px;
-                border-bottom: 1px solid var(--magenta);
-                padding-bottom: 10px;
-                font-size: 20px;
-            }}
-            h2 {{
-                color: var(--cyan);
-                margin-top: 25px;
-                font-size: 15px;
-                letter-spacing: 1px;
-            }}
-            .status-box {{
-                background: rgba(0, 0, 0, 0.5);
-                padding: 15px;
-                border-left: 4px solid var(--cyan);
-                margin: 10px 0;
-            }}
-            .status-box.error {{
-                border-left-color: var(--magenta);
-                color: #ffb3c6;
-            }}
-            pre {{
-                background: #000;
-                padding: 15px;
-                border: 1px solid #333;
-                overflow-x: auto;
-                color: #a3be8c;
-                font-size: 12px;
-                line-height: 1.4;
-            }}
-            ul {{
-                list-style-type: square;
-                padding-left: 20px;
-            }}
-            li.missing {{ color: var(--magenta); }}
-            li.found {{ color: var(--cyan); }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="top-bar">
-                <span class="operator">🛡️ AUTHENTICATED: {admin_name}</span>
-                <div class="actions">
-                    <form method="POST" style="margin:0;">
-                        <input type="hidden" name="action" value="pull_and_restart">
-                        <button type="submit" class="btn">⚡ 2-Way Git Sync & Restart</button>
-                    </form>
-                    <form method="POST" style="margin:0;">
-                        <input type="hidden" name="action" value="logout">
-                        <button type="submit" class="btn btn-danger">🔒 Lock Console</button>
-                    </form>
+def generate_breakglass_dashboard_html(
+    status_data: dict,
+    active_tab: str = "diag",
+    current_path: str = "",
+    file_list: list = None,
+    editor_file: str = "",
+    editor_content: str = "",
+    terminal_cmd: str = "",
+    terminal_output: str = "",
+    server_logs: str = "",
+    alert_msg: str = "",
+    alert_type: str = "info",
+    admin_name: str = "Administrator"
+) -> bytes:
+    """Generates the full Break-Glass Disaster Recovery & Management Web Dashboard."""
+    file_list = file_list or []
+    
+    alert_html = ""
+    if alert_msg:
+        border_col = "#00e5ff" if alert_type == "success" else ("#ff0055" if alert_type == "error" else "#ffb703")
+        bg_col = "rgba(0, 229, 255, 0.12)" if alert_type == "success" else ("rgba(255, 0, 85, 0.15)" if alert_type == "error" else "rgba(255, 183, 3, 0.12)")
+        alert_html = f'''
+        <div style="background:{bg_col}; border:1px solid {border_col}; color:#fff; padding:12px 18px; margin-bottom:20px; border-radius:6px; font-size:13px; font-weight:600; display:flex; justify-content:space-between; align-items:center;">
+            <span>{alert_msg}</span>
+            <span style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:1px;">{alert_type}</span>
+        </div>
+        '''
+
+    err = status_data.get("error_msg", "None")
+    tb = status_data.get("traceback", "None")
+    git_info = status_data.get("git", {})
+    quota = status_data.get("quota", {})
+    missing_pkgs = status_data.get("missing_packages", {})
+    missing_files = status_data.get("missing_files", {})
+    is_crashed = status_data.get("server_state") == "crashed"
+
+    pkg_html = ""
+    for p, s in missing_pkgs.items():
+        cls = "missing" if "MISSING" in s else "found"
+        pkg_html += f"<li class='{cls}'>[{s}] {p}</li>"
+    if not pkg_html:
+        pkg_html = "<li class='found'>All pre-flight packages verified.</li>"
+
+    file_chk_html = ""
+    for f, s in missing_files.items():
+        cls = "missing" if "MISSING" in s else "found"
+        file_chk_html += f"<li class='{cls}'>[{s}] {f}</li>"
+    if not file_chk_html:
+        file_chk_html = "<li class='found'>All pre-flight paths verified.</li>"
+
+    norm_path = current_path.replace("\\", "/").strip("/")
+    path_parts = norm_path.split("/") if norm_path else []
+    breadcrumbs = '<a href="?action=ls&path=" class="breadcrumb-link">~ [root]</a>'
+    accum = ""
+    for part in path_parts:
+        if part:
+            accum += "/" + part
+            breadcrumbs += f' / <a href="?action=ls&path={accum.lstrip("/")}" class="breadcrumb-link">{part}</a>'
+
+    parent_path = "/".join(path_parts[:-1]) if len(path_parts) > 1 else ("" if len(path_parts) == 1 else None)
+    parent_row = ""
+    if parent_path is not None:
+        parent_row = f'''
+        <tr>
+            <td colspan="4" style="padding: 8px 12px; background: rgba(255,255,255,0.02);">
+                <a href="?action=ls&path={parent_path}" style="color:var(--cyan); text-decoration:none; font-weight:bold;">📁 .. (Up to Parent Directory)</a>
+            </td>
+        </tr>
+        '''
+
+    file_rows = ""
+    for item in file_list:
+        name = item.get("name", "")
+        rel = item.get("rel_path", "").replace("\\", "/")
+        is_d = item.get("is_dir", False)
+        sz = _format_size(item.get("size", 0)) if not is_d else "-"
+        icon = "📁" if is_d else "📄"
+        
+        if is_d:
+            action_link = f'<a href="?action=ls&path={rel}" style="color:var(--cyan); text-decoration:none; font-weight:600;">{name}/</a>'
+            delete_btn = ""
+        else:
+            action_link = f'<a href="?action=cat&path={rel}" style="color:#f0f3f8; text-decoration:none;">{name}</a>'
+            delete_btn = f'''
+            <form method="POST" style="display:inline; margin:0;" onsubmit="return confirm('Permanently delete {name}?');">
+                <input type="hidden" name="action" value="rm">
+                <input type="hidden" name="path" value="{rel}">
+                <button type="submit" class="btn-icon" title="Delete">🗑️</button>
+            </form>
+            '''
+
+        file_rows += f'''
+        <tr>
+            <td style="padding: 6px 12px;">{icon} {action_link}</td>
+            <td style="padding: 6px 12px; font-family:var(--mono); font-size:12px; color:var(--text-muted);">{sz}</td>
+            <td style="padding: 6px 12px; font-family:var(--mono); font-size:12px; color:var(--text-muted);">{item.get("mtime_str", "-")}</td>
+            <td style="padding: 6px 12px; text-align:right;">
+                {f'<a href="?action=cat&path={rel}" class="btn-sm">Edit</a>' if not is_d else ''}
+                {delete_btn}
+            </td>
+        </tr>
+        '''
+    if not file_rows and parent_row == "":
+        file_rows = '<tr><td colspan="4" style="padding:14px; text-align:center; color:var(--text-muted);">Directory is empty.</td></tr>'
+
+    editor_display = "none" if not editor_file else "block"
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BREAK-GLASS | EMERGENCY CONSOLE</title>
+    <style>
+        :root {{
+            --bg: #090a10;
+            --panel: rgba(18, 20, 29, 0.95);
+            --text-main: #f0f3f8;
+            --text-muted: #8b949e;
+            --cyan: #00e5ff;
+            --magenta: #ff0055;
+            --amber: #ffb703;
+            --border: rgba(255, 255, 255, 0.08);
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }}
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body {{
+            background: radial-gradient(circle at 50% 10%, #151928 0%, var(--bg) 90%);
+            color: var(--text-main);
+            font-family: var(--font);
+            min-height: 100vh;
+            padding: 24px;
+        }}
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--panel);
+            border: 1px solid {'var(--magenta)' if is_crashed else 'var(--cyan)'};
+            border-radius: 10px;
+            padding: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }}
+        .top-bar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }}
+        .brand {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }}
+        .status-pill {{
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: {'rgba(255, 0, 85, 0.15)' if is_crashed else 'rgba(0, 229, 255, 0.15)'};
+            color: {'var(--magenta)' if is_crashed else 'var(--cyan)'};
+            border: 1px solid {'var(--magenta)' if is_crashed else 'var(--cyan)'};
+        }}
+        .quick-actions {{
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }}
+        .btn {{
+            background: rgba(0, 229, 255, 0.12);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 7px 14px;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }}
+        .btn:hover {{ background: var(--cyan); color: #000; }}
+        .btn-magenta {{
+            background: rgba(255, 0, 85, 0.12);
+            border-color: var(--magenta);
+            color: var(--magenta);
+        }}
+        .btn-magenta:hover {{ background: var(--magenta); color: #fff; }}
+        .btn-amber {{
+            background: rgba(255, 183, 3, 0.12);
+            border-color: var(--amber);
+            color: var(--amber);
+        }}
+        .btn-amber:hover {{ background: var(--amber); color: #000; }}
+        .btn-sm {{
+            padding: 3px 8px;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }}
+        .btn-sm:hover {{ border-color: var(--cyan); color: var(--cyan); }}
+        .btn-icon {{
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px 6px;
+            opacity: 0.7;
+        }}
+        .btn-icon:hover {{ opacity: 1.0; }}
+        .tabs {{
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }}
+        .tab-btn {{
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }}
+        .tab-btn.active {{
+            color: var(--cyan);
+            border-bottom-color: var(--cyan);
+            background: rgba(0, 229, 255, 0.04);
+        }}
+        .tab-content {{ display: none; }}
+        .tab-content.active {{ display: block; }}
+        .box {{
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }}
+        .box.error {{ border-color: var(--magenta); background: rgba(255, 0, 85, 0.05); }}
+        h2 {{ font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--cyan); margin-bottom: 12px; }}
+        pre {{
+            background: #050608;
+            padding: 14px;
+            border-radius: 4px;
+            border: 1px solid #222;
+            overflow-x: auto;
+            color: #a3be8c;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1.45;
+        }}
+        .terminal-screen {{
+            background: #030406;
+            color: #5af78e;
+            border: 1px solid #333;
+            min-height: 240px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 16px;
+            font-family: var(--mono);
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }}
+        th {{
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+        }}
+        tr:hover td {{ background: rgba(255, 255, 255, 0.03); }}
+        .breadcrumbs {{
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            margin-bottom: 14px;
+            font-family: var(--mono);
+            font-size: 13px;
+        }}
+        .breadcrumb-link {{ color: var(--cyan); text-decoration: none; }}
+        .breadcrumb-link:hover {{ text-decoration: underline; }}
+        textarea.editor {{
+            width: 100%;
+            height: 380px;
+            background: #050608;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: #f0f3f8;
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.45;
+            padding: 14px;
+            outline: none;
+            resize: vertical;
+        }}
+        textarea.editor:focus {{ border-color: var(--cyan); }}
+        input[type="text"], input[type="file"] {{
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: #fff;
+            font-family: var(--mono);
+            font-size: 13px;
+            padding: 8px 12px;
+            outline: none;
+        }}
+        input[type="text"]:focus {{ border-color: var(--cyan); }}
+        ul {{ list-style-type: square; padding-left: 20px; font-size: 13px; line-height: 1.6; }}
+        li.missing {{ color: var(--magenta); }}
+        li.found {{ color: var(--cyan); }}
+        .metric-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }}
+        .metric-card {{
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 6px;
+        }}
+        .metric-val {{ font-family: var(--mono); font-size: 16px; font-weight: 700; color: #fff; margin-top: 4px; }}
+        .metric-label {{ font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <div class="brand">
+                <span>🛡️ BREAK-GLASS RECOVERY CONSOLE</span>
+                <span class="status-pill">{'SERVER CRASHED' if is_crashed else 'STANDBY / ACTIVE'}</span>
+            </div>
+            <div class="quick-actions">
+                <form method="POST" style="margin:0;">
+                    <input type="hidden" name="action" value="pull_and_restart">
+                    <button type="submit" class="btn" title="Git Pull origin/main & Reload">⚡ 2-Way Git Sync</button>
+                </form>
+                <form method="POST" style="margin:0;" onsubmit="return confirm('Rollback to HEAD~1 and reload?');">
+                    <input type="hidden" name="action" value="rollback">
+                    <button type="submit" class="btn btn-magenta" title="Instant Git Revert">⏪ Git Rollback (HEAD~1)</button>
+                </form>
+                <form method="POST" style="margin:0;">
+                    <input type="hidden" name="action" value="cleanup">
+                    <button type="submit" class="btn btn-amber" title="Free Disk Quota on PythonAnywhere">🧹 Quota Rescue</button>
+                </form>
+                <form method="POST" style="margin:0;">
+                    <input type="hidden" name="action" value="reload">
+                    <button type="submit" class="btn" title="Touch WSGI file to trigger fresh worker start">🔄 WSGI Reload</button>
+                </form>
+                <form method="POST" style="margin:0;">
+                    <input type="hidden" name="action" value="logout">
+                    <button type="submit" class="btn btn-magenta" title="Lock Console">🔒 Lock</button>
+                </form>
+            </div>
+        </div>
+
+        {alert_html}
+
+        <div class="tabs">
+            <a href="?action=status&tab=diag" class="tab-btn {'active' if active_tab == 'diag' else ''}">[01] DIAGNOSTICS</a>
+            <a href="?action=ls&tab=files&path={norm_path}" class="tab-btn {'active' if active_tab == 'files' else ''}">[02] FILE EXPLORER & EDITOR</a>
+            <a href="?action=status&tab=terminal" class="tab-btn {'active' if active_tab == 'terminal' else ''}">[03] EMERGENCY TERMINAL</a>
+            <a href="?action=logs&tab=logs" class="tab-btn {'active' if active_tab == 'logs' else ''}">[04] RECOVERY LOGS</a>
+        </div>
+
+        <!-- TAB 1: DIAGNOSTICS -->
+        <div class="tab-content {'active' if active_tab == 'diag' else ''}">
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Git Branch / Commit</div>
+                    <div class="metric-val">{git_info.get("branch", "unknown")} @ {git_info.get("commit", "unknown")[:8]}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Disk Storage Quota</div>
+                    <div class="metric-val">{quota.get("used_mb", 0)} MB / {quota.get("total_mb", 0)} MB ({quota.get("pct", 0)}%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Operator Tier</div>
+                    <div class="metric-val" style="color:var(--cyan);">{admin_name}</div>
                 </div>
             </div>
 
-            <h1>[CRITICAL_FAILURE] Server Initialization Halted</h1>
-            
-            <div class="status-box error">
-                <strong>ERROR:</strong> {error_msg}
+            <div class="box {'error' if is_crashed else ''}">
+                <h2>[01.1] Server Status</h2>
+                <p style="font-size:14px; margin-bottom:12px;"><strong>Message:</strong> {err}</p>
+                <h2>[01.2] Crash Traceback Log</h2>
+                <pre>{tb}</pre>
             </div>
-            
-            <h2>[01] TRACEBACK_LOG</h2>
-            <pre>{traceback_str}</pre>
 
-            <h2>[02] DEPENDENCY_CHECK</h2>
-            <ul>
-    """
-    for pkg, status in missing_pkgs.items():
-        if status == 'MISSING':
-            html += f"<li class='missing'>[MISSING] {pkg} (Attempted auto-install, failed. Please run: pip install --user {pkg})</li>"
-        else:
-            html += f"<li class='found'>[INSTALLED] {pkg}</li>"
-
-    html += """
-            </ul>
-
-            <h2>[03] FILE_SYSTEM_CHECK</h2>
-            <ul>
-    """
-    for path, status in missing_files.items():
-        if status == 'MISSING':
-            html += f"<li class='missing'>[MISSING] {path}</li>"
-        else:
-            html += f"<li class='found'>[FOUND] {path}</li>"
-            
-    html += """
-            </ul>
-            
-            <h2>[04] RECOVERY_INSTRUCTIONS</h2>
-            <div class="status-box">
-                1. Ensure <strong>sync_mod.py</strong> and all required modules are uploaded.<br>
-                2. Verify that <strong>SYNC_SECRET</strong> is set in your environment variables.<br>
-                3. Click "2-Way Git Sync & Restart" above or the green "Reload" button on PythonAnywhere.
+            <div class="box">
+                <h2>[01.3] Dependency Integrity Check</h2>
+                <ul>{pkg_html}</ul>
+                <h2 style="margin-top:16px;">[01.4] File System Structure Check</h2>
+                <ul>{file_chk_html}</ul>
             </div>
         </div>
-    </body>
-    </html>
-    """
-    return html.encode('utf-8')
+
+        <!-- TAB 2: FILE EXPLORER & EDITOR -->
+        <div class="tab-content {'active' if active_tab == 'files' else ''}">
+            <div class="breadcrumbs">{breadcrumbs}</div>
+
+            <!-- In-Browser Editor -->
+            <div id="editor-panel" class="box" style="display:{editor_display};">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h2>Editing: <span style="color:#fff;">{editor_file}</span></h2>
+                    <a href="?action=ls&path={norm_path}" class="btn-sm">Close Editor</a>
+                </div>
+                <form method="POST">
+                    <input type="hidden" name="action" value="write">
+                    <input type="hidden" name="path" value="{editor_file}">
+                    <textarea name="content" class="editor" spellcheck="false">{editor_content}</textarea>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                        <label style="font-size:12px; font-family:var(--mono); color:var(--text-muted); cursor:pointer;">
+                            <input type="checkbox" name="reload" value="true" checked> Automatically touch WSGI configuration on save
+                        </label>
+                        <button type="submit" class="btn">💾 Save & Deploy File</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- File Table -->
+            <div class="box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                    <h2>Directory Contents</h2>
+                    <!-- File Upload Form -->
+                    <form method="POST" enctype="multipart/form-data" style="display:flex; gap:8px; align-items:center; margin:0;">
+                        <input type="hidden" name="action" value="write">
+                        <input type="hidden" name="path" value="{norm_path}">
+                        <input type="file" name="upload_file" required style="font-size:11px;">
+                        <button type="submit" class="btn-sm">Upload File</button>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Modified</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {parent_row}
+                        {file_rows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 3: EMERGENCY TERMINAL -->
+        <div class="tab-content {'active' if active_tab == 'terminal' else ''}">
+            <div class="box">
+                <h2>Emergency Command Execution</h2>
+                <form method="POST" style="margin-bottom:14px;">
+                    <input type="hidden" name="action" value="exec">
+                    <input type="hidden" name="tab" value="terminal">
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" name="cmd" placeholder="e.g. git status -s, pip list, python3 server.py" value="{terminal_cmd}" style="flex:1;" required autocomplete="off">
+                        <button type="submit" class="btn">Run Command</button>
+                    </div>
+                </form>
+
+                <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span style="font-size:11px; color:var(--text-muted); align-self:center;">Quick Presets:</span>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="git status -s"><button type="submit" class="btn-sm">git status -s</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="git diff HEAD~1"><button type="submit" class="btn-sm">git diff HEAD~1</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="git log -n 5 --oneline"><button type="submit" class="btn-sm">git log -5</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="python3 -m pip list"><button type="submit" class="btn-sm">pip list</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="df -h ~"><button type="submit" class="btn-sm">df -h ~</button></form>
+                    <form method="POST" style="display:inline; margin:0;"><input type="hidden" name="action" value="exec"><input type="hidden" name="tab" value="terminal"><input type="hidden" name="cmd" value="python3 -c 'import server; print(\"server ok\")'"><button type="submit" class="btn-sm">test server.py</button></form>
+                </div>
+
+                <div class="terminal-screen">{terminal_output or "$ Ready for emergency commands."}</div>
+            </div>
+        </div>
+
+        <!-- TAB 4: RECOVERY LOGS -->
+        <div class="tab-content {'active' if active_tab == 'logs' else ''}">
+            <div class="box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h2>System & WSGI Error Logs</h2>
+                    <form method="POST" style="margin:0;"><input type="hidden" name="action" value="logs"><input type="hidden" name="tab" value="logs"><button type="submit" class="btn-sm">Refresh Logs</button></form>
+                </div>
+                <pre style="max-height: 500px; overflow-y: auto;">{server_logs or "No logs fetched yet. Click 'Refresh Logs' above."}</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>"""
+    return html.encode("utf-8")
 
 
-def render_bootstrap_response(environ, start_response, base_dir: Path, error_msg: str, traceback_str: str, missing_pkgs: dict, missing_files: dict):
-    """Guards diagnostic environment information behind administrator authentication."""
+def render_bootstrap_response(
+    environ,
+    start_response,
+    base_dir: Path,
+    error_msg: str = "",
+    traceback_str: str = "",
+    missing_pkgs: dict = None,
+    missing_files: dict = None,
+    is_explicit_breakglass: bool = False
+):
+    """Guards break-glass operations behind administrator authentication with dual JSON API and Web UI."""
+    global _FLASK_APP
     method, params, post_params, cookies = _parse_bootstrap_request(environ)
-    action = (post_params.get("action") or params.get("action") or [""])[0].strip()
+    
+    # Detect JSON request
+    accept_hdr = environ.get("HTTP_ACCEPT", "").lower()
+    content_type_hdr = environ.get("CONTENT_TYPE", "").lower()
+    is_json = (
+        "application/json" in accept_hdr
+        or "application/json" in content_type_hdr
+        or (params.get("format") or [""])[0] == "json"
+        or (post_params.get("format") or [""])[0] == "json"
+    )
 
+    action = (post_params.get("action") or params.get("action") or ["status"])[0].strip()
+    tab = (post_params.get("tab") or params.get("tab") or ["diag"])[0].strip()
+
+    # Handle Logout
     if action == "logout":
         headers = [
-            ("Content-type", "text/html; charset=utf-8"),
+            ("Content-Type", "text/html; charset=utf-8"),
             ("Set-Cookie", "bootstrap_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax")
         ]
+        if is_json:
+            headers = [
+                ("Content-Type", "application/json; charset=utf-8"),
+                ("Set-Cookie", "bootstrap_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax")
+            ]
+            start_response("200 OK", headers)
+            return [json.dumps({"status": "ok", "message": "Logged out successfully"}).encode("utf-8")]
         start_response("200 OK", headers)
-        return [generate_secure_holding_html()]
+        return [generate_secure_holding_html(alert_text="Session closed. Console locked.")]
 
+    # Authenticate
     is_admin, admin_name, set_cookie_header = authenticate_bootstrap_admin(base_dir, params, post_params, cookies, environ)
 
     if not is_admin:
-        token_attempted = bool(post_params.get("admin_token") or post_params.get("token") or params.get("admin_token") or params.get("token"))
-        headers = [("Content-type", "text/html; charset=utf-8")]
+        token_attempted = bool(
+            post_params.get("admin_token") or post_params.get("token") or post_params.get("secret") or post_params.get("key")
+            or params.get("admin_token") or params.get("token") or params.get("secret") or params.get("key")
+            or environ.get("HTTP_AUTHORIZATION")
+        )
+        if is_json:
+            headers = [("Content-Type", "application/json; charset=utf-8")]
+            start_response("401 Unauthorized", headers)
+            return [json.dumps({
+                "status": "error",
+                "message": "Authentication required. Provide valid token via Authorization header or ?token=...",
+                "code": 401
+            }).encode("utf-8")]
+
+        headers = [("Content-Type", "text/html; charset=utf-8")]
         start_response("503 Service Unavailable", headers)
         return [generate_secure_holding_html(login_failed=token_attempted)]
 
-    if action == "pull_and_restart":
+    # Response headers for authenticated admin
+    resp_headers = []
+    if set_cookie_header:
+        resp_headers.append(set_cookie_header)
+
+    status_data = _gather_system_status(base_dir, error_msg, traceback_str, missing_pkgs, missing_files)
+
+    # 1. Action: STATUS
+    if action == "status":
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps(status_data).encode("utf-8")]
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab=tab, admin_name=admin_name)]
+
+    # 2. Action: LS (List Directory)
+    elif action == "ls":
+        req_path = (post_params.get("path") or params.get("path") or [""])[0].strip()
+        target, err_path = _safe_resolve_path(base_dir, req_path)
+        if not target or not target.exists():
+            msg = err_path or f"Path does not exist: {req_path}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("404 Not Found", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+        if target.is_file():
+            action = "cat"
+        else:
+            entries = []
+            try:
+                for item in sorted(target.iterdir(), key=lambda x: (not x.is_dir(), x.name.lower())):
+                    is_d = item.is_dir()
+                    sz = item.stat().st_size if not is_d else 0
+                    mtime = int(item.stat().st_mtime)
+                    mtime_str = datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
+                    try:
+                        rel = str(item.relative_to(base_dir)).replace("\\", "/")
+                    except Exception:
+                        rel = str(item).replace("\\", "/")
+                    entries.append({
+                        "name": item.name,
+                        "rel_path": rel,
+                        "is_dir": is_d,
+                        "size": sz,
+                        "size_human": _format_size(sz) if not is_d else "-",
+                        "mtime": mtime,
+                        "mtime_str": mtime_str
+                    })
+            except Exception:
+                pass
+
+            curr_rel = str(target.relative_to(base_dir)).replace("\\", "/") if base_dir in target.parents else ""
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("200 OK", resp_headers)
+                return [json.dumps({"status": "ok", "path": curr_rel, "entries": entries}).encode("utf-8")]
+
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", current_path=curr_rel, file_list=entries, admin_name=admin_name)]
+
+    # 3. Action: CAT / READ / VIEW
+    if action in ["cat", "read", "view"]:
+        req_path = (post_params.get("path") or params.get("path") or [""])[0].strip()
+        target, err_path = _safe_resolve_path(base_dir, req_path)
+        if not target or not target.is_file():
+            msg = err_path or f"File not found: {req_path}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("404 Not Found", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+        try:
+            content = target.read_text(encoding="utf-8", errors="replace")
+        except Exception as read_err:
+            content = f"[Error reading file: {read_err}]"
+
+        rel = str(target.relative_to(base_dir)).replace("\\", "/") if base_dir in target.parents else str(target)
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok", "path": rel, "size": len(content), "content": content}).encode("utf-8")]
+
+        parent_dir = target.parent
+        dir_entries = []
+        try:
+            for item in sorted(parent_dir.iterdir(), key=lambda x: (not x.is_dir(), x.name.lower())):
+                is_d = item.is_dir()
+                sz = item.stat().st_size if not is_d else 0
+                mtime_str = datetime.datetime.fromtimestamp(int(item.stat().st_mtime)).strftime("%Y-%m-%d %H:%M")
+                try:
+                    r_p = str(item.relative_to(base_dir)).replace("\\", "/")
+                except Exception:
+                    r_p = str(item).replace("\\", "/")
+                dir_entries.append({
+                    "name": item.name, "rel_path": r_p, "is_dir": is_d,
+                    "size": sz, "size_human": _format_size(sz) if not is_d else "-", "mtime_str": mtime_str
+                })
+        except Exception:
+            pass
+
+        parent_rel = str(parent_dir.relative_to(base_dir)).replace("\\", "/") if base_dir in parent_dir.parents else ""
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(
+            status_data, active_tab="files", current_path=parent_rel, file_list=dir_entries,
+            editor_file=rel, editor_content=content, admin_name=admin_name
+        )]
+
+    # 4. Action: WRITE / PUT / SAVE
+    elif action in ["write", "put", "save"]:
+        req_path = (post_params.get("path") or params.get("path") or [""])[0].strip()
+        upload_fname = (post_params.get("upload_filename") or [""])[0].strip()
+        content = (post_params.get("upload_content") or post_params.get("content") or [""])[0]
+
+        if upload_fname:
+            req_path = f"{req_path.rstrip('/')}/{upload_fname}" if req_path else upload_fname
+
+        target, err_path = _safe_resolve_path(base_dir, req_path)
+        if not target:
+            msg = err_path or "Invalid target destination"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("403 Forbidden", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            backed_up = False
+            if target.is_file():
+                bak_dir = base_dir / "backups" / "break_glass"
+                bak_dir.mkdir(parents=True, exist_ok=True)
+                bak_file = bak_dir / f"{target.name}.{int(time.time())}.bak"
+                shutil.copy2(target, bak_file)
+                backed_up = True
+
+            tmp_target = target.with_suffix(f".tmp.{os.getpid()}")
+            tmp_target.write_text(content, encoding="utf-8")
+            tmp_target.replace(target)
+
+            reload_req = (post_params.get("reload") or params.get("reload") or ["false"])[0].lower() in ["true", "1"]
+            reloaded = False
+            if reload_req or target.suffix == ".py":
+                wsgi_dir = Path("/var/www/")
+                if wsgi_dir.exists():
+                    for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                        try:
+                            wsgi_file.touch()
+                            reloaded = True
+                        except Exception:
+                            pass
+                _FLASK_APP = None
+
+            rel = str(target.relative_to(base_dir)).replace("\\", "/") if base_dir in target.parents else str(target)
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("200 OK", resp_headers)
+                return [json.dumps({
+                    "status": "ok", "message": f"Successfully written {len(content)} bytes to {rel}",
+                    "path": rel, "bytes": len(content), "backed_up": backed_up, "reloaded": reloaded
+                }).encode("utf-8")]
+
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(
+                status_data, active_tab="files", current_path=str(target.parent.relative_to(base_dir)).replace("\\", "/"),
+                editor_file=rel, editor_content=content, alert_msg=f"Successfully updated and deployed {rel}",
+                alert_type="success", admin_name=admin_name
+            )]
+        except Exception as write_err:
+            msg = f"Failed to write file: {write_err}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("500 Internal Error", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+    # 5. Action: RM / DELETE
+    elif action in ["rm", "delete"]:
+        req_path = (post_params.get("path") or params.get("path") or [""])[0].strip()
+        target, err_path = _safe_resolve_path(base_dir, req_path)
+        if not target or not target.exists():
+            msg = err_path or f"Target does not exist: {req_path}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("404 Not Found", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+        try:
+            if target.is_file():
+                target.unlink()
+            elif target.is_dir():
+                shutil.rmtree(target)
+            msg = f"Successfully removed {target.name}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("200 OK", resp_headers)
+                return [json.dumps({"status": "ok", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="success", admin_name=admin_name)]
+        except Exception as rm_err:
+            msg = f"Failed to remove target: {rm_err}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("500 Internal Error", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="files", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+    # 6. Action: EXEC / CMD
+    elif action in ["exec", "cmd"]:
+        cmd = (post_params.get("cmd") or params.get("cmd") or [""])[0].strip()
+        if not cmd:
+            msg = "No command provided to execute."
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("400 Bad Request", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="terminal", alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+        try:
+            res = subprocess.run(cmd, shell=True, cwd=str(base_dir), capture_output=True, text=True, timeout=35)
+            out = f"$ {cmd}\n[Exit Code: {res.returncode}]\n"
+            if res.stdout:
+                out += f"--- STDOUT ---\n{res.stdout}\n"
+            if res.stderr:
+                out += f"--- STDERR ---\n{res.stderr}\n"
+
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("200 OK", resp_headers)
+                return [json.dumps({
+                    "status": "ok", "cmd": cmd, "returncode": res.returncode,
+                    "stdout": res.stdout, "stderr": res.stderr
+                }).encode("utf-8")]
+
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(
+                status_data, active_tab="terminal", terminal_cmd=cmd, terminal_output=out, admin_name=admin_name
+            )]
+        except Exception as exec_err:
+            msg = f"Command failed: {exec_err}"
+            if is_json:
+                resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+                start_response("500 Internal Error", resp_headers)
+                return [json.dumps({"status": "error", "message": msg}).encode("utf-8")]
+            resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [generate_breakglass_dashboard_html(status_data, active_tab="terminal", terminal_cmd=cmd, terminal_output=msg, alert_msg=msg, alert_type="error", admin_name=admin_name)]
+
+    # 7. Action: ROLLBACK
+    elif action == "rollback":
+        git_bin = shutil.which("git") or "/usr/bin/git"
+        g_dir = base_dir / ".git"
+        if g_dir.is_dir():
+            for lk in g_dir.rglob("*.lock"):
+                try: lk.unlink(missing_ok=True)
+                except Exception: pass
+        res = subprocess.run([git_bin, "reset", "--hard", "HEAD~1"], cwd=str(base_dir), capture_output=True, text=True, timeout=25)
+        
+        wsgi_dir = Path("/var/www/")
+        if wsgi_dir.exists():
+            for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                try: wsgi_file.touch()
+                except Exception: pass
+        _FLASK_APP = None
+
+        out = res.stdout + res.stderr
+        status_data = _gather_system_status(base_dir, error_msg, traceback_str, missing_pkgs, missing_files)
+        msg = f"Git rollback completed. Rolled back 1 commit to {status_data['git']['commit'][:8]}."
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok", "message": msg, "output": out, "git": status_data["git"]}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="diag", alert_msg=msg, alert_type="success", admin_name=admin_name)]
+
+    # 8. Action: SYNC / PULL_AND_RESTART
+    elif action in ["pull_and_restart", "sync"]:
         auto_sync_git(base_dir, force=True)
         try:
             import importlib
             if "server" in sys.modules:
                 importlib.reload(sys.modules["server"])
             from server import app as flask_app
-            global _FLASK_APP
             _FLASK_APP = flask_app
-            return flask_app(environ, start_response)
+            if not is_json and not is_explicit_breakglass:
+                return flask_app(environ, start_response)
         except Exception as retry_err:
             error_msg = f"Post-pull reload failed: {retry_err}"
             traceback_str = traceback.format_exc()
 
-    headers = [("Content-type", "text/html; charset=utf-8")]
-    if set_cookie_header:
-        headers.append(set_cookie_header)
+        status_data = _gather_system_status(base_dir, error_msg, traceback_str, missing_pkgs, missing_files)
+        msg = "Git 2-way synchronization executed."
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok", "message": msg, "error": error_msg, "git": status_data["git"]}).encode("utf-8")]
 
-    start_response("200 OK", headers)
-    return [generate_diagnostic_html(error_msg, traceback_str, missing_pkgs, missing_files, admin_name)]
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="diag", alert_msg=msg, alert_type="success" if not error_msg else "error", admin_name=admin_name)]
+
+    # 9. Action: CLEANUP
+    elif action == "cleanup":
+        report = cleanup_storage(base_dir, verbose=False)
+        status_data = _gather_system_status(base_dir, error_msg, traceback_str, missing_pkgs, missing_files)
+        msg = f"Storage cleanup complete. Freed disk quota. Current used: {status_data['quota']['used_mb']} MB ({status_data['quota']['pct']}%)"
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok", "message": msg, "report": report, "quota": status_data["quota"]}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="diag", alert_msg=msg, alert_type="success", admin_name=admin_name)]
+
+    # 10. Action: RELOAD
+    elif action == "reload":
+        wsgi_dir = Path("/var/www/")
+        touched = 0
+        if wsgi_dir.exists():
+            for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                try:
+                    wsgi_file.touch()
+                    touched += 1
+                except Exception:
+                    pass
+        _FLASK_APP = None
+        msg = f"WSGI server reload triggered ({touched} configuration files touched)."
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok", "message": msg, "touched": touched}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="diag", alert_msg=msg, alert_type="success", admin_name=admin_name)]
+
+    # 11. Action: LOGS
+    elif action == "logs":
+        logs_content = _read_server_logs(base_dir)
+        if is_json:
+            resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
+            start_response("200 OK", resp_headers)
+            return [json.dumps({"status": "ok", "logs": logs_content}).encode("utf-8")]
+
+        resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+        start_response("200 OK", resp_headers)
+        return [generate_breakglass_dashboard_html(status_data, active_tab="logs", server_logs=logs_content, admin_name=admin_name)]
+
+    # Fallback to status
+    resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
+    start_response("200 OK", resp_headers)
+    return [generate_breakglass_dashboard_html(status_data, active_tab="diag", admin_name=admin_name)]
 
 # The main WSGI application entry point
 def application(environ, start_response):
@@ -894,6 +1803,14 @@ def application(environ, start_response):
             sys.path.insert(0, str(BASE_DIR))
         os.chdir(str(BASE_DIR))
 
+        # Step 1.5: Break-Glass Emergency Interceptor (accessible anytime on demand)
+        req_path = environ.get("PATH_INFO", "")
+        req_query = environ.get("QUERY_STRING", "")
+        if req_path in ["/__breakglass__", "/__emergency__", "/emergency"] or "breakglass=1" in req_query:
+            return render_bootstrap_response(
+                environ, start_response, BASE_DIR,
+                "", "", {}, {}, is_explicit_breakglass=True
+            )
         # Fast path: Serve healthy Flask app immediately with zero filesystem overhead
         if _FLASK_APP is not None:
             return _FLASK_APP(environ, start_response)
