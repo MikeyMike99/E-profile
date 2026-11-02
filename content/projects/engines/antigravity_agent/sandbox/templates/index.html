@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div id="header-actions" class="flex items-center gap-3">
             <!-- Model Selection Dropdown -->
             <div class="flex items-center gap-2 bg-slate-900/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-xs">
                 <label for="model-selector" class="text-xs font-semibold text-teal-400 shrink-0">{{ ui.header.model_label }}</label>
@@ -851,7 +851,7 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             var savedSidebar = localStorage.getItem('sidebarOpen');
-            if (savedSidebar === 'false') {
+            if (savedSidebar === 'false' && typeof toggleSidebar === 'function') {
                 toggleSidebar();
             }
             try {
@@ -912,7 +912,7 @@
         
         function injectAdminDashboardButton() {
             if (document.getElementById('admin-dashboard-btn')) return;
-            const actionsDiv = document.querySelector('.flex.items-center.gap-3');
+            const actionsDiv = document.getElementById('header-actions');
             if (actionsDiv) {
                 const btn = document.createElement('button');
                 btn.id = 'admin-dashboard-btn';
@@ -921,6 +921,14 @@
                 btn.title = 'Manage Access Keys';
                 btn.onclick = () => showAdminDashboard();
                 actionsDiv.insertBefore(btn, actionsDiv.firstChild);
+                const raBtn = document.createElement('button');
+                raBtn.id = 'resolver-access-btn';
+                raBtn.className = 'text-slate-400 hover:text-teal-400 transition-colors px-2';
+                raBtn.innerHTML = '<i class="fas fa-folder-tree"></i>';
+                raBtn.title = 'Resolver Access (directories & grants)';
+                raBtn.setAttribute('aria-label', 'Resolver Access');
+                raBtn.onclick = () => showResolverAccess();
+                actionsDiv.insertBefore(raBtn, btn.nextSibling);
             }
         }
         
@@ -1134,6 +1142,345 @@
         }
 
         
+
+        // ───────────────────────── Resolver Access (roots + grants) ─────────────────────────
+        // Admin-only. Every change is made by this human session; agents have no tool for it.
+        const RA = { data: null, browsePath: '', pollTimer: null };
+        function raEsc(v) {
+            return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+        function raWhen(ts) {
+            if (!ts) return 'never';
+            const d = new Date(ts * 1000);
+            return d.toLocaleString();
+        }
+        async function raApi(method, url, body) {
+            const opts = { method, headers: { 'Authorization': 'Bearer ' + (authToken || '') } };
+            if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+            const res = await fetch(url, opts);
+            let data = {};
+            try { data = await res.json(); } catch (e) {}
+            if (!res.ok || data.success === false) {
+                const err = new Error((data && (data.error || data.message)) || ('HTTP ' + res.status));
+                err.data = data;
+                throw err;
+            }
+            return data;
+        }
+        function raMsg(text, kind) {
+            const el = document.getElementById('ra-msg');
+            if (!el) return;
+            el.className = 'text-xs mb-3 px-3 py-2 rounded ' + (kind === 'error'
+                ? 'bg-rose-950/60 text-rose-300 border border-rose-800'
+                : 'bg-teal-950/60 text-teal-300 border border-teal-800');
+            el.textContent = text;
+            el.classList.remove('hidden');
+        }
+        function raErr(e) {
+            let t = e.message || String(e);
+            if (e.data && e.data.solution) t += ' — ' + e.data.solution;
+            raMsg(t, 'error');
+        }
+
+        window.showResolverAccess = async function() {
+            let modal = document.getElementById('resolver-access-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'resolver-access-modal';
+                modal.className = 'fixed inset-0 z-[9999] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4';
+                modal.setAttribute('role', 'dialog');
+                modal.setAttribute('aria-modal', 'true');
+                modal.setAttribute('aria-labelledby', 'ra-title');
+                modal.innerHTML = `
+                <div class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-5xl p-6 shadow-2xl flex flex-col max-h-[92vh]">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                        <h2 id="ra-title" class="text-lg font-bold text-white"><i class="fas fa-folder-tree text-teal-400 mr-2"></i> Resolver Access</h2>
+                        <div class="flex items-center gap-3">
+                            <span id="ra-jit" class="text-xs text-slate-400"></span>
+                            <button id="ra-jit-btn" type="button" onclick="raElevate()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-1.5 px-3 rounded">🔓 Elevate JIT (5m)</button>
+                            <button type="button" aria-label="Close" onclick="raClose()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+                        </div>
+                    </div>
+                    <div id="ra-msg" class="hidden" role="status" aria-live="polite"></div>
+                    <div class="overflow-y-auto pr-1 space-y-5">
+                        <section class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <h3 class="text-sm font-bold text-teal-400 mb-1">Directories in the resolver</h3>
+                            <p class="text-xs text-slate-400 mb-3">Adding indexes a folder under its own key prefix. Removing purges every key under it and revokes all its grants. Adding or removing needs JIT elevation. Secret files (tokens, keys, credentials, .env, .ssh) are never indexed.</p>
+                            <div id="ra-roots" class="space-y-2 mb-4"></div>
+                            <div class="bg-slate-950 border border-slate-700 rounded p-3">
+                                <div class="text-xs font-bold text-slate-300 mb-2">Add a directory</div>
+                                <div class="flex gap-2 mb-2">
+                                    <label for="ra-path" class="sr-only">Folder path</label>
+                                    <input id="ra-path" type="text" class="flex-1 bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white font-mono" placeholder="/mnt/c/Users/you/Documents/Project  or  C:\\Users\\you\\Documents\\Project">
+                                    <label for="ra-label" class="sr-only">Label</label>
+                                    <input id="ra-label" type="text" class="w-40 bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white" placeholder="Label (optional)">
+                                    <button type="button" onclick="raAddRoot()" class="bg-teal-600 hover:bg-teal-500 text-white text-sm font-bold px-4 rounded">Add</button>
+                                </div>
+                                <div class="text-xs text-slate-400 mb-1">Browse: <span id="ra-browse-path" class="font-mono text-slate-300"></span>
+                                    <button type="button" onclick="raBrowse(RA.browseParent)" class="ml-2 text-teal-400 hover:underline">↑ up</button>
+                                    <button type="button" onclick="raUseBrowsed()" class="ml-2 text-teal-400 hover:underline">use this folder</button>
+                                    <span id="ra-browse-warn" class="ml-2 text-amber-400"></span>
+                                </div>
+                                <div id="ra-browse" class="flex flex-wrap gap-1 max-h-28 overflow-y-auto"></div>
+                            </div>
+                        </section>
+
+                        <section class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <h3 class="text-sm font-bold text-teal-400 mb-1">Hand a directory to a key or tier</h3>
+                            <p class="text-xs text-slate-400 mb-3">Grants apply to agents too: an agent acts with exactly the access of the user who started it. Admins already have full access.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-end">
+                                <div class="md:col-span-2">
+                                    <label for="ra-g-root" class="text-xs text-slate-300 block mb-1">Directory</label>
+                                    <select id="ra-g-root" onchange="raSubBrowse('')" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-2 text-sm text-white"></select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="ra-g-sub" class="text-xs text-slate-300 block mb-1">Sub-folder (blank = whole directory)</label>
+                                    <input id="ra-g-sub" type="text" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-2 text-sm text-white font-mono" placeholder="e.g. docs/guides">
+                                </div>
+                                <div>
+                                    <label for="ra-g-type" class="text-xs text-slate-300 block mb-1">Give to</label>
+                                    <select id="ra-g-type" onchange="raFillGrantees()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-2 text-sm text-white">
+                                        <option value="role">A whole tier (role)</option>
+                                        <option value="key">One access key</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="ra-g-who" class="text-xs text-slate-300 block mb-1">Who</label>
+                                    <select id="ra-g-who" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-2 text-sm text-white"></select>
+                                </div>
+                            </div>
+                            <div id="ra-sub-browse" class="flex flex-wrap gap-1 mt-2 max-h-20 overflow-y-auto"></div>
+                            <div class="flex flex-wrap gap-4 items-center mt-3">
+                                <fieldset class="flex gap-3 text-sm text-slate-200">
+                                    <legend class="sr-only">Permissions</legend>
+                                    <label><input type="checkbox" id="ra-p-read" checked> read</label>
+                                    <label><input type="checkbox" id="ra-p-write"> write</label>
+                                    <label><input type="checkbox" id="ra-p-create"> create</label>
+                                    <label><input type="checkbox" id="ra-p-delete"> delete</label>
+                                </fieldset>
+                                <label class="text-sm text-slate-200">Expires after
+                                    <select id="ra-g-exp" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-sm text-white ml-1">
+                                        <option value="1">1 hour</option>
+                                        <option value="8">8 hours</option>
+                                        <option value="24" selected>1 day</option>
+                                        <option value="168">7 days</option>
+                                        <option value="720">30 days</option>
+                                        <option value="">never</option>
+                                    </select>
+                                </label>
+                                <label for="ra-g-note" class="sr-only">Note</label>
+                                <input id="ra-g-note" type="text" class="flex-1 min-w-[10rem] bg-slate-950 border border-slate-700 rounded px-2 py-1 text-sm text-white" placeholder="Note (optional)">
+                                <button type="button" onclick="raAddGrant()" class="bg-teal-600 hover:bg-teal-500 text-white text-sm font-bold py-1.5 px-4 rounded">Grant</button>
+                            </div>
+                            <div id="ra-grants" class="mt-4 space-y-2"></div>
+                        </section>
+
+                        <section class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-bold text-slate-200">Audit log</h3>
+                                <button type="button" onclick="raLoadAudit()" class="text-xs text-teal-400 hover:underline">refresh</button>
+                            </div>
+                            <div id="ra-audit" class="text-xs font-mono text-slate-400 max-h-48 overflow-y-auto space-y-1"></div>
+                        </section>
+                    </div>
+                </div>`;
+                document.body.appendChild(modal);
+                modal.addEventListener('keydown', e => { if (e.key === 'Escape') raClose(); });
+            }
+            modal.classList.remove('hidden');
+            await raLoad();
+            raBrowse('');
+            raLoadAudit();
+            document.getElementById('ra-path').focus();
+        };
+
+        window.raClose = function() {
+            const m = document.getElementById('resolver-access-modal');
+            if (m) m.classList.add('hidden');
+            if (RA.pollTimer) { clearTimeout(RA.pollTimer); RA.pollTimer = null; }
+        };
+
+        window.raLoad = async function() {
+            try {
+                RA.data = await raApi('GET', '/api/access/overview');
+            } catch (e) { raErr(e); return; }
+            const d = RA.data;
+            const jit = document.getElementById('ra-jit');
+            jit.textContent = d.jit && d.jit.active ? `JIT active (${Math.round(d.jit.remaining_seconds || 0)}s left)` : 'JIT locked';
+            jit.className = 'text-xs ' + (d.jit && d.jit.active ? 'text-amber-300' : 'text-slate-400');
+
+            const rootsEl = document.getElementById('ra-roots');
+            rootsEl.innerHTML = d.roots.map(r => `
+                <div class="bg-slate-950 border border-slate-700 rounded p-3 flex justify-between items-center gap-3">
+                    <div class="min-w-0">
+                        <div class="text-sm font-bold text-slate-200">${raEsc(r.label)} <span class="text-xs font-mono text-teal-400 ml-1">${raEsc(r.prefix)}.*</span>
+                            ${r.builtin ? '<span class="text-[10px] uppercase ml-2 px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">built-in</span>' : ''}
+                            <span class="text-[10px] uppercase ml-2 px-1.5 py-0.5 rounded ${r.status === 'ready' ? 'bg-teal-900 text-teal-300' : (r.status === 'error' ? 'bg-rose-900 text-rose-300' : 'bg-amber-900 text-amber-300')}">${raEsc(r.status || '')}</span></div>
+                        <div class="text-xs text-slate-500 font-mono truncate" title="${raEsc(r.path)}">${raEsc(r.path)}</div>
+                        ${r.builtin ? '' : `<div class="text-xs text-slate-500">${raEsc(r.file_count || 0)} files · ${raEsc(r.key_count || 0)} keys · indexed ${raEsc(raWhen(r.last_indexed_at))}${r.error ? ' · <span class="text-rose-400">' + raEsc(r.error) + '</span>' : ''}${r.status === 'truncated' ? ' · <span class="text-amber-400">file limit reached — pick a narrower folder</span>' : ''}</div>`}
+                    </div>
+                    ${r.builtin ? '' : `<div class="flex gap-2 shrink-0">
+                        <button type="button" data-act="reindex" data-id="${raEsc(r.id)}" class="text-xs text-teal-400 hover:text-teal-300 px-2 py-1 border border-slate-700 rounded">Re-index</button>
+                        <button type="button" data-act="remove" data-id="${raEsc(r.id)}" data-label="${raEsc(r.label)}" class="text-xs text-rose-400 hover:text-rose-300 px-2 py-1 border border-rose-900 rounded"><i class="fas fa-trash"></i> Remove</button>
+                    </div>`}
+                </div>`).join('');
+
+            rootsEl.querySelectorAll('button[data-act="reindex"]').forEach(b => b.onclick = () => raReindex(b.dataset.id));
+            rootsEl.querySelectorAll('button[data-act="remove"]').forEach(b => b.onclick = () => raRemoveRoot(b.dataset.id, b.dataset.label));
+
+            const sel = document.getElementById('ra-g-root');
+            const keep = sel.value;
+            sel.innerHTML = d.roots.filter(r => r.status !== 'indexing').map(r => `<option value="${raEsc(r.id)}">${raEsc(r.label)}</option>`).join('');
+            if (keep) sel.value = keep;
+            raFillGrantees();
+
+            const now = d.now || (Date.now() / 1000);
+            const grantsEl = document.getElementById('ra-grants');
+            grantsEl.innerHTML = d.grants.length ? d.grants.map(g => {
+                const perms = Object.entries(g.permissions || {}).filter(([k, v]) => v).map(([k]) => k).join(', ');
+                const who = g.grantee_type === 'role' ? `tier <b>${raEsc(g.grantee)}</b>` :
+                    `key <b>${raEsc(((d.principals || []).find(p => p.key_id === g.grantee) || {}).name || g.grantee)}</b>`;
+                const exp = g.expires_at == null ? 'never expires' :
+                    (g.active ? `expires ${raEsc(raWhen(g.expires_at))}` : `<span class="text-rose-400">expired ${raEsc(raWhen(g.expires_at))}</span>`);
+                return `<div class="bg-slate-950 border ${g.active ? 'border-slate-700' : 'border-rose-900/60 opacity-70'} rounded p-2 flex justify-between items-center gap-3 text-sm">
+                    <div class="text-slate-300 min-w-0">${who} → <span class="text-slate-100">${raEsc(g.root_label)}</span><span class="font-mono text-teal-400">${g.subpath ? '/' + raEsc(g.subpath) : ''}</span>
+                        <span class="text-xs text-slate-400 ml-2">[${raEsc(perms)}]</span>
+                        <div class="text-xs text-slate-500">${exp} · by ${raEsc(g.granted_by)}${g.note ? ' · ' + raEsc(g.note) : ''}</div></div>
+                    <button type="button" data-act="revoke" data-id="${raEsc(g.id)}" class="text-xs text-rose-400 hover:text-rose-300 px-2 py-1 border border-rose-900 rounded shrink-0">Revoke</button>
+                </div>`;
+            }).join('') : '<p class="text-xs text-slate-500">No grants yet.</p>';
+            grantsEl.querySelectorAll('button[data-act="revoke"]').forEach(b => b.onclick = () => raRevoke(b.dataset.id));
+
+            if (RA.pollTimer) clearTimeout(RA.pollTimer);
+            if (d.roots.some(r => r.status === 'indexing')) RA.pollTimer = setTimeout(raLoad, 2000);
+        };
+
+        window.raFillGrantees = function() {
+            const d = RA.data || { roles: [], principals: [] };
+            const type = document.getElementById('ra-g-type').value;
+            const who = document.getElementById('ra-g-who');
+            if (type === 'role') {
+                who.innerHTML = d.roles.map(r => `<option value="${raEsc(r)}">${raEsc(r)}</option>`).join('');
+            } else {
+                const keys = (d.principals || []).filter(p => !['admin', 'super_admin'].includes(String(p.role).toLowerCase()));
+                who.innerHTML = keys.length ? keys.map(p => `<option value="${raEsc(p.key_id)}">${raEsc(p.name)} (${raEsc(p.role)})</option>`).join('')
+                    : '<option value="">— no non-admin access keys yet —</option>';
+            }
+        };
+
+        window.raBrowse = async function(path) {
+            try {
+                const d = await raApi('GET', '/api/access/browse?path=' + encodeURIComponent(path || ''));
+                RA.browsePath = d.path; RA.browseParent = d.parent;
+                document.getElementById('ra-browse-path').textContent = d.path;
+                document.getElementById('ra-browse-warn').textContent = d.addable_reason ? ('(' + d.addable_reason + ')') : '';
+                document.getElementById('ra-browse').innerHTML = d.dirs.map(n =>
+                    `<button type="button" class="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200" data-dir="${raEsc(n)}">📁 ${raEsc(n)}</button>`).join('');
+                document.querySelectorAll('#ra-browse button[data-dir]').forEach(b =>
+                    b.onclick = () => raBrowse(RA.browsePath.replace(/\/+$/, '') + '/' + b.dataset.dir));
+            } catch (e) { raErr(e); }
+        };
+        window.raUseBrowsed = function() {
+            document.getElementById('ra-path').value = RA.browsePath || '';
+        };
+
+        window.raSubBrowse = async function(sub) {
+            const rootId = document.getElementById('ra-g-root').value;
+            const box = document.getElementById('ra-sub-browse');
+            if (!rootId) { box.innerHTML = ''; return; }
+            try {
+                const d = await raApi('GET', '/api/access/browse?root_id=' + encodeURIComponent(rootId) + '&path=' + encodeURIComponent(sub || ''));
+                const base = (sub || '').replace(/^\/+|\/+$/g, '');
+                document.getElementById('ra-g-sub').value = base;
+                box.innerHTML = (base ? `<button type="button" class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-200" data-up="1">↑</button>` : '') +
+                    d.dirs.slice(0, 200).map(n => `<button type="button" class="text-xs px-2 py-1 rounded bg-slate-900 hover:bg-slate-700 text-slate-300" data-dir="${raEsc(n)}">📁 ${raEsc(n)}</button>`).join('');
+                box.querySelectorAll('button[data-dir]').forEach(b => b.onclick = () => raSubBrowse((base ? base + '/' : '') + b.dataset.dir));
+                const up = box.querySelector('button[data-up]');
+                if (up) up.onclick = () => raSubBrowse(base.split('/').slice(0, -1).join('/'));
+            } catch (e) { box.innerHTML = ''; }
+        };
+
+        window.raElevate = async function() {
+            try {
+                await raApi('POST', '/api/security/jit-elevate', { ttl_seconds: 300 });
+                raMsg('JIT elevation active for 5 minutes.', 'ok');
+            } catch (e) { raErr(e); }
+            raLoad();
+        };
+
+        window.raAddRoot = async function() {
+            const path = document.getElementById('ra-path').value.trim();
+            const label = document.getElementById('ra-label').value.trim();
+            if (!path) { raMsg('Enter or browse to a folder first.', 'error'); return; }
+            try {
+                const d = await raApi('POST', '/api/access/roots', { path, label });
+                raMsg(`Added "${d.root.label}" (keys ${d.root.prefix}.*). Indexing…`, 'ok');
+                document.getElementById('ra-path').value = ''; document.getElementById('ra-label').value = '';
+            } catch (e) { raErr(e); }
+            raLoad(); raLoadAudit();
+        };
+
+        window.raRemoveRoot = async function(id, label) {
+            if (!confirm(`Remove "${label}" from the resolver?\n\nAll of its keys are purged and every grant on it is revoked. Files on disk are NOT touched.`)) return;
+            try {
+                const d = await raApi('DELETE', '/api/access/roots/' + encodeURIComponent(id));
+                raMsg(`Removed "${label}": ${d.keys_purged} keys purged, ${d.grants_revoked.length} grants revoked.`, 'ok');
+            } catch (e) { raErr(e); }
+            raLoad(); raLoadAudit();
+        };
+
+        window.raReindex = async function(id) {
+            raMsg('Re-indexing…', 'ok');
+            try {
+                const d = await raApi('POST', '/api/access/roots/' + encodeURIComponent(id) + '/reindex');
+                raMsg(`Re-indexed: ${d.file_count} files, ${d.key_count} keys (${d.status}).`, d.status === 'error' ? 'error' : 'ok');
+            } catch (e) { raErr(e); }
+            raLoad(); raLoadAudit();
+        };
+
+        window.raAddGrant = async function() {
+            const body = {
+                root_id: document.getElementById('ra-g-root').value,
+                subpath: document.getElementById('ra-g-sub').value.trim(),
+                grantee_type: document.getElementById('ra-g-type').value,
+                grantee: document.getElementById('ra-g-who').value,
+                permissions: {
+                    read: document.getElementById('ra-p-read').checked,
+                    write: document.getElementById('ra-p-write').checked,
+                    create: document.getElementById('ra-p-create').checked,
+                    delete: document.getElementById('ra-p-delete').checked,
+                },
+                expires_in_hours: document.getElementById('ra-g-exp').value || null,
+                note: document.getElementById('ra-g-note').value.trim(),
+            };
+            try {
+                await raApi('POST', '/api/access/grants', body);
+                raMsg('Grant added.', 'ok');
+                document.getElementById('ra-g-note').value = '';
+            } catch (e) { raErr(e); }
+            raLoad(); raLoadAudit();
+        };
+
+        window.raRevoke = async function(id) {
+            if (!confirm('Revoke this grant now?')) return;
+            try {
+                await raApi('DELETE', '/api/access/grants/' + encodeURIComponent(id));
+                raMsg('Grant revoked.', 'ok');
+            } catch (e) { raErr(e); }
+            raLoad(); raLoadAudit();
+        };
+
+        window.raLoadAudit = async function() {
+            try {
+                const d = await raApi('GET', '/api/access/audit?limit=100');
+                document.getElementById('ra-audit').innerHTML = d.events.length ? d.events.map(ev => {
+                    const extra = Object.entries(ev).filter(([k]) => !['ts', 'event', 'actor'].includes(k))
+                        .map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : v}`).join(' ');
+                    return `<div><span class="text-slate-500">${raEsc(raWhen(ev.ts))}</span> <span class="text-teal-400">${raEsc(ev.event)}</span> <span class="text-slate-300">${raEsc(ev.actor)}</span> ${raEsc(extra)}</div>`;
+                }).join('') : '<div>No events yet.</div>';
+            } catch (e) {}
+        };
+
         function showLoginOverlay(data) {
             if (document.getElementById('login-overlay')) return;
             const overlay = document.createElement('div');
@@ -1862,16 +2209,17 @@
                     });
                     if (!res.ok) return;
                     var data = await res.json();
-                    if (data && typeof data.last_seq === 'number' && data.last_seq > lastReceivedSeq) {
-                        lastReceivedSeq = data.last_seq;
-                    }
                     if (data && Array.isArray(data.messages)) {
                         data.messages.forEach(function(msg) {
-                            if (msg && typeof msg.seq === 'number' && msg.seq > lastReceivedSeq) {
+                            if (msg && typeof msg.seq === 'number') {
+                                if (msg.seq <= lastReceivedSeq) return;
                                 lastReceivedSeq = msg.seq;
                             }
                             handleServerMessage(msg);
                         });
+                    }
+                    if (data && typeof data.last_seq === 'number' && data.last_seq > lastReceivedSeq) {
+                        lastReceivedSeq = data.last_seq;
                     }
                 } catch (e) {
                 } finally {
@@ -2002,17 +2350,29 @@
                 return; // Silent keep-alive response
             }
             else if (data.type === 'heartbeat') {
+                if (!isTaskRunning && data.status === 'running') {
+                    isTaskRunning = true;
+                    if (!taskStartTime && typeof data.elapsed === 'number') {
+                        taskStartTime = (Date.now() / 1000) - data.elapsed;
+                    }
+                    clearInterval(timerInterval);
+                    timerInterval = setInterval(updateTimer, 500);
+                }
                 if (isTaskRunning && timerDisplay) {
                     taskBanner.classList.remove('hidden');
                 }
+                var heartbeatMsg = data.message;
+                if (!heartbeatMsg && typeof data.elapsed === 'number') {
+                    heartbeatMsg = (data.current_action || 'Thinking and reasoning') + ' (' + data.elapsed + 's elapsed)...';
+                }
                 if (currentAgentArticle) {
                     var typingInd = currentAgentArticle.querySelector('.typing-indicator');
-                    if (typingInd && data.message) {
-                        typingInd.innerHTML = '<span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> ' + escapeHtml(data.message);
+                    if (typingInd && heartbeatMsg) {
+                        typingInd.innerHTML = '<span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> ' + escapeHtml(heartbeatMsg);
                     }
                 }
-                if (data.progress_tick && data.message) {
-                    announce(data.message);
+                if (data.progress_tick && heartbeatMsg) {
+                    announce(heartbeatMsg);
                 }
                 return;
             }
@@ -4651,5 +5011,42 @@
             }
         }
     </script>
+<!-- Claude Brain connect widget (self-contained; shows only when not connected) -->
+<div id="cc-btn" onclick="ccOpen()" style="display:none;position:fixed;right:18px;bottom:18px;z-index:9998;background:linear-gradient(90deg,#4f46e5,#0d9488);color:#fff;font:600 13px system-ui,sans-serif;padding:.6rem 1rem;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer">⚡ Connect Claude</div>
+<div id="cc-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);align-items:center;justify-content:center">
+  <div style="background:#0f1115;border:1px solid #243041;border-radius:14px;max-width:460px;width:92%;padding:1.4rem 1.5rem;color:#e0e0e0;font-family:system-ui,sans-serif">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem">
+      <b style="font-size:1.05rem">Connect Claude</b>
+      <span id="cc-badge" style="font-size:.7rem;padding:.1rem .5rem;border-radius:999px;background:#243041;color:#9aa4b2">checking…</span>
+    </div>
+    <div style="font-size:.85rem;color:#8b94a3;margin-bottom:1rem">Recommended — no API key: sign in with your Claude subscription.</div>
+    <button onclick="ccStart()" id="cc-signin" style="width:100%;background:linear-gradient(90deg,#4f46e5,#0d9488);color:#fff;border:0;border-radius:8px;padding:.6rem;font-weight:600;cursor:pointer">Sign in with Claude</button>
+    <div id="cc-flow" style="display:none;margin-top:.8rem">
+      <a id="cc-link" href="#" target="_blank" rel="noopener" style="display:block;color:#5eead0;margin-bottom:.5rem">① Open the Claude sign-in page →</a>
+      <div style="font-size:.82rem;color:#8b94a3;margin-bottom:.35rem">② Approve, then paste the code:</div>
+      <input id="cc-code" type="text" placeholder="paste code here" style="width:100%;box-sizing:border-box;padding:.55rem;border-radius:8px;border:1px solid #2a3340;background:#0b0e13;color:#e0e0e0">
+      <button onclick="ccFinish()" style="width:100%;margin-top:.5rem;background:#0d9488;color:#fff;border:0;border-radius:8px;padding:.55rem;font-weight:600;cursor:pointer">③ Finish sign-in</button>
+    </div>
+    <div style="margin:1rem 0 .4rem;font-size:.8rem;color:#6f7889">— or —</div>
+    <input id="cc-key" type="password" placeholder="sk-ant-... (API key)" style="width:100%;box-sizing:border-box;padding:.55rem;border-radius:8px;border:1px solid #2a3340;background:#0b0e13;color:#e0e0e0">
+    <button onclick="ccSaveKey()" style="width:100%;margin-top:.5rem;background:#1a222c;color:#cfd6e0;border:1px solid #2a3340;border-radius:8px;padding:.55rem;cursor:pointer">Save &amp; Test Key</button>
+    <div id="cc-msg" style="font-size:.82rem;margin-top:.7rem;min-height:1em"></div>
+    <button onclick="ccClose()" style="width:100%;margin-top:.8rem;background:transparent;color:#8b94a3;border:0;cursor:pointer">Close</button>
+  </div>
+</div>
+<script>
+ (function(){
+   const B = location.pathname.replace(/\/(index\.html)?$/,'');
+   window.ccBase = B;
+   function msg(t,ok){const m=document.getElementById('cc-msg');if(m){m.textContent=t;m.style.color=ok?'#4ade80':'#f87171';}}
+   window.ccOpen=()=>{document.getElementById('cc-modal').style.display='flex';ccRefresh();};
+   window.ccClose=()=>{document.getElementById('cc-modal').style.display='none';};
+   window.ccRefresh=async()=>{try{const r=await fetch(B+'/api/ai/status');const j=await r.json();const b=document.getElementById('cc-badge');b.textContent=j.connected?'connected':'not connected';b.style.color=j.connected?'#4ade80':'#9aa4b2';document.getElementById('cc-btn').style.display=j.connected?'none':'block';}catch(e){}};
+   window.ccStart=async()=>{msg('Starting sign-in…',true);try{const r=await fetch(B+'/api/ai/login/start',{method:'POST'});const j=await r.json();if(!j.ok){msg(j.error||'could not start',false);return;}document.getElementById('cc-link').href=j.url;document.getElementById('cc-flow').style.display='block';try{window.open(j.url,'_blank');}catch(e){}msg('Open the page, approve, paste the code below.',true);}catch(e){msg('request failed',false);}};
+   window.ccFinish=async()=>{const code=document.getElementById('cc-code').value.trim();if(!code){msg('paste the code first',false);return;}msg('Finishing…',true);try{const r=await fetch(B+'/api/ai/login/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});const j=await r.json();msg(j.ok?'✓ '+j.message:'✗ '+(j.error||j.message),j.ok);if(j.ok){document.getElementById('cc-flow').style.display='none';ccRefresh();setTimeout(ccClose,1200);}}catch(e){msg('request failed',false);}};
+   window.ccSaveKey=async()=>{const key=document.getElementById('cc-key').value.trim();if(!key){msg('enter a key first',false);return;}msg('Saving…',true);try{const r=await fetch(B+'/api/ai/connect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:key})});const j=await r.json();msg(j.ok?'✓ '+j.message:'✗ '+(j.error||j.message),j.ok);if(j.ok){document.getElementById('cc-key').value='';ccRefresh();setTimeout(ccClose,1200);}}catch(e){msg('request failed',false);}};
+   document.addEventListener('DOMContentLoaded',ccRefresh);
+ })();
+</script>
 </body>
 </html>

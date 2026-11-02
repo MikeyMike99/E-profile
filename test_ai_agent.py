@@ -34,8 +34,14 @@ class TestEProfileAIAgent(unittest.TestCase):
 
         self.orig_active_project = getattr(ai_plugin.project_mgr, "active_project", "")
         self.orig_message_queue = list(getattr(ai_plugin.agent_mgr, "message_queue", []))
+        self.orig_enable_test_users = os.environ.get("DEVCORE_ENABLE_TEST_USERS")
+        os.environ["DEVCORE_ENABLE_TEST_USERS"] = "1"
 
     def tearDown(self):
+        if self.orig_enable_test_users is None:
+            os.environ.pop("DEVCORE_ENABLE_TEST_USERS", None)
+        else:
+            os.environ["DEVCORE_ENABLE_TEST_USERS"] = self.orig_enable_test_users
         if hasattr(ai_plugin.project_mgr, "set_active_project"):
             ai_plugin.project_mgr.set_active_project(self.orig_active_project)
         if hasattr(ai_plugin.agent_mgr, "message_queue"):

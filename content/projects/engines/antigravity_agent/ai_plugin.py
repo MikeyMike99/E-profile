@@ -12,6 +12,17 @@ import shutil
 import subprocess
 
 PLUGIN_DIR = Path(__file__).resolve().parent
+
+if (
+    "PYTHONANYWHERE_DOMAIN" in os.environ
+    or "PYTHONANYWHERE_SITE" in os.environ
+    or os.path.exists("/var/www")
+):
+    _pa_proxy = "http://proxy.server:3128"
+    for _pk in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "all_proxy", "ALL_PROXY"):
+        os.environ.setdefault(_pk, _pa_proxy)
+    for _nk in ("no_proxy", "NO_PROXY"):
+        os.environ.setdefault(_nk, "localhost,127.0.0.1")
 ai_path = str(PLUGIN_DIR)
 if ai_path not in sys.path:
     sys.path.insert(0, ai_path)
@@ -239,6 +250,19 @@ def run_ai_loop():
 
 threading.Thread(target=run_ai_loop, daemon=True).start()
 
+
+def _get_or_create_ai_loop():
+    global ai_loop
+    if ai_loop is None or ai_loop.is_closed() or not ai_loop.is_running():
+        ai_loop = asyncio.new_event_loop()
+        def _runner():
+            asyncio.set_event_loop(ai_loop)
+            ai_loop.run_forever()
+        t = threading.Thread(target=_runner, daemon=True, name="Siraugga-AI-Loop")
+        t.start()
+        time.sleep(0.05)
+    return ai_loop
+
 DEMO_TOKEN_TTL_SECONDS = 7 * 24 * 3600
 
 
@@ -299,7 +323,7 @@ def _resolve_token_scope() -> str:
         session["is_admin"] = True
         return "root"
 
-    if demo_arg == "1" or mode_arg == "demo":
+    if demo_arg == "1" or mode_arg == "demo" or session.get("agent_token_scope") == "demo":
         session["agent_token_scope"] = "demo"
         return "demo"
     elif demo_arg == "0" or mode_arg in ("root", "admin"):
@@ -1190,7 +1214,7 @@ def start_chat():
 
     if msg_type == "cli_input":
         text_input = data.get("text", prompt)
-        asyncio.run_coroutine_threadsafe(agent_mgr.send_input(text_input), ai_loop)
+        asyncio.run_coroutine_threadsafe(agent_mgr.send_input(text_input), _get_or_create_ai_loop())
         return jsonify({"success": True, "message": "CLI input dispatched"})
 
     if agent_mgr.is_running() and not prompt.startswith("[STEER_NOW]") and not prompt.startswith("[QUEUE_NEXT]"):
@@ -1204,7 +1228,7 @@ def start_chat():
             user=user,
             admin_override=(admin_override and is_admin_exec),
         ),
-        ai_loop,
+        _get_or_create_ai_loop(),
     )
     return jsonify({"success": True, "message": "Task started", "scope": scope})
 
@@ -1252,7 +1276,7 @@ def get_stream():
 
 @ai_bp.route("/api/kill", methods=["POST"])
 def kill_chat():
-    asyncio.run_coroutine_threadsafe(agent_mgr.cancel_task(), ai_loop)
+    asyncio.run_coroutine_threadsafe(agent_mgr.cancel_task(), _get_or_create_ai_loop())
     return jsonify({"success": True})
 
 
