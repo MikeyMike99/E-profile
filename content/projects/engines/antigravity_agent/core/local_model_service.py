@@ -117,13 +117,21 @@ def resolve_gguf_model_path(model_label: str = "") -> str:
 
 def is_cloud_hosted_environment() -> bool:
     """Detects whether Siraugga is running in a cloud-hosted WSGI environment such as PythonAnywhere."""
-    if os.environ.get("SIRAUGGA_CLOUD_ONLY", "").lower() in ("1", "true", "yes"):
-        return True
-    return (
-        "PYTHONANYWHERE_DOMAIN" in os.environ
+    cloud_detected = (
+        os.environ.get("SIRAUGGA_CLOUD_ONLY", "").lower() in ("1", "true", "yes")
+        or "PYTHONANYWHERE_DOMAIN" in os.environ
         or "PYTHONANYWHERE_SITE" in os.environ
         or os.path.exists("/var/www")
     )
+    if cloud_detected:
+        pa_proxy = "http://proxy.server:3128"
+        for p_var in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "all_proxy", "ALL_PROXY"):
+            if p_var not in os.environ:
+                os.environ[p_var] = pa_proxy
+        for n_var in ("no_proxy", "NO_PROXY"):
+            if n_var not in os.environ:
+                os.environ[n_var] = "localhost,127.0.0.1"
+    return cloud_detected
 
 
 def discover_local_models() -> list:

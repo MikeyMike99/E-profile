@@ -309,30 +309,34 @@ class ExecutionMixin:
             last_announced_phase = ""
             while True:
                 await asyncio.sleep(3)
-                elapsed = int(time.time() - start_time)
-                running_act = self.actions[-1] if self.actions and self.actions[-1].get("status") == "running" else None
+                try:
+                    elapsed = int(time.time() - start_time)
+                    running_act = self.actions[-1] if self.actions and self.actions[-1].get("status") == "running" else None
 
-                should_announce = False
-                if running_act:
-                    current_desc = running_act.get("announcement") or running_act.get("friendly_name") or running_act.get("tool", "Operation")
-                    msg = f"{current_desc} ({elapsed}s elapsed)"
-                    if current_desc != last_announced_phase:
-                        should_announce = True
-                        last_announced_phase = current_desc
-                else:
-                    current_desc = "Reasoning"
-                    msg = ""
                     should_announce = False
+                    if running_act:
+                        current_desc = running_act.get("announcement") or running_act.get("friendly_name") or running_act.get("tool", "Operation")
+                        msg = f"{current_desc} ({elapsed}s elapsed)"
+                        if current_desc != last_announced_phase or (elapsed > 0 and elapsed % 15 == 0):
+                            should_announce = True
+                            last_announced_phase = current_desc
+                    else:
+                        current_desc = "Reasoning"
+                        msg = f"Thinking and analyzing request ({elapsed}s elapsed)..."
+                        if elapsed > 0 and elapsed % 15 == 0:
+                            should_announce = True
 
-                await self.broadcast({
-                    "type": "heartbeat",
-                    "elapsed": elapsed,
-                    "status": "running",
-                    "current_action": current_desc,
-                    "message": msg,
-                    "context": msg,
-                    "progress_tick": should_announce
-                })
+                    await self.broadcast({
+                        "type": "heartbeat",
+                        "elapsed": elapsed,
+                        "status": "running",
+                        "current_action": current_desc,
+                        "message": msg,
+                        "context": msg,
+                        "progress_tick": should_announce
+                    })
+                except Exception as ex:
+                    logging.warning(f"[HeartbeatWorker] Tick warning: {ex}")
         except asyncio.CancelledError:
             pass
 
@@ -536,14 +540,13 @@ class ExecutionMixin:
 
             if is_pa:
                 pa_proxy = "http://proxy.server:3128"
-                safe_env["http_proxy"] = pa_proxy
-                safe_env["https_proxy"] = pa_proxy
-                safe_env["HTTP_PROXY"] = pa_proxy
-                safe_env["HTTPS_PROXY"] = pa_proxy
-                safe_env["all_proxy"] = pa_proxy
-                safe_env["ALL_PROXY"] = pa_proxy
+                for k in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "all_proxy", "ALL_PROXY"):
+                    safe_env[k] = pa_proxy
+                    os.environ[k] = pa_proxy
                 safe_env["no_proxy"] = "localhost,127.0.0.1"
                 safe_env["NO_PROXY"] = "localhost,127.0.0.1"
+                os.environ["no_proxy"] = "localhost,127.0.0.1"
+                os.environ["NO_PROXY"] = "localhost,127.0.0.1"
 
             real_agy = _find_agy_executable(base_dir)
             env_override = os.environ.get("ADMIN_OVERRIDE", "false").lower() == "true"
@@ -783,7 +786,12 @@ class ExecutionMixin:
                 real_agy = "wsl.exe"
 
             if not real_agy:
-                await self._execute_native_gemini(prompt, model, task_time, conversation_id, is_admin)
+                try:
+                    await self._execute_native_gemini(prompt, model, task_time, conversation_id, is_admin)
+                finally:
+                    hb_task.cancel()
+                    self.active_task = None
+                    self.start_time = None
                 return
 
             cmd = []
