@@ -1410,7 +1410,7 @@ def render_bootstrap_response(
             }).encode("utf-8")]
 
         headers = [("Content-Type", "text/html; charset=utf-8")]
-        start_response("503 Service Unavailable", headers)
+        start_response("200 OK", headers)
         return [generate_secure_holding_html(login_failed=token_attempted)]
 
     # Response headers for authenticated admin
@@ -1812,7 +1812,16 @@ def application(environ, start_response):
                 "", "", {}, {}, is_explicit_breakglass=True
             )
         # Fast path: Serve healthy Flask app immediately with zero filesystem overhead
+        if _FLASK_APP is None:
+            try:
+                import sync_mod
+                from server import app as flask_app
+                _FLASK_APP = flask_app
+            except Exception:
+                pass
+
         if _FLASK_APP is not None:
+            trigger_background_sync(BASE_DIR)
             return _FLASK_APP(environ, start_response)
 
         # Trigger non-blocking background sync on production servers
