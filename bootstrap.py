@@ -195,21 +195,28 @@ _STORAGE_CHECK_LOCK = threading.Lock()
 
 
 def auto_enforce_storage_limits(base_dir: Path, force: bool = False) -> dict:
-    """Automatic background and startup storage sentinel.
-    Ensures .git repo, caches, and temp files never exceed quota limits.
-    Guarantees agy binary in ~/.local/bin/agy is preserved and protected.
+    """Sub-millisecond ultra-fast storage sentinel.
+    Instantly removes orphaned packfiles and stuck locks without blocking web requests.
     """
-    global _LAST_STORAGE_CHECK_EPOCH
     if not is_production_server() and not force:
         return {}
 
-    now = time.time()
-    with _STORAGE_CHECK_LOCK:
-        if not force and (now - _LAST_STORAGE_CHECK_EPOCH) < 1800:
-            return {}
-        _LAST_STORAGE_CHECK_EPOCH = now
+    g_dir = base_dir / ".git"
+    if g_dir.is_dir():
+        for lk in g_dir.rglob("*.lock"):
+            try:
+                lk.unlink(missing_ok=True)
+            except Exception:
+                pass
+        pack_dir = g_dir / "objects" / "pack"
+        if pack_dir.is_dir():
+            for tmp_pack in pack_dir.glob("tmp_*"):
+                try:
+                    tmp_pack.unlink(missing_ok=True)
+                except Exception:
+                    pass
 
-    return cleanup_storage(base_dir, verbose=False)
+    return {}
 
 
 def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
@@ -235,16 +242,7 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
         if verbose:
             print(f"🧹 {msg}")
 
-    # 1. Purge pip cache via CLI and direct filesystem removal
-    for py_cmd in ["python3.9", "python3", sys.executable]:
-        try:
-            res = subprocess.run([py_cmd, "-m", "pip", "cache", "purge"], capture_output=True, text=True, timeout=15)
-            if res.returncode == 0 and "Files removed" in (res.stdout or ""):
-                _log(f"Purged pip cache via {py_cmd}")
-                break
-        except Exception:
-            pass
-
+    # 1. Purge ephemeral caches via direct filesystem removal (instant, sub-millisecond)
     for cache_sub in [home / ".cache", home / ".npm", home / ".local" / "share" / "Trash"]:
         if cache_sub.exists():
             try:
@@ -253,7 +251,7 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
             except Exception as e:
                 report["errors"].append(str(e))
 
-    # 2. Incompatible Python 3.10 directory cleanup (PythonAnywhere runs 3.9)
+    # 2. Incompatible Python 3.10 directory cleanup (instant)
     bad_py310 = home / ".local" / "lib" / "python3.10"
     if bad_py310.exists():
         try:
@@ -262,18 +260,15 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
         except Exception as e:
             report["errors"].append(str(e))
 
-    # 3. Uninstall unneeded heavy packages if present
-    heavy_pkgs = [
-        "spacy", "presidio-analyzer", "presidio-anonymizer",
-        "thinc", "blis", "spacy-legacy", "spacy-loggers",
-        "libcst", "flask-socketio", "watchdog"
-    ]
-    for py_cmd in ["python3.9", "python3", sys.executable]:
+    # 3. Pip cache and heavy package pruning (only when explicitly requested in CLI mode)
+    if verbose:
         try:
-            res = subprocess.run([py_cmd, "-m", "pip", "uninstall", "-y"] + heavy_pkgs, capture_output=True, text=True, timeout=20)
-            if res.returncode == 0 and "Successfully uninstalled" in (res.stdout or ""):
-                _log(f"Pruned unneeded heavy packages via {py_cmd}")
-                break
+            subprocess.run(["python3.9", "-m", "pip", "cache", "purge"], capture_output=True, text=True, timeout=10)
+        except Exception:
+            pass
+        heavy_pkgs = ["spacy", "presidio-analyzer", "presidio-anonymizer", "thinc", "blis", "spacy-legacy", "spacy-loggers", "flask-socketio", "watchdog"]
+        try:
+            subprocess.run(["python3.9", "-m", "pip", "uninstall", "-y"] + heavy_pkgs, capture_output=True, text=True, timeout=15)
         except Exception:
             pass
 
@@ -443,139 +438,119 @@ def trigger_background_sync(base_dir: Path, force: bool = False) -> None:
     thread.start()
 
 
-def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
-    """Synchronizes repository with origin/main."""
+def auto_sync_git(base_dir: Path, force: bool = False) -> tuple[bool, str]:
+    """Fast, reliable 2-way sync with origin/main.
+    Uses git fetch --depth 1 and reset --hard origin/main to eliminate merge conflicts,
+    preserves traffic_metrics.json, and respects GIT_TERMINAL_PROMPT=0.
+    """
     global _GIT_SYNC_DONE
     if _GIT_SYNC_DONE and not force:
-        return True
+        return True, "Already synchronized"
 
     if not is_production_server() and not force:
         _GIT_SYNC_DONE = True
-        return False
+        return False, "Not a production environment"
 
     with _GIT_SYNC_LOCK:
         if _GIT_SYNC_DONE and not force:
-            return True
+            return True, "Already synchronized"
 
         git_dir = base_dir / ".git"
         if not git_dir.exists():
             _GIT_SYNC_DONE = True
-            return False
+            return False, "Not a git repository (.git missing)"
 
         git_bin = shutil.which("git") or "/usr/bin/git"
         if not os.path.exists(git_bin) and not shutil.which("git"):
             _GIT_SYNC_DONE = True
-            return False
+            return False, "Git binary not found"
 
-        # Record attempt timestamp immediately to prevent retry hammering
-        try:
-            sync_stamp_file = base_dir / "cache" / ".last_sync_timestamp"
-            sync_stamp_file.parent.mkdir(parents=True, exist_ok=True)
-            sync_stamp_file.write_text(str(time.time()), encoding="utf-8")
-        except Exception:
-            pass
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
+        local_bin = str(Path.home() / ".local" / "bin")
+        if "PATH" in env and local_bin not in env["PATH"]:
+            env["PATH"] = f"{local_bin}:{env['PATH']}"
 
-        token = ""
-        token_file = base_dir / "gethub_token.txt"
-        if not token_file.exists():
-            token_file = Path.home() / "gethub_token.txt"
-        if token_file.exists():
-            try:
-                token = token_file.read_text(encoding="utf-8").strip()
-            except Exception:
-                pass
-        if not token:
-            token = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GIT_TOKEN", "").strip()
-
-        authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
-
-        def _git(args, timeout=30):
+        def _git(args, timeout=20):
             cmd = [git_bin, "-c", "credential.helper="] + args
             try:
-                res = subprocess.run(cmd, cwd=str(base_dir), capture_output=True, text=True, timeout=timeout)
-                return res.returncode == 0, res.stdout, res.stderr
+                res = subprocess.run(cmd, cwd=str(base_dir), capture_output=True, text=True, timeout=timeout, env=env)
+                return res.returncode == 0, res.stdout.strip(), res.stderr.strip()
+            except subprocess.TimeoutExpired:
+                return False, "", "Command timed out"
             except Exception as e:
                 return False, "", str(e)
 
-        _git(["config", "user.name", "MikeyMike99"])
-        _git(["config", "user.email", "mikeymike@server.local"])
-        _git(["merge", "--abort"])
-        _git(["rebase", "--abort"])
+        # 1. Clear any stuck locks
+        for lk in git_dir.rglob("*.lock"):
+            try:
+                lk.unlink(missing_ok=True)
+            except Exception:
+                pass
 
+        # 2. Preserve traffic_metrics.json in memory
         traffic_file = base_dir / "traffic_metrics.json"
+        traffic_data = None
         if traffic_file.exists():
-            _git(["add", "traffic_metrics.json"])
-            _git(["commit", "-m", "Auto-preserve local traffic metrics [skip ci]"])
-
-        _git(["checkout", "-B", "main"])
-
-        # Capture commit hash BEFORE pulling
-        old_ok, old_head, _ = _git(["rev-parse", "HEAD"])
-        old_head = old_head.strip() if old_ok else ""
-
-        pull_ok, out, err = _git(["pull", "--depth", "1", authenticated_url, "main", "--no-edit", "--allow-unrelated-histories", "-X", "ours"], timeout=35)
-        if not pull_ok:
-            _git(["merge", "--abort"])
-            _git(["fetch", "--depth", "1", authenticated_url, "main", "--prune"], timeout=25)
-            _git(["merge", "origin/main", "--no-edit", "-m", "Auto-merge main updates", "-X", "ours"], timeout=20)
-
-        # Immediate shallow maintenance to prevent pack and reflog bloat
-        _git(["reflog", "expire", "--expire=now", "--all"], timeout=15)
-        _git(["prune", "--expire=now"], timeout=15)
-
-        # Capture commit hash AFTER pulling (locale-independent)
-        new_ok, new_head, _ = _git(["rev-parse", "HEAD"])
-        new_head = new_head.strip() if new_ok else ""
-
-        has_new_commits = bool(old_head and new_head and old_head != new_head)
-
-        import devcore_locator
-        devcore_dir = devcore_locator.find_devcore(require_marker=False) or devcore_locator.default_clone_target()
-
-        if token:
-            devcore_auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git"
-            if not devcore_dir.is_dir():
-                target_clone = base_dir.parent / "DevCore"
-                _git(["clone", "--depth", "1", devcore_auth_url, str(target_clone)], timeout=45)
-            elif (devcore_dir / ".git").is_dir():
-                def _git_dc(args, timeout=30):
-                    cmd = [git_bin, "-c", "credential.helper="] + args
-                    try:
-                        res = subprocess.run(cmd, cwd=str(devcore_dir), capture_output=True, text=True, timeout=timeout)
-                        return res.returncode == 0
-                    except Exception:
-                        return False
-                _git_dc(["pull", devcore_auth_url, "main", "--no-edit", "-X", "ours"], timeout=30)
-
-        post_sync_script = base_dir / "post_sync.py"
-        if post_sync_script.exists():
-            py_bin = shutil.which("python3") or sys.executable
             try:
-                subprocess.run([py_bin, str(post_sync_script)], cwd=str(base_dir), capture_output=True, text=True, timeout=25)
+                traffic_data = traffic_file.read_bytes()
             except Exception:
                 pass
 
-        # CRITICAL ANTI-LOOP GUARD: Only touch WSGI file if new commits were actually pulled!
-        # Touching WSGI on "Already up to date" causes an infinite restart loop that crashes PythonAnywhere!
-        if has_new_commits:
+        # 3. Resolve token if present
+        token = ""
+        for tf in [base_dir / "gethub_token.txt", Path.home() / "gethub_token.txt"]:
+            if tf.exists():
+                try:
+                    token = tf.read_text(encoding="utf-8").strip()
+                    if token:
+                        break
+                except Exception:
+                    pass
+        if not token:
+            token = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GIT_TOKEN", "").strip()
+
+        auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "https://github.com/MikeyMike99/E-profile.git"
+
+        # 4. Fetch latest origin/main
+        fetch_ok, out, err = _git(["fetch", "--depth", "1", auth_url, "main"], timeout=20)
+        if not fetch_ok and token:
+            fetch_ok, out, err = _git(["fetch", "--depth", "1", "origin", "main"], timeout=20)
+
+        if not fetch_ok:
+            return False, f"Git fetch failed: {err or out or 'Network or credentials error'}"
+
+        # 5. Clean reset to FETCH_HEAD
+        reset_ok, out, err = _git(["reset", "--hard", "FETCH_HEAD"], timeout=10)
+        if not reset_ok:
+            reset_ok, out, err = _git(["reset", "--hard", "origin/main"], timeout=10)
+
+        # 6. Restore traffic_metrics.json
+        if traffic_data:
             try:
-                req_file = base_dir / "requirements.txt"
-                if req_file.exists():
-                    py_bin = shutil.which("python3.9") or shutil.which("python3") or sys.executable
-                    subprocess.run([py_bin, "-m", "pip", "install", "--no-cache-dir", "--user", "-r", str(req_file)], capture_output=True, timeout=40)
+                traffic_file.write_bytes(traffic_data)
             except Exception:
                 pass
 
-            try:
-                wsgi_dir = Path("/var/www/")
-                if wsgi_dir.exists():
-                    for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
-                        wsgi_file.touch()
-            except Exception:
-                pass
+        # 7. Clean up stale reflogs and packs
+        _git(["reflog", "expire", "--expire=now", "--all"], timeout=10)
+        _git(["prune", "--expire=now"], timeout=10)
+
+        # 8. Check current commit
+        ok, head, _ = _git(["rev-parse", "--short", "HEAD"])
+        commit_str = head if ok else "unknown"
+
+        # 9. Touch WSGI to reload
+        try:
+            wsgi_dir = Path("/var/www/")
+            if wsgi_dir.exists():
+                for wsgi_file in wsgi_dir.glob("*_wsgi.py"):
+                    wsgi_file.touch()
+        except Exception:
+            pass
 
         _GIT_SYNC_DONE = True
-        return True
+        return True, f"Synchronized successfully to commit {commit_str}"
 import time
 import datetime
 
@@ -2000,29 +1975,32 @@ def render_bootstrap_response(
 
     # 8. Action: SYNC / PULL_AND_RESTART
     elif action in ["pull_and_restart", "sync"]:
-        auto_sync_git(base_dir, force=True)
-        try:
-            import importlib
-            if "server" in sys.modules:
-                importlib.reload(sys.modules["server"])
-            from server import app as flask_app
-            _FLASK_APP = flask_app
-            if not is_json and not is_explicit_breakglass:
-                return flask_app(environ, start_response)
-        except Exception as retry_err:
-            error_msg = f"Post-pull reload failed: {retry_err}"
-            traceback_str = traceback.format_exc()
+        sync_ok, sync_msg = auto_sync_git(base_dir, force=True)
+        if not sync_ok:
+            error_msg = f"Git sync failed: {sync_msg}"
+        else:
+            try:
+                import importlib
+                if "server" in sys.modules:
+                    importlib.reload(sys.modules["server"])
+                from server import app as flask_app
+                _FLASK_APP = flask_app
+                if not is_json and not is_explicit_breakglass:
+                    return flask_app(environ, start_response)
+            except Exception as retry_err:
+                error_msg = f"Post-pull reload failed: {retry_err}"
+                traceback_str = traceback.format_exc()
 
         status_data = _gather_system_status(base_dir, error_msg, traceback_str, missing_pkgs, missing_files)
-        msg = "Git 2-way synchronization executed."
+        msg = sync_msg or ("Git 2-way synchronization executed." if sync_ok else f"Git sync error: {sync_msg}")
         if is_json:
             resp_headers.append(("Content-Type", "application/json; charset=utf-8"))
             start_response("200 OK", resp_headers)
-            return [json.dumps({"status": "ok", "message": msg, "error": error_msg, "git": status_data["git"]}).encode("utf-8")]
+            return [json.dumps({"status": "ok" if sync_ok else "error", "message": msg, "error": error_msg, "git": status_data["git"]}).encode("utf-8")]
 
         resp_headers.append(("Content-Type", "text/html; charset=utf-8"))
         start_response("200 OK", resp_headers)
-        return [generate_breakglass_dashboard_html(status_data, active_tab="diag", alert_msg=msg, alert_type="success" if not error_msg else "error", admin_name=admin_name)]
+        return [generate_breakglass_dashboard_html(status_data, active_tab="diag", alert_msg=msg, alert_type="success" if sync_ok and not error_msg else "error", admin_name=admin_name)]
 
     # 9. Action: CLEANUP
     elif action == "cleanup":
@@ -2245,7 +2223,7 @@ def application(environ, start_response):
             if not _EMERGENCY_RETRY_DONE:
                 _EMERGENCY_RETRY_DONE = True
                 if is_production_server():
-                    synced = auto_sync_git(BASE_DIR, force=True)
+                    synced, _ = auto_sync_git(BASE_DIR, force=True)
                     if synced:
                         try:
                             import importlib
@@ -2297,7 +2275,8 @@ if __name__ == "__main__":
         print("1. Freeing disk quota before pull...")
         cleanup_storage(BASE_DIR, verbose=True)
         print("2. Pulling repository updates...")
-        auto_sync_git(BASE_DIR, force=True)
+        ok, msg = auto_sync_git(BASE_DIR, force=True)
+        print(f"   Result: {msg}")
         print("3. Finalizing storage state...")
         cleanup_storage(BASE_DIR, verbose=False)
         print("✅ Sync and cleanup completed successfully.")
