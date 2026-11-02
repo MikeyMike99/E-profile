@@ -6,12 +6,15 @@ download thank-you emails fire only for admin downloads, so no visitor is emaile
 before the consent and confirmation flow ships.
 """
 
+from __future__ import annotations
+
 import html
 import json
 import re
 import secrets
 import threading
 from datetime import datetime
+from typing import Optional, Dict, Any, List
 from urllib.parse import urlparse
 
 from flask import Blueprint, abort, current_app, jsonify, render_template, request, session, url_for
@@ -271,7 +274,7 @@ def update_subscriber_preferences(
         return entry
 
 
-def purge_subscriber_by_token(token: str) -> dict | None:
+def purge_subscriber_by_token(token: str) -> Optional[dict]:
     if not token or not isinstance(token, str):
         return None
     token = token.strip()
