@@ -58,4 +58,42 @@ Siraugga dynamically adjusts its absolute filesystem boundaries based on the use
 1. **The Playground (Visitors)**: Unprivileged users are trapped in a strict sub-folder (`/playground/`). The backend's canonical path resolution mathematically blocks the AI from traversing out of the playground to see or modify the core website code.
 2. **God-Mode (Root Admin)**: When accessed via the admin-exclusive pop-out shortcut, the AI detects the master session (Tier 5) and completely bypasses the Semantic Firewall and path restrictions, elevating its anchor to the absolute root of the directory for unrestricted deployment power.
 
-copy_right 
+## 🚨 Emergency Break-Glass Console & Remote CLI (`bootstrap.py`)
+If the main web application fails to start or encounters an unhandled runtime crash on PythonAnywhere (or any remote WSGI host), `bootstrap.py` operates as an autonomous, zero-dependency emergency management kernel.
+
+### Capabilities:
+- **Zero-Dependency Standard Library Architecture**: Operates purely on native Python standard libraries; runs even if `Flask`, `pip`, or virtualenvs are corrupted.
+- **On-Demand & Automatic Fallback**:
+  - Automatically intercepts all incoming HTTP traffic when the main application crashes.
+  - Can be manually accessed on demand anytime via `/__breakglass__` or `?breakglass=1`.
+- **Integrated Emergency Web Console**:
+  - **Diagnostics & Health**: Live traceback inspection, dependency verification, storage quota metrics.
+  - **File Explorer & Built-In Editor**: Browse directories, edit code in-browser, upload files, and trigger atomic saves with automated backups and WSGI reloading.
+  - **Emergency Terminal**: Execute safe maintenance commands (`git status`, `git diff`, `pip list`, `python3 server.py`).
+  - **Quick Action Bar**: 1-click **2-Way Git Sync**, **Git Rollback (`HEAD~1`)**, **Quota Rescue**, and **WSGI Worker Reload**.
+- **Remote CLI Command & Control (`scripts/break_glass.py`)**:
+  Manage the remote server directly from your local terminal or DevCore:
+  ```bash
+  # Check server health, crash tracebacks, and disk quota
+  python3 scripts/break_glass.py status
+
+  # List files or view source code
+  python3 scripts/break_glass.py ls [path]
+  python3 scripts/break_glass.py cat server.py
+
+  # Upload or push a hotfix directly to the remote server
+  python3 scripts/break_glass.py put server.py
+
+  # Download and edit in local $EDITOR, auto-deploying on save
+  python3 scripts/break_glass.py edit server.py
+
+  # Instantly rollback a broken git deployment
+  python3 scripts/break_glass.py rollback
+
+  # Execute remote commands
+  python3 scripts/break_glass.py exec "git status -s"
+
+  # Launch the interactive break-glass shell
+  python3 scripts/break_glass.py shell
+  ```
+ 
