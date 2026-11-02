@@ -9,28 +9,133 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h2 style="font-size: 1.8rem; margin: 0 0 8px 0; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px;">
-                    🛡️ Cyber Intelligence Newsletter
+                    🛡️ Cyber Intelligence Feed & Incident Stories
                 </h2>
                 <p style="color: rgba(234, 242, 255, 0.7); margin: 0; font-size: 0.95rem;">
-                    Active threat digest dispatched: <strong style="color: #fff;">{{ manifest.dispatched_at }}</strong>
+                    Active threat digest dispatched: <strong style="color: #fff;">{{ manifest.dispatched_at }}</strong> · 
+                    <span style="color: #00ff88;">Quota-Safe Real-Time Feed</span> (Newest releases always on top)
                 </p>
             </div>
-            <div style="background: rgba(25, 230, 255, 0.08); border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 8px 16px; font-family: monospace; font-size: 0.85rem;">
-                <span style="color: #19e6ff;">⚡ DISK CACHE ACTIVE</span>: 
-                <span style="color: #fff;">{{ cached_count }} Dossiers Cached</span>
-                <span style="color: rgba(234, 242, 255, 0.5);"> (RAM-Clean)</span>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div style="background: rgba(25, 230, 255, 0.08); border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 8px 16px; font-family: monospace; font-size: 0.85rem;">
+                    <span style="color: #19e6ff;">⚡ DISK CACHE ACTIVE</span>: 
+                    <span style="color: #fff;">{{ cached_count }} Cached</span>
+                    <span style="color: rgba(234, 242, 255, 0.5);"> (RAM-Clean)</span>
+                </div>
+                {% if is_admin %}
+                <button onclick="refreshThreatFeed()" id="btn-refresh-feed"
+                        style="padding: 8px 14px; background: rgba(0, 255, 136, 0.15); border: 1px solid #00ff88; color: #00ff88; font-family: monospace; font-size: 0.85rem; border-radius: 6px; cursor: pointer; transition: background 0.2s;">
+                    🔄 Refresh Threat Feed
+                </button>
+                {% endif %}
             </div>
         </div>
 
         <div style="margin-top: 20px;">
             <label for="newsletter-search-input" style="font-size: 0.85rem; font-family: monospace; color: #19e6ff; display: block; margin-bottom: 6px;">
-                SEARCH THREAT ADVISORIES (TITLE, CVE, SEVERITY):
+                SEARCH THREAT ADVISORIES (TITLE, CVE, SEVERITY, ADVERSARY):
             </label>
-            <input type="text" id="newsletter-search-input" placeholder="e.g. CVE-2024, CRITICAL, Linux, SSH..." 
+            <input type="text" id="newsletter-search-input" placeholder="e.g. VOLTA, CVE-2026, CRITICAL, Infostealer, Ivanti..." 
                    style="width: 100%; max-width: 600px; background: rgba(5, 7, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.95rem;"
                    oninput="filterAdvisories(this.value)">
         </div>
     </header>
+
+    <!-- Interactive Subscriber Preferences & Sign-up Module -->
+    <section aria-label="Newsletter Subscription Options" class="newsletter-subscribe-panel" 
+             style="background: #0d1117; border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 22px; margin-bottom: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; margin-bottom: 18px;">
+            <div>
+                <span style="font-size: 0.8rem; font-family: monospace; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">
+                    📬 TAILORED INBOX DISPATCHES
+                </span>
+                <h3 style="font-size: 1.35rem; margin: 4px 0 6px 0; color: #ffffff;">
+                    Subscribe to Threat Intelligence on Your Terms
+                </h3>
+                <p style="color: rgba(234, 242, 255, 0.7); margin: 0; font-size: 0.9rem; max-width: 700px;">
+                    Select your delivery cadence and primary appetite. Dispatches include 1-click links to the Interactive Threat Dossier and Accessible Audio Suite.
+                </p>
+            </div>
+            <div>
+                <a href="/newsletter/preferences" style="font-size: 0.85rem; font-family: monospace; color: #19e6ff; text-decoration: none; border: 1px solid rgba(25, 230, 255, 0.4); padding: 6px 12px; border-radius: 4px; display: inline-block;">
+                    ⚙️ Manage Preferences
+                </a>
+            </div>
+        </div>
+
+        <form id="public-subscribe-form" onsubmit="handlePublicSubscribe(event)">
+            <!-- Cadence Selection -->
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 0.8rem; font-family: monospace; color: rgba(234, 242, 255, 0.6); margin-bottom: 8px;">
+                    SELECT DELIVERY CADENCE:
+                </label>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid #19e6ff; border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_format" value="hybrid_brief" checked>
+                        <strong>Hybrid Brief (Headlines + Dossier)</strong>
+                    </label>
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_format" value="full_story_daily">
+                        <span>Daily Full Story</span>
+                    </label>
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_format" value="quick_threat_wire">
+                        <span>Quick Threat Wire</span>
+                    </label>
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_format" value="weekly_digest">
+                        <span>Weekly Digest</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Appetite Selection -->
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 0.8rem; font-family: monospace; color: rgba(234, 242, 255, 0.6); margin-bottom: 8px;">
+                    PRIMARY STORY APPETITE:
+                </label>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <label style="cursor: pointer; background: rgba(255, 170, 0, 0.1); border: 1px solid #ffaa00; border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #ffc04d; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_appetite" value="cyber_thriller" checked>
+                        🍿 Cyber Thriller
+                    </label>
+                    <label style="cursor: pointer; background: rgba(25, 230, 255, 0.08); border: 1px solid rgba(25, 230, 255, 0.4); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #19e6ff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_appetite" value="deep_dive">
+                        🔬 Deep Dive
+                    </label>
+                    <label style="cursor: pointer; background: rgba(0, 255, 136, 0.08); border: 1px solid rgba(0, 255, 136, 0.4); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #00ff88; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_appetite" value="defense_playbook">
+                        🛡️ Defense Playbook
+                    </label>
+                    <label style="cursor: pointer; background: rgba(179, 136, 255, 0.08); border: 1px solid rgba(179, 136, 255, 0.4); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #d1b3ff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_appetite" value="executive_espresso">
+                        ☕ Executive Espresso
+                    </label>
+                    <label style="cursor: pointer; background: rgba(255, 120, 120, 0.08); border: 1px solid rgba(255, 120, 120, 0.4); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #ff9999; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_appetite" value="snarky_hacker">
+                        💻 Snarky Hacker
+                    </label>
+                </div>
+            </div>
+
+            <!-- Terms & Conditions Note -->
+            <p style="margin: 0 0 10px 0; font-size: 0.85rem; color: rgba(234, 242, 255, 0.75); line-height: 1.4;">
+                By clicking <strong>⚡ Subscribe Free</strong>, you agree to our 
+                <a href="/terms" target="_blank" style="color: #19e6ff; text-decoration: underline; font-weight: bold;">Terms and Conditions</a>.
+            </p>
+
+            <!-- Email & Subscribe Input -->
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; max-width: 600px;">
+                <input type="email" id="subscribe-email-input" required placeholder="name@security-team.org" 
+                       style="flex: 1; min-width: 250px; background: rgba(5, 7, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.95rem;">
+                <button type="submit" id="btn-submit-subscribe"
+                        style="padding: 10px 20px; background: #19e6ff; color: #000; font-family: monospace; font-size: 0.9rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    ⚡ Subscribe Free
+                </button>
+            </div>
+            <div id="subscribe-status-msg" style="margin-top: 10px; font-size: 0.85rem; font-family: monospace; display: none;"></div>
+        </form>
+    </section>
 
     {% if items and items|length > 0 %}
     <section aria-label="Threat Advisories Feed" class="advisory-grid" id="advisory-list" style="display: flex; flex-direction: column; gap: 20px;">
@@ -40,9 +145,15 @@
         {% set cves = item.cves|default([]) %}
         
         <article class="advisory-card" data-search="{{ item.title }} {{ cves|join(' ') }} {{ threat_level }} {{ item.source }}"
-                 style="background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.1); border-left: 4px solid {% if score >= 90 %}#ff4d4d{% elif score >= 75 %}#ffaa00{% else %}#19e6ff{% endif %}; border-radius: 8px; padding: 20px; transition: border-color 0.2s;">
+                 style="background: #0d1117; border: 1px solid {% if item.is_latest %}rgba(25, 230, 255, 0.5){% else %}rgba(255, 255, 255, 0.1){% endif %}; border-left: 4px solid {% if item.is_latest %}#19e6ff{% elif score >= 90 %}#ff4d4d{% elif score >= 75 %}#ffaa00{% else %}#19e6ff{% endif %}; border-radius: 8px; padding: 20px; transition: border-color 0.2s; position: relative;">
+            
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    {% if item.is_latest %}
+                    <span style="font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: rgba(25, 230, 255, 0.25); color: #19e6ff; border: 1px solid #19e6ff; box-shadow: 0 0 10px rgba(25, 230, 255, 0.4);">
+                        ⚡ LATEST RELEASE
+                    </span>
+                    {% endif %}
                     <span style="font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: {% if score >= 90 %}rgba(255, 77, 77, 0.2){% elif score >= 75 %}rgba(255, 170, 0, 0.2){% else %}rgba(25, 230, 255, 0.2){% endif %}; color: {% if score >= 90 %}#ff7878{% elif score >= 75 %}#ffc04d{% else %}#19e6ff{% endif %}; border: 1px solid currentColor;">
                         SCORE {{ score }}/100 · {{ threat_level }}
                     </span>
@@ -54,8 +165,8 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                <span style="font-size: 0.8rem; color: rgba(234, 242, 255, 0.5); font-family: monospace;">
-                    Source: {{ item.source }} ({{ item.date|default('Recent') }})
+                <span style="font-size: 0.8rem; color: rgba(234, 242, 255, 0.6); font-family: monospace;">
+                    {{ item.source }} · <strong style="color: #fff;">{{ item.display_date|default(item.date)|default('Recent') }}</strong>
                 </span>
             </div>
 
@@ -69,8 +180,37 @@
                 {{ item.summary }}
             </p>
 
+            <!-- Story Appetites Quick Selector -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <span style="font-size: 0.8rem; font-family: monospace; color: #19e6ff; font-weight: bold;">
+                    🎭 STORY APPETITES:
+                </span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=cyber_thriller" 
+                       style="padding: 4px 10px; background: rgba(255, 170, 0, 0.15); border: 1px solid #ffaa00; border-radius: 4px; color: #ffc04d; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        🍿 Thriller
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=deep_dive" 
+                       style="padding: 4px 10px; background: rgba(25, 230, 255, 0.15); border: 1px solid #19e6ff; border-radius: 4px; color: #19e6ff; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        🔬 Deep Dive
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=defense_playbook" 
+                       style="padding: 4px 10px; background: rgba(0, 255, 136, 0.15); border: 1px solid #00ff88; border-radius: 4px; color: #00ff88; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        🛡️ Playbook
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=executive_espresso" 
+                       style="padding: 4px 10px; background: rgba(179, 136, 255, 0.15); border: 1px solid #b388ff; border-radius: 4px; color: #d1b3ff; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        ☕ Espresso
+                    </a>
+                    <a href="/newsletter/story/{{ item.story_id }}?appetite=snarky_hacker" 
+                       style="padding: 4px 10px; background: rgba(255, 120, 120, 0.15); border: 1px solid #ff7878; border-radius: 4px; color: #ff9999; font-family: monospace; font-size: 0.75rem; text-decoration: none;">
+                        💻 Snarky Hacker
+                    </a>
+                </div>
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-                <div style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.6);">
+                <div style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.6); max-width: 70%;">
                     <strong>Actionable Defense:</strong> {{ item.remediation|default('Enforce security boundaries and apply vendor patches.') }}
                 </div>
                 <a href="/newsletter/story/{{ item.story_id }}" 
@@ -85,9 +225,9 @@
     </section>
     {% else %}
     <div style="background: #0d1117; border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 40px; text-align: center;">
-        <h3 style="color: #19e6ff; margin: 0 0 10px 0;">No Active Email Digest Registered Yet</h3>
+        <h3 style="color: #19e6ff; margin: 0 0 10px 0;">No Active Threat Advisories Loaded Yet</h3>
         <p style="color: rgba(234, 242, 255, 0.7); max-width: 500px; margin: 0 auto 20px auto;">
-            Run <code>python main.py --export-email</code> in the <code>cyber_news</code> workspace to generate an email digest and populate the Cyber Newsletter feed automatically.
+            The feed will automatically populate on next scheduled scan, or you can trigger an immediate scan.
         </p>
     </div>
     {% endif %}
@@ -100,7 +240,7 @@ function filterAdvisories(query) {
     let visibleCount = 0;
 
     cards.forEach(card => {
-        const text = card.getAttribute('data-search').toLowerCase();
+        const text = (card.getAttribute('data-search') || '').toLowerCase();
         if (!q || text.includes(q)) {
             card.style.display = 'block';
             visibleCount++;
@@ -111,8 +251,114 @@ function filterAdvisories(query) {
 
     const announcer = document.getElementById('newsletter-live-announcer');
     if (announcer) {
-        announcer.textContent = `Showing ${visibleCount} threat advisories.`;
+        announcer.textContent = `Showing ${visibleCount} threat advisories for search "${query}".`;
     }
+}
+
+function refreshThreatFeed() {
+    const btn = document.getElementById('btn-refresh-feed');
+    const announcer = document.getElementById('newsletter-live-announcer');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Refreshing Feed...';
+    }
+    if (announcer) {
+        announcer.textContent = 'Checking upstream threat intelligence feeds adhering to quota policies...';
+    }
+
+    fetch('/api/newsletter/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ force: true })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (announcer) {
+            announcer.textContent = 'Feed successfully updated. Reloading feed...';
+        }
+        window.location.reload();
+    })
+    .catch(err => {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '🔄 Refresh Threat Feed';
+        }
+        if (announcer) {
+            announcer.textContent = 'Feed refresh encountered an issue: ' + err;
+        }
+    });
+}
+
+function handlePublicSubscribe(event) {
+    event.preventDefault();
+    const emailInput = document.getElementById('subscribe-email-input');
+    const email = emailInput ? emailInput.value.trim() : '';
+    const btn = document.getElementById('btn-submit-subscribe');
+    const msg = document.getElementById('subscribe-status-msg');
+    const announcer = document.getElementById('newsletter-live-announcer');
+
+    const form = document.getElementById('public-subscribe-form');
+    const formData = new FormData(form);
+    const format = formData.get('sub_format') || 'hybrid_brief';
+    const appetite = formData.get('sub_appetite') || 'cyber_thriller';
+
+    if (!email) return;
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Subscribing...';
+    }
+    if (announcer) {
+        announcer.textContent = 'Subscribing to Cyber Threat Intelligence...';
+    }
+
+    fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email: email,
+            format: format,
+            appetite: appetite
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '⚡ Subscribe Free';
+        }
+        if (msg) {
+            msg.style.display = 'block';
+            if (data.status === 'success') {
+                msg.style.color = '#00ff88';
+                msg.innerHTML = `✅ ${data.message} <a href="/newsletter/preferences?token=${encodeURIComponent(data.token)}" style="color: #19e6ff; text-decoration: underline; margin-left: 8px;">Open Preference Center →</a>`;
+                if (announcer) {
+                    announcer.textContent = data.message;
+                }
+                if (emailInput) emailInput.value = '';
+            } else {
+                msg.style.color = '#ff7878';
+                msg.textContent = '❌ ' + (data.message || 'Subscription failed.');
+                if (announcer) {
+                    announcer.textContent = 'Subscription failed: ' + data.message;
+                }
+            }
+        }
+    })
+    .catch(err => {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '⚡ Subscribe Free';
+        }
+        if (msg) {
+            msg.style.display = 'block';
+            msg.style.color = '#ff7878';
+            msg.textContent = '❌ Network error: ' + err;
+        }
+        if (announcer) {
+            announcer.textContent = 'Network error: ' + err;
+        }
+    });
 }
 </script>
 {% endblock %}

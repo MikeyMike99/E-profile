@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="hub-container newsletter-container" id="main-content" style="max-width: 900px; margin: 0 auto; padding: 25px 20px;">
+    <!-- Accessibility Live Region -->
+    <div id="pref-live-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;"></div>
+
+    <header style="border-bottom: 1px solid rgba(25, 230, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px;">
+        <div style="font-size: 0.85rem; font-family: monospace; color: #19e6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">
+            🛡️ Zero-Trust Preference Center
+        </div>
+        <h1 style="font-size: 1.9rem; margin: 0 0 10px 0; color: #ffffff;">
+            Cyber Threat Intelligence Preferences
+        </h1>
+        <p style="color: rgba(234, 242, 255, 0.7); margin: 0; font-size: 1rem; line-height: 1.5;">
+            Customize your dispatch format, primary story appetite, topic filters, and bonus modules without passwords.
+        </p>
+    </header>
+
+    {% if unsubscribed_notice %}
+    <div role="alert" style="background: rgba(255, 77, 77, 0.15); border: 1px solid #ff4d4d; border-radius: 8px; padding: 18px; margin-bottom: 25px; color: #ffffff;">
+        <h3 style="margin: 0 0 6px 0; color: #ff7878; font-size: 1.1rem;">
+            {% if purged_notice %}
+            🗑️ Unsubscribed & Data Purged Successfully
+            {% else %}
+            🚫 Unsubscribed Successfully
+            {% endif %}
+        </h3>
+        <p style="margin: 0; font-size: 0.95rem; color: rgba(234, 242, 255, 0.85);">
+            {% if purged_notice %}
+            Your subscription and data for <strong style="color: #ffffff; font-family: monospace;">{{ purged_email if purged_email else 'your email' }}</strong> have been permanently purged from our newsfeed registry. You will receive no further communications.
+            {% else %}
+            You have been unsubscribed from all automated intelligence dispatches. You can re-activate or adjust your settings anytime below.
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    {% if subscriber and subscriber.email %}
+    {% set current_format = subscriber.delivery.format if subscriber.delivery else 'hybrid_brief' %}
+    {% set current_appetite = subscriber.content.primary_appetite if subscriber.content else 'cyber_thriller' %}
+    {% set current_topics = subscriber.content.topics if subscriber.content else ['zero_days', 'cisa_kev'] %}
+    {% set current_engagement = subscriber.engagement_modules if subscriber.engagement_modules else {'alt_appetite_teaser': True, 'audio_link': True, 'zero_day_radar': True} %}
+
+    <div style="background: #0d1117; border: 1px solid rgba(25, 230, 255, 0.25); border-radius: 8px; padding: 24px; margin-bottom: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; margin-bottom: 24px;">
+            <div>
+                <span style="font-size: 0.8rem; font-family: monospace; color: rgba(234, 242, 255, 0.6); display: block;">SUBSCRIBER ADDRESS</span>
+                <strong style="color: #ffffff; font-size: 1.1rem; font-family: monospace;">{{ subscriber.email }}</strong>
+            </div>
+            <div>
+                {% if subscriber.status == 'active' %}
+                <span style="font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88;">
+                    ● ACTIVE SUBSCRIBER
+                </span>
+                {% else %}
+                <span style="font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; background: rgba(255, 77, 77, 0.15); color: #ff7878; border: 1px solid #ff7878;">
+                    ○ UNSUBSCRIBED
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <form id="preferences-form" onsubmit="savePreferences(event)">
+            <input type="hidden" id="pref-token" value="{{ token }}">
+
+            <!-- 1. Delivery Package & Format -->
+            <fieldset style="border: none; padding: 0; margin: 0 0 25px 0;">
+                <legend style="font-size: 1.05rem; font-weight: 600; color: #19e6ff; margin-bottom: 12px; font-family: monospace;">
+                    1. DELIVERY PACKAGE & CADENCE
+                </legend>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_format == 'hybrid_brief' %}#19e6ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 14px; cursor: pointer; transition: all 0.2s;">
+                        <input type="radio" name="format" value="hybrid_brief" {% if current_format == 'hybrid_brief' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #ffffff; font-size: 0.95rem;">Hybrid Brief (Default)</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.82rem; margin-top: 6px; line-height: 1.4;">
+                            Top 3–5 advisory headlines + 1 full featured incident dossier in your appetite.
+                        </div>
+                    </label>
+
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_format == 'full_story_daily' %}#19e6ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 14px; cursor: pointer; transition: all 0.2s;">
+                        <input type="radio" name="format" value="full_story_daily" {% if current_format == 'full_story_daily' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #ffffff; font-size: 0.95rem;">Daily Full Story</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.82rem; margin-top: 6px; line-height: 1.4;">
+                            1 complete incident narrative deep dive focused entirely on the primary threat.
+                        </div>
+                    </label>
+
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_format == 'quick_threat_wire' %}#19e6ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 14px; cursor: pointer; transition: all 0.2s;">
+                        <input type="radio" name="format" value="quick_threat_wire" {% if current_format == 'quick_threat_wire' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #ffffff; font-size: 0.95rem;">Quick Threat Wire</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.82rem; margin-top: 6px; line-height: 1.4;">
+                            Rapid 1-minute bullet briefs only. Zero filler, pure IOCs and remediations.
+                        </div>
+                    </label>
+
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_format == 'weekly_digest' %}#19e6ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 14px; cursor: pointer; transition: all 0.2s;">
+                        <input type="radio" name="format" value="weekly_digest" {% if current_format == 'weekly_digest' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #ffffff; font-size: 0.95rem;">Weekly Digest</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.82rem; margin-top: 6px; line-height: 1.4;">
+                            Consolidated weekend debrief of the week's top 7 vulnerabilities and campaigns.
+                        </div>
+                    </label>
+                </div>
+            </fieldset>
+
+            <!-- 2. Primary Story Appetite -->
+            <fieldset style="border: none; padding: 0; margin: 0 0 25px 0;">
+                <legend style="font-size: 1.05rem; font-weight: 600; color: #19e6ff; margin-bottom: 12px; font-family: monospace;">
+                    2. PRIMARY STORY APPETITE
+                </legend>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                    {% for key, meta in appetites.items() %}
+                    <label style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_appetite == key %}#19e6ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 12px; cursor: pointer;">
+                        <input type="radio" name="appetite" value="{{ key }}" {% if current_appetite == key %}checked{% endif %} style="margin-right: 6px;">
+                        <span style="color: {{ meta.badge_color|default('#19e6ff') }}; font-weight: bold; font-size: 0.9rem;">
+                            {{ meta.title }}
+                        </span>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.78rem; margin-top: 4px; line-height: 1.3;">
+                            {{ meta.description }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <!-- 3. Threat Topics of Interest -->
+            <fieldset style="border: none; padding: 0; margin: 0 0 25px 0;">
+                <legend style="font-size: 1.05rem; font-weight: 600; color: #19e6ff; margin-bottom: 12px; font-family: monospace;">
+                    3. TOPIC FILTERS
+                </legend>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    {% set all_topics = [
+                        ('zero_days', '⚡ Zero-Day Exploits'),
+                        ('cisa_kev', '📋 CISA KEV Alerts'),
+                        ('ransomware', '🚨 Ransomware Groups'),
+                        ('supply_chain', '📦 Supply Chain Risks'),
+                        ('cloud_infra', '☁️ Cloud & IAM Security')
+                    ] %}
+                    {% for t_id, t_label in all_topics %}
+                    <label style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="topics" value="{{ t_id }}" {% if t_id in current_topics %}checked{% endif %}>
+                        <span style="color: #ffffff;">{{ t_label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <!-- 4. Safe Engagement & Bonus Modules -->
+            <fieldset style="border: none; padding: 0; margin: 0 0 30px 0;">
+                <legend style="font-size: 1.05rem; font-weight: 600; color: #19e6ff; margin-bottom: 12px; font-family: monospace;">
+                    4. BONUS MODULES & SAFE ENGAGEMENT
+                </legend>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 12px 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                        <input type="checkbox" name="module_alt_teaser" value="1" {% if current_engagement.alt_appetite_teaser %}checked{% endif %} style="margin-top: 3px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.9rem;">🎭 Alternate Appetite Teasers</strong>
+                            <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.8rem; margin-top: 2px;">
+                                Include a 2-sentence preview card of the incident from an alternate perspective (e.g. Snarky Hacker or Executive Espresso).
+                            </div>
+                        </div>
+                    </label>
+
+                    <label style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 12px 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                        <input type="checkbox" name="module_audio" value="1" {% if current_engagement.audio_link %}checked{% endif %} style="margin-top: 3px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.9rem;">🎧 Accessible Audio Suite Links</strong>
+                            <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.8rem; margin-top: 2px;">
+                                Include 1-click links to stream hands-free synthesized threat briefs in the web audio player.
+                            </div>
+                        </div>
+                    </label>
+
+                    <label style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 12px 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                        <input type="checkbox" name="module_radar" value="1" {% if current_engagement.zero_day_radar %}checked{% endif %} style="margin-top: 3px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.9rem;">🔍 Bonus Zero-Day & KEV Radar</strong>
+                            <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.8rem; margin-top: 2px;">
+                                Include an emerging vulnerability micro-table highlighting high-severity CVEs beyond the primary story.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </fieldset>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 20px;">
+                <button type="submit" id="btn-save-pref" style="background: #19e6ff; color: #000; font-family: monospace; font-size: 0.95rem; font-weight: bold; padding: 12px 28px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    💾 Save Preferences
+                </button>
+
+                {% if subscriber.status == 'active' %}
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button type="button" onclick="confirmUnsubscribe(false)" id="btn-unsub" style="background: transparent; color: rgba(234, 242, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); font-family: monospace; font-size: 0.85rem; padding: 10px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                        🚫 Pause Dispatches
+                    </button>
+                    <button type="button" onclick="confirmUnsubscribe(true)" id="btn-purge" style="background: rgba(255, 77, 77, 0.15); color: #ff7878; border: 1px solid rgba(255, 77, 77, 0.4); font-family: monospace; font-size: 0.85rem; padding: 10px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                        🗑️ Unsubscribe & Purge All Data
+                    </button>
+                </div>
+                {% else %}
+                <button type="button" onclick="reactivateSubscription()" id="btn-reactivate" style="background: transparent; color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.4); font-family: monospace; font-size: 0.85rem; padding: 10px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    🔄 Reactivate Subscription
+                </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    {% else %}
+    <div style="background: #0d1117; border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 40px; text-align: center;">
+        <h3 style="color: #19e6ff; margin: 0 0 12px 0;">Secure Preference Link Required</h3>
+        <p style="color: rgba(234, 242, 255, 0.7); max-width: 540px; margin: 0 auto 14px auto; font-size: 0.95rem; line-height: 1.5;">
+            To manage your preferences securely without a password, please click the "Preferences" link at the bottom of any dispatched email, or subscribe with your email below.
+        </p>
+        <p style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.75); margin: 0 auto 16px auto; max-width: 480px;">
+            By clicking Subscribe, you agree to our <a href="/terms" target="_blank" style="color: #19e6ff; text-decoration: underline; font-weight: bold;">Terms and Conditions</a>.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 10px; max-width: 480px; margin: 0 auto;">
+            <input type="email" id="resub-email" placeholder="name@company.com" style="flex: 1; background: rgba(5, 7, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.95rem;">
+            <button onclick="requestPreferenceLink()" style="background: #19e6ff; color: #000; font-family: monospace; font-weight: bold; border: none; border-radius: 6px; padding: 10px 18px; cursor: pointer;">
+                Subscribe / Retrieve
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/newsletter" style="color: #19e6ff; font-family: monospace; font-size: 0.85rem; text-decoration: none;">
+            ← Return to Live Threat Intelligence Feed
+        </a>
+    </div>
+</main>
+
+<script>
+function announce(msg) {
+    const announcer = document.getElementById('pref-live-announcer');
+    if (announcer) {
+        announcer.textContent = msg;
+    }
+}
+
+function savePreferences(event) {
+    event.preventDefault();
+    const token = document.getElementById('pref-token').value;
+    const btn = document.getElementById('btn-save-pref');
+    
+    const form = document.getElementById('preferences-form');
+    const formData = new FormData(form);
+
+    const delivery_format = formData.get('format');
+    const primary_appetite = formData.get('appetite');
+    const topics = formData.getAll('topics');
+
+    const engagement_modules = {
+        alt_appetite_teaser: formData.get('module_alt_teaser') === '1',
+        audio_link: formData.get('module_audio') === '1',
+        zero_day_radar: formData.get('module_radar') === '1'
+    };
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Saving...';
+    }
+    announce('Saving your threat intelligence preferences...');
+
+    fetch('/newsletter/preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            token: token,
+            format: delivery_format,
+            appetite: primary_appetite,
+            topics: topics,
+            engagement_modules: engagement_modules
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '💾 Save Preferences';
+        }
+        if (data.status === 'success') {
+            announce('Preferences saved successfully.');
+            alert('Your intelligence preferences have been updated!');
+        } else {
+            announce('Failed to save preferences: ' + (data.message || 'Error'));
+            alert('Error: ' + (data.message || 'Failed to update preferences.'));
+        }
+    })
+    .catch(err => {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '💾 Save Preferences';
+        }
+        announce('Network error while saving preferences: ' + err);
+        alert('Network error: ' + err);
+    });
+}
+
+function confirmUnsubscribe(purge = false) {
+    const confirmPrompt = purge 
+        ? 'Are you sure you want to permanently purge your email and all preferences from our newsfeed registry? This action cannot be undone.'
+        : 'Are you sure you want to pause threat intelligence dispatches?';
+    if (!confirm(confirmPrompt)) {
+        return;
+    }
+    const token = document.getElementById('pref-token').value;
+    announce(purge ? 'Purging subscriber data...' : 'Unsubscribing...');
+
+    const url = '/newsletter/unsubscribe?token=' + encodeURIComponent(token) + (purge ? '&purge=1' : '');
+    window.location.href = url;
+}
+
+function reactivateSubscription() {
+    const token = document.getElementById('pref-token').value;
+    announce('Reactivating subscription...');
+
+    fetch('/newsletter/preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, status: 'active' })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            announce('Subscription reactivated.');
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.message || 'Failed to reactivate.'));
+        }
+    })
+    .catch(err => alert('Network error: ' + err));
+}
+
+function requestPreferenceLink() {
+    const emailInput = document.getElementById('resub-email');
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (!email) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+    announce('Subscribing and retrieving preferences...');
+
+    fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success' && data.token) {
+            announce('Subscribed successfully. Loading preferences...');
+            window.location.href = '/newsletter/preferences?token=' + encodeURIComponent(data.token);
+        } else {
+            alert('Error: ' + (data.message || 'Could not subscribe.'));
+        }
+    })
+    .catch(err => alert('Network error: ' + err));
+}
+</script>
+{% endblock %}

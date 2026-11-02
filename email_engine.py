@@ -156,7 +156,8 @@ def send_email(
     subject: str,
     html_content: str,
     text_content: Optional[str] = None,
-    sender: Optional[str] = None
+    sender: Optional[str] = None,
+    headers: Optional[Dict[str, str]] = None
 ) -> Tuple[bool, str, Dict[str, Any]]:
     """
     Dispatches an email through the configured backend ('local' or 'smtp').
@@ -183,6 +184,7 @@ def send_email(
         "subject": subject,
         "text": text_content,
         "html": html_content,
+        "headers": headers or {},
         "backend": backend,
         "status": "QUEUED"
     }
@@ -203,6 +205,10 @@ def send_email(
             msg["Subject"] = subject
             msg["From"] = sender
             msg["To"] = to_address
+
+            if headers:
+                for h_k, h_v in headers.items():
+                    msg[h_k] = str(h_v)
 
             part1 = MIMEText(text_content, "plain", "utf-8")
             part2 = MIMEText(html_content, "html", "utf-8")
@@ -408,8 +414,6 @@ def apply_gateway_settings(
 
     return True, "Email gateway credentials successfully updated and active!"
 
-    return True, "Email gateway credentials successfully updated and active!"
-
 
 def apply_google_service_json(raw_json: str) -> Tuple[bool, str, Dict[str, Any]]:
     """Validates and saves a Google service account or client secret JSON to disk."""
@@ -442,4 +446,574 @@ def apply_google_service_json(raw_json: str) -> Tuple[bool, str, Dict[str, Any]]
     }
 
     return True, f"Google credentials JSON saved successfully for project '{project_id}'.", metadata
+
+
+def build_personalized_newsletter_email(
+    subscriber: Dict[str, Any],
+    manifest: Dict[str, Any],
+    base_url: str = ""
+) -> Tuple[str, str, str, Dict[str, str]]:
+    """
+    Constructs a block-based, slot-resolved personalized Cyber Intelligence newsletter.
+    
+    Slots:
+      Slot 1: Masthead Header (Brand, date, subscriber format/appetite greeting, 1-click pref link)
+      Slot 2: Headlines Brief (Rendered for 'hybrid_brief' and 'weekly_digest')
+      Slot 3: Featured Story (Rendered in subscriber's chosen appetite for 'full_story_daily' and 'hybrid_brief')
+      Slot 4: Quick Threat Wire (Rendered for 'quick_threat_wire')
+      Slot 5: Safe Engagement Hook: Alt-Appetite Teaser (Curiosity card with alternate perspective preview)
+      Slot 6: Safe Engagement Hook: Audio Edition CTA (Hands-free listening on Accessible Audio Suite)
+      Slot 7: Safe Engagement Hook: Bonus Zero-Day & KEV Radar (Emerging CVE table)
+      Slot 8: RFC 8058 Footer (One-click unsubscribe & preference links)
+      
+    Returns:
+      (subject: str, html_content: str, text_content: str, headers: Dict[str, str])
+    """
+    import html as html_lib
+    import markdown
+    from story_agent_dispatcher import APPETITE_CONFIG, get_cached_story, generate_builtin_appetite_story
+    from notify_mod import encode_tracking_token
+
+    clean_base = (base_url or "").rstrip("/")
+    token = subscriber.get("token") or "token"
+    delivery = subscriber.get("delivery") or {}
+    content_pref = subscriber.get("content") or {}
+    engagement = subscriber.get("engagement_modules") or {}
+
+    delivery_format = delivery.get("format") or "hybrid_brief"
+    primary_appetite = content_pref.get("primary_appetite") or "cyber_thriller"
+    enable_alt_teaser = bool(engagement.get("alt_appetite_teaser", True))
+    enable_audio = bool(engagement.get("audio_link", True))
+    enable_radar = bool(engagement.get("zero_day_radar", True))
+
+    items = manifest.get("items") or []
+    dispatched_at = manifest.get("dispatched_at") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    pref_url = f"{clean_base}/newsletter/preferences?token={token}" if clean_base else f"/newsletter/preferences?token={token}"
+    unsub_url = f"{clean_base}/newsletter/unsubscribe?token={token}" if clean_base else f"/newsletter/unsubscribe?token={token}"
+    unsub_purge_url = f"{clean_base}/newsletter/unsubscribe?token={token}&purge=1" if clean_base else f"/newsletter/unsubscribe?token={token}&purge=1"
+
+    def track_url(slot: str, path: str) -> str:
+        tok = encode_tracking_token(slot, path, sub_token=token)
+        return f"{clean_base}/newsletter/r/{tok}" if clean_base else f"/newsletter/r/{tok}"
+
+    featured_item = items[0] if items else {}
+    featured_title = featured_item.get("title") or "Emerging Cyber Threats"
+    featured_level = featured_item.get("threat_level") or "HIGH"
+    featured_story_id = featured_item.get("story_id") or "threat-advisory"
+
+    if delivery_format == "full_story_daily":
+        subject = f"[Dossier] {featured_title} · Threat Level {featured_level}"
+    elif delivery_format == "hybrid_brief":
+        remaining_count = max(1, len(items) - 1)
+        subject = f"[Cyber Intel Brief] {featured_title} + {remaining_count} Advisories"
+    elif delivery_format == "quick_threat_wire":
+        subject = f"[Threat Wire] {len(items)} Rapid Vulnerability Bulletins"
+    elif delivery_format == "weekly_digest":
+        subject = f"[Weekly Digest] Cyber Threat Debrief: {len(items)} Key Disclosures"
+    else:
+        subject = f"Cyber Threat Intelligence Brief: {featured_title}"
+
+    format_labels = {
+        "hybrid_brief": "Hybrid Brief (Headlines + Featured Dossier)",
+        "full_story_daily": "Daily Full Story (Incident Dossier)",
+        "quick_threat_wire": "Quick Threat Wire (1-Min Bulletins)",
+        "weekly_digest": "Weekly Threat Debrief"
+    }
+    format_label = format_labels.get(delivery_format, delivery_format.replace("_", " ").title())
+    app_cfg = APPETITE_CONFIG.get(primary_appetite, {
+        "title": primary_appetite.replace("_", " ").title(),
+        "badge_color": "#19e6ff"
+    })
+    appetite_label = app_cfg.get("title")
+    appetite_color = app_cfg.get("badge_color", "#19e6ff")
+
+    slots_html = []
+    text_parts = []
+
+    # Slot 1: Masthead Header
+    slot1_html = f"""
+    <div style="border-bottom: 1px solid rgba(25, 230, 255, 0.25); padding-bottom: 18px; margin-bottom: 22px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <div style="font-size: 11px; font-family: monospace; letter-spacing: 2px; color: #19e6ff; text-transform: uppercase;">
+                        🛡️ SIRAUGA INTEL · ZERO-TRUST FEED
+                    </div>
+                    <h1 style="color: #ffffff; font-size: 22px; margin: 6px 0 4px 0; font-weight: 700;">
+                        Cyber Threat Intelligence Dispatch
+                    </h1>
+                    <div style="font-size: 12px; color: #888899; font-family: monospace;">
+                        Dispatched: {html_lib.escape(str(dispatched_at))} · Security Tier: Verified
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top: 14px; background: rgba(25, 230, 255, 0.06); border: 1px solid rgba(25, 230, 255, 0.2); border-radius: 6px; padding: 10px 14px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="font-size: 12px; color: #cccccc; font-family: monospace;">
+                        Delivery: <strong style="color: #ffffff;">{html_lib.escape(format_label)}</strong><br>
+                        Appetite: <strong style="color: {appetite_color};">{html_lib.escape(appetite_label)}</strong>
+                    </td>
+                    <td style="text-align: right; vertical-align: middle;">
+                        <a href="{pref_url}" style="font-size: 11px; font-family: monospace; color: #19e6ff; text-decoration: none; border: 1px solid #19e6ff; padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                            ⚙️ Preferences
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    """
+    slots_html.append(slot1_html)
+    text_parts.append(f"CYBER THREAT INTELLIGENCE DISPATCH\nDispatched: {dispatched_at}\nDelivery: {format_label} | Appetite: {appetite_label}\nPreferences: {pref_url}\n" + "=" * 60)
+
+    # Slot 2: Headlines Brief (for hybrid_brief and weekly_digest)
+    if delivery_format in ("hybrid_brief", "weekly_digest"):
+        headline_items = items[1:5] if delivery_format == "hybrid_brief" else items[:7]
+        if not headline_items and delivery_format == "hybrid_brief" and items:
+            headline_items = items[:1]
+
+        headline_rows = []
+        for it in headline_items:
+            it_id = it.get("story_id") or "item"
+            it_title = html_lib.escape(it.get("title") or "Security Advisory")
+            it_score = it.get("score", 75)
+            it_lvl = html_lib.escape(it.get("threat_level") or "HIGH")
+            it_cves = ", ".join(it.get("cves") or []) or "Zero-Day"
+            it_summary = html_lib.escape(it.get("summary") or "")
+            it_url = track_url("headlines", f"/newsletter/story/{it_id}")
+            
+            badge_bg = "rgba(255, 77, 77, 0.2)" if it_score >= 90 else "rgba(255, 170, 0, 0.2)"
+            badge_color = "#ff7878" if it_score >= 90 else "#ffaa00"
+
+            headline_rows.append(f"""
+            <div style="background: rgba(255, 255, 255, 0.02); border-left: 3px solid {badge_color}; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 12px 14px; margin-bottom: 12px;">
+                <div style="font-size: 11px; font-family: monospace; margin-bottom: 4px;">
+                    <span style="background: {badge_bg}; color: {badge_color}; padding: 2px 6px; border-radius: 3px; font-weight: bold;">
+                        {it_lvl} ({it_score}/100)
+                    </span>
+                    <span style="color: #888899; margin-left: 6px;">{it_cves}</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">
+                    <a href="{it_url}" style="color: #19e6ff; text-decoration: none;">
+                        {it_title} →
+                    </a>
+                </div>
+                <div style="font-size: 13px; color: #aaaaaa; line-height: 1.4;">
+                    {it_summary}
+                </div>
+            </div>
+            """)
+            text_parts.append(f"\n- [{it_lvl}] {it.get('title')}\n  CVEs: {it_cves}\n  Link: {it_url}\n  Summary: {it.get('summary')}")
+
+        slot2_html = f"""
+        <div style="margin-bottom: 24px;">
+            <div style="font-size: 13px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;">
+                ⚡ Advisory Headlines Brief
+            </div>
+            {''.join(headline_rows) if headline_rows else '<div style="color: #888;">No additional headlines in this digest.</div>'}
+        </div>
+        """
+        slots_html.append(slot2_html)
+
+    # Slot 3: Featured Story (for full_story_daily and hybrid_brief)
+    if delivery_format in ("full_story_daily", "hybrid_brief") and featured_item:
+        cached = get_cached_story(featured_story_id, primary_appetite)
+        if cached and cached.get("markdown"):
+            story_md = cached["markdown"]
+        else:
+            story_md = generate_builtin_appetite_story(primary_appetite, featured_item)
+
+        story_html_rendered = markdown.markdown(story_md, extensions=['tables', 'fenced_code'])
+        featured_cta = track_url("featured_story", f"/newsletter/story/{featured_story_id}?appetite={primary_appetite}")
+
+        slot3_html = f"""
+        <div style="background: #151922; border: 1px solid rgba(25, 230, 255, 0.35); border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+            <div style="font-size: 11px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; color: {appetite_color}; margin-bottom: 6px; font-weight: bold;">
+                🔥 Featured Dossier · {html_lib.escape(appetite_label)}
+            </div>
+            <h2 style="color: #ffffff; font-size: 20px; margin: 0 0 12px 0;">
+                {html_lib.escape(featured_title)}
+            </h2>
+            <div style="font-size: 14px; color: #d0d7de; line-height: 1.6; margin-bottom: 18px;" class="story-rendered-body">
+                {story_html_rendered}
+            </div>
+            <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <a href="{featured_cta}" style="background-color: #19e6ff; color: #000000; font-family: monospace; font-size: 13px; font-weight: bold; padding: 10px 22px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                    🛡️ Read Full Threat Dossier & Interactive Playbook →
+                </a>
+            </div>
+        </div>
+        """
+        slots_html.append(slot3_html)
+        text_parts.append(f"\nFEATURED DOSSIER: {featured_title}\n{story_md}\nFull Interactive Playbook: {featured_cta}")
+
+    # Slot 4: Quick Threat Wire (for quick_threat_wire)
+    if delivery_format == "quick_threat_wire":
+        wire_rows = []
+        for it in items:
+            it_id = it.get("story_id") or "item"
+            it_title = html_lib.escape(it.get("title") or "Security Alert")
+            it_lvl = html_lib.escape(it.get("threat_level") or "HIGH")
+            it_cves = ", ".join(it.get("cves") or []) or "Zero-Day"
+            it_rem = html_lib.escape(it.get("remediation") or "Patch perimeter assets.")
+            it_url = track_url("headlines", f"/newsletter/story/{it_id}")
+
+            wire_rows.append(f"""
+            <div style="font-family: monospace; font-size: 12px; background: rgba(5, 7, 10, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 10px 12px; margin-bottom: 8px;">
+                <span style="color: #ffaa00; font-weight: bold;">[{it_lvl}]</span>
+                <a href="{it_url}" style="color: #19e6ff; text-decoration: none; font-weight: bold;">{it_title}</a>
+                <div style="color: #888899; margin-top: 4px;">CVEs: {it_cves} · Action: {it_rem}</div>
+            </div>
+            """)
+            text_parts.append(f"[{it_lvl}] {it.get('title')} | CVE: {it_cves} | Action: {it.get('remediation')} | Link: {it_url}")
+
+        slot4_html = f"""
+        <div style="margin-bottom: 24px;">
+            <div style="font-size: 13px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;">
+                ⚡ Rapid Threat Wire (1-Min Bulletins)
+            </div>
+            {''.join(wire_rows)}
+        </div>
+        """
+        slots_html.append(slot4_html)
+
+    # Slot 5: Engagement Hook: Alt-Appetite Teaser
+    if enable_alt_teaser and delivery_format in ("hybrid_brief", "full_story_daily") and featured_item:
+        all_apps = ["snarky_hacker", "executive_espresso", "deep_dive", "cyber_thriller", "defense_playbook"]
+        alt_candidates = [a for a in all_apps if a != primary_appetite]
+        alt_app = alt_candidates[0] if alt_candidates else "snarky_hacker"
+        alt_cfg = APPETITE_CONFIG.get(alt_app, {})
+        alt_title = alt_cfg.get("title", alt_app.replace("_", " ").title())
+        alt_badge_color = alt_cfg.get("badge_color", "#ffaa00")
+
+        alt_cached = get_cached_story(featured_story_id, alt_app)
+        if alt_cached and alt_cached.get("markdown"):
+            alt_md = alt_cached["markdown"]
+        else:
+            alt_md = generate_builtin_appetite_story(alt_app, featured_item)
+
+        clean_lines = [l.strip() for l in alt_md.splitlines() if l.strip() and not l.strip().startswith("#")]
+        teaser_snippet = " ".join(clean_lines[:2])[:240]
+        if not teaser_snippet:
+            teaser_snippet = f"Curious how defenders unpack {featured_title}? Explore this incident from another perspective."
+
+        alt_cta = track_url("alt_teaser", f"/newsletter/story/{featured_story_id}?appetite={alt_app}")
+
+        slot5_html = f"""
+        <div style="background: rgba(255, 170, 0, 0.05); border: 1px dashed rgba(255, 170, 0, 0.4); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div style="margin-bottom: 8px;">
+                <span style="font-size: 11px; font-family: monospace; font-weight: bold; color: {alt_badge_color}; text-transform: uppercase;">
+                    🎭 Alternate Perspective Preview · {html_lib.escape(alt_title)}
+                </span>
+                <span style="font-size: 11px; color: #888899; font-family: monospace; float: right;">Curiosity Hook</span>
+            </div>
+            <p style="font-size: 13px; color: #e6edf3; font-style: italic; margin: 0 0 12px 0; line-height: 1.5;">
+                "{html_lib.escape(teaser_snippet)}..."
+            </p>
+            <div style="text-align: right;">
+                <a href="{alt_cta}" style="color: #ffaa00; font-family: monospace; font-size: 12px; font-weight: bold; text-decoration: none;">
+                    ⚡ Read the {html_lib.escape(alt_title)} Breakdown on Web Portal →
+                </a>
+            </div>
+        </div>
+        """
+        slots_html.append(slot5_html)
+        text_parts.append(f"\nALTERNATE PERSPECTIVE PREVIEW ({alt_title}):\n\"{teaser_snippet}...\"\nRead on Portal: {alt_cta}")
+
+    # Slot 6: Engagement Hook: Audio Edition CTA
+    if enable_audio:
+        audio_cta = track_url("audio", "/audio")
+        slot6_html = f"""
+        <div style="background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="vertical-align: middle;">
+                        <div style="font-size: 11px; font-family: monospace; color: #00ff88; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">
+                            🎧 Accessible Audio Suite · Hands-Free Briefing
+                        </div>
+                        <div style="font-size: 13px; color: #cccccc; line-height: 1.4;">
+                            Commuting or prefer listening? Stream hands-free voice threat briefings directly in your browser or screen reader.
+                        </div>
+                    </td>
+                    <td style="text-align: right; vertical-align: middle; padding-left: 15px; white-space: nowrap;">
+                        <a href="{audio_cta}" style="background: rgba(0, 255, 136, 0.15); border: 1px solid #00ff88; color: #00ff88; font-family: monospace; font-size: 12px; font-weight: bold; padding: 8px 14px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                            ▶️ Stream Audio
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        """
+        slots_html.append(slot6_html)
+        text_parts.append(f"\nAUDIO SUITE (Hands-free listening): {audio_cta}")
+
+    # Slot 7: Engagement Hook: Bonus Zero-Day Radar
+    if enable_radar:
+        radar_items = [it for it in items if it.get("cves") or it.get("score", 0) >= 80][:3]
+        if not radar_items:
+            radar_items = items[:2]
+
+        radar_cta = track_url("zero_day_radar", "/newsletter")
+        radar_rows = []
+        for r_it in radar_items:
+            cve_str = ", ".join(r_it.get("cves") or []) or "Zero-Day"
+            r_title = html_lib.escape(r_it.get("title", "")[:45])
+            r_score = r_it.get("score", 80)
+            radar_rows.append(f"""
+            <tr>
+                <td style="padding: 6px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-family: monospace; font-size: 12px; color: #19e6ff;">
+                    {html_lib.escape(cve_str)}
+                </td>
+                <td style="padding: 6px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 12px; color: #ffffff;">
+                    {r_title}
+                </td>
+                <td style="padding: 6px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-family: monospace; font-size: 12px; color: #ff7878; text-align: right;">
+                    {r_score}/100
+                </td>
+            </tr>
+            """)
+
+        slot7_html = f"""
+        <div style="background: rgba(25, 230, 255, 0.03); border: 1px solid rgba(25, 230, 255, 0.2); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 10px;">
+                <tr>
+                    <td>
+                        <span style="font-size: 11px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase;">
+                            🔍 Bonus Zero-Day & KEV Radar
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        <a href="{radar_cta}" style="font-size: 11px; font-family: monospace; color: #19e6ff; text-decoration: none;">
+                            Explore Radar →
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 6px;">
+                <thead>
+                    <tr style="text-align: left; font-size: 11px; font-family: monospace; color: #888899; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                        <th style="padding: 4px 8px;">CVE IDENTIFIER</th>
+                        <th style="padding: 4px 8px;">AFFECTED COMPONENT</th>
+                        <th style="padding: 4px 8px; text-align: right;">SEVERITY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(radar_rows)}
+                </tbody>
+            </table>
+        </div>
+        """
+        slots_html.append(slot7_html)
+        text_parts.append(f"\nBONUS ZERO-DAY RADAR: {radar_cta}")
+
+    # Slot 7b: E-Profile Development & Engineering News (Advertising & Releases)
+    dev_projects_url = track_url("dev_releases", "/projects")
+    audio_suite_url = track_url("audio_release", "/audio")
+    slot_dev_news_html = f"""
+    <div style="background: rgba(0, 243, 255, 0.04); border: 1px solid rgba(0, 243, 255, 0.22); border-radius: 8px; padding: 18px; margin-bottom: 24px;">
+        <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #00f3ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+            🚀 E-Profile Development & Engineering News
+        </div>
+        <h3 style="color: #ffffff; font-size: 15px; margin: 0 0 6px 0; font-weight: 600;">
+            What's Happening in E-Profile Development & New Releases
+        </h3>
+        <p style="font-size: 13px; color: #c8d2e0; line-height: 1.5; margin: 0 0 10px 0;">
+            We actively advertise and report ongoing software releases and architectural advancements in our dispatches. Recent milestones include zero-restart live staging, screen reader voice synthesis in the <strong>Accessible Audio Suite</strong>, and zero-database local flat-file privacy enhancements.
+        </p>
+        <div style="font-size: 12px; color: #8899aa; line-height: 1.4; margin-bottom: 12px;">
+            📢 <strong>Policy & Governance Updates:</strong> Terms of service and privacy protocols are continuously updated to guarantee complete data minimization and subscriber sovereignty.
+        </div>
+        <table role="presentation" cellspacing="0" cellpadding="0">
+            <tr>
+                <td style="padding-right: 14px;">
+                    <a href="{dev_projects_url}" style="color: #00f3ff; font-family: monospace; font-size: 12px; font-weight: bold; text-decoration: underline;">
+                        Explore Engineering Projects & Roadmap →
+                    </a>
+                </td>
+                <td>
+                    <a href="{audio_suite_url}" style="color: #00ff88; font-family: monospace; font-size: 12px; font-weight: bold; text-decoration: underline;">
+                        Audio Suite Releases →
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    """
+    slots_html.append(slot_dev_news_html)
+    text_parts.append(
+        f"\nE-PROFILE DEVELOPMENT & RELEASES:\n"
+        f"Ongoing updates on new software releases, Accessible Audio Suite, and policy changes.\n"
+        f"Projects: {dev_projects_url}\nAudio Suite: {audio_suite_url}"
+    )
+
+    # Slot 7c: Author & Engineering Credibility (Credly & LinkedIn Verification)
+    linkedin_url = "https://www.linkedin.com/in/michael-robberts-40b68a180"
+    credly_profile_url = "https://www.credly.com/users/michael-robberts.d08637aa"
+    credly_badge_url = "https://www.credly.com/badges/95063855-9875-40cd-9d3f-13bc9ad1448e"
+    credly_badge_id = "95063855-9875-40cd-9d3f-13bc9ad1448e"
+
+    slot_cred_html = f"""
+    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 18px; margin-bottom: 24px;">
+        <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">
+            🎖️ Author Credibility & Verified Qualifications
+        </div>
+        <div style="color: #ffffff; font-size: 15px; font-weight: 700; margin-bottom: 4px;">
+            Michael Robberts
+        </div>
+        <div style="font-size: 12px; color: #888899; font-family: monospace; margin-bottom: 12px;">
+            Cybersecurity Researcher & Systems Developer · IBM, CompTIA, Cisco Certified
+        </div>
+        <table role="presentation" cellspacing="0" cellpadding="0" style="margin-bottom: 14px;">
+            <tr>
+                <td style="padding-right: 10px;">
+                    <a href="{linkedin_url}" style="display: inline-block; background: #0a66c2; color: #ffffff; text-decoration: none; font-size: 11px; font-family: monospace; font-weight: bold; padding: 6px 12px; border-radius: 4px;">
+                        💼 LinkedIn Profile →
+                    </a>
+                </td>
+                <td>
+                    <a href="{credly_profile_url}" style="display: inline-block; background: #ff6b00; color: #ffffff; text-decoration: none; font-size: 11px; font-family: monospace; font-weight: bold; padding: 6px 12px; border-radius: 4px;">
+                        🏅 Credly Verified Transcript →
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Verified Credly Badge Embed & Card -->
+        <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 107, 0, 0.35); border-radius: 6px; padding: 14px; text-align: center;">
+            <div style="font-size: 11px; font-family: monospace; color: #ffaa00; margin-bottom: 6px; font-weight: bold;">
+                VERIFIED CREDLY DIGITAL BADGE · IBM DATA SCIENCE
+            </div>
+            <div style="font-size: 14px; color: #ffffff; font-weight: 600; margin-bottom: 4px;">
+                Python for Data Science
+            </div>
+            <div style="font-size: 11px; color: #888899; font-family: monospace; margin-bottom: 10px;">
+                Issued by IBM · Verification ID: {credly_badge_id}
+            </div>
+            <!-- Credly Live Badge Embed -->
+            <div style="margin: 10px auto;">
+                <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="{credly_badge_id}" data-share-badge-host="https://www.credly.com"></div>
+                <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+            </div>
+            <div style="margin-top: 8px;">
+                <a href="{credly_badge_url}" style="color: #ffaa00; font-family: monospace; font-size: 11px; text-decoration: underline;">
+                    Verify Badge Directly on Credly.com →
+                </a>
+            </div>
+        </div>
+    </div>
+    """
+    slots_html.append(slot_cred_html)
+    text_parts.append(
+        f"\nAUTHOR CREDIBILITY & VERIFIED CERTIFICATIONS:\n"
+        f"Author: Michael Robberts (Cybersecurity Researcher & Developer)\n"
+        f"LinkedIn Profile: {linkedin_url}\n"
+        f"Credly Transcript: {credly_profile_url}\n"
+        f"IBM Python for Data Science (Badge ID: {credly_badge_id}): {credly_badge_url}"
+    )
+
+    # Slot 8: Subscription Activity Requirement & 1-Click Unsubscribe Purge
+    visit_site_url = track_url("active_keepalive", "/newsletter")
+    terms_url = f"{clean_base}/terms" if clean_base else "/terms"
+
+    slot8_html = f"""
+    <!-- Subscription Activity Requirement Card -->
+    <div style="margin: 24px 0 16px 0; padding: 14px 16px; background: rgba(255, 170, 0, 0.07); border: 1px solid rgba(255, 170, 0, 0.28); border-radius: 6px;">
+        <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ffaa00; text-transform: uppercase; margin-bottom: 4px;">
+            ⏱️ Subscription Activity Requirement
+        </div>
+        <p style="margin: 0 0 8px 0; font-size: 12px; color: #d0d8e8; line-height: 1.45;">
+            To ensure our local registry remains clean and intentional, we require subscribers to visit the site from time to time to keep their subscription active. If you do not visit the website from the emails you receive, we will consider that you did not subscribe to the service, and your records will be automatically purged.
+        </p>
+        <div style="text-align: right;">
+            <a href="{visit_site_url}" style="color: #ffaa00; font-family: monospace; font-size: 12px; font-weight: bold; text-decoration: underline;">
+                🌐 Visit E-Profile to Keep Subscription Active →
+            </a>
+        </div>
+    </div>
+
+    <!-- Accidental Subscription Notice & Pretty Unsubscribe Button -->
+    <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.3); border-radius: 8px; text-align: center;">
+        <p style="margin: 0 0 12px 0; font-size: 13px; color: #ffffff; font-weight: 600; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            If you have not subscribed to this newsletter, please just hit that pretty button below to relieve your inbox.
+        </p>
+        <a href="{unsub_purge_url}" style="display: inline-block; background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%); color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-family: monospace, -apple-system, sans-serif; font-weight: bold; border-radius: 6px; border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4); letter-spacing: 0.5px;">
+            🚫 1-Click Unsubscribe & Purge Data
+        </a>
+        <div style="margin-top: 10px; font-size: 10px; color: #ff9999; font-family: monospace;">
+            Immediately and completely purges your email address and records from our local registry.
+        </div>
+    </div>
+
+    <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; font-size: 11px; color: #666677; text-align: center; line-height: 1.6;">
+        <p style="margin: 0 0 8px 0;">
+            You are receiving this intelligence brief because you subscribed at <strong>Michael Robberts E-Profile</strong>.
+        </p>
+        <p style="margin: 0 0 12px 0;">
+            <a href="{pref_url}" style="color: #19e6ff; text-decoration: underline; margin-right: 10px;">⚙️ Manage Preferences</a>
+            ·
+            <a href="{terms_url}" style="color: #888899; text-decoration: underline; margin: 0 10px;">📄 Terms & Conditions</a>
+            ·
+            <a href="{unsub_purge_url}" style="color: #ff7878; text-decoration: underline; margin-left: 10px;">🚫 One-Click Purge</a>
+        </p>
+        <div style="font-size: 10px; color: #555566; font-family: monospace;">
+            RFC 8058 Compliant · Zero-Database Local Storage Architecture
+        </div>
+    </div>
+    """
+    slots_html.append(slot8_html)
+    text_parts.append(
+        f"\n" + "=" * 60 +
+        f"\nSUBSCRIPTION ACTIVITY REQUIREMENT:\n"
+        f"We require subscribers to visit the site from time to time to keep their subscription active.\n"
+        f"If you do not visit the website from the emails you receive, we will consider that you did not subscribe to the service, and your records will be purged.\n"
+        f"Visit Website to Confirm Active Status: {visit_site_url}\n"
+        f"\nACCIDENTAL SUBSCRIPTION? RELIEVE YOUR INBOX:\n"
+        f"If you have not subscribed to this newsletter, please just hit that pretty button below to relieve your inbox.\n"
+        f"1-Click Unsubscribe & Purge Data: {unsub_purge_url}\n"
+        f"Manage Preferences: {pref_url}\n"
+        f"Terms and Conditions: {terms_url}\n"
+    )
+
+    master_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{html_lib.escape(subject)}</title>
+    <style>
+        .story-rendered-body h1, .story-rendered-body h2, .story-rendered-body h3 {{ color: #ffffff; margin-top: 16px; margin-bottom: 8px; }}
+        .story-rendered-body p {{ margin: 0 0 12px 0; }}
+        .story-rendered-body ul, .story-rendered-body ol {{ margin: 0 0 12px 20px; padding: 0; }}
+        .story-rendered-body li {{ margin-bottom: 4px; }}
+        .story-rendered-body code {{ background: rgba(255, 255, 255, 0.1); color: #19e6ff; padding: 2px 4px; border-radius: 3px; font-family: monospace; font-size: 12px; }}
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0a0a0b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e0e0e0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0a0a0b; padding: 25px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" style="max-width: 640px; background-color: #10141d; border: 1px solid rgba(25, 230, 255, 0.25); border-radius: 8px; padding: 24px; text-align: left;">
+                    <tr>
+                        <td>
+                            {''.join(slots_html)}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"""
+
+    headers = {
+        "List-Unsubscribe": f"<{unsub_url}>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+    }
+
+    plain_text = "\n".join(text_parts)
+    return subject, master_html, plain_text, headers
+
 

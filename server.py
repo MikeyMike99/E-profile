@@ -1352,6 +1352,25 @@ def page_not_found(e):
     return render_template('base.html', active_tab='error', content="<h2>404 - Page Not Found</h2>"), 404
 
 
+# --- THREAT INTELLIGENCE BACKGROUND SCHEDULER ---
+import threading
+
+def _run_threat_feed_scheduler():
+    time.sleep(10)
+    while True:
+        try:
+            from threat_intel_engine import ThreatIntelEngine
+            engine = ThreatIntelEngine()
+            engine.refresh_feed(force=False)
+        except Exception:
+            pass
+        time.sleep(1800)
+
+if os.environ.get("WERKZEUG_RUN_MAIN") in ("true", None) and not app.config.get("TESTING"):
+    _threat_thread = threading.Thread(target=_run_threat_feed_scheduler, daemon=True, name="ThreatFeedScheduler")
+    _threat_thread.start()
+
+
 if __name__ == '__main__':
     # Only run the local development server if NOT on PythonAnywhere
     import os

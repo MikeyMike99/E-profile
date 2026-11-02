@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="hub-container terms-container" id="main-content" style="max-width: 900px; margin: 0 auto; padding: 30px 20px;">
+    <!-- Breadcrumb / Back Link -->
+    <div style="margin-bottom: 20px;">
+        <a href="/newsletter" style="color: #19e6ff; font-family: monospace; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            ← Return to Threat Intelligence Feed
+        </a>
+    </div>
+
+    <article style="background: #0d1117; border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 35px 30px; line-height: 1.7; color: rgba(234, 242, 255, 0.88);">
+        <header style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; margin-bottom: 25px;">
+            <span style="font-size: 0.8rem; font-family: monospace; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">
+                LEGAL & PRIVACY POLICIES · ZERO-TRUST & FLAT-FILE ARCHITECTURE
+            </span>
+            <h1 style="font-size: 1.9rem; color: #ffffff; margin: 8px 0 10px 0;">
+                Cyber Threat Intelligence Feed & Dispatches: Terms and Conditions
+            </h1>
+            <p style="font-size: 0.85rem; color: rgba(234, 242, 255, 0.6); margin: 0; font-family: monospace;">
+                Effective Date: November 2, 2026 · Version 2.0
+            </p>
+        </header>
+
+        <!-- Section 1: Acceptance of Terms -->
+        <section style="margin-bottom: 28px;">
+            <h2 style="font-size: 1.25rem; color: #19e6ff; margin: 0 0 10px 0;">1. Acceptance of Terms</h2>
+            <p style="margin: 0;">
+                By entering your email address and subscribing to the Cyber Threat Intelligence Feed or any of its tailored dispatches (Hybrid Brief, Daily Full Story, Quick Threat Wire, or Weekly Digest), you agree to be bound by these Terms and Conditions. If you do not agree with these terms, please do not subscribe to our intelligence dispatches.
+            </p>
+        </section>
+
+        <!-- Section 2: Scope, Development Advertising & Policy Notifications -->
+        <section style="margin-bottom: 28px;">
+            <h2 style="font-size: 1.25rem; color: #19e6ff; margin: 0 0 10px 0;">2. Scope of Dispatches, Development Advertising & Policy Notices</h2>
+            <p style="margin: 0 0 10px 0;">
+                Michael Robberts E-Profile provides educational, research-oriented cybersecurity advisories, vulnerability analyses (including CISA Known Exploited Vulnerabilities and CVE zero-day bulletins), and narrative incident reports personalized to subscriber appetites.
+            </p>
+            <p style="margin: 0 0 10px 0;">
+                <strong>Engineering & Development Updates:</strong> Dispatches also serve as our primary developer communication channel. Dispatches will include news, announcements, and advertisements regarding active developments in the E-Profile platform, new software releases (such as the Accessible Audio Suite hands-free player, Antigravity web integrations, and threat pipeline improvements), and formal notifications of policy or governance updates.
+            </p>
+        </section>
+
+        <!-- Section 3: Data Handling (No Database Architecture) -->
+        <section style="margin-bottom: 28px; background: rgba(25, 230, 255, 0.04); border-left: 3px solid #19e6ff; padding: 18px 20px; border-radius: 4px;">
+            <h2 style="font-size: 1.25rem; color: #19e6ff; margin: 0 0 10px 0;">3. How Your Data is Handled: Zero Database Architecture</h2>
+            <p style="margin: 0 0 10px 0;">
+                We operate under a strict Zero-Trust and data minimization framework. <strong>We do not maintain or operate a database.</strong>
+            </p>
+            <ul style="margin: 0 0 10px 20px; padding: 0;">
+                <li><strong>Local Flat-File Storage Only:</strong> Rather than using relational SQL engines or third-party cloud database warehouses, subscriber records are maintained exclusively in lightweight local flat-file storage (<code style="background: rgba(255,255,255,0.1); color: #19e6ff; padding: 2px 5px; border-radius: 3px;">subscribers.json</code>) on our secure host system.</li>
+                <li><strong>Minimal Data Stored:</strong> We store only the email address you provide, cryptographically random preference tokens, chosen cadence/appetite preferences, and timestamps of recent activity.</li>
+                <li><strong>Zero Telemetry & Tracking:</strong> We do not employ third-party tracking cookies, advertising pixels, or analytics trackers.</li>
+                <li><strong>Absolute Non-Disclosure:</strong> We never sell, rent, monetize, or disclose your email address or subscriber telemetry to third-party data brokers or advertisers.</li>
+            </ul>
+        </section>
+
+        <!-- Section 4: Subscription Activity Requirement & Automatic Inactivity Purge -->
+        <section style="margin-bottom: 28px; background: rgba(255, 170, 0, 0.05); border-left: 3px solid #ffaa00; padding: 18px 20px; border-radius: 4px;">
+            <h2 style="font-size: 1.25rem; color: #ffaa00; margin: 0 0 10px 0;">4. Subscription Activity Requirement & Inactivity Purge Policy</h2>
+            <p style="margin: 0 0 10px 0;">
+                To keep our local flat-file registry clean and ensure that intelligence briefs are delivered only to readers who actively want them:
+            </p>
+            <ul style="margin: 0 0 10px 20px; padding: 0;">
+                <li><strong>Periodic Site Visit Requirement:</strong> Subscribers are required to visit the website from time to time (by clicking story links in the emails, checking the Accessible Audio Suite, or accessing the preference center) to maintain an active subscription.</li>
+                <li><strong>Presumption of Non-Subscription:</strong> If a subscriber does not visit the website from the emails they receive over time, our system presumes that they did not intend to subscribe to the service or no longer wish to receive dispatches.</li>
+                <li><strong>Automated Data Purge for Inactivity:</strong> Inactive subscriber accounts with no recorded visits are automatically and permanently purged from the local registry, leaving no residual records behind.</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: 1-Click Unsubscribe & Complete Data Purge Guarantee -->
+        <section style="margin-bottom: 28px; background: rgba(255, 77, 77, 0.05); border-left: 3px solid #ff4d4d; padding: 18px 20px; border-radius: 4px;">
+            <h2 style="font-size: 1.25rem; color: #ff7878; margin: 0 0 10px 0;">5. 1-Click Unsubscribe & Complete Data Purge Guarantee</h2>
+            <p style="margin: 0 0 10px 0;">
+                You retain complete sovereignty over your inbox and data:
+            </p>
+            <ul style="margin: 0 0 10px 20px; padding: 0;">
+                <li><strong>Accidental Subscription Relief:</strong> If you did not subscribe to this newsletter or wish to stop immediately, every dispatch includes an explicit notice and high-contrast button: <em>"If you have not subscribed to this newsletter, please just hit that pretty button below to relieve your inbox."</em></li>
+                <li><strong>Single-Click Data Purge:</strong> Clicking the prominent red button (or submitting an RFC 8058 one-click unsubscribe) immediately purges your email address and configurations from the registry.</li>
+                <li><strong>No Lingering Records:</strong> Once purged, no background retainers, analytics profiles, or zombie records remain on disk. You will never receive another dispatch unless you explicitly re-enroll.</li>
+            </ul>
+        </section>
+
+        <!-- Section 6: Publisher Identity, Certifications & Professional Credibility -->
+        <section style="margin-bottom: 28px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: 22px 24px; border-radius: 6px;">
+            <h2 style="font-size: 1.25rem; color: #19e6ff; margin: 0 0 10px 0;">6. Publisher Credibility & Verified Professional Credentials</h2>
+            <p style="margin: 0 0 12px 0;">
+                This portal and all cybersecurity intelligence dispatches are published and engineered by <strong>Michael Robberts</strong>, a Cybersecurity Researcher and Systems Developer specializing in Zero-Trust architectures, accessibility tooling, and threat intelligence.
+            </p>
+            
+            <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px;">
+                <a href="https://www.linkedin.com/in/michael-robberts-40b68a180" target="_blank" rel="noopener noreferrer"
+                   style="display: inline-flex; align-items: center; gap: 8px; background: #0a66c2; color: #ffffff; text-decoration: none; font-size: 0.85rem; font-family: monospace; font-weight: bold; padding: 8px 14px; border-radius: 4px;">
+                    💼 Verified LinkedIn: Michael Robberts →
+                </a>
+                <a href="https://www.credly.com/users/michael-robberts.d08637aa" target="_blank" rel="noopener noreferrer"
+                   style="display: inline-flex; align-items: center; gap: 8px; background: #ff6b00; color: #ffffff; text-decoration: none; font-size: 0.85rem; font-family: monospace; font-weight: bold; padding: 8px 14px; border-radius: 4px;">
+                    🏅 Credly Official Transcript & Badges →
+                </a>
+            </div>
+
+            <!-- Embedded Credly Badge -->
+            <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 107, 0, 0.35); border-radius: 6px; padding: 20px; text-align: center; margin-top: 14px;">
+                <div style="font-size: 0.8rem; font-family: monospace; color: #ffaa00; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;">
+                    Verified Credly Digital Badge · IBM Data Science
+                </div>
+                <h3 style="font-size: 1.1rem; color: #ffffff; margin: 0 0 6px 0;">Python for Data Science</h3>
+                <p style="font-size: 0.85rem; color: #888899; font-family: monospace; margin: 0 0 14px 0;">
+                    Issued by IBM · Verification Badge ID: 95063855-9875-40cd-9d3f-13bc9ad1448e
+                </p>
+                <div style="margin: 12px auto; display: flex; justify-content: center;">
+                    <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="95063855-9875-40cd-9d3f-13bc9ad1448e" data-share-badge-host="https://www.credly.com"></div>
+                    <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+                </div>
+                <div style="margin-top: 10px;">
+                    <a href="https://www.credly.com/badges/95063855-9875-40cd-9d3f-13bc9ad1448e" target="_blank" rel="noopener noreferrer"
+                       style="color: #ffaa00; font-family: monospace; font-size: 0.85rem; text-decoration: underline;">
+                        Inspect & Verify Badge on Credly.com →
+                    </a>
+                </div>
+            </div>
+
+            <p style="margin: 14px 0 0 0; font-size: 0.85rem; color: #888899;">
+                Comprehensive certifications portfolio includes IBM Data Science, CompTIA (A+, Network+, Security+), Cisco/Sisko networking and systems security.
+            </p>
+        </section>
+
+        <!-- Section 7: Advisory Disclaimer -->
+        <section style="margin-bottom: 28px;">
+            <h2 style="font-size: 1.25rem; color: #19e6ff; margin: 0 0 10px 0;">7. Advisory Disclaimer & Limitation of Liability</h2>
+            <p style="margin: 0 0 10px 0;">
+                Threat intelligence feeds, incident summaries, CVE scores, and mitigation guidance are provided for informational and educational purposes only on an "AS-IS" and "AS-AVAILABLE" basis.
+            </p>
+            <p style="margin: 0;">
+                While reasonable efforts are made to ensure accuracy and timely reporting of security advisories, Michael Robberts E-Profile makes no warranties regarding complete vulnerability remediation or threat mitigation. Always test and validate system updates, security patches, and workarounds in staging environments prior to production rollout.
+            </p>
+        </section>
+
+        <!-- Section 8: Contact & Preferences -->
+        <section style="margin-bottom: 10px;">
+            <h2 style="font-size: 1.25rem; color: #19e6ff; margin: 0 0 10px 0;">8. Contact & Preference Management</h2>
+            <p style="margin: 0 0 15px 0;">
+                If you have questions regarding these Terms and Conditions or wish to inspect or adjust your delivery preferences, you may do so at any time via the <a href="/newsletter/preferences" style="color: #19e6ff; text-decoration: underline;">Preference Center</a> or by contacting the system administrator.
+            </p>
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <a href="/newsletter" style="color: #19e6ff; font-family: monospace; font-size: 0.9rem; text-decoration: underline;">
+                    ← Back to Newsletter & Threat Feed
+                </a>
+                <a href="/newsletter/preferences" style="color: #00ff88; font-family: monospace; font-size: 0.9rem; text-decoration: underline;">
+                    Manage Subscriber Preferences →
+                </a>
+            </div>
+        </section>
+    </article>
+</main>
+{% endblock %}
