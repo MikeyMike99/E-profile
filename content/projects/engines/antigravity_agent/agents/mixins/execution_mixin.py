@@ -1905,7 +1905,7 @@ class ExecutionMixin:
             self.queued_prompts = []
             await self._broadcast_queue_state()
 
-        if self.is_running() and self.active_proc:
+        if self.active_proc:
             try:
                 if sys.platform == "win32":
                     subprocess.run(['taskkill', '/F', '/T', '/PID', str(self.active_proc.pid)], capture_output=True)
@@ -1931,8 +1931,12 @@ class ExecutionMixin:
                 subprocess.run(cmd, capture_output=True)
         except Exception as e:
             logging.error(f"[AgentManager] Failed to run pkill: {e}")
+
+        self.active_proc = None
         if hasattr(self, 'active_task') and self.active_task and not self.active_task.done():
             self.active_task.cancel()
+        self.active_task = None
+        self.start_time = None
 
         await self.broadcast({
             "type": "system",
@@ -1941,5 +1945,6 @@ class ExecutionMixin:
         })
         await self.broadcast({
             "type": "agent_done",
-            "cancelled": True
+            "cancelled": True,
+            "status": "CANCELLED"
         })

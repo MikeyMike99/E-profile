@@ -1258,7 +1258,21 @@ def get_stream():
         except Exception:
             pass
 
+    server_max_seq = max((it.get("seq", 0) for it in queue_items if isinstance(it, dict)), default=0)
+
+    is_running = agent_mgr.is_running()
+    if not is_running and queue_items:
+        last_item = queue_items[-1] if queue_items else {}
+        last_msg = last_item.get("msg", {}) if isinstance(last_item, dict) else {}
+        last_type = last_msg.get("type", "")
+        last_ts = last_item.get("ts", 0) if isinstance(last_item, dict) else 0
+        if last_type not in ("agent_done", "error") and (time.time() - last_ts < 180):
+            is_running = True
+
     if since_seq is not None:
+        if since_seq > server_max_seq and server_max_seq > 0:
+            since_seq = 0
+
         messages = []
         max_seq = since_seq
         for item in queue_items:
@@ -1269,7 +1283,12 @@ def get_stream():
                 messages.append(msg_obj)
                 if seq_val > max_seq:
                     max_seq = seq_val
-        return jsonify({"messages": messages, "last_seq": max_seq, "is_running": agent_mgr.is_running()})
+        return jsonify({
+            "messages": messages,
+            "last_seq": max_seq,
+            "server_max_seq": server_max_seq,
+            "is_running": is_running
+        })
 
     messages = []
     max_seq = 0
@@ -1280,13 +1299,31 @@ def get_stream():
             if item["seq"] > max_seq:
                 max_seq = item["seq"]
         messages.append(msg_obj)
-    return jsonify({"messages": messages, "last_seq": max_seq, "is_running": agent_mgr.is_running()})
+    return jsonify({
+        "messages": messages,
+        "last_seq": max_seq,
+        "server_max_seq": server_max_seq,
+        "is_running": is_running
+    })
 
 
 @ai_bp.route("/api/kill", methods=["POST"])
 def kill_chat():
-    asyncio.run_coroutine_threadsafe(agent_mgr.cancel_task(), _get_or_create_ai_loop())
-    return jsonify({"success": True})
+    try:
+        fut = asyncio.run_coroutine_threadsafe(agent_mgr.cancel_task(), _get_or_create_ai_loop())
+        try:
+            fut.result(timeout=2.0)
+        except Exception:
+            pass
+    except Exception as e:
+        logging.warning(f"Error in kill_chat threadsafe call: {e}")
+
+    try:
+        subprocess.run(['pkill', '-9', '-f', 'agy'], capture_output=True)
+    except Exception:
+        pass
+
+    return jsonify({"success": True, "message": "Task and background subagents cancelled successfully", "is_running": False})
 
 
 @ai_bp.route("/api/auth/login", methods=["POST"])

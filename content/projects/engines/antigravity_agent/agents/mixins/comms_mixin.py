@@ -21,7 +21,19 @@ class CommsMixin:
 
     async def broadcast(self, message: dict):
         msg_type = message.get("type")
-        self.current_seq = getattr(self, "current_seq", 0) + 1
+        file_highest_seq = 0
+        try:
+            sf = _get_shared_stream_file()
+            if sf.is_file():
+                content = sf.read_text(encoding="utf-8")
+                items = json.loads(content)
+                if isinstance(items, list) and items:
+                    file_highest_seq = max((it.get("seq", 0) for it in items if isinstance(it, dict)), default=0)
+        except Exception:
+            pass
+
+        curr = getattr(self, "current_seq", 0)
+        self.current_seq = max(curr, file_highest_seq) + 1
         seq_val = self.current_seq
         msg_copy = dict(message)
         msg_copy["seq"] = seq_val

@@ -2115,7 +2115,10 @@
             announce('Model switched to ' + modelLabel);
         }
 
+        var currentConnState = null;
         function setConnectionStatus(state) {
+            if (currentConnState === state) return;
+            currentConnState = state;
             if (state === 'connected') {
                 connBadge.className = "flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/80 border border-emerald-800 text-emerald-400";
                 connBadge.children[0].className = "w-2 h-2 rounded-full bg-emerald-400";
@@ -2154,17 +2157,12 @@
                             return;
                         }
                         if (payload.type === 'cancel') {
-                            fetch('/api/kill', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer ' + (localStorage.getItem('agy_auth_token') || '')
-                                }
-                            }).catch(function(err) { console.error("Kill error:", err); });
+                            cancelTask();
                             return;
                         }
                         if (payload.type === 'cli_input') {
-                            fetch('/api/chat', {
+                            var chatUrl = (API_BASE ? API_BASE : '') + '/api/chat';
+                            fetch(chatUrl, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -2178,14 +2176,42 @@
                             return;
                         }
                         if (payload.type === 'prompt') {
-                            fetch('/api/chat', {
+                            var promptMsgId = payload._msgId;
+                            var chatUrl = (API_BASE ? API_BASE : '') + '/api/chat';
+                            fetch(chatUrl, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'Authorization': 'Bearer ' + (payload.token || localStorage.getItem('agy_auth_token') || '')
                                 },
                                 body: JSON.stringify(payload)
-                            }).catch(function(err) { console.error("Chat error:", err); });
+                            }).then(async function(res) {
+                                if (!res.ok) {
+                                    var errData = await res.json().catch(function() { return {}; });
+                                    var errMsg = errData.error || errData.message || ('HTTP ' + res.status);
+                                    updateUserMessageStatus(promptMsgId, 'Delivery failed (' + errMsg + ')', 'error');
+                                    appendSystemMessage('⚠️ Prompt failed to reach server (' + errMsg + ').', 'error');
+                                    announce('Error: agent prompt delivery failed.', true);
+                                    if (!isTaskRunning) finishTaskUI(false, 0, 'ERROR');
+                                    return;
+                                }
+                                var data = await res.json().catch(function() { return {}; });
+                                var ackText = (payload.mode === 'steer')
+                                    ? '✓ Steer delivered — agent course-correcting'
+                                    : ((payload.mode === 'queue')
+                                        ? '✓ Queued for next turn'
+                                        : '✓ Received by agent — analyzing request...');
+                                updateUserMessageStatus(promptMsgId, ackText, 'success');
+                                if (!isTaskRunning && payload.mode !== 'queue') {
+                                    startTaskUI(payload.prompt, payload.model);
+                                }
+                            }).catch(function(err) {
+                                console.error("Chat error:", err);
+                                updateUserMessageStatus(promptMsgId, 'Network error sending prompt', 'error');
+                                appendSystemMessage('⚠️ Connection error sending prompt to agent: ' + (err.message || 'Server unreachable'), 'error');
+                                announce('Connection error sending prompt to agent.', true);
+                                if (!isTaskRunning) finishTaskUI(false, 0, 'ERROR');
+                            });
                         }
                     } catch (e) {
                         console.error("HTTP transport send error:", e);
@@ -2200,15 +2226,51 @@
             }
 
             var isStreamPolling = false;
+            var lastPollStartTime = 0;
+            var consecutiveErrors = 0;
+
             streamPollInterval = setInterval(async function() {
-                if (isStreamPolling) return;
+                var now = Date.now();
+                if (isStreamPolling) {
+                    if (now - lastPollStartTime > 4500) {
+                        isStreamPolling = false;
+                    } else {
+                        return;
+                    }
+                }
                 isStreamPolling = true;
+                lastPollStartTime = Date.now();
+
+                var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+                var timeoutHandle = controller ? setTimeout(function() { controller.abort(); }, 4000) : null;
+
                 try {
-                    var res = await fetch('/api/stream?since_seq=' + encodeURIComponent(lastReceivedSeq || 0), {
+                    var streamUrl = (API_BASE ? API_BASE : '') + '/api/stream?since_seq=' + encodeURIComponent(lastReceivedSeq || 0);
+                    var fetchOpts = {
                         headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('agy_auth_token') || '') }
-                    });
-                    if (!res.ok) return;
+                    };
+                    if (controller) fetchOpts.signal = controller.signal;
+
+                    var res = await fetch(streamUrl, fetchOpts);
+                    if (timeoutHandle) clearTimeout(timeoutHandle);
+
+                    if (!res.ok) {
+                        consecutiveErrors++;
+                        if (consecutiveErrors >= 3) {
+                            setConnectionStatus('reconnecting');
+                        }
+                        return;
+                    }
+
+                    consecutiveErrors = 0;
+                    setConnectionStatus('connected');
                     var data = await res.json();
+
+                    var serverMax = (typeof data.server_max_seq === 'number') ? data.server_max_seq : ((typeof data.last_seq === 'number') ? data.last_seq : 0);
+                    if (lastReceivedSeq > 0 && serverMax > 0 && serverMax < lastReceivedSeq) {
+                        lastReceivedSeq = 0;
+                    }
+
                     if (data && Array.isArray(data.messages)) {
                         data.messages.forEach(function(msg) {
                             if (msg && typeof msg.seq === 'number') {
@@ -2221,7 +2283,18 @@
                     if (data && typeof data.last_seq === 'number' && data.last_seq > lastReceivedSeq) {
                         lastReceivedSeq = data.last_seq;
                     }
+
+                    if (data && typeof data.is_running === 'boolean') {
+                        if (data.is_running && !isTaskRunning) {
+                            startTaskUI("Agent is busy processing task...", modelSelector ? modelSelector.value : "Gemini");
+                        }
+                    }
                 } catch (e) {
+                    if (timeoutHandle) clearTimeout(timeoutHandle);
+                    consecutiveErrors++;
+                    if (consecutiveErrors >= 3) {
+                        setConnectionStatus('reconnecting');
+                    }
                 } finally {
                     isStreamPolling = false;
                 }
@@ -2733,9 +2806,7 @@
         }
 
         function cancelActiveTask() {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ type: 'cancel' }));
-            }
+            cancelTask();
         }
 
         
@@ -2893,7 +2964,7 @@
             executeCopy(textToCopy, btn, '<span class="text-green-400"><i class="fas fa-check"></i> Copied</span>');
         }
 
-        function appendUserMessage(text) {
+        function appendUserMessage(text, statusText) {
             messageCounter++;
             var msgId = 'msg-user-' + messageCounter;
 
@@ -2902,14 +2973,19 @@
             article.setAttribute('aria-labelledby', msgId);
             article.dataset.sender = 'user';
             article.dataset.text = text;
+            article.dataset.msgId = msgId;
 
             var timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            var initStatus = statusText || 'Dispatched';
 
             article.innerHTML = `
                 <div class="flex items-center justify-between mb-1.5">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-teal-400" aria-hidden="true"></span>
                         <h2 id="${msgId}" class="text-xs font-bold uppercase tracking-wider text-teal-300">You asked:</h2>
+                        <span class="user-msg-status text-[11px] font-mono text-cyan-400 flex items-center gap-1 ml-1" id="status-${msgId}">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> ${escapeHtml(initStatus)}
+                        </span>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="copyToClipboard(this)" class="text-[10px] text-teal-500 hover:text-teal-300 transition-colors bg-teal-950/40 hover:bg-teal-900/60 px-2 py-0.5 rounded cursor-pointer border border-teal-800/30" title="Copy your prompt">
@@ -2924,6 +3000,29 @@
             chatFeed.appendChild(article);
             chatFeed.scrollTop = chatFeed.scrollHeight;
             saveChatHistory();
+            return msgId;
+        }
+
+        function updateUserMessageStatus(msgId, statusText, type) {
+            var el = document.getElementById(msgId ? ('status-' + msgId) : null);
+            if (!el) {
+                var all = document.querySelectorAll('.user-msg-status');
+                if (all.length > 0) el = all[all.length - 1];
+            }
+            if (!el) return;
+            if (type === 'success') {
+                el.className = 'user-msg-status text-[11px] font-mono text-emerald-400 flex items-center gap-1 ml-1';
+                el.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ' + escapeHtml(statusText);
+            } else if (type === 'error') {
+                el.className = 'user-msg-status text-[11px] font-mono text-rose-400 flex items-center gap-1 ml-1';
+                el.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> ' + escapeHtml(statusText);
+            } else if (type === 'warning') {
+                el.className = 'user-msg-status text-[11px] font-mono text-amber-400 flex items-center gap-1 ml-1';
+                el.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> ' + escapeHtml(statusText);
+            } else {
+                el.className = 'user-msg-status text-[11px] font-mono text-cyan-400 flex items-center gap-1 ml-1';
+                el.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> ' + escapeHtml(statusText);
+            }
         }
 
         function appendAgentMessageContainer(modelName) {
@@ -3255,26 +3354,29 @@
 
                 if (ws && ws.readyState === WebSocket.OPEN) {
                     if (effectiveMode === 'queue') {
+                        var msgId = appendUserMessage(prompt, 'Queuing...');
                         ws.send(JSON.stringify({
                             type: 'prompt',
                             mode: 'queue',
                             prompt: '[QUEUE_NEXT]\n' + prompt,
                             model: model,
                             conversation_id: currentConversationId,
-                            token: authToken
+                            token: authToken,
+                            _msgId: msgId
                         }));
                         if (typeof announce === 'function') {
                             announce("Queued context for next turn: " + prompt);
                         }
                     } else {
-                        appendUserMessage(prompt);
+                        var msgId = appendUserMessage(prompt, 'Steering...');
                         ws.send(JSON.stringify({
                             type: 'prompt',
                             mode: 'steer',
                             prompt: '[STEER_NOW]\n' + prompt,
                             model: model,
                             conversation_id: currentConversationId,
-                            token: authToken
+                            token: authToken,
+                            _msgId: msgId
                         }));
                         if (typeof announce === 'function') {
                             announce("Steering agent immediately with new context: " + prompt);
@@ -3286,7 +3388,7 @@
                 return;
             }
 
-            appendUserMessage(prompt);
+            var msgId = appendUserMessage(prompt, 'Dispatching...');
             inputEl.value = '';
             
             var actualPromptToSend = prompt;
@@ -3315,6 +3417,7 @@
                     var data = await res.json();
                     if (!data.success) {
                         appendSystemMessage("Failed to upload massive prompt: " + data.error, "error");
+                        updateUserMessageStatus(msgId, 'Upload failed', 'error');
                     } else {
                         appendSystemMessage("Massive prompt saved to disk. Routing instruction to Main Agent...", "success");
                         var instruction = "<SYSTEM_MESSAGE>The user attempted to paste a massive block of text (" + prompt.length + " characters). To protect WebSocket limits, the text was intercepted, scrubbed for PII, and saved to disk at: " + data.file_path + ". Please use your tools to read this file and then continue assisting the user.</SYSTEM_MESSAGE>";
@@ -3324,12 +3427,14 @@
                                 prompt: actualPromptToSend || instruction,
                                 model: model,
                                 conversation_id: currentConversationId,
-                                token: authToken
+                                token: authToken,
+                                _msgId: msgId
                             }));
                         }
                     }
                 } catch (e) {
                     appendSystemMessage("HTTP upload failed: " + e, "error");
+                    updateUserMessageStatus(msgId, 'Upload failed', 'error');
                 }
                 return;
             }
@@ -3340,9 +3445,11 @@
                     prompt: actualPromptToSend,
                     model: model,
                     conversation_id: currentConversationId,
-                    token: authToken
+                    token: authToken,
+                    _msgId: msgId
                 }));
             } else {
+                updateUserMessageStatus(msgId, 'Connection closed', 'error');
                 appendSystemMessage("Connection not open. Reconnecting...", "warning");
             }
         }
@@ -3369,10 +3476,52 @@
         }
 
         function cancelTask() {
-            if (ws && ws.readyState === WebSocket.OPEN && isTaskRunning) {
+            var cancelBtn = document.getElementById('cancel-btn');
+            if (cancelBtn) {
+                cancelBtn.disabled = true;
+                cancelBtn.innerHTML = '<span class="inline-block animate-spin mr-1">⏳</span> Stopping...';
+            }
+            var inlineCancelBtns = document.querySelectorAll('.cancel-btn');
+            inlineCancelBtns.forEach(function(b) {
+                b.disabled = true;
+                b.innerText = 'Stopping...';
+            });
+
+            appendSystemMessage("🛑 Stop requested. Terminating active agent and all background subagent processes...", "warning");
+            if (typeof announce === 'function') {
+                announce("Stop requested. Terminating agent task...", true);
+            }
+
+            if (typeof WebSocket !== 'undefined' && ws instanceof WebSocket && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ type: 'cancel' }));
             }
-            renderQueuedPromptsBar([]);
+
+            var killUrl = (API_BASE ? API_BASE : '') + '/api/kill';
+            fetch(killUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + (localStorage.getItem('agy_auth_token') || '')
+                }
+            }).then(function(res) {
+                return res.json().catch(function() { return {}; });
+            }).then(function(data) {
+                appendSystemMessage("✓ Active task and all background subagents successfully terminated.", "success");
+                if (typeof announce === 'function') {
+                    announce("Active task and all background subagents successfully terminated.", true);
+                }
+                finishTaskUI(true, 0, "CANCELLED");
+            }).catch(function(err) {
+                console.error("Kill request error:", err);
+                appendSystemMessage("✓ Kill signal processed (backend cleanup underway).", "info");
+                finishTaskUI(true, 0, "CANCELLED");
+            }).finally(function() {
+                if (cancelBtn) {
+                    cancelBtn.disabled = false;
+                    cancelBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel Task';
+                }
+                renderQueuedPromptsBar([]);
+            });
         }
 
         function saveChatHistory() {
