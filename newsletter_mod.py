@@ -57,6 +57,29 @@ def purge_temp_docs_cache() -> int:
     return count
 
 
+def prune_temp_docs_cache(max_age_hours: int = 72, max_files: int = 40) -> int:
+    """Removes stale cached stories from disk to maintain lean storage and protect server capacity."""
+    import time
+    pruned = 0
+    if not TEMP_DOCS_DIR.exists():
+        return 0
+    now = time.time()
+    try:
+        json_files = list(TEMP_DOCS_DIR.glob("*.json"))
+        json_files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+        for i, f in enumerate(json_files):
+            try:
+                age_hours = (now - f.stat().st_mtime) / 3600
+                if i >= max_files or age_hours > max_age_hours:
+                    f.unlink()
+                    pruned += 1
+            except OSError:
+                pass
+    except Exception:
+        pass
+    return pruned
+
+
 def get_disk_cached_doc(story_id: str) -> Optional[dict]:
     """Retrieves documentation bundle from temporary disk cache if it exists."""
     safe_id = re.sub(r"[^a-zA-Z0-9_-]", "-", story_id).strip("-")
@@ -71,11 +94,12 @@ def get_disk_cached_doc(story_id: str) -> Optional[dict]:
 
 
 def save_disk_cached_doc(story_id: str, bundle: dict) -> Path:
-    """Writes the generated documentation bundle to temporary disk cache."""
+    """Writes the generated documentation bundle to temporary disk cache and prunes older files."""
     safe_id = re.sub(r"[^a-zA-Z0-9_-]", "-", story_id).strip("-")
     target_file = TEMP_DOCS_DIR / f"{safe_id}.json"
     with open(target_file, "w", encoding="utf-8") as f:
         json.dump(bundle, f, indent=2)
+    prune_temp_docs_cache()
     return target_file
 
 
@@ -191,11 +215,22 @@ def newsletter_story(story_id: str):
             "html": rendered_html
         }
 
-    # Pre-load initial appetite story if cached (e.g. cyber_thriller)
-    initial_appetite = "cyber_thriller"
+    # Pre-load initial requested appetite story
+    initial_appetite = request.args.get("appetite") or "briefs"
+    if initial_appetite not in APPETITE_CONFIG:
+        initial_appetite = "briefs"
+
     initial_story = get_cached_story(story_id, initial_appetite)
+    if not initial_story:
+        # Generate on first view for the requested appetite
+        initial_story = dispatch_story_generation(
+            story_id=story_id,
+            appetite=initial_appetite,
+            item_metadata=found_intel if not is_instant_cache else bundle.get("story")
+        )
+
     initial_rendered_story = None
-    if initial_story:
+    if initial_story and initial_story.get("markdown"):
         initial_rendered_story = markdown.markdown(
             initial_story.get("markdown", ""),
             extensions=['tables', 'fenced_code']
@@ -214,6 +249,53 @@ def newsletter_story(story_id: str):
         initial_story=initial_story,
         initial_rendered_story=initial_rendered_story
     )
+
+
+@newsletter_bp.route('/newsletter/download/<story_id>/<doc_type>')
+def download_story_playbook(story_id: str, doc_type: str = "playbook"):
+    """Serves downloadable Markdown playbooks and documentation suites for educational purposes."""
+    bundle = get_disk_cached_doc(story_id)
+    if not bundle:
+        manifest = load_active_manifest()
+        item = next((it for it in manifest.get("items", []) if it.get("story_id") == story_id), None)
+        if item:
+            bundle = generate_full_intel_bundle(item)
+            save_disk_cached_doc(story_id, bundle)
+            prune_temp_docs_cache()
+    if not bundle:
+        abort(404, "Story not found")
+
+    title = bundle.get("story", {}).get("title", story_id)
+    safe_title = re.sub(r"[^a-zA-Z0-9_-]", "_", title).strip("_")
+
+    if doc_type == "playbook":
+        playbook_content = f"# Remediation & Threat Reconstruction Playbook: {title}\n\n"
+        playbook_content += "> [!NOTE]\n"
+        playbook_content += "> **Educational & Defensive Sandbox Notice**: Generated for authorized laboratory simulation and security engineering.\n\n"
+
+        reconstruction_story = get_cached_story(story_id, "reconstruction")
+        if reconstruction_story and reconstruction_story.get("markdown"):
+            playbook_content += reconstruction_story["markdown"]
+        else:
+            from story_agent_dispatcher import generate_builtin_appetite_story
+            playbook_content += generate_builtin_appetite_story("reconstruction", bundle.get("story", {}))
+
+        response = make_response(playbook_content)
+        response.headers["Content-Disposition"] = f"attachment; filename=playbook_{safe_title}.md"
+        response.headers["Content-Type"] = "text/markdown; charset=utf-8"
+        return response
+    else:
+        full_doc = f"# Complete Threat Intelligence Dossier: {title}\n\n"
+        doc_suite = bundle.get("doc_suite", {})
+        for pkey, pval in doc_suite.items():
+            full_doc += f"\n\n## {pval.get('title', pkey)}\n{pval.get('subtitle', '')}\n\n"
+            full_doc += pval.get("content", "")
+            full_doc += "\n\n---\n"
+
+        response = make_response(full_doc)
+        response.headers["Content-Disposition"] = f"attachment; filename=dossier_{safe_title}.md"
+        response.headers["Content-Type"] = "text/markdown; charset=utf-8"
+        return response
 
 
 # --- API ENDPOINTS ---

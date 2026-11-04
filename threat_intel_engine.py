@@ -70,12 +70,42 @@ def parse_to_epoch(date_str: Optional[str]) -> float:
     return 0.0
 
 
-def format_display_date(epoch_ts: float, original_str: str) -> str:
-    """Formats epoch timestamp into an accessible readable string."""
-    if epoch_ts > 0:
-        dt = datetime.fromtimestamp(epoch_ts, tz=timezone.utc)
-        return dt.strftime("%Y-%m-%d %H:%M UTC")
-    return original_str or "Recent Advisory"
+def format_display_date(epoch_ts: float, original_str: str = "") -> str:
+    """Formats release timestamp or original string into an accessible, readable string:
+    e.g. 'November 1, 2026 at 2 PM'.
+    Uses actual full month name, no slashes, no minutes or seconds, rounded to nearest hour.
+    """
+    from datetime import timedelta
+    dt = None
+    if original_str:
+        cleaned = original_str.strip()
+        try:
+            dt = email.utils.parsedate_to_datetime(cleaned)
+        except Exception:
+            pass
+        if dt is None:
+            try:
+                dt = datetime.fromisoformat(cleaned.replace("Z", "+00:00"))
+            except Exception:
+                pass
+    if dt is None and epoch_ts and epoch_ts > 0:
+        try:
+            dt = datetime.fromtimestamp(epoch_ts, tz=timezone.utc)
+        except Exception:
+            pass
+    if dt is None:
+        dt = datetime.now(timezone.utc)
+
+    # Round to nearest hour
+    if dt.minute >= 30:
+        dt = dt + timedelta(hours=1)
+
+    month = dt.strftime("%B")
+    day = dt.day
+    year = dt.year
+    hour = dt.hour % 12 or 12
+    ampm = "AM" if dt.hour < 12 else "PM"
+    return f"{month} {day}, {year} at {hour} {ampm}"
 
 
 class ThreatIntelEngine:

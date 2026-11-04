@@ -28,8 +28,8 @@ CACHE_DIR = config.ROOT_DIR / "cache"
 SUBSCRIBERS_FILE = CACHE_DIR / "subscribers.json"
 NOTIFY_STATE_FILE = CACHE_DIR / "notify_state.json"
 TOPICS = ("releases", "downloads", "newsletter")
-VALID_FORMATS = ("hybrid_brief", "full_story_daily", "quick_threat_wire", "weekly_digest")
-VALID_APPETITES = ("cyber_thriller", "deep_dive", "defense_playbook", "executive_espresso", "snarky_hacker")
+VALID_FORMATS = ("headlines", "briefs", "deep_dive", "reconstruction", "cyber_thriller", "hybrid_brief", "full_story_daily", "quick_threat_wire", "weekly_digest")
+VALID_APPETITES = ("headlines", "briefs", "deep_dive", "reconstruction", "cyber_thriller", "defense_playbook", "executive_espresso", "snarky_hacker")
 VALID_TOPICS = ("zero_days", "ransomware", "cisa_kev", "supply_chain", "cloud_infra")
 METRICS_FILE = config.ROOT_DIR / "traffic_metrics.json"
 
