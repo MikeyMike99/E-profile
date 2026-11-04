@@ -6,10 +6,10 @@ Dual-mode email orchestration:
   1. 'local' Mode: Embedded, zero-dependency mock mailbox for testing/development.
      Captures all outbound emails locally to `cache/mailbox.json` and exposes
      them to the Admin Mailbox Viewer.
-  2. 'smtp' Mode: Standard TLS/SMTP relay (Port 587) compatible with Gmail,
+  2. 'smtp' Mode: Standard TLS/SMTP relay (Port 587 / 465) compatible with Gmail,
      Resend, SendGrid, Mailgun, and custom MTAs.
 
-Enforces strict error resilience, thread safety, and HTML sanitization.
+Enforces strict error resilience, thread safety, delivery honesty, and HTML sanitization.
 =============================================================================
 """
 
@@ -18,6 +18,8 @@ import json
 import uuid
 import smtplib
 import threading
+import html as html_lib
+import re
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -151,6 +153,54 @@ def build_email_template(title: str, body_html: str, action_url: Optional[str] =
 </html>"""
 
 
+# ---------------------------------------------------------------------------
+# Delivery Core & Honesty Rules
+# ---------------------------------------------------------------------------
+
+SMTP_MISSING_CREDENTIALS_ERROR = (
+    "SMTP delivery failed: Missing MAIL_USERNAME or MAIL_PASSWORD in configuration. No email sent."
+)
+
+
+def _smtp_credentials() -> Tuple[str, str]:
+    """Returns (username, password) from Config, stripping Google App Password spaces."""
+    username = (config.MAIL_USERNAME or "").strip()
+    raw_password = config.MAIL_PASSWORD or ""
+    if "gmail" in (config.MAIL_SERVER or "").lower():
+        password = raw_password.replace(" ", "").strip()
+    else:
+        password = raw_password.strip()
+    return username, password
+
+
+def _open_smtp_connection(username: str, password: str) -> smtplib.SMTP:
+    """Opens and authenticates an SMTP connection (SSL on 465, STARTTLS otherwise)."""
+    server_host = config.MAIL_SERVER
+    server_port = int(config.MAIL_PORT)
+    if server_port == 465:
+        server = smtplib.SMTP_SSL(server_host, server_port, timeout=10)
+        server.ehlo()
+    else:
+        server = smtplib.SMTP(server_host, server_port, timeout=10)
+        server.ehlo()
+        if config.MAIL_USE_TLS or server_port == 587 or "gmail" in server_host.lower():
+            server.starttls()
+            server.ehlo()
+    try:
+        server.login(username, password)
+    except Exception:
+        server.close()
+        raise
+    return server
+
+
+def _record_failure(record: Dict[str, Any], error_msg: str) -> Tuple[bool, str, Dict[str, Any]]:
+    record["status"] = "FAILED"
+    record["error"] = error_msg
+    _append_to_local_mailbox(record)
+    return False, error_msg, record
+
+
 def send_email(
     to_address: str,
     subject: str,
@@ -161,7 +211,7 @@ def send_email(
 ) -> Tuple[bool, str, Dict[str, Any]]:
     """
     Dispatches an email through the configured backend ('local' or 'smtp').
-    
+
     Returns:
         (success: bool, status_message: str, email_metadata: dict)
     """
@@ -172,7 +222,6 @@ def send_email(
 
     # Plaintext fallback from HTML if not supplied
     if not text_content:
-        import re
         text_content = re.sub(r'<[^>]+>', ' ', html_content)
         text_content = re.sub(r'\s+', ' ', text_content).strip()
 
@@ -191,94 +240,59 @@ def send_email(
 
     if backend == "local":
         record["status"] = "DELIVERED_LOCAL"
-        record["details"] = "Captured in local mock mailbox (cache/mailbox.json)"
+        record["details"] = "Captured in local mock mailbox (cache/mailbox.json). External delivery bypassed."
         _append_to_local_mailbox(record)
-        return True, "Email successfully captured in local mailbox.", record
+        return True, "Email captured in local mailbox (NOT sent over the internet).", record
 
-    elif backend == "smtp":
+    if backend == "smtp":
+        username, password = _smtp_credentials()
+        if not username or not password:
+            return _record_failure(record, SMTP_MISSING_CREDENTIALS_ERROR)
+
+        # Fallback sender to authenticated username if sender is local mock or empty
+        if not sender or "eprofile.local" in sender:
+            sender = username
+            record["from"] = sender
+
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = sender
+        msg["To"] = to_address
+        for h_k, h_v in (headers or {}).items():
+            msg[h_k] = str(h_v)
+        msg.attach(MIMEText(text_content, "plain", "utf-8"))
+        msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+        server_host = config.MAIL_SERVER
+        server_port = int(config.MAIL_PORT)
         try:
-            # Fallback sender to authenticated username if sender is local mock or empty
-            if ("eprofile.local" in (sender or "") or not sender) and config.MAIL_USERNAME:
-                sender = config.MAIL_USERNAME.strip()
-
-            msg = MIMEMultipart("alternative")
-            msg["Subject"] = subject
-            msg["From"] = sender
-            msg["To"] = to_address
-
-            if headers:
-                for h_k, h_v in headers.items():
-                    msg[h_k] = str(h_v)
-
-            part1 = MIMEText(text_content, "plain", "utf-8")
-            part2 = MIMEText(html_content, "html", "utf-8")
-            msg.attach(part1)
-            msg.attach(part2)
-
-            server_host = config.MAIL_SERVER
-            server_port = int(config.MAIL_PORT)
-            use_tls = config.MAIL_USE_TLS
-            username = config.MAIL_USERNAME.strip() if config.MAIL_USERNAME else ""
-            
-            # Google App Passwords have spaces when copied from Google security settings; clean them
-            raw_password = config.MAIL_PASSWORD or ""
-            if "gmail" in server_host.lower():
-                password = raw_password.replace(" ", "").strip()
-            else:
-                password = raw_password.strip()
-
-            if server_port == 465:
-                server = smtplib.SMTP_SSL(server_host, server_port, timeout=10)
-                server.ehlo()
-            else:
-                server = smtplib.SMTP(server_host, server_port, timeout=10)
-                server.ehlo()
-                if use_tls or server_port == 587 or "gmail" in server_host.lower():
-                    server.starttls()
-                    server.ehlo()
-
-            if username and password:
-                server.login(username, password)
-
-            server.sendmail(sender, [to_address], msg.as_string())
-            server.quit()
-
-            record["status"] = "SENT_SMTP"
-            record["details"] = f"Transmitted via {server_host}:{server_port}"
-            _append_to_local_mailbox(record)
-            return True, f"Email delivered via SMTP ({server_host}).", record
-
-        except smtplib.SMTPAuthenticationError as e:
-            error_msg = f"SMTP Authentication Failed (535): Username or App Password rejected by {config.MAIL_SERVER}. Check credentials."
-            record["status"] = "FAILED"
-            record["error"] = error_msg
-            _append_to_local_mailbox(record)
-            return False, error_msg, record
+            server = _open_smtp_connection(username, password)
+            try:
+                server.sendmail(sender, [to_address], msg.as_string())
+            finally:
+                try:
+                    server.quit()
+                except Exception:
+                    server.close()
+        except smtplib.SMTPAuthenticationError:
+            return _record_failure(record, f"SMTP Authentication Failed (535): Username or App Password rejected by {server_host}. Check credentials.")
         except smtplib.SMTPSenderRefused as e:
-            error_msg = f"Sender Refused: The sender address '{sender}' is rejected by SMTP server: {e.smtp_error}"
-            record["status"] = "FAILED"
-            record["error"] = error_msg
-            _append_to_local_mailbox(record)
-            return False, error_msg, record
-        except smtplib.SMTPRecipientsRefused as e:
-            error_msg = f"Recipient Refused: The destination address '{to_address}' was rejected. Ensure recipient exists."
-            record["status"] = "FAILED"
-            record["error"] = error_msg
-            _append_to_local_mailbox(record)
-            return False, error_msg, record
+            return _record_failure(record, f"Sender Refused: The sender address '{sender}' is rejected by SMTP server: {e.smtp_error}")
+        except smtplib.SMTPRecipientsRefused:
+            return _record_failure(record, f"Recipient Refused: The destination address '{to_address}' was rejected. Ensure recipient exists.")
         except Exception as e:
-            error_msg = f"SMTP Transmission Failed: {e}"
-            record["status"] = "FAILED"
-            record["error"] = error_msg
-            _append_to_local_mailbox(record)
-            return False, error_msg, record
+            return _record_failure(record, f"SMTP Transmission Failed: {e}")
 
-    else:
-        # Fallback for unrecognized backend
-        record["status"] = "UNKNOWN_BACKEND"
-        record["error"] = f"Unrecognized backend '{backend}'. Saved locally."
+        record["status"] = "SENT_SMTP"
+        record["details"] = f"Transmitted via {server_host}:{server_port}"
         _append_to_local_mailbox(record)
-        return True, "Unrecognized backend; archived to local mailbox.", record
+        return True, f"Email delivered via SMTP ({server_host}).", record
+
+    # Fallback for unrecognized backend
+    record["status"] = "UNKNOWN_BACKEND"
+    record["error"] = f"Unrecognized backend '{backend}'. Saved locally."
+    _append_to_local_mailbox(record)
+    return True, "Unrecognized backend; archived to local mailbox.", record
 
 
 def test_smtp_connection() -> Tuple[bool, str]:
@@ -286,33 +300,17 @@ def test_smtp_connection() -> Tuple[bool, str]:
     if config.MAIL_BACKEND.lower() == "local":
         return True, "Email Engine is configured in 'local' mock mode. Real external connections are bypassed."
 
-    try:
-        port = int(config.MAIL_PORT)
-        server_host = config.MAIL_SERVER
-        username = config.MAIL_USERNAME.strip() if config.MAIL_USERNAME else ""
-        raw_password = config.MAIL_PASSWORD or ""
-        if "gmail" in server_host.lower():
-            password = raw_password.replace(" ", "").strip()
-        else:
-            password = raw_password.strip()
-        use_tls = config.MAIL_USE_TLS
+    username, password = _smtp_credentials()
+    if not username or not password:
+        return False, "Missing MAIL_USERNAME or MAIL_PASSWORD in configuration. Cannot authenticate."
 
-        if port == 465:
-            server = smtplib.SMTP_SSL(server_host, port, timeout=10)
-            server.ehlo()
-        else:
-            server = smtplib.SMTP(server_host, port, timeout=10)
-            server.ehlo()
-            if use_tls or port == 587 or "gmail" in server_host.lower():
-                server.starttls()
-                server.ehlo()
-        if username and password:
-            server.login(username, password)
+    try:
+        server = _open_smtp_connection(username, password)
         server.quit()
-        return True, f"Successfully connected to {server_host}:{port} and authenticated as '{username}'."
+        return True, f"Successfully connected to {config.MAIL_SERVER}:{config.MAIL_PORT} and authenticated as '{username}'."
     except smtplib.SMTPAuthenticationError:
-        return False, f"Authentication Failed (535): Invalid username or Google App Password. Ensure 2-Step Verification is enabled and use a 16-character App Password."
-    except smtplib.SMTPConnectError as e:
+        return False, "Authentication Failed (535): Invalid username or Google App Password. Ensure 2-Step Verification is enabled and use a 16-character App Password."
+    except smtplib.SMTPConnectError:
         return False, f"Connection Failed: Could not connect to {config.MAIL_SERVER}:{config.MAIL_PORT}. Network or port issue."
     except Exception as e:
         return False, f"Connection failed: {e}"
@@ -338,8 +336,10 @@ def update_env_file(key_values: Dict[str, str]) -> bool:
             if k in key_values:
                 new_lines.append(f"{k}={key_values[k]}\n")
                 updated_keys.add(k)
-                continue
-        new_lines.append(line)
+            else:
+                new_lines.append(line)
+        else:
+            new_lines.append(line)
 
     for k, v in key_values.items():
         if k not in updated_keys:
@@ -448,315 +448,333 @@ def apply_google_service_json(raw_json: str) -> Tuple[bool, str, Dict[str, Any]]
     return True, f"Google credentials JSON saved successfully for project '{project_id}'.", metadata
 
 
+# ---------------------------------------------------------------------------
+# Personalized newsletter: every appetite style is a TEASER that drives the
+# reader to the full story on the site. No full story dumps in email.
+# ---------------------------------------------------------------------------
+
+_APPETITE_STYLE_MAP = {
+    "headlines": "headlines", "quick_threat_wire": "headlines",
+    "briefs": "briefs", "hybrid_brief": "briefs", "weekly_digest": "briefs", "executive_espresso": "briefs",
+    "deep_dive": "deep_dive", "defense_playbook": "deep_dive",
+    "reconstruction": "reconstruction",
+    "cyber_thriller": "cyber_thriller", "snarky_hacker": "cyber_thriller",
+}
+
+# style -> (emoji, label, accent color, CTA label)
+_STYLE_META = {
+    "headlines": ("⚡", "Radar Headlines", "#19e6ff", "⚡ Open on Newsfeed →"),
+    "briefs": ("📋", "Executive Brief", "#b388ff", "📖 Read More on Site →"),
+    "deep_dive": ("🔬", "Deep Dive", "#00ff88", "🔬 Inspect Full Deep Dive on Site →"),
+    "reconstruction": ("⚔️", "Attack Reconstruction", "#ffaa00", "⚔️ Access Complete Lab Simulation on Site →"),
+    "cyber_thriller": ("🍿", "Cyber Thriller", "#ff7878", "🍿 Continue Story on Site →"),
+}
+
+_ALT_STYLE = {
+    "headlines": "briefs",
+    "briefs": "cyber_thriller",
+    "deep_dive": "cyber_thriller",
+    "reconstruction": "cyber_thriller",
+    "cyber_thriller": "deep_dive",
+}
+
+_ALT_HOOKS = {
+    "briefs": "Short on time? The same advisory distilled into a three-sentence executive brief.",
+    "deep_dive": "The headline tells you what broke. The deep dive tells you why it was breakable.",
+    "cyber_thriller": "What did this look like from inside the SOC at 3 AM? Read it as a cyber thriller.",
+}
+
+_LAYOUT_LABELS = {
+    "hybrid_brief": "Hybrid Brief (Headlines + Featured Dossier)",
+    "quick_threat_wire": "Rapid Threat Wire (1-Min Bulletins)",
+    "weekly_digest": "Weekly Threat Debrief",
+    "full_story_daily": "Daily Featured Dossier",
+}
+
+LINKEDIN_URL = "https://www.linkedin.com/in/michael-robberts-40b68a180"
+CREDLY_URL = "https://www.credly.com/users/michael-robberts.d08637aa"
+CREDLY_BADGE_ID = "95063855-9875-40cd-9d3f-13bc9ad1448e"
+INBOX_RELIEF_NOTICE = (
+    "If you have not subscribed to this newsletter, please just hit that pretty button below to relieve your inbox."
+)
+
+
+def _first_sentences(text: str, count: int) -> str:
+    parts = [p.strip() for p in re.split(r"(?<=[.!?])\s+", (text or "").strip()) if p.strip()]
+    return " ".join(parts[:count])
+
+
+def _story_fields(item: Dict[str, Any]) -> Dict[str, Any]:
+    from threat_intel_engine import format_display_date
+    return {
+        "id": item.get("story_id") or "threat-advisory",
+        "title": item.get("title") or "Critical Cyber Threat Intelligence",
+        "date": item.get("display_date") or format_display_date(item.get("timestamp", 0), item.get("date", "")),
+        "level": str(item.get("threat_level") or "HIGH"),
+        "score": item.get("score", 80),
+        "cves": item.get("cves") or [],
+        "summary": item.get("summary") or "",
+        "remediation": item.get("remediation") or "",
+        "source": item.get("source") or "threat telemetry",
+    }
+
+
+def _cta(url: str, label: str, color: str) -> str:
+    return (
+        f'<a href="{url}" style="display: inline-block; background-color: {color}; color: #000000; '
+        f'font-family: monospace; font-size: 12px; font-weight: bold; padding: 8px 18px; '
+        f'border-radius: 4px; text-decoration: none;">{label}</a>'
+    )
+
+
+def _section(color: str, kicker: str, inner_html: str) -> str:
+    return f"""
+    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 4px solid {color}; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
+        <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: {color}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">{kicker}</div>
+        {inner_html}
+    </div>"""
+
+
+def _paragraph(text: str) -> str:
+    return f'<p style="margin: 0 0 10px 0; color: #c8d2e0; font-size: 14px; line-height: 1.6;">{text}</p>'
+
+
+def _headline_bulletin(f: Dict[str, Any], url: str) -> Tuple[str, str]:
+    """One rapid bulletin: release date, threat level, and a 1-click newsfeed button."""
+    color = "#ff7878" if f["score"] >= 90 else "#ffaa00"
+    cves = ", ".join(f["cves"]) or "No CVE assigned"
+    block = f"""
+    <div style="border-left: 3px solid {color}; padding: 8px 0 8px 12px; margin-bottom: 12px;">
+        <div style="font-family: monospace; font-size: 11px; color: #888899; margin-bottom: 4px;">
+            <strong style="color: {color};">{html_lib.escape(f['level'])} · {f['score']}/100</strong> · Released {html_lib.escape(f['date'])} · {html_lib.escape(cves)}
+        </div>
+        <div style="font-size: 15px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;">
+            <a href="{url}" style="color: #ffffff; text-decoration: none;">{html_lib.escape(f['title'])}</a>
+        </div>
+        {_cta(url, _STYLE_META['headlines'][3], '#19e6ff')}
+    </div>"""
+    text = f"- [{f['level']}] {f['title']}\n  Released: {f['date']} | {cves}\n  Open on Newsfeed: {url}\n"
+    return block, text
+
+
+def _featured_teaser(style: str, f: Dict[str, Any], url: str) -> Tuple[str, str]:
+    """Renders the featured story as a short teaser in the subscriber's appetite style."""
+    if style == "headlines":
+        return _headline_bulletin(f, url)
+
+    lead = _first_sentences(f["summary"], 1)
+    cve = f["cves"][0] if f["cves"] else "No CVE assigned yet"
+
+    if style == "briefs":
+        brief = _first_sentences(f["summary"], 2) or "A new advisory has been published for this threat."
+        if f["remediation"]:
+            brief += f" Recommended action: {_first_sentences(f['remediation'], 1)}"
+        paragraphs = [brief]
+    elif style == "deep_dive":
+        paragraphs = [
+            "The patch closes the door. The real question is why the door was there at all.",
+            f"Key identifier: {cve}",
+            lead or "A new exploitable weakness has been confirmed.",
+            "The full deep dive traces the root cause, the exploit primitive, and a prioritized blue-team runbook.",
+        ]
+    elif style == "reconstruction":
+        paragraphs = [
+            "Simulated lab timeline (educational reconstruction, not a real incident log):",
+            f"02:14 — The initial alert fired: {lead or f['title']}",
+            f"02:31 — The team pinned the entry point to {cve}.",
+            "02:47 — Then a second process spawned that nobody on the team recognized…",
+        ]
+    else:  # cyber_thriller
+        paragraphs = [
+            f"The SOC floor was quiet at 03:07 — until a single line from {f['source']} scrolled across the night-shift console: “{f['title']}.”",
+            "The analyst read it twice, then pulled the logs. The timestamps didn't add up. Someone had been inside for hours.",
+            "Reaching for the phone to wake the incident commander, the analyst froze. On the screen, a new session had just opened — one nobody on the team had started —",
+        ]
+
+    _, _, color, cta_label = _STYLE_META[style]
+    block = f"""
+    <div style="font-family: monospace; font-size: 11px; color: #888899; margin-bottom: 6px;">
+        <strong style="color: {color};">{html_lib.escape(f['level'])}</strong> · Released {html_lib.escape(f['date'])}
+    </div>
+    <h2 style="color: #ffffff; font-size: 19px; margin: 0 0 12px 0; line-height: 1.3;">{html_lib.escape(f['title'])}</h2>
+    {''.join(_paragraph(html_lib.escape(p)) for p in paragraphs)}
+    <div style="margin-top: 14px;">{_cta(url, cta_label, color)}</div>"""
+    text = (
+        f"{f['title']}\nReleased: {f['date']} | {f['level']}\n\n"
+        + "\n".join(paragraphs)
+        + f"\n\n{cta_label.rstrip(' →')}: {url}\n"
+    )
+    return block, text
+
+
 def build_personalized_newsletter_email(
     subscriber: Dict[str, Any],
     manifest: Dict[str, Any],
     base_url: str = ""
 ) -> Tuple[str, str, str, Dict[str, str]]:
     """
-    Constructs a personalized Cyber Intelligence newsletter tailored to the subscriber's
-    chosen appetite format:
-      1. 'headlines'      : Instant Radar Skimmer (Headlines + Release Time + 1-Click to Newsfeed)
-      2. 'briefs'         : Executive Briefings (Headlines + 2-3 Sentence Brief + Read More on Site)
-      3. 'deep_dive'      : Technical Deep Dive & Remediation Playbook (Forensics, Mechanics, Runbook)
-      4. 'reconstruction' : Attack Reconstruction Playbook (Educational Threat Simulation, Stages, Detection)
-      5. 'cyber_thriller' : Narrative Cyber Thriller (Cinematic Storytelling, Accessible to Non-Experts)
+    Constructs a personalized Cyber Intelligence newsletter. Every appetite style is a
+    short teaser that links to the full story on the site:
+      1. 'headlines'      : 3-5 rapid bulletins (release date, threat level, 1-click newsfeed)
+      2. 'briefs'         : 2-3 sentence executive brief + Read More on Site
+      3. 'deep_dive'      : Root-cause provocation + key CVE + 2-line teaser
+      4. 'reconstruction' : Cliffhanger simulated timeline + lab simulation link
+      5. 'cyber_thriller' : Cold open cut off mid-scene + Continue Story on Site
+
+    The delivery format picks the layout ('quick_threat_wire' = bulletins only,
+    'hybrid_brief'/'weekly_digest' = featured dossier + headlines brief).
 
     Returns:
       (subject: str, html_content: str, text_content: str, headers: Dict[str, str])
     """
-    import html as html_lib
-    import markdown
-    from story_agent_dispatcher import APPETITE_CONFIG, get_cached_story, generate_builtin_appetite_story
-    from threat_intel_engine import format_display_date
     from notify_mod import encode_tracking_token
 
     clean_base = (base_url or "").rstrip("/")
     token = subscriber.get("token") or "token"
     delivery = subscriber.get("delivery") or {}
     content_pref = subscriber.get("content") or {}
+    modules = subscriber.get("engagement_modules") or {}
 
-    raw_style = content_pref.get("primary_appetite") or delivery.get("format") or "briefs"
-    style_map = {
-        "headlines": "headlines",
-        "quick_threat_wire": "headlines",
-        "briefs": "briefs",
-        "hybrid_brief": "briefs",
-        "weekly_digest": "briefs",
-        "executive_espresso": "briefs",
-        "deep_dive": "deep_dive",
-        "defense_playbook": "deep_dive",
-        "reconstruction": "reconstruction",
-        "cyber_thriller": "cyber_thriller",
-        "snarky_hacker": "cyber_thriller",
-    }
-    target_style = style_map.get(raw_style, "briefs")
+    layout = delivery.get("format") or "hybrid_brief"
+    style = _APPETITE_STYLE_MAP.get(content_pref.get("primary_appetite") or layout, "briefs")
+    emoji, style_label, style_color, _ = _STYLE_META[style]
+    layout_label = _LAYOUT_LABELS.get(layout, "Featured Dossier")
 
     items = manifest.get("items") or []
-    pref_url = f"{clean_base}/newsletter/preferences?token={token}" if clean_base else f"/newsletter/preferences?token={token}"
-    unsub_purge_url = f"{clean_base}/newsletter/unsubscribe?token={token}&purge=1" if clean_base else f"/newsletter/unsubscribe?token={token}&purge=1"
-    visit_site_url = f"{clean_base}/newsletter" if clean_base else "/newsletter"
-    terms_url = f"{clean_base}/terms-and-conditions" if clean_base else "/terms-and-conditions"
+    featured = _story_fields(items[0] if items else {})
+
+    pref_url = f"{clean_base}/newsletter/preferences?token={token}"
+    unsub_purge_url = f"{clean_base}/newsletter/unsubscribe?token={token}&purge=1"
+    visit_site_url = f"{clean_base}/newsletter"
+    terms_url = f"{clean_base}/terms-and-conditions"
 
     def track_url(slot: str, path: str) -> str:
-        tok = encode_tracking_token(slot, path, sub_token=token)
-        return f"{clean_base}/newsletter/r/{tok}" if clean_base else f"/newsletter/r/{tok}"
+        return f"{clean_base}/newsletter/r/{encode_tracking_token(slot, path, sub_token=token)}"
 
-    featured_item = items[0] if items else {}
-    featured_title = featured_item.get("title") or "Critical Cyber Threat Intelligence"
-    featured_date = featured_item.get("display_date") or format_display_date(featured_item.get("timestamp", 0), featured_item.get("date", ""))
-    featured_id = featured_item.get("story_id") or "threat-advisory"
-    featured_score = featured_item.get("score", 85)
-    featured_level = featured_item.get("threat_level", "HIGH")
-    featured_cves = ", ".join(featured_item.get("cves") or []) or "Active Vector"
+    def story_url(slot: str, f: Dict[str, Any], appetite: str) -> str:
+        return track_url(slot, f"/newsletter/story/{f['id']}?appetite={appetite}")
 
-    content_blocks = []
-    text_parts = []
+    blocks: List[str] = []
+    text_parts: List[str] = []
 
-    # 1. Masthead Header
-    masthead_meta = {
-        "headlines": ("⚡ SIRAUGA THREAT RADAR · DIRECT WIRE", "#19e6ff", "Radar Headlines Skimmer"),
-        "briefs": ("📋 SIRAUGA EXECUTIVE BRIEFINGS · ADVISORY FEED", "#b388ff", "Executive Briefing"),
-        "deep_dive": ("🔬 SIRAUGA TECHNICAL INTELLIGENCE · FORENSICS & REMEDIATION", "#00ff88", "Technical Deep Dive & Remediation"),
-        "reconstruction": ("⚔️ SIRAUGA DEFENSE SIMULATION · PURPLE-TEAM LAB", "#ffaa00", "Attack Reconstruction Playbook"),
-        "cyber_thriller": ("🍿 SIRAUGA CYBER THRILLER · INSIDE THE BREACH", "#ff7878", "Cyber Thriller Narrative"),
-    }
-    masthead_title, masthead_color, appetite_label = masthead_meta.get(target_style, masthead_meta["briefs"])
-
-    masthead_html = f"""
+    # Masthead
+    blocks.append(f"""
     <div style="border-bottom: 1px solid rgba(25, 230, 255, 0.25); padding-bottom: 16px; margin-bottom: 20px;">
-        <div style="font-size: 11px; font-family: monospace; letter-spacing: 2px; color: {masthead_color}; text-transform: uppercase;">
-            {masthead_title}
+        <div style="font-size: 11px; font-family: monospace; letter-spacing: 2px; color: #19e6ff; text-transform: uppercase;">
+            Cyber Threat Intelligence Dispatch
         </div>
         <div style="font-size: 12px; color: #888899; font-family: monospace; margin-top: 4px;">
-            Release Stream · Latest Advisory: <strong style="color: #ffffff;">{featured_date}</strong>
+            {layout_label} · <strong style="color: {style_color};">{emoji} {style_label}</strong> · Latest release: <strong style="color: #ffffff;">{html_lib.escape(featured['date'])}</strong>
         </div>
-        <div style="margin-top: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 8px 12px;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td style="font-size: 12px; color: #cccccc; font-family: monospace;">
-                        Format Style: <strong style="color: {masthead_color};">{html_lib.escape(appetite_label)}</strong>
-                    </td>
-                    <td style="text-align: right; vertical-align: middle;">
-                        <a href="{pref_url}" style="font-size: 11px; font-family: monospace; color: #19e6ff; text-decoration: none; border: 1px solid #19e6ff; padding: 4px 8px; border-radius: 4px; display: inline-block;">
-                            ⚙️ Switch Style
-                        </a>
-                    </td>
-                </tr>
-            </table>
+        <div style="margin-top: 10px;">
+            <a href="{pref_url}" style="font-size: 11px; font-family: monospace; color: #19e6ff; text-decoration: none; border: 1px solid #19e6ff; padding: 4px 8px; border-radius: 4px; display: inline-block;">⚙️ Switch Style</a>
         </div>
-    </div>
-    """
-    content_blocks.append(masthead_html)
+    </div>""")
+    text_parts.append(f"CYBER THREAT INTELLIGENCE DISPATCH\n{layout_label} · {emoji} {style_label}\nLatest release: {featured['date']}\n")
 
-    # Format 1: Just Headlines (Instant Radar Skimmer)
-    if target_style == "headlines":
-        subject = f"[⚡ Radar Headlines] {featured_title} · {featured_date}"
-        text_parts.append(f"⚡ SIRAUGA THREAT RADAR · DIRECT WIRE\nReleased: {featured_date}\n\nHEADLINES WIRE:\n")
+    if layout == "quick_threat_wire":
+        bulletins = [_story_fields(it) for it in items[:5]]
+        subject = f"[Threat Wire] {len(bulletins)} Rapid Vulnerability Bulletins"
+        rows = [_headline_bulletin(f, story_url("headline", f, "headlines")) for f in bulletins]
+        blocks.append(_section("#19e6ff", "⚡ Rapid Threat Wire (1-Min Bulletins)", "".join(h for h, _ in rows)))
+        text_parts.append("RAPID THREAT WIRE:\n" + "\n".join(t for _, t in rows))
+    else:
+        featured_html, featured_text = _featured_teaser(style, featured, story_url(style, featured, style))
+        blocks.append(_section(style_color, f"Featured Dossier · {emoji} {style_label}", featured_html))
+        text_parts.append(f"FEATURED DOSSIER · {style_label.upper()}\n{featured_text}")
 
-        headline_rows = []
-        for it in items[:7]:
-            it_id = it.get("story_id") or "item"
-            it_title = html_lib.escape(it.get("title") or "Security Alert")
-            it_date = it.get("display_date") or format_display_date(it.get("timestamp", 0), it.get("date", ""))
-            it_lvl = html_lib.escape(it.get("threat_level") or "HIGH")
-            it_score = it.get("score", 80)
-            it_cves = html_lib.escape(", ".join(it.get("cves") or []) or "Zero-Day")
-            it_url = track_url("headline", f"/newsletter/story/{it_id}?appetite=headlines")
+        headline_items = []
+        if layout in ("hybrid_brief", "weekly_digest"):
+            headline_items = [_story_fields(it) for it in items[1:5]]
+        if headline_items:
+            rows = [_headline_bulletin(f, story_url("headline", f, "headlines")) for f in headline_items]
+            blocks.append(_section("#19e6ff", "⚡ Advisory Headlines Brief", "".join(h for h, _ in rows)))
+            text_parts.append("ADVISORY HEADLINES BRIEF:\n" + "\n".join(t for _, t in rows))
 
-            badge_color = "#ff7878" if it_score >= 90 else "#ffaa00"
-            badge_bg = "rgba(255, 77, 77, 0.2)" if it_score >= 90 else "rgba(255, 170, 0, 0.2)"
+        if layout == "hybrid_brief":
+            subject = f"[Cyber Intel Brief] {featured['title']}"
+            if headline_items:
+                subject += f" + {len(headline_items)} Advisories"
+        else:
+            subject = f"[{style_label}] {featured['title']}"
 
-            headline_rows.append(f"""
-            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(25, 230, 255, 0.2); border-left: 4px solid {badge_color}; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px;">
-                <div style="margin-bottom: 6px; font-family: monospace; font-size: 11px;">
-                    <span style="background: {badge_bg}; color: {badge_color}; padding: 2px 6px; border-radius: 3px; font-weight: bold;">
-                        {it_lvl} ({it_score}/100) · {it_cves}
-                    </span>
-                    <span style="color: #888899; margin-left: 8px;">{it_date}</span>
-                </div>
-                <div style="font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 10px;">
-                    <a href="{it_url}" style="color: #ffffff; text-decoration: none;">
-                        {it_title}
-                    </a>
-                </div>
-                <div>
-                    <a href="{it_url}" style="display: inline-block; background-color: #19e6ff; color: #000000; font-family: monospace; font-size: 12px; font-weight: bold; padding: 6px 14px; border-radius: 4px; text-decoration: none;">
-                        ⚡ View on Newsfeed →
-                    </a>
-                </div>
-            </div>
-            """)
-            text_parts.append(f"- [{it_lvl}] {it.get('title')}\n  Released: {it_date} | {it_cves}\n  Link: {it_url}\n")
+    # Engagement module 1: alternate appetite teaser
+    if items and modules.get("alt_appetite_teaser", True):
+        alt_style = _ALT_STYLE[style]
+        alt_emoji, alt_label, alt_color, _ = _STYLE_META[alt_style]
+        alt_url = story_url("alt_teaser", featured, alt_style)
+        hook = _ALT_HOOKS[alt_style]
+        blocks.append(_section(
+            alt_color,
+            f"🔀 Alternate Perspective Preview · {alt_emoji} {alt_label}",
+            _paragraph(f'<strong style="color: {alt_color};">Curiosity Hook:</strong> {html_lib.escape(hook)}')
+            + _cta(alt_url, f"{alt_emoji} Read as {alt_label} →", alt_color),
+        ))
+        text_parts.append(f"ALTERNATE PERSPECTIVE PREVIEW ({alt_label}):\nCuriosity Hook: {hook}\n{alt_url}\n")
 
-        content_blocks.append(f"""
-        <div style="margin-bottom: 24px;">
-            <div style="font-size: 12px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
-                ⚡ Real-Time Radar Headlines (1-Click Direct Access)
-            </div>
-            <p style="color: #a0aec0; font-size: 13px; margin: 0 0 16px 0;">
-                Direct threat radar with zero long scrolling. Click any bulletin to open the verified advisory immediately on the newsfeed.
-            </p>
-            {''.join(headline_rows)}
+    # Engagement module 2: audio edition CTA
+    if modules.get("audio_link", True):
+        audio_url = track_url("audio_cta", "/downloads")
+        blocks.append(_section(
+            "#b388ff",
+            "🎧 Accessible Audio Suite",
+            _paragraph("Prefer to listen? Visit the Accessible Audio Suite on the site.")
+            + _cta(audio_url, "🎧 Stream Audio on Site →", "#b388ff"),
+        ))
+        text_parts.append(f"ACCESSIBLE AUDIO SUITE:\nStream Audio on Site: {audio_url}\n")
+
+    # Engagement module 3: zero-day / KEV radar
+    radar = [f for f in (_story_fields(it) for it in items[:8]) if f["cves"]][:5]
+    if radar and modules.get("zero_day_radar", True):
+        radar_rows, radar_text = [], []
+        for f in radar:
+            url = story_url("zero_day_radar", f, style)
+            cves = ", ".join(f["cves"])
+            radar_rows.append(
+                f'<li style="margin-bottom: 6px;"><a href="{url}" style="color: #19e6ff; font-family: monospace;">{html_lib.escape(cves)}</a>'
+                f' <span style="color: #888899;">· {html_lib.escape(f["level"])} · {html_lib.escape(f["title"])}</span></li>'
+            )
+            radar_text.append(f"- {cves} [{f['level']}] {f['title']}: {url}")
+        blocks.append(_section(
+            "#ff7878",
+            "🛰️ Bonus Zero-Day & KEV Radar",
+            f'<ul style="margin: 0; padding-left: 18px; font-size: 13px;">{"".join(radar_rows)}</ul>',
+        ))
+        text_parts.append("BONUS ZERO-DAY & KEV RADAR:\n" + "\n".join(radar_text) + "\n")
+
+    # E-Profile development news
+    dev_url = track_url("dev_releases", "/projects")
+    blocks.append(_section(
+        "#00ff88",
+        "🛠️ E-Profile Development & Engineering News",
+        "<h3 style=\"color: #ffffff; font-size: 15px; margin: 0 0 8px 0;\">What's Happening in E-Profile Development & New Releases</h3>"
+        + _paragraph("New platform releases, project write-ups, and Accessible Audio Suite updates are published on the projects page.")
+        + _cta(dev_url, "🛠️ See New Releases →", "#00ff88"),
+    ))
+    text_parts.append(f"E-PROFILE DEVELOPMENT & RELEASES:\nWhat's Happening in E-Profile Development & New Releases\n{dev_url}\n")
+
+    # Author credibility
+    blocks.append(f"""
+    <div style="text-align: center; margin: 24px 0; font-size: 12px; color: #a0aec0;">
+        Curated by <strong style="color: #ffffff;">Michael Robberts</strong> ·
+        <a href="{LINKEDIN_URL}" style="color: #19e6ff;">LinkedIn</a> ·
+        <a href="{CREDLY_URL}" style="color: #19e6ff;">Credly Certifications</a>
+        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="{CREDLY_BADGE_ID}" data-share-badge-host="https://www.credly.com" style="margin-top: 8px;">
+            <a href="https://www.credly.com/badges/{CREDLY_BADGE_ID}" style="color: #888899; font-size: 11px;">View verified Credly badge →</a>
         </div>
-        """)
+    </div>""")
+    text_parts.append(f"Curated by Michael Robberts\nLinkedIn: {LINKEDIN_URL}\nCredly: {CREDLY_URL}\n")
 
-    # Format 2: Headline Briefs (Executive Brief + Read More)
-    elif target_style == "briefs":
-        subject = f"[📋 Executive Brief] {featured_title} + {max(1, len(items)-1)} Advisories"
-        text_parts.append(f"📋 SIRAUGA EXECUTIVE BRIEFINGS\nReleased: {featured_date}\n\n")
-
-        brief_rows = []
-        for it in items[:5]:
-            it_id = it.get("story_id") or "item"
-            it_title = html_lib.escape(it.get("title") or "Security Advisory")
-            it_date = it.get("display_date") or format_display_date(it.get("timestamp", 0), it.get("date", ""))
-            it_lvl = html_lib.escape(it.get("threat_level") or "HIGH")
-            it_score = it.get("score", 80)
-            it_summary = html_lib.escape(it.get("summary") or "Adversary threat campaign.")
-            it_url = track_url("briefs", f"/newsletter/story/{it_id}?appetite=briefs")
-
-            badge_color = "#ff7878" if it_score >= 90 else "#ffaa00"
-
-            brief_rows.append(f"""
-            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid {badge_color}; border-radius: 8px; padding: 18px 20px; margin-bottom: 16px;">
-                <div style="font-family: monospace; font-size: 11px; color: #888899; margin-bottom: 6px;">
-                    <span style="color: {badge_color}; font-weight: bold;">[{it_lvl}]</span> · Released: <strong style="color: #ffffff;">{it_date}</strong>
-                </div>
-                <h3 style="color: #ffffff; font-size: 17px; margin: 0 0 8px 0; line-height: 1.4;">
-                    <a href="{it_url}" style="color: #ffffff; text-decoration: none;">
-                        {it_title}
-                    </a>
-                </h3>
-                <p style="color: #c8d2e0; font-size: 13.5px; line-height: 1.6; margin: 0 0 12px 0;">
-                    {it_summary}
-                </p>
-                <div>
-                    <a href="{it_url}" style="display: inline-block; background: rgba(25, 230, 255, 0.15); border: 1px solid #19e6ff; color: #19e6ff; font-family: monospace; font-size: 12px; font-weight: bold; padding: 7px 16px; border-radius: 4px; text-decoration: none;">
-                        📖 Read More on Site →
-                    </a>
-                </div>
-            </div>
-            """)
-            text_parts.append(f"### {it.get('title')}\nReleased: {it_date}\n{it.get('summary')}\nRead More: {it_url}\n\n")
-
-        content_blocks.append(f"""
-        <div style="margin-bottom: 24px;">
-            <div style="font-size: 12px; font-family: monospace; font-weight: bold; color: #b388ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
-                📋 Executive Threat Briefings
-            </div>
-            <p style="color: #a0aec0; font-size: 13px; margin: 0 0 16px 0;">
-                Concise executive takeaways explaining threat exposure, blast radius, and decision questions.
-            </p>
-            {''.join(brief_rows)}
-        </div>
-        """)
-
-    # Format 3: Technical Deep Dive & Remediation Playbook
-    elif target_style == "deep_dive":
-        subject = f"[🔬 Deep Dive & Remediation] {featured_title}"
-        cached = get_cached_story(featured_id, "deep_dive")
-        raw_story = (cached.get("markdown") if cached else "") or generate_builtin_appetite_story("deep_dive", featured_item)
-        story_html = markdown.markdown(raw_story, extensions=['tables', 'fenced_code'])
-        featured_cta = track_url("deep_dive", f"/newsletter/story/{featured_id}?appetite=deep_dive")
-
-        text_parts.append(f"🔬 TECHNICAL DEEP DIVE & REMEDIATION PLAYBOOK\nReleased: {featured_date}\n\n{raw_story}\nFull Interactive Playbook: {featured_cta}\n")
-
-        content_blocks.append(f"""
-        <div style="background: rgba(0, 255, 136, 0.04); border: 1px solid rgba(0, 255, 136, 0.35); border-radius: 8px; padding: 22px; margin-bottom: 24px;">
-            <div style="font-size: 11px; font-family: monospace; color: #00ff88; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin-bottom: 6px;">
-                🔬 Forensic Root-Cause Analysis & Blue-Team Runbook
-            </div>
-            <div style="font-size: 11px; font-family: monospace; color: #888899; margin-bottom: 12px;">
-                Released: <strong style="color: #ffffff;">{featured_date}</strong> · Identifiers: {featured_cves}
-            </div>
-            <h2 style="color: #ffffff; font-size: 20px; margin: 0 0 14px 0; line-height: 1.3;">
-                {html_lib.escape(featured_title)}
-            </h2>
-            <div style="font-size: 14px; color: #d0d7de; line-height: 1.6;" class="story-rendered-body">
-                {story_html}
-            </div>
-            <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <a href="{featured_cta}" style="display: inline-block; background-color: #00ff88; color: #000000; font-family: monospace; font-size: 13px; font-weight: bold; padding: 10px 22px; border-radius: 4px; text-decoration: none;">
-                    🔬 Inspect Full Technical Dossier & Playbook on Site →
-                </a>
-            </div>
-        </div>
-        """)
-
-    # Format 4: Attack Reconstruction Playbook (Educational Simulation)
-    elif target_style == "reconstruction":
-        subject = f"[⚔️ Threat Reconstruction Playbook] {featured_title}"
-        cached = get_cached_story(featured_id, "reconstruction")
-        raw_story = (cached.get("markdown") if cached else "") or generate_builtin_appetite_story("reconstruction", featured_item)
-        story_html = markdown.markdown(raw_story, extensions=['tables', 'fenced_code'])
-        featured_cta = track_url("reconstruction", f"/newsletter/story/{featured_id}?appetite=reconstruction")
-
-        text_parts.append(f"⚔️ ATTACK RECONSTRUCTION & SIMULATION PLAYBOOK\nReleased: {featured_date}\n\n{raw_story}\nAccess Lab Reconstruction: {featured_cta}\n")
-
-        content_blocks.append(f"""
-        <div style="background: rgba(255, 170, 0, 0.04); border: 1px solid rgba(255, 170, 0, 0.35); border-radius: 8px; padding: 22px; margin-bottom: 24px;">
-            <div style="font-size: 11px; font-family: monospace; color: #ffaa00; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin-bottom: 6px;">
-                ⚔️ Educational Threat Simulation & Reconstruction
-            </div>
-            <div style="font-size: 11px; font-family: monospace; color: #888899; margin-bottom: 12px;">
-                Released: <strong style="color: #ffffff;">{featured_date}</strong> · Sandbox Scope: Authorized Labs
-            </div>
-            <h2 style="color: #ffffff; font-size: 20px; margin: 0 0 14px 0; line-height: 1.3;">
-                {html_lib.escape(featured_title)}
-            </h2>
-            <div style="font-size: 14px; color: #d0d7de; line-height: 1.6;" class="story-rendered-body">
-                {story_html}
-            </div>
-            <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <a href="{featured_cta}" style="display: inline-block; background-color: #ffaa00; color: #000000; font-family: monospace; font-size: 13px; font-weight: bold; padding: 10px 22px; border-radius: 4px; text-decoration: none;">
-                    ⚔️ Access Complete Lab Reconstruction & Defense Guide on Site →
-                </a>
-            </div>
-        </div>
-        """)
-
-    # Format 5: Cyber Thriller (Narrative Story)
-    else:  # cyber_thriller
-        subject = f"[🍿 Cyber Thriller] {featured_title}"
-        cached = get_cached_story(featured_id, "cyber_thriller")
-        raw_story = (cached.get("markdown") if cached else "") or generate_builtin_appetite_story("cyber_thriller", featured_item)
-        story_html = markdown.markdown(raw_story, extensions=['tables', 'fenced_code'])
-        featured_cta = track_url("cyber_thriller", f"/newsletter/story/{featured_id}?appetite=cyber_thriller")
-
-        text_parts.append(f"🍿 CYBER THRILLER (NARRATIVE)\nReleased: {featured_date}\n\n{raw_story}\nRead Full Story: {featured_cta}\n")
-
-        content_blocks.append(f"""
-        <div style="background: rgba(255, 120, 120, 0.04); border: 1px solid rgba(255, 120, 120, 0.35); border-radius: 8px; padding: 22px; margin-bottom: 24px;">
-            <div style="font-size: 11px; font-family: monospace; color: #ff7878; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin-bottom: 6px;">
-                🍿 Inside the Breach · Cyber Thriller Narrative
-            </div>
-            <div style="font-size: 11px; font-family: monospace; color: #888899; margin-bottom: 12px;">
-                Incident Released: <strong style="color: #ffffff;">{featured_date}</strong> · Non-Technical Reading Format
-            </div>
-            <h2 style="color: #ffffff; font-size: 20px; margin: 0 0 14px 0; line-height: 1.3;">
-                {html_lib.escape(featured_title)}
-            </h2>
-            <div style="font-size: 14.5px; color: #d0d7de; line-height: 1.7;" class="story-rendered-body">
-                {story_html}
-            </div>
-            <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <a href="{featured_cta}" style="display: inline-block; background-color: #ff7878; color: #000000; font-family: monospace; font-size: 13px; font-weight: bold; padding: 10px 22px; border-radius: 4px; text-decoration: none;">
-                    🍿 Read the Full Cyber Thriller on Site →
-                </a>
-            </div>
-        </div>
-        """)
-
-    # Footer: Activity requirement and RFC 8058 links (Zero download links in email)
-    footer_html = f"""
+    # Footer: activity requirement, inbox relief, RFC 8058 links (zero download links in email)
+    blocks.append(f"""
     <div style="margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
         <div style="background: rgba(25, 230, 255, 0.04); border: 1px solid rgba(25, 230, 255, 0.15); border-radius: 6px; padding: 12px 14px; margin-bottom: 18px; font-size: 11px; color: #a0aec0; line-height: 1.5;">
-            <strong style="color: #19e6ff;">Active Subscription Requirement:</strong> We require subscribers to visit the site from time to time to keep their subscription active. If you do not visit the website from the emails you receive, your subscription record will be automatically purged.
+            <strong style="color: #19e6ff;">Subscription Activity Requirement:</strong> We require subscribers to visit the site from time to time to keep their subscription active. If you do not visit the website from the emails you receive, your subscription record will be automatically purged.
             <div style="margin-top: 6px;">
                 <a href="{visit_site_url}" style="color: #19e6ff; text-decoration: underline; font-weight: bold;">Visit Website to Keep Active →</a>
             </div>
         </div>
+        <p style="margin: 0 0 12px 0; font-size: 12px; color: #cbd5e1; text-align: center;">{INBOX_RELIEF_NOTICE}</p>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto 16px auto;">
             <tr>
                 <td align="center" bgcolor="#d32f2f" style="border-radius: 6px; background-color: #d32f2f; border: 1px solid #ff4d4d;">
@@ -778,16 +796,14 @@ def build_personalized_newsletter_email(
                 RFC 8058 Compliant · Zero-Database Local Storage Architecture
             </div>
         </div>
-    </div>
-    """
-    content_blocks.append(footer_html)
-
+    </div>""")
     text_parts.append(
-        f"\n" + "=" * 60 +
-        f"\nACTIVE SUBSCRIPTION REQUIREMENT:\n"
-        f"We require subscribers to visit the site from time to time to keep their subscription active.\n"
+        "\n" + "=" * 60 +
+        "\nSUBSCRIPTION ACTIVITY REQUIREMENT:\n"
+        "We require subscribers to visit the site from time to time to keep their subscription active.\n"
         f"Visit Website to Confirm Active Status: {visit_site_url}\n"
-        f"\n1-Click Unsubscribe & Purge Data: {unsub_purge_url}\n"
+        f"\n{INBOX_RELIEF_NOTICE}\n"
+        f"1-Click Unsubscribe & Purge Data: {unsub_purge_url}\n"
         f"Manage Preferences: {pref_url}\n"
         f"Terms and Conditions: {terms_url}\n"
     )
@@ -798,13 +814,6 @@ def build_personalized_newsletter_email(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{html_lib.escape(subject)}</title>
-    <style>
-        .story-rendered-body h1, .story-rendered-body h2, .story-rendered-body h3 {{ color: #ffffff; margin-top: 14px; margin-bottom: 6px; }}
-        .story-rendered-body p {{ margin: 0 0 10px 0; }}
-        .story-rendered-body ul, .story-rendered-body ol {{ margin: 0 0 10px 20px; padding: 0; }}
-        .story-rendered-body li {{ margin-bottom: 4px; }}
-        .story-rendered-body code {{ background: rgba(255, 255, 255, 0.1); color: #19e6ff; padding: 2px 4px; border-radius: 3px; font-family: monospace; font-size: 12px; }}
-    </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #0a0a0b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e0e0e0;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0a0a0b; padding: 25px 12px;">
@@ -813,7 +822,7 @@ def build_personalized_newsletter_email(
                 <table role="presentation" width="100%" style="max-width: 640px; background-color: #10141d; border: 1px solid rgba(25, 230, 255, 0.25); border-radius: 8px; padding: 24px; text-align: left;">
                     <tr>
                         <td>
-                            {''.join(content_blocks)}
+                            {''.join(blocks)}
                         </td>
                     </tr>
                 </table>
@@ -823,14 +832,12 @@ def build_personalized_newsletter_email(
 </body>
 </html>"""
 
-    clean_unsub_url = f"{clean_base}/newsletter/unsubscribe?token={token}"
     headers = {
-        "List-Unsubscribe": f"<{clean_unsub_url}>",
+        "List-Unsubscribe": f"<{clean_base}/newsletter/unsubscribe?token={token}>",
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
     }
+    return subject, master_html, "\n".join(text_parts), headers
 
-    plain_text = "\n".join(text_parts)
-    return subject, master_html, plain_text, headers
 
 def build_welcome_subscription_email(
     subscriber: Dict[str, Any],
@@ -847,8 +854,6 @@ def build_welcome_subscription_email(
     Returns:
       (subject: str, html_content: str, text_content: str, headers: Dict[str, str])
     """
-    import html as html_lib
-
     clean_base = (base_url or "").rstrip("/")
     if not clean_base:
         clean_base = getattr(config, "BASE_URL", "https://mikeymike.pythonanywhere.com").rstrip("/")
@@ -886,79 +891,63 @@ def build_welcome_subscription_email(
                     <!-- Masthead -->
                     <tr>
                         <td style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 16px;">
-                            <span style="font-size: 18px; font-weight: bold; color: #00f3ff; letter-spacing: 1.5px; font-family: monospace;">
-                                E-PROFILE INTELLIGENCE SYSTEM
-                            </span>
-                            <span style="float: right; font-size: 11px; font-family: monospace; color: #00ff88; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); padding: 3px 8px; border-radius: 4px;">
-                                ACTIVE VERIFICATION
-                            </span>
+                            <span style="font-size: 18px; font-weight: bold; color: #00f3ff; letter-spacing: 1px;">MICHAEL ROBBERTS</span>
+                            <span style="float: right; font-size: 12px; color: #888899; font-family: monospace;">Zero-Trust Intel</span>
                         </td>
                     </tr>
 
-                    <!-- Welcome Heading -->
+                    <!-- Body -->
                     <tr>
-                        <td style="padding-top: 20px;">
-                            <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
-                                📬 SUBSCRIPTION CONFIRMATION & WELCOME
+                        <td style="padding-top: 24px;">
+                            <div style="font-size: 11px; font-family: monospace; letter-spacing: 2px; color: #19e6ff; text-transform: uppercase; margin-bottom: 6px;">
+                                Subscription Notification
                             </div>
-                            <h2 style="color: #ffffff; font-size: 22px; margin: 0 0 14px 0; font-weight: 700;">
-                                Welcome to Cyber Threat Intelligence!
-                            </h2>
-                            <p style="font-size: 15px; color: #d0d8e8; line-height: 1.6; margin: 0 0 20px 0;">
-                                We received a subscription request for <strong style="color: #19e6ff;">{html_lib.escape(email)}</strong> to receive Cyber Threat Intelligence feeds, zero-day telemetry, and vulnerability advisories from Michael Robberts E-Profile.
+                            <h1 style="color: #ffffff; font-size: 22px; margin: 0 0 16px 0; font-weight: 700;">
+                                Did you subscribe to Cyber Threat Intelligence?
+                            </h1>
+                            <p style="font-size: 14px; line-height: 1.6; color: #c8d2e0; margin: 0 0 16px 0;">
+                                Hello, we received a subscription request for <strong style="color: #ffffff;">{html_lib.escape(email)}</strong> to receive curated, multi-cadence cyber intelligence feeds and zero-day threat dispatches from the Michael Robberts E-Profile platform.
                             </p>
 
-                            <!-- Did you subscribe? Card -->
-                            <div style="background: rgba(0, 243, 255, 0.04); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; padding: 18px; margin-bottom: 20px;">
-                                <h3 style="color: #00f3ff; font-size: 16px; margin: 0 0 8px 0;">
-                                    ✅ Did you subscribe?
-                                </h3>
-                                <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; margin: 0 0 12px 0;">
-                                    If this was you, you're all set! You will receive tailored intelligence updates according to your selected format (<strong>{html_lib.escape(format_label)}</strong>) and primary appetite (<strong>{html_lib.escape(appetite_label)}</strong>).
-                                </p>
-                                <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin: 0 0 14px 0;">
-                                    You can fine-tune your threat topics, delivery frequency, or audio briefing preferences at any time in your private Preference Center:
-                                </p>
-                                <div>
-                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0;">
-                                        <tr>
-                                            <td align="center" bgcolor="#00f3ff" style="border-radius: 4px; background-color: #00f3ff;">
-                                                <a href="{pref_url}" target="_blank" role="button" aria-label="Manage Preferences & Confirm Settings" style="display: inline-block; background-color: #00f3ff; color: #000000; padding: 10px 22px; text-decoration: none; font-weight: bold; font-size: 13px; font-family: monospace, -apple-system, sans-serif; border-radius: 4px; border: 1px solid #00d2de;">
-                                                    ⚙️ Manage Preferences & Confirm Settings →
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </table>
+                            <!-- Subscription Details Card -->
+                            <div style="background: rgba(25, 230, 255, 0.05); border: 1px solid rgba(25, 230, 255, 0.2); border-radius: 6px; padding: 14px 16px; margin-bottom: 20px;">
+                                <div style="font-size: 11px; font-family: monospace; color: #19e6ff; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;">
+                                    Selected Preferences:
                                 </div>
+                                <div style="font-size: 13px; color: #e2e8f0; font-family: monospace;">
+                                    Delivery Format: <strong style="color: #ffffff;">{html_lib.escape(format_label)}</strong><br>
+                                    Primary Reading Appetite: <strong style="color: #19e6ff;">{html_lib.escape(appetite_label)}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Manage Preferences Button -->
+                            <div style="margin: 20px 0; text-align: center;">
+                                <a href="{pref_url}" style="background-color: #00f3ff; color: #000000; font-family: monospace; font-size: 13px; font-weight: bold; padding: 10px 22px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                                    ⚙️ Manage Your Preferences
+                                </a>
                             </div>
 
                             <!-- Accidental Subscription Notice & Pretty Unsubscribe Button -->
-                            <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: #1a0f12; border: 1px solid #772228; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ff7878; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
-                                    ⚠️ ACCIDENTAL SUBSCRIPTION OR NOT YOU?
-                                </div>
-                                <h3 style="color: #ffffff; font-size: 16px; margin: 0 0 8px 0; font-weight: 700;">
-                                    Was this not you?
-                                </h3>
-                                <p style="margin: 0 0 16px 0; font-size: 13px; color: #f1f5f9; line-height: 1.45; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                                    If you did not subscribe, or if someone else entered your email, click the button below to cancel immediately and permanently purge all records from our registry:
+                            <div style="margin: 24px 0; padding: 20px 16px; background-color: #1a0f12; border: 1px solid #772228; border-radius: 8px; text-align: center;">
+                                <p style="margin: 0 0 14px 0; font-size: 13px; color: #ffffff; font-weight: 600; line-height: 1.4;">
+                                    If you have not subscribed to this newsletter, please just hit that pretty button below to relieve your inbox.
                                 </p>
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
                                     <tr>
                                         <td align="center" bgcolor="#d32f2f" style="border-radius: 6px; background-color: #d32f2f; background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%); border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4);">
-                                            <a href="{unsub_url}" target="_blank" role="button" aria-label="1-Click Unsubscribe & Purge Data" style="display: inline-block; padding: 12px 28px; font-family: monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: bold; color: #ffffff; text-decoration: none; letter-spacing: 0.5px; border-radius: 6px; -webkit-text-size-adjust: none;">
+                                            <a href="{unsub_url}" target="_blank" role="button" aria-label="1-Click Unsubscribe & Purge Data" style="display: inline-block; padding: 12px 28px; font-family: monospace, sans-serif; font-size: 13px; font-weight: bold; color: #ffffff; text-decoration: none; letter-spacing: 0.5px; border-radius: 6px;">
                                                 🚫 1-Click Unsubscribe & Purge Data
                                             </a>
                                         </td>
                                     </tr>
                                 </table>
-                                <div style="margin-top: 12px; font-size: 11px; color: #ff9999; font-family: monospace;">
-                                    Immediately and completely purges your email address from our local registry.
+                                <div style="margin-top: 12px; font-size: 10px; color: #ff9999; font-family: monospace;">
+                                    Immediately and completely purges your email address and records from our local registry.
                                 </div>
                             </div>
 
                             <!-- Subscription Activity Requirement Card -->
-                            <div style="margin: 0 0 20px 0; padding: 14px 16px; background: rgba(255, 170, 0, 0.07); border: 1px solid rgba(255, 170, 0, 0.28); border-radius: 6px;">
+                            <div style="margin: 24px 0 16px 0; padding: 14px 16px; background: rgba(255, 170, 0, 0.07); border: 1px solid rgba(255, 170, 0, 0.28); border-radius: 6px;">
                                 <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ffaa00; text-transform: uppercase; margin-bottom: 4px;">
                                     ⏱️ Subscription Activity Requirement
                                 </div>
@@ -1063,4 +1052,54 @@ def send_welcome_email(
     )
 
 
+# ---------------------------------------------------------------------------
+# CLI Diagnostics & Direct Testing Tools
+# ---------------------------------------------------------------------------
 
+def _print_mail_config() -> None:
+    username, password = _smtp_credentials()
+    print("======================================================")
+    print("  E-Profile Email Engine Configuration")
+    print("======================================================")
+    print(f"  MAIL_BACKEND        : {config.MAIL_BACKEND}")
+    print(f"  MAIL_SERVER         : {config.MAIL_SERVER}")
+    print(f"  MAIL_PORT           : {config.MAIL_PORT}")
+    print(f"  MAIL_USE_TLS        : {config.MAIL_USE_TLS}")
+    print(f"  MAIL_USERNAME       : {username or '(missing)'}")
+    print(f"  MAIL_PASSWORD       : {'(configured)' if password else '(missing)'}")
+    print(f"  MAIL_DEFAULT_SENDER : {config.MAIL_DEFAULT_SENDER}")
+    print("======================================================")
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="E-Profile email engine diagnostics.")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--check", action="store_true", help="Print mail configuration and test the SMTP connection.")
+    group.add_argument("--send-test", metavar="EMAIL", help="Send a test email to EMAIL and report the honest delivery status.")
+    args = parser.parse_args(argv)
+
+    _print_mail_config()
+    print()
+
+    if args.check:
+        ok, message = test_smtp_connection()
+        print(f"[{'OK' if ok else 'FAIL'}] {message}")
+        return 0 if ok else 1
+
+    subject = "E-Profile Email Engine Test"
+    html_content = build_email_template(
+        title=subject,
+        body_html=f"<p>Test email generated at {datetime.now():%Y-%m-%d %H:%M:%S} via the '{config.MAIL_BACKEND}' backend.</p>",
+    )
+    ok, message, record = send_email(args.send_test, subject, html_content)
+    print(f"Status : {record['status']}")
+    print(f"Result : {message}")
+    if record.get("details"):
+        print(f"Details: {record['details']}")
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

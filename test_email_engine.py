@@ -308,6 +308,10 @@ class TestEmailEngine(unittest.TestCase):
         email_engine.config.MAIL_PORT = 465
         Config.MAIL_SERVER = "smtp.custom-ssl.net"
         email_engine.config.MAIL_SERVER = "smtp.custom-ssl.net"
+        Config.MAIL_USERNAME = "tester@custom-ssl.net"
+        email_engine.config.MAIL_USERNAME = "tester@custom-ssl.net"
+        Config.MAIL_PASSWORD = "app-password"
+        email_engine.config.MAIL_PASSWORD = "app-password"
 
         success, msg, record = email_engine.send_email(
             to_address="target@domain.org",
