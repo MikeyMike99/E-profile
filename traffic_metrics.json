@@ -1,9 +1,11 @@
 {
-    "total_views": 415,
+    "total_views": 425,
     "unique_visitors": [
         "v1",
         "46197d323d5f6ddfa527cee6ca22e6f7",
-        "1d1e21172e99619136cfffa1f045868a"
+        "1d1e21172e99619136cfffa1f045868a",
+        "d161524861561e0f2006dd7033b9354a",
+        "dc62de7631faac78d14c82085e631b10"
     ],
     "paths": {
         "/": 101,
@@ -38,8 +40,14 @@
         "/ai_agent/api/ui-config": 6,
         "/ai_agent/api/ai/status": 1,
         "/ai_agent/api/ai/selftest": 1,
-        "/newsletter": 1,
-        "/newsletter/download/new-volta-infostealer-uses-claude-gemini-and-/playbook": 1
+        "/newsletter": 2,
+        "/newsletter/download/new-volta-infostealer-uses-claude-gemini-and-/playbook": 1,
+        "/newsletter/story/debian-and-ubuntu-apt-flaw-lets-mitm-attacker": 3,
+        "/newsletter/story/synology-nas-devices-targeted-in-ransomware-a": 2,
+        "/newsletter/story/new-wave-of-refrigeration-cyberattacks-hits-s": 1,
+        "/newsletter/story/hackers-steal-about-2-7-million-from-polymark": 1,
+        "/newsletter/story/google-disrupts-1-3-million-device-android-bo": 1,
+        "/newsletter/story/darkblinders-compromises-israeli-target-and-i": 1
     },
     "newsletter": {
         "sends": {
