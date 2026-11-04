@@ -163,26 +163,46 @@ def add_subscriber(email: str, topics) -> dict:
     return entry
 
 
-def dispatch_welcome_email(subscriber: dict, base_url: str = None, sync: bool = False) -> None:
+def dispatch_welcome_email(subscriber: dict, base_url: str = None, sync: bool = None) -> None:
     """Dispatches the welcome confirmation email with an immediate 1-click unsubscribe option."""
     from email_engine import send_welcome_email
+    import os
+
     resolved_base = base_url
     if not resolved_base:
         try:
+            from flask import request
             resolved_base = request.host_url.rstrip("/")
         except Exception:
             resolved_base = getattr(config, "BASE_URL", "https://mikeymike.pythonanywhere.com").rstrip("/")
 
+    is_pa = bool(os.environ.get("PYTHONANYWHERE_DOMAIN") or os.environ.get("PYTHONANYWHERE_SITE"))
+    is_smtp = getattr(config, "MAIL_BACKEND", "").lower() == "smtp"
+    if sync is None:
+        sync = is_pa or is_smtp
+
+    app = None
+    try:
+        from flask import current_app
+        if current_app:
+            app = current_app._get_current_object()
+    except Exception:
+        pass
+
     def deliver():
+        ctx = app.app_context() if app else None
+        if ctx:
+            ctx.push()
         try:
             ok, msg, _ = send_welcome_email(subscriber, base_url=resolved_base)
-            if not ok:
-                current_app.logger.warning("Welcome email to %s failed: %s", subscriber.get("email"), msg)
+            if not ok and app:
+                app.logger.warning("Welcome email to %s failed: %s", subscriber.get("email"), msg)
         except Exception as exc:
-            try:
-                current_app.logger.warning("Exception sending welcome email to %s: %s", subscriber.get("email"), exc)
-            except Exception:
-                pass
+            if app:
+                app.logger.warning("Exception sending welcome email to %s: %s", subscriber.get("email"), exc)
+        finally:
+            if ctx:
+                ctx.pop()
 
     if sync:
         deliver()
@@ -198,7 +218,7 @@ def subscribe_newsletter(
     engagement_modules: dict = None,
     send_welcome: bool = False,
     base_url: str = None,
-    sync_welcome: bool = False
+    sync_welcome: bool = None
 ) -> dict:
     address = (email or "").strip().lower()
     if len(address) > 254 or not EMAIL_PATTERN.match(address):
