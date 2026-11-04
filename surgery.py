@@ -2,8 +2,8 @@ import os
 import textwrap
 try:
     import libcst as cst
-    _CST_BASE = cst.CSTTransformer
-except ImportError:
+    _CST_BASE = getattr(cst, "CSTTransformer", object)
+except Exception:
     cst = None
     _CST_BASE = object
 import re

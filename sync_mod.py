@@ -127,13 +127,44 @@ def handle_remote_git_pull():
         return jsonify({"status": "error", "message": "Unauthorized"}), 403
 
     try:
+        git_env = os.environ.copy()
+        git_env["GIT_TERMINAL_PROMPT"] = "0"
+        git_env["GIT_EDITOR"] = "true"
+
+        token = ""
+        for t_file in (config.ROOT_DIR / "gethub_token.txt", Path.home() / "gethub_token.txt"):
+            if t_file.is_file():
+                try:
+                    token = t_file.read_text(encoding="utf-8").strip()
+                    if token:
+                        break
+                except Exception:
+                    pass
+        if not token:
+            token = os.environ.get("GITHUB_TOKEN", "").strip()
+
+        auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
+
+        git_dir = config.ROOT_DIR / ".git"
+        if git_dir.is_dir():
+            for lock_f in git_dir.rglob("*.lock"):
+                try:
+                    lock_f.unlink(missing_ok=True)
+                except Exception:
+                    pass
+
         res = subprocess.run(
-            ['git', 'pull', 'origin', 'main', '--no-edit', '-X', 'ours'],
+            ['git', 'pull', auth_url, 'main', '--no-edit', '--allow-unrelated-histories', '-X', 'ours'],
             cwd=str(config.ROOT_DIR),
+            env=git_env,
             capture_output=True,
             text=True,
             timeout=30
         )
+        if res.returncode != 0:
+            subprocess.run(['git', 'fetch', auth_url, 'main'], cwd=str(config.ROOT_DIR), env=git_env, capture_output=True, text=True, timeout=20)
+            res = subprocess.run(['git', 'reset', '--hard', 'FETCH_HEAD'], cwd=str(config.ROOT_DIR), env=git_env, capture_output=True, text=True, timeout=10)
+
         reloaded = _touch_wsgi_reload()
         return jsonify({
             "status": "success" if res.returncode == 0 else "error",

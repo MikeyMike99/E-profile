@@ -52,7 +52,7 @@ class RemoteSyncController:
         print(f"\n🔍 Querying Split-Brain Bridge Status: {self.server_url} ...")
         t0 = time.time()
         try:
-            resp = requests.get(f"{self.server_url}/api/bridge/status", headers=self._headers(), timeout=10)
+            resp = requests.get(f"{self.server_url}/api/bridge/status", headers=self._headers(), timeout=45)
             latency_ms = round((time.time() - t0) * 1000, 1)
 
             if resp.status_code == 200:
@@ -81,7 +81,7 @@ class RemoteSyncController:
                 f"{self.server_url}/api/sync/git-pull",
                 headers=self._headers(),
                 data={"secret": self.secret},
-                timeout=35
+                timeout=60
             )
             elapsed = round(time.time() - t0, 2)
             if resp.status_code == 200:
@@ -126,7 +126,7 @@ class RemoteSyncController:
                 headers={"X-Sync-Secret": self.secret},
                 data=data,
                 files=files,
-                timeout=30
+                timeout=60
             )
             elapsed = round(time.time() - t0, 2)
             if resp.status_code == 200:
