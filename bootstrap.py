@@ -129,6 +129,14 @@ def _find_agy_binary() -> Path | None:
 
 def _run_agy_command(base_dir: Path, cmd_or_args, timeout: int = 90) -> tuple[int, str, str]:
     """Safely executes agy CLI operations in a properly configured subshell."""
+    if is_production_server():
+        msg = (
+            "[Split-Brain Architecture]\n"
+            "Antigravity CLI execution is decoupled from the PythonAnywhere web edge.\n"
+            "Headless tasks are dispatched to the local workstation core engine via the bridge.\n"
+            "Ensure scripts/local_bridge_worker.py is running on your workstation to process tasks."
+        )
+        return 0, msg, ""
     agy_bin = _find_agy_binary()
     if not agy_bin:
         return -1, "", "Antigravity CLI binary (agy) not found in ~/.local/bin/agy or PATH."
@@ -818,14 +826,23 @@ def _gather_system_status(base_dir: Path, error_msg: str, traceback_str: str, mi
     except Exception:
         pass
 
-    agy_bin = _find_agy_binary()
-    agy_data = {
-        "installed": agy_bin is not None,
-        "path": str(agy_bin) if agy_bin else "Not Found (~/.local/bin/agy)",
-        "size_mb": round(agy_bin.stat().st_size / (1024 * 1024), 1) if agy_bin else 0.0,
-        "executable": os.access(str(agy_bin), os.X_OK) if agy_bin else False,
-        "status_label": "Ready / Active" if agy_bin else "Offline / Missing"
-    }
+    if is_production_server():
+        agy_data = {
+            "installed": True,
+            "path": "Decoupled (Local Workstation Core)",
+            "size_mb": 0.0,
+            "executable": True,
+            "status_label": "Split-Brain Active (Thin Edge)"
+        }
+    else:
+        agy_bin = _find_agy_binary()
+        agy_data = {
+            "installed": agy_bin is not None,
+            "path": str(agy_bin) if agy_bin else "Not Found (~/.local/bin/agy)",
+            "size_mb": round(agy_bin.stat().st_size / (1024 * 1024), 1) if agy_bin else 0.0,
+            "executable": os.access(str(agy_bin), os.X_OK) if agy_bin else False,
+            "status_label": "Ready / Active" if agy_bin else "Offline / Missing"
+        }
 
     return {
         "status": "ok",
@@ -1374,7 +1391,7 @@ def generate_breakglass_dashboard_html(
             <a href="?action=ls&tab=files&path={norm_path}" class="tab-btn {'active' if active_tab == 'files' else ''}">[02] FILE EXPLORER & EDITOR</a>
             <a href="?action=status&tab=terminal" class="tab-btn {'active' if active_tab == 'terminal' else ''}">[03] EMERGENCY TERMINAL</a>
             <a href="?action=logs&tab=logs" class="tab-btn {'active' if active_tab == 'logs' else ''}">[04] RECOVERY LOGS</a>
-            <a href="?action=agy_view&tab=agy" class="tab-btn {'active' if active_tab == 'agy' else ''}">[05] AGY AI COPILOT</a>
+            <a href="?action=agy_view&tab=agy" class="tab-btn {'active' if active_tab == 'agy' else ''}">[05] AI CORE & LOCAL BRIDGE</a>
         </div>
 
         <!-- TAB 1: DIAGNOSTICS -->
@@ -1512,27 +1529,27 @@ def generate_breakglass_dashboard_html(
             <div class="box">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                     <div>
-                        <h2>🤖 Antigravity AI Copilot & Diagnostics (AGY)</h2>
+                        <h2>🤖 AI Core & Local Workstation Bridge</h2>
                         <p style="font-size:12px; color:var(--text-muted); margin-top:3px;">
-                            Autonomous diagnostic reasoning engine powered by Google Antigravity CLI binary.
+                            Split-Brain architecture: Thin web edge decoupled from thick local workstation AI execution core.
                         </p>
                     </div>
                     <span class="status-pill" style="border-color:{'var(--cyan)' if agy_info.get('installed') else 'var(--magenta)'}; color:{'var(--cyan)' if agy_info.get('installed') else 'var(--magenta)'};">
-                        {'● AGY ONLINE' if agy_info.get('installed') else '○ AGY OFFLINE'}
+                        {'● SPLIT-BRAIN ACTIVE' if is_production_server() else ('● AGY ONLINE' if agy_info.get('installed') else '○ AGY OFFLINE')}
                     </span>
                 </div>
 
                 <div class="metric-grid" style="margin-bottom:16px;">
                     <div class="metric-card">
-                        <div class="metric-label">AGY Binary Location</div>
-                        <div class="metric-val" style="font-size:13px; word-break:break-all;">{agy_info.get('path', 'Not found')}</div>
+                        <div class="metric-label">Execution Topology</div>
+                        <div class="metric-val" style="font-size:13px; word-break:break-all;">{agy_info.get('path', 'Local Core')}</div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-label">Binary Size / Executable</div>
                         <div class="metric-val">{agy_info.get('size_mb', 0.0)} MB / {'Yes (0755)' if agy_info.get('executable') else 'No'}</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-label">Engine Status</div>
+                        <div class="metric-label">Engine Topology Status</div>
                         <div class="metric-val" style="color:var(--cyan);">{agy_info.get('status_label', 'Ready')}</div>
                     </div>
                 </div>

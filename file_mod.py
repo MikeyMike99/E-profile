@@ -8,6 +8,12 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, jsonify, session
 from config import Config
 
+try:
+    from bridge_manager import is_production_server
+except Exception:
+    def is_production_server() -> bool:
+        return False
+
 config = Config()
 # Prefix: /api/projects/explorer
 file_manager_bp = Blueprint('file_manager', __name__)
@@ -195,6 +201,10 @@ def terminal_command():
     cmd_to_run = raw_cmd
     # Wrap direct prompt calls to agy: e.g. `agy "explain this file"` -> `agy --print "explain this file"`
     if cmd_to_run.startswith("agy ") or cmd_to_run == "agy":
+        if is_production_server():
+            return jsonify({
+                "output": "[Split-Brain Architecture]\nAntigravity CLI execution is decoupled from the PythonAnywhere edge host.\nHeadless tasks are dispatched to the local workstation core engine via the bridge.\nTo execute headless prompts, ensure scripts/local_bridge_worker.py is running on your workstation."
+            })
         parts = cmd_to_run.split(maxsplit=1)
         sub_arg = parts[1].strip() if len(parts) > 1 else ""
         standard_subcommands = {"agent", "agents", "models", "mcp", "plugin", "plugins", "help", "--help", "-h", "version", "--version", "update", "changelog"}

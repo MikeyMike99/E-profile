@@ -7,6 +7,13 @@ import subprocess
 from pathlib import Path
 from flask import Blueprint, session, jsonify, request, flash, redirect, url_for
 
+try:
+    from bridge_manager import is_production_server, bridge_mgr
+except Exception:
+    def is_production_server() -> bool:
+        return False
+    bridge_mgr = None
+
 diagnostics_bp = Blueprint('diagnostics', __name__)
 
 _DIAGNOSTICS_CACHE = {
@@ -135,27 +142,33 @@ def get_system_diagnostic_summary(force_refresh=False):
     # 4. Top Largest Files
     largest_files = _scan_largest_files(home_dir, limit=10, max_depth=3)
 
-    # 5. Antigravity CLI (agy) Detection
-    checked_paths = [
-        "PATH (which agy)",
-        str(home_dir / ".local" / "bin" / "agy"),
-        "/usr/local/bin/agy",
-        str(home_dir / ".local" / "bin" / "agy_real")
-    ]
-    agy_path = shutil.which("agy")
-    if not agy_path:
-        for p in [home_dir / ".local" / "bin" / "agy", Path("/usr/local/bin/agy"), home_dir / ".local" / "bin" / "agy_real"]:
-            if p.exists() and os.access(str(p), os.X_OK):
-                agy_path = str(p)
-                break
+    # 5. Antigravity CLI (agy) Detection / Split-Brain Bridge
+    if is_production_server():
+        b_status = bridge_mgr.get_status() if bridge_mgr else {}
+        checked_paths = ["Split-Brain Local Core Bridge"]
+        agy_path = "Decoupled (Local Workstation Core)"
+        agy_version = f"Split-Brain Thin Edge (Core Status: {b_status.get('status_label', 'Unknown')})"
+    else:
+        checked_paths = [
+            "PATH (which agy)",
+            str(home_dir / ".local" / "bin" / "agy"),
+            "/usr/local/bin/agy",
+            str(home_dir / ".local" / "bin" / "agy_real")
+        ]
+        agy_path = shutil.which("agy")
+        if not agy_path:
+            for p in [home_dir / ".local" / "bin" / "agy", Path("/usr/local/bin/agy"), home_dir / ".local" / "bin" / "agy_real"]:
+                if p.exists() and os.access(str(p), os.X_OK):
+                    agy_path = str(p)
+                    break
 
-    agy_version = None
-    if agy_path:
-        try:
-            res = subprocess.run([agy_path, "--version"], capture_output=True, text=True, timeout=2.0)
-            agy_version = res.stdout.strip() or res.stderr.strip()
-        except Exception as e:
-            agy_version = f"Error querying version: {e}"
+        agy_version = None
+        if agy_path:
+            try:
+                res = subprocess.run([agy_path, "--version"], capture_output=True, text=True, timeout=2.0)
+                agy_version = res.stdout.strip() or res.stderr.strip()
+            except Exception as e:
+                agy_version = f"Error querying version: {e}"
 
     # 6. Installed Python Packages (via importlib.metadata)
     packages = []

@@ -29,6 +29,13 @@ try:
 except Exception:
     BASE_DIR = Path(__file__).resolve().parent
 
+try:
+    from bridge_manager import is_production_server, bridge_mgr
+except Exception:
+    def is_production_server() -> bool:
+        return False
+    bridge_mgr = None
+
 CACHE_DIR = BASE_DIR / "cache"
 TEMP_DOCS_DIR = CACHE_DIR / "temp_docs"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -160,6 +167,8 @@ Tone: Sarcastic, funny, technically razor-sharp, respectful to victims but merci
 
 def generate_story_with_claude(prompt: str, timeout_sec: int = 40) -> Optional[str]:
     """Invokes Claude Code non-interactively with security guardrails."""
+    if is_production_server():
+        return None
     if not (os.path.exists(CLAUDE_BIN) and os.access(CLAUDE_BIN, os.X_OK)):
         return None
 
@@ -196,6 +205,8 @@ def generate_story_with_claude(prompt: str, timeout_sec: int = 40) -> Optional[s
 
 def generate_story_with_antigravity(prompt: str, timeout_sec: int = 40) -> Optional[str]:
     """Invokes Antigravity CLI non-interactively with sandbox protection."""
+    if is_production_server():
+        return None
     if not (os.path.exists(AGY_BIN) and os.access(AGY_BIN, os.X_OK)):
         return None
 
@@ -373,6 +384,34 @@ def dispatch_story_generation(
             "score": 75,
             "threat_level": "HIGH"
         }
+
+    # 3. If running on PythonAnywhere production edge, do not invoke local subprocesses
+    if is_production_server():
+        story_text = generate_builtin_appetite_story(appetite, item)
+        used_engine = "builtin (edge-safe)"
+        config_info = APPETITE_CONFIG.get(appetite, {})
+        result = {
+            "story_id": story_id,
+            "appetite": appetite,
+            "appetite_title": config_info.get("title", appetite),
+            "badge_color": config_info.get("badge_color", "#19e6ff"),
+            "engine": used_engine,
+            "generated_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+            "markdown": story_text,
+            "is_instant_cache": False
+        }
+        save_cached_story(story_id, appetite, result)
+        if bridge_mgr:
+            try:
+                bridge_mgr.enqueue_task("story", {
+                    "story_id": story_id,
+                    "appetite": appetite,
+                    "engine_choice": engine_choice,
+                    "item_metadata": item
+                })
+            except Exception:
+                pass
+        return result
 
     prompt = build_appetite_prompt(appetite, item)
     story_text = None

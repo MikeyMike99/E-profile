@@ -15,14 +15,7 @@ def _ensure_lf(path: Path):
 
 
 def _find_agy_bin(root: Path):
-    for base in (root, root.parent / "DevCore", Path.home() / "DevCore", root / "content" / "projects" / "engines" / "antigravity_agent", Path.home()):
-        for rel in (Path(".local/bin/agy_real"), Path(".local/bin/agy"), Path("agy_real"), Path("agy"), Path("bin/agy")):
-            cand = base / rel
-            if cand.is_file() and cand.stat().st_size > 50:
-                if cand.name == "agy" and (cand.parent / "agy_real").is_file() and cand.stat().st_size < 4096:
-                    return str(cand.parent / "agy_real")
-                return str(cand)
-    return shutil.which("agy")
+    return None
 
 
 def is_production_server() -> bool:
@@ -101,46 +94,8 @@ def main():
         (root / ".gitmodules").unlink(missing_ok=True)
         (submod_worktree / ".git").unlink(missing_ok=True)
 
-        agy_bin = _find_agy_bin(root)
-        if agy_bin:
-            agy_env = os.environ.copy()
-            if "PYTHONANYWHERE_DOMAIN" in os.environ or Path("/var/www").exists():
-                pa_proxy = "http://proxy.server:3128"
-                for k in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "all_proxy", "ALL_PROXY"):
-                    agy_env[k] = pa_proxy
-            try:
-                subprocess.run([agy_bin, "update"], cwd=str(root), env=agy_env, capture_output=True, text=True, timeout=25)
-            except Exception:
-                pass
-            try:
-                probe = subprocess.run(
-                    [agy_bin, "--model", "__probe_available_models__", "--output-format", "stream-json", "--print", "ping"],
-                    cwd=str(root),
-                    env=agy_env,
-                    capture_output=True,
-                    text=True,
-                    timeout=15,
-                )
-                combined_out = (probe.stdout or "") + "\n" + (probe.stderr or "")
-                if "Available models:" in combined_out:
-                    after = combined_out.split("Available models:", 1)[1]
-                    models = []
-                    for raw_line in after.splitlines():
-                        line = raw_line.strip()
-                        if not line:
-                            continue
-                        if line.startswith("{"):
-                            break
-                        models.append(line)
-                    target_core = engine_root if (engine_root / "core").is_dir() else submod_worktree
-                    if models and (target_core / "core").is_dir():
-                        cache_file = target_core / "core" / ".available_models_cache.json"
-                        cache_file.write_text(
-                            json.dumps({"updated_at": time.time(), "models": models}, indent=2),
-                            encoding="utf-8",
-                        )
-            except Exception:
-                pass
+        # Split-Brain Architecture: headless execution is decoupled from PythonAnywhere
+        print("[post_sync] Split-brain architecture active: headless CLI execution delegated to local workstation core.")
 
         subprocess.run(
             [
