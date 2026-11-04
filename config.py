@@ -33,7 +33,7 @@ class Config:
     THREAT_FEED_REFRESH_HOURS = int(os.environ.get("THREAT_FEED_REFRESH_HOURS", 6))
 
     # --- Email Service Configuration ---
-    MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "local")  # 'local', 'smtp'
+    MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "smtp")  # 'smtp' (live), 'local' (mock)
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
     MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "True").lower() in ("true", "1")
