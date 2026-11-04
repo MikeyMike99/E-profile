@@ -18,7 +18,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Dict, Any
-from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session
+from flask import Blueprint, render_template, abort, request, jsonify, redirect, url_for, session, make_response
 import markdown
 
 from config import Config
@@ -434,22 +434,62 @@ def newsletter_unsubscribe():
     elif not token and request.form:
         token = request.form.get("token", "").strip()
 
+    is_api_client = request.method == "POST" or (
+        request.headers.get("Accept") == "application/json" and "text/html" not in request.headers.get("Accept", "")
+    )
+
+    def _html_response(status_code: int = 200, **context):
+        resp = make_response(render_template(
+            'newsletter_preferences.html',
+            active_tab='newsletter',
+            appetites=APPETITE_CONFIG,
+            valid_formats=VALID_FORMATS,
+            valid_topics=VALID_TOPICS,
+            **context
+        ), status_code)
+        resp.headers['Referrer-Policy'] = 'no-referrer'
+        resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
+        return resp
+
     if not token:
-        return jsonify({"status": "error", "message": "Missing unsubscribe token."}), 400
+        if is_api_client:
+            return jsonify({"status": "error", "message": "Missing unsubscribe token."}), 400
+        return _html_response(
+            status_code=400,
+            subscriber=None,
+            unsubscribed_notice=False,
+            purged_notice=False,
+            token=""
+        )
+
+    # RFC 8058 One-Click POST detection from mail user agents (Gmail, Apple Mail)
+    is_rfc8058 = request.form.get("List-Unsubscribe") == "One-Click"
 
     purge_arg = request.args.get("purge", "").lower()
     json_purge = (request.get_json(silent=True) or {}).get("purge") if request.is_json else None
     form_purge = request.form.get("purge", "").lower() if request.form else None
 
-    should_purge = purge_arg in ("1", "true", "yes") or bool(json_purge) or (form_purge in ("1", "true", "yes"))
+    # Never purge on RFC 8058 automated header dispatches; purge only on explicit user request
+    should_purge = not is_rfc8058 and (
+        purge_arg in ("1", "true", "yes") or bool(json_purge) or (form_purge in ("1", "true", "yes"))
+    )
 
     if should_purge:
         purged_entry = purge_subscriber_by_token(token)
         if not purged_entry:
-            return jsonify({"status": "error", "message": "Subscriber token not found or already purged."}), 404
+            if is_api_client:
+                return jsonify({"status": "error", "message": "Subscriber token not found or already purged."}), 404
+            return _html_response(
+                status_code=200,
+                subscriber={"status": "purged", "email": ""},
+                unsubscribed_notice=True,
+                purged_notice=True,
+                purged_email="",
+                token=""
+            )
 
         email = purged_entry.get("email", "")
-        if request.method == "POST" or request.headers.get("Accept") == "application/json" or request.is_json:
+        if is_api_client:
             return jsonify({
                 "status": "success",
                 "message": f"Subscriber {email} and all associated data have been permanently purged.",
@@ -457,36 +497,36 @@ def newsletter_unsubscribe():
                 "email": email
             }), 200
 
-        return render_template(
-            'newsletter_preferences.html',
-            active_tab='newsletter',
+        return _html_response(
+            status_code=200,
             subscriber={"status": "purged", "email": email},
             unsubscribed_notice=True,
             purged_notice=True,
             purged_email=email,
-            token="",
-            appetites=APPETITE_CONFIG,
-            valid_formats=VALID_FORMATS,
-            valid_topics=VALID_TOPICS
+            token=""
         )
 
     ok = unsubscribe_by_token(token, purge=False)
     if not ok:
-        return jsonify({"status": "error", "message": "Subscriber token not found."}), 404
+        if is_api_client:
+            return jsonify({"status": "error", "message": "Subscriber token not found."}), 404
+        return _html_response(
+            status_code=200,
+            subscriber={"status": "unsubscribed"},
+            unsubscribed_notice=True,
+            purged_notice=False,
+            token=""
+        )
 
-    if request.method == "POST" or request.headers.get("Accept") == "application/json" or request.is_json:
+    if is_api_client:
         return jsonify({"status": "success", "message": "You have been successfully unsubscribed."}), 200
 
-    return render_template(
-        'newsletter_preferences.html',
-        active_tab='newsletter',
+    return _html_response(
+        status_code=200,
         subscriber={"status": "unsubscribed"},
         unsubscribed_notice=True,
         purged_notice=False,
-        token=token,
-        appetites=APPETITE_CONFIG,
-        valid_formats=VALID_FORMATS,
-        valid_topics=VALID_TOPICS
+        token=token
     )
 
 

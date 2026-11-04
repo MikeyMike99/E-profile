@@ -36,7 +36,28 @@
     </div>
     {% endif %}
 
-    {% if subscriber and subscriber.email %}
+    {% if purged_notice %}
+    <!-- Data Purged Confirmation Card (No broken preference form) -->
+    <div style="background: #0d1117; border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; padding: 36px 24px; text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 2.8rem; margin-bottom: 12px;" aria-hidden="true">🛡️</div>
+        <h2 style="color: #ffffff; font-size: 1.35rem; margin: 0 0 10px 0;">All Personal Data Erased</h2>
+        <p style="color: rgba(234, 242, 255, 0.8); max-width: 520px; margin: 0 auto 16px auto; font-size: 0.95rem; line-height: 1.6;">
+            Your email address (<strong>{{ purged_email if purged_email else 'your address' }}</strong>) and all associated configurations have been permanently removed from our server.
+        </p>
+        <p style="color: rgba(234, 242, 255, 0.55); font-size: 0.85rem; max-width: 480px; margin: 0 auto 24px auto; line-height: 1.5;">
+            In accordance with Zero-Data-Hoarding principles, no residual tokens, tracking IDs, or logs remain linked to your account.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <a href="/" style="background: rgba(25, 230, 255, 0.1); color: #19e6ff; border: 1px solid #19e6ff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-family: monospace; font-size: 0.9rem; font-weight: bold;">
+                ← Return to E-Profile Home
+            </a>
+            <a href="/newsletter" style="background: #19e6ff; color: #000; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-family: monospace; font-size: 0.9rem; font-weight: bold;">
+                Subscribe Again
+            </a>
+        </div>
+    </div>
+
+    {% elif subscriber and subscriber.email %}
     {% set current_format = subscriber.delivery.format if subscriber.delivery else 'hybrid_brief' %}
     {% set current_appetite = subscriber.content.primary_appetite if subscriber.content else 'cyber_thriller' %}
     {% set current_topics = subscriber.content.topics if subscriber.content else ['zero_days', 'cisa_kev'] %}

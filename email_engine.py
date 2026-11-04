@@ -935,14 +935,20 @@ def build_personalized_newsletter_email(
     </div>
 
     <!-- Accidental Subscription Notice & Pretty Unsubscribe Button -->
-    <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.3); border-radius: 8px; text-align: center;">
-        <p style="margin: 0 0 12px 0; font-size: 13px; color: #ffffff; font-weight: 600; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: #1a0f12; border: 1px solid #772228; border-radius: 8px; text-align: center;">
+        <p style="margin: 0 0 14px 0; font-size: 13px; color: #ffffff; font-weight: 600; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             If you have not subscribed to this newsletter, please just hit that pretty button below to relieve your inbox.
         </p>
-        <a href="{unsub_purge_url}" style="display: inline-block; background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%); color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-family: monospace, -apple-system, sans-serif; font-weight: bold; border-radius: 6px; border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4); letter-spacing: 0.5px;">
-            🚫 1-Click Unsubscribe & Purge Data
-        </a>
-        <div style="margin-top: 10px; font-size: 10px; color: #ff9999; font-family: monospace;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+            <tr>
+                <td align="center" bgcolor="#d32f2f" style="border-radius: 6px; background-color: #d32f2f; background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%); border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4);">
+                    <a href="{unsub_purge_url}" target="_blank" role="button" aria-label="1-Click Unsubscribe & Purge Data" style="display: inline-block; padding: 12px 28px; font-family: monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: bold; color: #ffffff; text-decoration: none; letter-spacing: 0.5px; border-radius: 6px; -webkit-text-size-adjust: none;">
+                        🚫 1-Click Unsubscribe & Purge Data
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top: 12px; font-size: 10px; color: #ff9999; font-family: monospace;">
             Immediately and completely purges your email address and records from our local registry.
         </div>
     </div>
@@ -1008,8 +1014,9 @@ def build_personalized_newsletter_email(
 </body>
 </html>"""
 
+    clean_unsub_url = f"{clean_base}/newsletter/unsubscribe?token={token}"
     headers = {
-        "List-Unsubscribe": f"<{unsub_url}>",
+        "List-Unsubscribe": f"<{clean_unsub_url}>",
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
     }
 
@@ -1105,27 +1112,39 @@ def build_welcome_subscription_email(
                                     You can fine-tune your threat topics, delivery frequency, or audio briefing preferences at any time in your private Preference Center:
                                 </p>
                                 <div>
-                                    <a href="{pref_url}" style="background-color: #00f3ff; color: #000000; padding: 10px 20px; text-decoration: none; font-weight: bold; font-size: 13px; font-family: monospace; border-radius: 4px; display: inline-block;">
-                                        ⚙️ Manage Preferences & Confirm Settings →
-                                    </a>
+                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0;">
+                                        <tr>
+                                            <td align="center" bgcolor="#00f3ff" style="border-radius: 4px; background-color: #00f3ff;">
+                                                <a href="{pref_url}" target="_blank" role="button" aria-label="Manage Preferences & Confirm Settings" style="display: inline-block; background-color: #00f3ff; color: #000000; padding: 10px 22px; text-decoration: none; font-weight: bold; font-size: 13px; font-family: monospace, -apple-system, sans-serif; border-radius: 4px; border: 1px solid #00d2de;">
+                                                    ⚙️ Manage Preferences & Confirm Settings →
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 
                             <!-- Accidental Subscription Notice & Pretty Unsubscribe Button -->
-                            <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.35); border-radius: 8px; text-align: center;">
-                                <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ff7878; text-transform: uppercase; margin-bottom: 6px;">
+                            <div style="margin: 0 0 20px 0; padding: 20px 16px; background-color: #1a0f12; border: 1px solid #772228; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #ff7878; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
                                     ⚠️ ACCIDENTAL SUBSCRIPTION OR NOT YOU?
                                 </div>
-                                <h3 style="color: #ffffff; font-size: 16px; margin: 0 0 8px 0;">
+                                <h3 style="color: #ffffff; font-size: 16px; margin: 0 0 8px 0; font-weight: 700;">
                                     Was this not you?
                                 </h3>
-                                <p style="margin: 0 0 14px 0; font-size: 13px; color: #f1f5f9; line-height: 1.45; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                <p style="margin: 0 0 16px 0; font-size: 13px; color: #f1f5f9; line-height: 1.45; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                                     If you did not subscribe, or if someone else entered your email, click the button below to cancel immediately and permanently purge all records from our registry:
                                 </p>
-                                <a href="{unsub_url}" style="display: inline-block; background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%); color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-family: monospace, -apple-system, sans-serif; font-weight: bold; border-radius: 6px; border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4); letter-spacing: 0.5px;">
-                                    🚫 1-Click Unsubscribe & Purge Data
-                                </a>
-                                <div style="margin-top: 10px; font-size: 11px; color: #ff9999; font-family: monospace;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+                                    <tr>
+                                        <td align="center" bgcolor="#d32f2f" style="border-radius: 6px; background-color: #d32f2f; background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%); border: 1px solid #ff4d4d; box-shadow: 0 4px 14px rgba(255, 77, 77, 0.4);">
+                                            <a href="{unsub_url}" target="_blank" role="button" aria-label="1-Click Unsubscribe & Purge Data" style="display: inline-block; padding: 12px 28px; font-family: monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: bold; color: #ffffff; text-decoration: none; letter-spacing: 0.5px; border-radius: 6px; -webkit-text-size-adjust: none;">
+                                                🚫 1-Click Unsubscribe & Purge Data
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div style="margin-top: 12px; font-size: 11px; color: #ff9999; font-family: monospace;">
                                     Immediately and completely purges your email address from our local registry.
                                 </div>
                             </div>
@@ -1208,8 +1227,9 @@ Terms and Conditions: {terms_url}
 RFC 8058 Compliant · Zero-Database Local Storage Architecture
 """
 
+    clean_unsub_url = f"{clean_base}/newsletter/unsubscribe?token={token}"
     headers = {
-        "List-Unsubscribe": f"<{unsub_url}>",
+        "List-Unsubscribe": f"<{clean_unsub_url}>",
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
     }
 
