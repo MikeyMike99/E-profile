@@ -1,5 +1,5 @@
 {
-    "total_views": 1289,
+    "total_views": 1298,
     "unique_visitors": [
         "v1",
         "46197d323d5f6ddfa527cee6ca22e6f7",
@@ -9,10 +9,11 @@
         "8ab0838cb5aef977f7700f4ae20b2d5e",
         "d095383db4bddeaf555c2ae05ca0638a",
         "1a4a5972aed7ec3a929571eac665eb02",
-        "01930e779dbc7bbcc8e87703acba0295"
+        "01930e779dbc7bbcc8e87703acba0295",
+        "9bd1ca4a11f7be22456967626b92b21b"
     ],
     "paths": {
-        "/": 110,
+        "/": 111,
         "/docs/api/admin/schedule": 12,
         "/docs/api/admin/save": 18,
         "/docs/api/admin/create": 12,
@@ -62,17 +63,20 @@
         "/newsletter/story/government-linux-servers-targeted-with-sysgor": 1,
         "/newsletter/download/attackers-pose-as-it-support-on-microsoft-tea/full": 1,
         "/newsletter/download/weekly-recap-critical-cves-linux-ddos-botnet-/full": 1,
-        "/projects": 4,
+        "/projects": 5,
         "/favicon.ico": 7,
         "/ai_agent/api/user/subscription/status": 1,
         "/ai_agent/api/auth_check": 1,
         "/newsletter/download/attackers-pose-as-it-support-on-microsoft-tea/playbook": 1,
         "/newsletter/story/openai-ai-pipeline-generates-948-linux-root-e": 1,
         "/newsletter/story/researchers-uncover-prompt-adware-hidden-in-o": 1,
-        "/robots.txt": 4,
+        "/robots.txt": 8,
         "/usage": 1,
         "/newsletter/download/weekly-recap-critical-cves-linux-ddos-botnet-/playbook": 1,
-        "/hub": 1
+        "/hub": 1,
+        "/bio": 1,
+        "/certifications": 1,
+        "/newsletter/download/is-your-soc-ready-for-ai-agents-a-maturity-ch/full": 1
     },
     "newsletter": {
         "sends": {
