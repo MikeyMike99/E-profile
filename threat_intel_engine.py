@@ -453,6 +453,13 @@ class ThreatIntelEngine:
         with open(MANIFEST_FILE, "w", encoding="utf-8") as f:
             json.dump(manifest_data, f, indent=2)
 
+        # Trigger autonomous background synthesis for all manifest headlines across core appetites
+        try:
+            from story_agent_dispatcher import auto_generate_manifest_stories
+            auto_generate_manifest_stories(manifest_data, background=True)
+        except Exception:
+            pass
+
         state["last_full_refresh"] = now
         self.save_rate_limit_state(state)
 

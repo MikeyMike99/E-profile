@@ -146,6 +146,54 @@
         {% endif %}
         {% endfor %}
     </div>
+
+    <!-- ========================================== -->
+    <!-- LOCAL AGENT CONSOLE DRAWER (HTTP TRANSPORT) -->
+    <!-- ========================================== -->
+    <aside id="agent-drawer" class="agent-drawer" aria-label="Local Agent Console" aria-hidden="true" style="display: none;">
+        <div class="agent-drawer-header">
+            <div class="agent-header-left">
+                <span class="agent-terminal-icon" aria-hidden="true">🤖</span>
+                <span id="agent-scope-badge" class="tool-pill" style="font-weight: bold; border-color: var(--accent-teal); color: var(--accent-teal);">AGENT_SCOPE: ROOT</span>
+                <span id="agent-heartbeat-badge" class="badge-pulse" title="Active HTTP Heartbeat">● HEARTBEAT: INIT (2s)</span>
+                <span id="agent-status-badge" class="badge-status">● IDLE</span>
+            </div>
+            <div class="agent-header-right">
+                <label for="agent-model-select" class="sr-only">Select AI Model</label>
+                <select id="agent-model-select" class="cyber-select-mini" aria-label="Select AI Model">
+                    <option value="Claude Opus 5.5 (Low)">Claude Opus 5.5 (Low)</option>
+                    <option value="Claude Sonnet 5.5 (Low)">Claude Sonnet 5.5 (Low)</option>
+                    <option value="Claude Opus 5.5 (High)">Claude Opus 5.5 (High)</option>
+                    <option value="Claude Sonnet 5.5 (High)">Claude Sonnet 5.5 (High)</option>
+                    <option value="Gemini 3.8 Flash (High)" selected>Gemini 3.8 Flash (High)</option>
+                    <option value="Gemini 4 Argon (Medium)">Gemini 4 Argon (Medium)</option>
+                    <option value="Local Qwen 2.5 (Offline)">Local Qwen 2.5 (Offline)</option>
+                </select>
+                <button type="button" onclick="openFullAgentPortal()" class="tool-pill" title="Open Full Agent Portal in New Tab" aria-label="Open Full Portal">↗ POP OUT</button>
+                <button type="button" onclick="closeAgentDrawer()" class="tool-pill heart-btn" title="Close Agent Drawer" aria-label="Close Agent Drawer">✕ CLOSE</button>
+            </div>
+        </div>
+
+        <div id="agent-chat-feed" class="agent-chat-feed" role="log" aria-live="polite" aria-label="Agent Conversation History">
+            <div class="agent-welcome-banner">
+                <div style="color: var(--accent-teal); font-weight: bold; margin-bottom: 4px;">[LOCAL HTTP AGENT CONSOLE INITIALIZED]</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">Direct HTTP Request Protocol active with 2-second persistent heartbeat. Type your instructions below and press Enter to execute, or steer mid-flight. Claude Brain & Gemini ready.</div>
+            </div>
+        </div>
+
+        <div class="agent-drawer-footer">
+            <div class="agent-input-row">
+                <textarea id="agent-prompt-input" class="cyber-textarea-input" placeholder="Type prompt for agent... (Enter to send, Shift+Enter for newline, Alt/Ctrl+Enter to queue)" rows="2" aria-label="Enter prompt for Agent"></textarea>
+                <div class="agent-btn-col">
+                    <button type="button" id="agent-send-btn" onclick="submitAgentPrompt()" class="btn-launch-pill status-ready" style="min-width: 110px;">EXECUTE</button>
+                    <div style="display: flex; gap: 5px; margin-top: 5px;">
+                        <button type="button" id="agent-queue-btn" onclick="submitAgentPrompt('queue')" class="tool-pill" title="Queue prompt for after current task" style="font-size: 0.75rem; padding: 2px 6px;">QUEUE</button>
+                        <button type="button" id="agent-cancel-btn" onclick="cancelAgentTask()" class="tool-pill" style="border-color: #ff3366; color: #ff3366; font-size: 0.75rem; padding: 2px 6px; display: none;" title="Cancel running task">STOP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
 </div>
 
 <script src="{{ url_for('static', filename='js/projects.js') }}?v=2.9.0"></script>

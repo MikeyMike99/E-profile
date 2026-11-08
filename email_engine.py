@@ -607,6 +607,49 @@ def _featured_teaser(style: str, f: Dict[str, Any], url: str) -> Tuple[str, str]
     return block, text
 
 
+def build_devcore_engineering_news_section(base_url: str = "", token: str = "") -> Tuple[str, str]:
+    """Generates the DevCore & E-Profile Engineering News section for all email templates."""
+    clean_base = (base_url or "").rstrip("/")
+    if token:
+        try:
+            from notify_mod import encode_tracking_token
+            dev_url = f"{clean_base}/newsletter/r/{encode_tracking_token('dev_releases', '/projects', sub_token=token)}"
+            docs_url = f"{clean_base}/newsletter/r/{encode_tracking_token('devcore_docs', '/docs', sub_token=token)}"
+        except Exception:
+            dev_url = f"{clean_base}/projects"
+            docs_url = f"{clean_base}/docs"
+    else:
+        dev_url = f"{clean_base}/projects"
+        docs_url = f"{clean_base}/docs"
+
+    html = _section(
+        "#00ff88",
+        "🛡️ DEVCORE · E-Profile Development & Engineering News",
+        "<h3 style=\"color: #ffffff; font-size: 15px; margin: 0 0 8px 0;\">What's Happening in E-Profile Development & New Releases</h3>"
+        + _paragraph("DevCore Autonomous AI Agent and Siraugga zero-trust framework engineering developments: Zero-downtime hot-patching, accessible WebSocket streaming, POPIA-compliant offline PII scrubbing, and Super Admin JIT elevation.")
+        + """<div style="margin: 10px 0; font-size: 12px; font-family: monospace; color: #a0aec0;">
+            <div style="margin-bottom: 4px;">⚡ <strong style="color: #19e6ff;">DevCore v2.4:</strong> Zero-downtime hot-patch sequence and AST memory syncing.</div>
+            <div style="margin-bottom: 4px;">🔐 <strong style="color: #00ff88;">Siraugga Security:</strong> KMS keychain, mantrap defense, and encrypted session rollover.</div>
+            <div>🎧 <strong style="color: #b388ff;">Accessible Audio Suite:</strong> High-contrast NVDA coordinate audio engine and TTS feeds.</div>
+        </div>"""
+        + '<div style="margin-top: 12px;">'
+        + _cta(dev_url, "🛠️ Explore DevCore Releases →", "#00ff88")
+        + " &nbsp; "
+        + _cta(docs_url, "📚 Architecture Docs & Devlogs →", "#19e6ff")
+        + '</div>',
+    )
+    text = (
+        f"E-PROFILE DEVELOPMENT & RELEASES:\n"
+        f"DEVCORE PLATFORM & ENGINEERING INTEL:\n"
+        f"What's Happening in E-Profile Development & New Releases\n"
+        f"- DevCore v2.4: Zero-downtime hot-patch sequence and AST memory syncing\n"
+        f"- Siraugga Security: KMS keychain, mantrap defense, and encrypted session rollover\n"
+        f"- Accessible Audio Suite: High-contrast NVDA coordinate audio engine\n"
+        f"DevCore Releases: {dev_url}\nArchitecture Docs: {docs_url}\n"
+    )
+    return html, text
+
+
 def build_personalized_newsletter_email(
     subscriber: Dict[str, Any],
     manifest: Dict[str, Any],
@@ -742,16 +785,10 @@ def build_personalized_newsletter_email(
         ))
         text_parts.append("BONUS ZERO-DAY & KEV RADAR:\n" + "\n".join(radar_text) + "\n")
 
-    # E-Profile development news
-    dev_url = track_url("dev_releases", "/projects")
-    blocks.append(_section(
-        "#00ff88",
-        "🛠️ E-Profile Development & Engineering News",
-        "<h3 style=\"color: #ffffff; font-size: 15px; margin: 0 0 8px 0;\">What's Happening in E-Profile Development & New Releases</h3>"
-        + _paragraph("New platform releases, project write-ups, and Accessible Audio Suite updates are published on the projects page.")
-        + _cta(dev_url, "🛠️ See New Releases →", "#00ff88"),
-    ))
-    text_parts.append(f"E-PROFILE DEVELOPMENT & RELEASES:\nWhat's Happening in E-Profile Development & New Releases\n{dev_url}\n")
+    # DevCore & E-Profile Engineering News
+    devcore_html, devcore_text = build_devcore_engineering_news_section(clean_base, token=token)
+    blocks.append(devcore_html)
+    text_parts.append(devcore_text)
 
     # Author credibility
     blocks.append(f"""
@@ -876,6 +913,51 @@ def build_welcome_subscription_email(
 
     subject = "Welcome to Cyber Threat Intelligence – Did you subscribe?"
 
+    # Fetch recent threat topics for the welcome email brief
+    recent_topics_html = []
+    recent_topics_text = []
+    try:
+        from newsletter_mod import load_active_manifest
+        manifest = load_active_manifest()
+        manifest_items = manifest.get("items", [])[:3]
+        for it in manifest_items:
+            it_title = html_lib.escape(it.get("title", "Threat Advisory"))
+            it_id = it.get("story_id", "")
+            it_lvl = html_lib.escape(str(it.get("threat_level", "HIGH")))
+            it_score = it.get("score", 75)
+            it_cves = ", ".join(it.get("cves", [])) or "Active Exploit Vector"
+            raw_summary = it.get("summary", "")
+            it_summary = html_lib.escape(raw_summary[:220])
+            if len(raw_summary) > 220:
+                it_summary += "..."
+            it_url = f"{clean_base}/newsletter/story/{it_id}"
+
+            badge_color = "#ff7878" if it_score >= 90 else "#ffaa00"
+            recent_topics_html.append(f"""
+            <div style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid {badge_color}; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 12px 14px; margin-bottom: 12px;">
+                <div style="font-family: monospace; font-size: 11px; margin-bottom: 4px;">
+                    <span style="color: {badge_color}; font-weight: bold;">[{it_lvl}]</span>
+                    <span style="color: #888899; margin-left: 6px;">{it_cves}</span>
+                </div>
+                <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">
+                    <a href="{it_url}" style="color: #19e6ff; text-decoration: none;">{it_title} →</a>
+                </div>
+                <div style="font-size: 12px; color: #a0aec0; line-height: 1.4; margin-bottom: 8px;">
+                    {it_summary}
+                </div>
+                <div style="text-align: right;">
+                    <a href="{it_url}" style="font-size: 11px; font-family: monospace; color: #00ff88; text-decoration: none;">
+                        🛡️ Read Dossier & Interactive Playbook →
+                    </a>
+                </div>
+            </div>""")
+            recent_topics_text.append(f"- [{it_lvl}] {it.get('title')}\n  CVEs: {it_cves}\n  Summary: {raw_summary[:200]}\n  Dossier Link: {it_url}")
+    except Exception:
+        pass
+
+    topics_markup = "".join(recent_topics_html) if recent_topics_html else '<p style="color: #888899; font-size: 13px;">Curating latest vulnerability telemetry...</p>'
+    devcore_html, devcore_text = build_devcore_engineering_news_section(clean_base, token=token)
+
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -918,6 +1000,19 @@ def build_welcome_subscription_email(
                                     Delivery Format: <strong style="color: #ffffff;">{html_lib.escape(format_label)}</strong><br>
                                     Primary Reading Appetite: <strong style="color: #19e6ff;">{html_lib.escape(appetite_label)}</strong>
                                 </div>
+                            </div>
+
+                            <!-- Recent Active Threat Telemetry Topics Brief -->
+                            <div style="margin-bottom: 22px;">
+                                <div style="font-size: 11px; font-family: monospace; font-weight: bold; color: #19e6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">
+                                    ⚡ RECENT THREAT TELEMETRY (ACTIVE AT TIME OF SUBSCRIPTION)
+                                </div>
+                                {topics_markup}
+                            </div>
+
+                            <!-- DevCore Platform & Engineering News Brief -->
+                            <div style="margin-bottom: 22px;">
+                                {devcore_html}
                             </div>
 
                             <!-- Manage Preferences Button -->
@@ -986,6 +1081,7 @@ def build_welcome_subscription_email(
 </body>
 </html>"""
 
+    plain_text_topics = ("\n".join(recent_topics_text)) if recent_topics_text else "Curating latest vulnerability telemetry..."
     plain_text = f"""============================================================
 CYBER THREAT INTELLIGENCE · SUBSCRIPTION CONFIRMATION
 ============================================================
@@ -993,6 +1089,16 @@ CYBER THREAT INTELLIGENCE · SUBSCRIPTION CONFIRMATION
 Hello,
 
 We received a subscription request for {email} to receive Cyber Threat Intelligence feeds and advisories from Michael Robberts E-Profile.
+
+------------------------------------------------------------
+RECENT THREAT TELEMETRY (ACTIVE AT TIME OF SUBSCRIPTION):
+------------------------------------------------------------
+{plain_text_topics}
+
+------------------------------------------------------------
+DEVCORE PLATFORM & ENGINEERING INTEL:
+------------------------------------------------------------
+{devcore_text}
 
 ------------------------------------------------------------
 DID YOU SUBSCRIBE?
@@ -1031,6 +1137,152 @@ RFC 8058 Compliant · Zero-Database Local Storage Architecture
     }
 
     return subject, html_content, plain_text, headers
+
+
+def build_ready_appetite_email(
+    to_address: str,
+    story_id: str,
+    appetite: str,
+    story_data: Dict[str, Any],
+    token: str = "",
+    base_url: str = ""
+) -> Tuple[str, str, str, Dict[str, str]]:
+    """Builds an email delivering a previously queued/pending synthesized appetite once ready."""
+    clean_base = (base_url or "").rstrip("/")
+    if not clean_base:
+        clean_base = getattr(config, "BASE_URL", "https://mikeymike.pythonanywhere.com").rstrip("/")
+
+    import markdown
+    from story_agent_dispatcher import APPETITE_CONFIG
+    app_cfg = APPETITE_CONFIG.get(appetite, {})
+    app_title = app_cfg.get("title", appetite.replace("_", " ").title())
+    app_color = app_cfg.get("badge_color", "#19e6ff")
+
+    title = story_data.get("story_id", story_id).replace("-", " ").title()
+    if isinstance(story_data.get("item_metadata"), dict):
+        title = story_data["item_metadata"].get("title", title)
+    elif story_data.get("title"):
+        title = story_data["title"]
+
+    md_content = story_data.get("markdown", "")
+    rendered_html = markdown.markdown(md_content, extensions=['tables', 'fenced_code'])
+
+    story_url = f"{clean_base}/newsletter/story/{story_id}?appetite={appetite}"
+    pref_url = f"{clean_base}/newsletter/preferences?token={token}" if token else f"{clean_base}/newsletter/preferences"
+    unsub_url = f"{clean_base}/newsletter/unsubscribe?token={token}&purge=1" if token else f"{clean_base}/newsletter/unsubscribe"
+
+    subject = f"[Ready] {title} · {app_title}"
+    devcore_html, devcore_text = build_devcore_engineering_news_section(clean_base, token=token)
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{html_lib.escape(subject)}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0a0a0b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e0e0e0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0a0a0b; padding: 25px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" style="max-width: 640px; background-color: #10141d; border: 1px solid rgba(25, 230, 255, 0.25); border-radius: 8px; padding: 24px; text-align: left;">
+                    <tr>
+                        <td style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 16px;">
+                            <span style="font-size: 18px; font-weight: bold; color: #00f3ff; letter-spacing: 1px;">MICHAEL ROBBERTS</span>
+                            <span style="float: right; font-size: 12px; color: {app_color}; font-family: monospace;">⚡ SYNTHESIS COMPLETE</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 20px;">
+                            <div style="font-size: 11px; font-family: monospace; letter-spacing: 2px; color: {app_color}; text-transform: uppercase; margin-bottom: 6px;">
+                                {html_lib.escape(app_title)}
+                            </div>
+                            <h1 style="color: #ffffff; font-size: 20px; margin: 0 0 14px 0; font-weight: 700;">
+                                {html_lib.escape(title)}
+                            </h1>
+                            <p style="font-size: 13px; color: #a0aec0; line-height: 1.5; margin: 0 0 18px 0;">
+                                You visited this advisory while our threat intelligence engine was actively synthesizing it. Your requested analysis is now ready:
+                            </p>
+                            <div style="background: #141824; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 18px; margin-bottom: 20px; color: #d0d8e8; line-height: 1.6; font-size: 13px;">
+                                {rendered_html}
+                            </div>
+                            <div style="text-align: center; margin: 20px 0;">
+                                <a href="{story_url}" style="background-color: {app_color}; color: #000000; font-family: monospace; font-size: 13px; font-weight: bold; padding: 10px 22px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                                    🛡️ Open Interactive Dossier on Web Portal →
+                                </a>
+                            </div>
+                            <div style="margin-top: 24px; margin-bottom: 20px;">
+                                {devcore_html}
+                            </div>
+                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px; font-size: 11px; color: #64748b; text-align: center;">
+                                <a href="{pref_url}" style="color: #19e6ff;">Preferences</a> · 
+                                <a href="{unsub_url}" style="color: #ff7878;">Unsubscribe & Purge</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"""
+
+    plain_text = f"""{subject}
+============================================================
+{title}
+Appetite: {app_title}
+============================================================
+
+You visited this advisory while our threat intelligence engine was actively synthesizing it.
+Your requested analysis is now ready:
+
+{md_content}
+
+------------------------------------------------------------
+Open Interactive Dossier on Web Portal:
+{story_url}
+
+------------------------------------------------------------
+DEVCORE PLATFORM & ENGINEERING INTEL:
+------------------------------------------------------------
+{devcore_text}
+
+Manage Preferences: {pref_url}
+Unsubscribe & Purge: {unsub_url}
+"""
+
+    headers = {
+        "List-Unsubscribe": f"<{unsub_url}>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+    }
+
+    return subject, html_content, plain_text, headers
+
+
+def send_ready_appetite_email(
+    to_address: str,
+    story_id: str,
+    appetite: str,
+    story_data: Dict[str, Any],
+    token: str = "",
+    base_url: str = ""
+) -> Tuple[bool, str, Dict[str, Any]]:
+    """Delivers a completed appetite analysis to a user whose request was backlogged."""
+    subject, html_content, text_content, headers = build_ready_appetite_email(
+        to_address=to_address,
+        story_id=story_id,
+        appetite=appetite,
+        story_data=story_data,
+        token=token,
+        base_url=base_url
+    )
+    return send_email(
+        to_address=to_address,
+        subject=subject,
+        html_content=html_content,
+        text_content=text_content,
+        headers=headers
+    )
 
 
 def send_welcome_email(

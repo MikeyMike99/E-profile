@@ -356,11 +356,15 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
 
     temp_docs = base_dir / "cache" / "temp_docs"
     if temp_docs.is_dir():
+        # Only evict stale stories (>72h). Wiping the whole cache forced every story
+        # page to be regenerated on its next view, which is very slow on the server.
         doc_count = 0
+        stale_before = time.time() - 72 * 3600
         for f in temp_docs.glob("*.json"):
             try:
-                f.unlink(missing_ok=True)
-                doc_count += 1
+                if f.stat().st_mtime < stale_before:
+                    f.unlink(missing_ok=True)
+                    doc_count += 1
             except Exception:
                 pass
         if doc_count > 0:
@@ -2151,8 +2155,12 @@ def application(environ, start_response):
             sys.path.insert(0, str(BASE_DIR))
         os.chdir(str(BASE_DIR))
 
-        # Enforce storage limits and prevent quota bloat at startup
-        auto_enforce_storage_limits(BASE_DIR)
+        # NOTE: storage cleanup used to run here, inside the request. On PythonAnywhere
+        # (single uWSGI worker, threads disabled) that blocked the whole site for
+        # 10-40s every 30 min and after every worker restart (pip/git subprocesses,
+        # full-tree __pycache__ wipe, story-cache wipe). Run it out-of-band instead:
+        # a Scheduled Task `python bootstrap.py --cleanup`, or the breakglass
+        # "cleanup" action.
 
         # Step 1.5: Break-Glass Emergency Interceptor (accessible anytime on demand)
         req_path = environ.get("PATH_INFO", "")

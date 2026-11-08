@@ -59,6 +59,7 @@
 
     {% elif subscriber and subscriber.email %}
     {% set current_format = subscriber.delivery.format if subscriber.delivery else 'hybrid_brief' %}
+    {% set current_cadence = subscriber.delivery.cadence if (subscriber.delivery and subscriber.delivery.cadence) else (subscriber.delivery.frequency if (subscriber.delivery and subscriber.delivery.frequency) else 'daily') %}
     {% set current_appetite = subscriber.content.primary_appetite if subscriber.content else 'cyber_thriller' %}
     {% set current_topics = subscriber.content.topics if subscriber.content else ['zero_days', 'cisa_kev'] %}
     {% set current_engagement = subscriber.engagement_modules if subscriber.engagement_modules else {'alt_appetite_teaser': True, 'audio_link': True, 'zero_day_radar': True} %}
@@ -125,7 +126,37 @@
                 </div>
             </fieldset>
 
-            <!-- 2. Primary Story Appetite -->
+            <!-- 2. Delivery Frequency -->
+            <fieldset style="border: none; padding: 0; margin: 0 0 25px 0;">
+                <legend style="font-size: 1.05rem; font-weight: 600; color: #19e6ff; margin-bottom: 12px; font-family: monospace;">
+                    2. DISPATCH FREQUENCY
+                </legend>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_cadence == 'daily' %}#00ff88{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 12px; cursor: pointer;">
+                        <input type="radio" name="cadence" value="daily" {% if current_cadence == 'daily' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #00ff88; font-size: 0.95rem;">⚡ Daily Updates</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.8rem; margin-top: 4px;">
+                            Dispatched daily as soon as new critical advisories break.
+                        </div>
+                    </label>
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_cadence == 'weekly' %}#19e6ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 12px; cursor: pointer;">
+                        <input type="radio" name="cadence" value="weekly" {% if current_cadence == 'weekly' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #19e6ff; font-size: 0.95rem;">📅 Weekly Digest</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.8rem; margin-top: 4px;">
+                            Consolidated weekend debrief of key disclosures.
+                        </div>
+                    </label>
+                    <label class="pref-card" style="display: block; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if current_cadence == 'monthly' %}#b388ff{% else %}rgba(255, 255, 255, 0.1){% endif %}; border-radius: 6px; padding: 12px; cursor: pointer;">
+                        <input type="radio" name="cadence" value="monthly" {% if current_cadence == 'monthly' %}checked{% endif %} style="margin-right: 8px;">
+                        <strong style="color: #b388ff; font-size: 0.95rem;">🗓️ Monthly Review</strong>
+                        <div style="color: rgba(234, 242, 255, 0.6); font-size: 0.8rem; margin-top: 4px;">
+                            Executive monthly strategic threat & DevCore framework roundup.
+                        </div>
+                    </label>
+                </div>
+            </fieldset>
+
+            <!-- 3. Primary Story Appetite -->
             <fieldset style="border: none; padding: 0; margin: 0 0 25px 0;">
                 <legend style="font-size: 1.05rem; font-weight: 600; color: #19e6ff; margin-bottom: 12px; font-family: monospace;">
                     2. PRIMARY STORY APPETITE
@@ -270,6 +301,7 @@ function savePreferences(event) {
     const formData = new FormData(form);
 
     const delivery_format = formData.get('format');
+    const cadence = formData.get('cadence') || 'daily';
     const primary_appetite = formData.get('appetite');
     const topics = formData.getAll('topics');
 
@@ -291,6 +323,8 @@ function savePreferences(event) {
         body: JSON.stringify({
             token: token,
             format: delivery_format,
+            cadence: cadence,
+            frequency: cadence,
             appetite: primary_appetite,
             topics: topics,
             engagement_modules: engagement_modules

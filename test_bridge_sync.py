@@ -193,6 +193,36 @@ class TestBridgeSyncArchitecture(unittest.TestCase):
         self.assertTrue(stat_data["bridge_online"])
         self.assertEqual(stat_data["worker_id"], "test_http_worker")
 
+    def test_projects_agent_chat_and_stream(self):
+        # 1. Heartbeat check
+        hb_res = self.client.get("/api/heartbeat")
+        self.assertEqual(hb_res.status_code, 200)
+        hb_data = hb_res.get_json()
+        self.assertIn("bridge_online", hb_data)
+
+        # 2. Chat enqueue
+        chat_res = self.client.post("/api/chat", json={
+            "prompt": "Hello local agent",
+            "model": "Claude Opus 5.5 (Low)",
+            "project": "root"
+        })
+        self.assertEqual(chat_res.status_code, 200)
+        task_id = chat_res.get_json()["task_id"]
+
+        # 3. Stream retrieval
+        self.mgr.append_stream_chunk(task_id, 1, "Hello from local!", done=False)
+        stream_res = self.client.get(f"/api/stream?since_seq=0&task_id={task_id}")
+        self.assertEqual(stream_res.status_code, 200)
+        s_data = stream_res.get_json()
+        self.assertIn("messages", s_data)
+        self.assertTrue(len(s_data["messages"]) > 0)
+        self.assertEqual(s_data["messages"][0]["type"], "agent_chunk")
+        self.assertEqual(s_data["messages"][0]["chunk"], "Hello from local!")
+
+        # 4. Kill route
+        kill_res = self.client.post("/api/kill", json={"task_id": task_id})
+        self.assertEqual(kill_res.status_code, 200)
+
     # -------------------------------------------------------------------------
     # 3. STORY DISPATCHER SPLIT-BRAIN ISOLATION
     # -------------------------------------------------------------------------

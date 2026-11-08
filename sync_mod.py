@@ -62,7 +62,16 @@ def handle_sync():
         return jsonify({"status": "error", "message": "Path traversal detected"}), 403
 
     target_path.parent.mkdir(parents=True, exist_ok=True)
-    file.save(str(target_path))
+    raw_bytes = file.read()
+    if request.headers.get("X-Vault-Envelope") == "fernet-sync":
+        try:
+            from vault_mod import derive_fernet_key
+            from cryptography.fernet import Fernet
+            sync_key = derive_fernet_key(os.environ.get("SYNC_SECRET", ""), b"eprofile_sync_transit_salt")
+            raw_bytes = Fernet(sync_key).decrypt(raw_bytes)
+        except Exception as e:
+            return jsonify({"status": "error", "message": f"Transit decryption failed: {e}"}), 400
+    target_path.write_bytes(raw_bytes)
 
     reloaded = False
     if target_path.suffix == '.py':

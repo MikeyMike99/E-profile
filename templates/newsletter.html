@@ -89,6 +89,27 @@
                 </div>
             </div>
 
+            <!-- Delivery Frequency Selection (Daily, Weekly, Monthly) -->
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 0.8rem; font-family: monospace; color: rgba(234, 242, 255, 0.6); margin-bottom: 8px;">
+                    DISPATCH FREQUENCY:
+                </label>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid #00ff88; border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_frequency" value="daily" checked>
+                        <strong>⚡ Daily Updates</strong>
+                    </label>
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_frequency" value="weekly">
+                        <span>📅 Weekly Digest</span>
+                    </label>
+                    <label class="cadence-chip" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 6px 12px; font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <input type="radio" name="sub_frequency" value="monthly">
+                        <span>🗓️ Monthly Review</span>
+                    </label>
+                </div>
+            </div>
+
             <!-- Appetite Selection -->
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 0.8rem; font-family: monospace; color: rgba(234, 242, 255, 0.6); margin-bottom: 8px;">
@@ -300,6 +321,7 @@ function handlePublicSubscribe(event) {
     const form = document.getElementById('public-subscribe-form');
     const formData = new FormData(form);
     const format = formData.get('sub_format') || 'hybrid_brief';
+    const frequency = formData.get('sub_frequency') || 'daily';
     const appetite = formData.get('sub_appetite') || 'cyber_thriller';
 
     if (!email) return;
@@ -318,6 +340,8 @@ function handlePublicSubscribe(event) {
         body: JSON.stringify({
             email: email,
             format: format,
+            cadence: frequency,
+            frequency: frequency,
             appetite: appetite
         })
     })
