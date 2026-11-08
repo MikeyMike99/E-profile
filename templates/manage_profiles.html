@@ -487,7 +487,8 @@
         <!-- ADMIN DASHBOARD SUB-NAVIGATION TABS -->
         <nav class="admin-tab-nav" aria-label="Admin Navigation Tabs" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px;">
             <a href="#section-identities" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem;">[ IDENTITIES ]</a>
-            <a href="#section-server-diagnostics" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--magenta); color: var(--magenta); font-weight: bold; background: rgba(255, 45, 141, 0.12);">[ SERVER STORAGE & PACKAGES ]</a>
+            <a href="#section-vault-cli" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: #00ff88; color: #00ff88; font-weight: bold; background: rgba(0, 255, 136, 0.14);">[ 🔐 VAULT &amp; CLI ]</a>
+            <a href="#section-server-diagnostics" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--magenta); color: var(--magenta); font-weight: bold; background: rgba(255, 45, 141, 0.12);">[ SERVER STORAGE &amp; PACKAGES ]</a>
             <a href="#section-git-sync" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--amber); color: var(--amber);">[ GIT SYNC ]</a>
             <a href="#section-analytics" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: var(--cyan); color: var(--cyan);">[ ANALYTICS ]</a>
             <a href="{{ url_for('admin_mailbox') }}" target="_blank" rel="noopener noreferrer" class="cyber-btn" style="padding: 6px 14px; font-size: 0.75rem; border-color: #00ff88; color: #00ff88; background: rgba(0, 255, 136, 0.08);" aria-label="Open Email Mailbox and Server in a new tab" title="Opens Email Mailbox & Server in a new tab">[ EMAIL MAILBOX &nearr; ]</a>
@@ -623,6 +624,275 @@
                 </form>
             </div>
         </div>
+
+        <!-- UNIFIED BITWARDEN CLI & X_SHI3LD_X (.VAULT) CRYPTOGRAPHIC HUB -->
+        <section id="section-vault-cli" aria-labelledby="vault-cli-title" style="background: rgba(0,0,0,0.5); padding: 24px; border: 1px solid #00ff88; border-radius: 4px; margin-bottom: 30px; box-shadow: 0 0 25px rgba(0, 255, 136, 0.08);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid rgba(0, 255, 136, 0.3); padding-bottom: 12px;">
+                <div>
+                    <h2 id="vault-cli-title" class="subtitle" style="margin: 0; font-size: 1.05rem; color: #00ff88; letter-spacing: 0.15em; font-weight: bold;">
+                        [CRYPTO_VAULT] BITWARDEN_CLI &amp; X_SHI3LD_X (.VAULT) ENGINE
+                    </h2>
+                    <span style="font-size: 0.72rem; color: var(--text-dim);">
+                        Dual-engine credential vault with WebCrypto AES-256-GCM In-Transit Envelopes &amp; PBKDF2/Fernet + KMS Keychain At-Rest Protection
+                    </span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <span id="vault-transit-badge" style="font-size: 0.68rem; padding: 4px 10px; border: 1px solid var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.08); border-radius: 3px;">
+                        🔒 IN-TRANSIT: AES-256-GCM READY
+                    </span>
+                    <button type="button" onclick="vaultRefreshStatus()" class="cyber-btn" style="padding: 6px 12px; font-size: 0.75rem; border-color: var(--cyan); color: var(--cyan);">
+                        ↻ Refresh Vault Status
+                    </button>
+                </div>
+            </div>
+
+            <div id="vault-live-alert" role="status" aria-live="polite" style="display: none; padding: 10px 14px; margin-bottom: 16px; border-left: 4px solid var(--cyan); background: rgba(0, 229, 255, 0.08); font-size: 0.82rem; color: #fff;"></div>
+
+            <!-- STATUS CARDS: BITWARDEN CLI vs LOCAL .VAULT vs KMS KEYCHAIN -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
+                <fieldset style="background: rgba(0,0,0,0.6); padding: 14px; border: 1px solid var(--cyan); border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.7rem; color: var(--cyan); font-weight: bold; padding: 0 6px;">BITWARDEN CLI (bw)</legend>
+                    <div id="vault-bw-status-pill" style="font-size: 0.85rem; font-weight: bold; color: var(--amber); margin-bottom: 6px;">
+                        {% if vault_overview and vault_overview.bitwarden.installed %}
+                            CLI DETECTED ({{ vault_overview.bitwarden.status | upper }})
+                        {% else %}
+                            CLI UNAVAILABLE (FALLBACK ACTIVE)
+                        {% endif %}
+                    </div>
+                    <div id="vault-bw-meta" style="font-size: 0.7rem; color: var(--text-dim); word-break: break-all;">
+                        {% if vault_overview and vault_overview.bitwarden.installed %}
+                            Binary: {{ vault_overview.bitwarden.binary_path }}
+                        {% else %}
+                            Host lacks `bw` binary — routing automatically to X_SHI3LD_X .vault engine.
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <fieldset style="background: rgba(0,0,0,0.6); padding: 14px; border: 1px solid #00ff88; border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.7rem; color: #00ff88; font-weight: bold; padding: 0 6px;">LOCAL X_SHI3LD_X (.VAULT)</legend>
+                    <div id="vault-shield-status-pill" style="font-size: 0.85rem; font-weight: bold; color: #00ff88; margin-bottom: 6px;">
+                        {% if vault_overview and vault_overview.shield_vault.unlocked %}
+                            UNLOCKED ({{ vault_overview.shield_vault.unlocked_user }})
+                        {% elif vault_overview and vault_overview.shield_vault.exists %}
+                            LOCKED AT REST (MRSV ||X_SHI3LD_X||)
+                        {% else %}
+                            READY TO INITIALIZE
+                        {% endif %}
+                    </div>
+                    <div id="vault-shield-meta" style="font-size: 0.7rem; color: var(--text-dim);">
+                        PBKDF2-HMAC-SHA256 + Fernet + Split-Key Shadow Recovery Bridge
+                    </div>
+                </fieldset>
+
+                <fieldset style="background: rgba(0,0,0,0.6); padding: 14px; border: 1px solid var(--magenta); border-radius: 4px; margin: 0;">
+                    <legend style="font-size: 0.7rem; color: var(--magenta); font-weight: bold; padding: 0 6px;">KMS KEYCHAIN &amp; AT-REST</legend>
+                    <div id="vault-kms-status-pill" style="font-size: 0.85rem; font-weight: bold; color: var(--magenta); margin-bottom: 6px;">
+                        {% if vault_overview and vault_overview.kms_keychain.initialized %}
+                            ACTIVE DEK: {{ vault_overview.kms_keychain.active_key_id | upper }} ({{ vault_overview.kms_keychain.key_count }} KEYS)
+                        {% else %}
+                            INITIALIZING KMS...
+                        {% endif %}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                        <span style="font-size: 0.68rem; color: var(--text-dim);">KEK/DEK Envelope Active</span>
+                        <button type="button" onclick="vaultRotateKms()" class="cyber-btn" style="padding: 3px 8px; font-size: 0.65rem; border-color: var(--magenta); color: var(--magenta);">
+                            ↻ Rotate DEK
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- ENGINE AUTHENTICATION & UNLOCK PANELS -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 22px;">
+                <!-- PANEL 1: BITWARDEN CLI LOGIN & UNLOCK -->
+                <div style="background: rgba(0,0,0,0.45); padding: 16px; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 4px;">
+                    <h3 style="margin-top: 0; font-size: 0.85rem; color: var(--cyan); border-bottom: 1px solid rgba(0, 229, 255, 0.25); padding-bottom: 6px;">
+                        [1] BITWARDEN CLI AUTHENTICATION (IF AVAILABLE)
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <label for="bw-email-input" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">BITWARDEN EMAIL</label>
+                            <input type="email" id="bw-email-input" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="user@example.com" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="bw-2fa-input" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">2FA CODE (OPTIONAL)</label>
+                            <input type="text" id="bw-2fa-input" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="6-digit TOTP / Email code" autocomplete="off">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label for="bw-pass-input" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">MASTER PASSWORD (ENCRYPTED IN TRANSIT)</label>
+                        <div style="display: flex; gap: 6px;">
+                            <input type="password" id="bw-pass-input" class="cyber-input" style="padding: 8px; font-size: 0.8rem; flex: 1;" placeholder="Bitwarden Master Password" autocomplete="new-password">
+                            <button type="button" onclick="togglePasswordVisibility('bw-pass-input', null, this)" class="cyber-btn" style="padding: 4px 8px; font-size: 0.65rem; border-color: var(--cyan); color: var(--cyan);">Show Passwords</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" onclick="vaultBwLogin()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: var(--cyan); color: var(--cyan); font-weight: bold;">
+                            🔑 Login &amp; Unlock CLI
+                        </button>
+                        <button type="button" onclick="vaultBwUnlock()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: #00ff88; color: #00ff88;">
+                            🔓 Unlock Session
+                        </button>
+                        <button type="button" onclick="vaultBwSync()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: var(--amber); color: var(--amber);">
+                            ☁️ Sync
+                        </button>
+                        <button type="button" onclick="vaultBwLock()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: #ff4d4d; color: #ff4d4d;">
+                            🔒 Lock CLI
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: LOCAL X_SHI3LD_X (.VAULT) FALLBACK & AT-REST ENGINE -->
+                <div style="background: rgba(0,0,0,0.45); padding: 16px; border: 1px solid rgba(0, 255, 136, 0.35); border-radius: 4px;">
+                    <h3 style="margin-top: 0; font-size: 0.85rem; color: #00ff88; border-bottom: 1px solid rgba(0, 255, 136, 0.25); padding-bottom: 6px;">
+                        [2] LOCAL X_SHI3LD_X (.VAULT) ENGINE (DOCUMENTS ENCRYPTION TOOL)
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <label for="sv-user-input" style="font-size: 0.65rem; color: #00ff88; display: block; margin-bottom: 3px;">OPERATOR USERNAME</label>
+                            <input type="text" id="sv-user-input" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" value="{{ username if username and username != 'Guest' else 'admin' }}" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="sv-pass-input" style="font-size: 0.65rem; color: #00ff88; display: block; margin-bottom: 3px;">VAULT PASSWORD (MIN 4 CHARS)</label>
+                            <div style="display: flex; gap: 6px;">
+                                <input type="password" id="sv-pass-input" class="cyber-input" style="padding: 8px; font-size: 0.8rem; flex: 1;" placeholder="Local .vault Password" autocomplete="new-password">
+                                <button type="button" onclick="togglePasswordVisibility('sv-pass-input', null, this)" class="cyber-btn" style="padding: 4px 8px; font-size: 0.65rem; border-color: #00ff88; color: #00ff88;">Show Passwords</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                        <button type="button" onclick="vaultLocalUnlock()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: #00ff88; color: #00ff88; font-weight: bold;">
+                            🔓 Unlock .vault
+                        </button>
+                        <button type="button" onclick="vaultLocalInit()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: var(--cyan); color: var(--cyan);">
+                            ✨ Initialize New .vault
+                        </button>
+                        <button type="button" onclick="vaultLocalLock()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: #ff4d4d; color: #ff4d4d;">
+                            🔒 Lock .vault
+                        </button>
+                        <button type="button" onclick="vaultToggleRecoveryDrawer()" class="cyber-btn" style="padding: 7px 12px; font-size: 0.72rem; border-color: var(--amber); color: var(--amber);">
+                            🛡️ Split-Key Recovery
+                        </button>
+                    </div>
+                    <!-- AT-REST FILE ENCRYPTION BAR -->
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <label for="sv-protect-file-select" style="font-size: 0.65rem; color: var(--text-dim);">ENCRYPT FILE AT REST:</label>
+                        <select id="sv-protect-file-select" class="cyber-select" style="padding: 5px 8px; font-size: 0.75rem; width: auto; flex: 1;">
+                            <option value="profiles.json">profiles.json &rarr; profiles.json.vault</option>
+                            <option value="gethub_token.txt">gethub_token.txt &rarr; gethub_token.txt.vault</option>
+                            <option value=".env">.env &rarr; .env.vault</option>
+                            <option value="cache/bridge_queue.json">cache/bridge_queue.json &rarr; bridge_queue.json.vault</option>
+                        </select>
+                        <button type="button" onclick="vaultProtectFileAtRest()" class="cyber-btn" style="padding: 5px 10px; font-size: 0.7rem; border-color: var(--magenta); color: var(--magenta);">
+                            🔐 Seal .vault Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMERGENCY SPLIT-KEY SHADOW RECOVERY DRAWER -->
+            <div id="vault-recovery-drawer" style="display: none; background: rgba(255, 176, 32, 0.07); border: 1px solid var(--amber); padding: 16px; border-radius: 4px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; font-size: 0.85rem; color: var(--amber);">
+                    [EMERGENCY RECOVERY BRIDGE] SPLIT-KEY SHADOW MANIFEST (X_SHI3LD_X)
+                </h3>
+                <p style="font-size: 0.74rem; color: var(--text-dim); margin: 4px 0 12px 0;">
+                    Displays the active 64-byte recovery cipher and 6-index map. Entering the derived 6-character Recovery Token unlocks the shadow vault, resets the operator password, and rotates the recovery cipher.
+                </p>
+                <div id="vault-recovery-manifest" style="font-family: monospace; font-size: 0.75rem; background: rgba(0,0,0,0.65); padding: 10px; border: 1px solid rgba(255,176,32,0.3); margin-bottom: 12px; word-break: break-all;">
+                    Click "Load Recovery Challenge" to view FILE_UUID, CIPHER, and SECRET_KEY map.
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto; gap: 10px; align-items: end;">
+                    <div>
+                        <label for="sv-rec-token" style="font-size: 0.65rem; color: var(--amber); display: block; margin-bottom: 3px;">RECOVERY TOKEN</label>
+                        <input type="password" id="sv-rec-token" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="6-char split-key token">
+                    </div>
+                    <div>
+                        <label for="sv-rec-newpass" style="font-size: 0.65rem; color: var(--amber); display: block; margin-bottom: 3px;">NEW OPERATOR PASSWORD</label>
+                        <input type="password" id="sv-rec-newpass" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="New password (min 4 chars)">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" onclick="vaultLoadRecoveryChallenge()" class="cyber-btn" style="padding: 8px 12px; font-size: 0.72rem; border-color: var(--cyan); color: var(--cyan);">
+                            Load Challenge
+                        </button>
+                        <button type="button" onclick="vaultExecuteRecovery()" class="cyber-btn" style="padding: 8px 14px; font-size: 0.72rem; border-color: var(--amber); color: var(--amber); font-weight: bold;">
+                            ⚡ Execute Recovery &amp; Rotate
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1-CLICK LOCAL MACHINE SECRET HARVESTER -->
+            <div style="background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.3); padding: 16px; border-radius: 4px; margin-bottom: 22px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 0.85rem; color: var(--cyan);">
+                            [MACHINE SECRET HARVESTER] LOCATE &amp; VAULT TOKENS (NON-DESTRUCTIVE)
+                        </h3>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">
+                            Scans Google Cloud OAuth, Gemini API Keys, Gmail SMTP App Password, Antigravity OAuth, GitHub PAT, 2FA Backup Codes &amp; ABSA Portal (originals are NOT purged).
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" onclick="vaultScanMachineSecrets()" class="cyber-btn" style="padding: 6px 12px; font-size: 0.72rem; border-color: var(--cyan); color: var(--cyan);">
+                            🔍 Scan Machine Tokens
+                        </button>
+                        <button type="button" onclick="vaultImportHarvestedSecrets()" class="cyber-btn" style="padding: 6px 14px; font-size: 0.72rem; border-color: #00ff88; color: #00ff88; font-weight: bold; background: rgba(0,255,136,0.1);">
+                            ⚡ Auto-Import All into Unlocked Vault
+                        </button>
+                    </div>
+                </div>
+                <div id="vault-harvest-preview" style="display: none; max-height: 220px; overflow-y: auto; border: 1px solid rgba(0,229,255,0.2); background: rgba(0,0,0,0.6);"></div>
+            </div>
+
+            <!-- ADD CREDENTIAL & VAULT ITEMS TABLE -->
+            <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.12); padding: 16px; border-radius: 4px;">
+                <h3 style="margin-top: 0; font-size: 0.85rem; color: #00ff88; border-bottom: 1px solid rgba(0,255,136,0.25); padding-bottom: 6px;">
+                    [VAULT ITEMS] ADD OR REVEAL ENCRYPTED CREDENTIALS
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; align-items: end;">
+                    <div>
+                        <label for="vi-name" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">CREDENTIAL NAME *</label>
+                        <input type="text" id="vi-name" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="e.g. Google Gemini API Key">
+                    </div>
+                    <div>
+                        <label for="vi-category" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">CATEGORY</label>
+                        <select id="vi-category" class="cyber-select" style="padding: 8px; font-size: 0.8rem;">
+                            <option value="Google Gemini API">Google Gemini API</option>
+                            <option value="Google Cloud OAuth">Google Cloud OAuth</option>
+                            <option value="Google Workspace / SMTP">Google Workspace / SMTP</option>
+                            <option value="API Key">API Key / Token</option>
+                            <option value="Portal Login">Portal Login</option>
+                            <option value="2FA Backup Codes">2FA Backup Codes</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="vi-username" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">USERNAME / CLIENT ID</label>
+                        <input type="text" id="vi-username" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="Optional username or ID">
+                    </div>
+                    <div>
+                        <label for="vi-secret" style="font-size: 0.65rem; color: var(--cyan); display: block; margin-bottom: 3px;">SECRET / PASSWORD *</label>
+                        <input type="password" id="vi-secret" class="cyber-input" style="padding: 8px; font-size: 0.8rem;" placeholder="Secret value">
+                    </div>
+                    <div>
+                        <button type="button" onclick="vaultAddItem()" class="cyber-btn" style="padding: 8px 14px; font-size: 0.75rem; border-color: #00ff88; color: #00ff88; font-weight: bold; width: 100%;">
+                            + Encrypt &amp; Store
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                    <input type="text" id="vi-search" oninput="vaultLoadItems()" class="cyber-input" style="padding: 6px 10px; font-size: 0.78rem; max-width: 320px;" aria-label="Search Vault Items" placeholder="Filter vault items by name or category...">
+                    <button type="button" onclick="vaultLoadItems()" class="cyber-btn" style="padding: 5px 10px; font-size: 0.7rem; border-color: var(--cyan); color: var(--cyan);">
+                        ↻ Reload Vault Items
+                    </button>
+                </div>
+
+                <div id="vault-items-container" style="max-height: 320px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.6); padding: 10px; font-size: 0.8rem;">
+                    <span style="color: var(--text-dim);">Unlock Bitwarden CLI or Local X_SHI3LD_X .vault to view stored credentials.</span>
+                </div>
+            </div>
+        </section>
+
         <!-- PYTHONANYWHERE SERVER DIAGNOSTICS & STORAGE HUB -->
         <section id="section-server-diagnostics" aria-labelledby="server-diag-title" style="border-top: 1px solid rgba(255, 45, 141, 0.4); background: rgba(0,0,0,0.4); padding: 24px; border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 4px; margin-bottom: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid rgba(0,229,255,0.2); padding-bottom: 12px;">
@@ -1596,6 +1866,452 @@
                     btn.disabled = false;
                 }
             }
+        }
+
+        // --- UNIFIED VAULT & CLI WEBCRYPTO AES-256-GCM CLIENT ---
+        let _vaultTransitState = null;
+
+        function vaultAlert(msg, isError = false) {
+            const el = document.getElementById('vault-live-alert');
+            if (!el) return;
+            el.style.display = 'block';
+            el.style.borderLeftColor = isError ? '#ff4d4d' : '#00ff88';
+            el.style.color = isError ? '#ff9999' : '#66ffb2';
+            el.textContent = (isError ? '[VAULT_ERROR] ' : '[VAULT_OK] ') + msg;
+        }
+
+        function _b64ToBytes(b64) {
+            const bin = atob(b64);
+            const arr = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+            return arr;
+        }
+
+        function _bytesToB64(bytes) {
+            let bin = '';
+            const arr = new Uint8Array(bytes);
+            for (let i = 0; i < arr.length; i++) bin += String.fromCharCode(arr[i]);
+            return btoa(bin);
+        }
+
+        async function ensureVaultTransitKey() {
+            const now = Math.floor(Date.now() / 1000);
+            if (_vaultTransitState && (now - _vaultTransitState.issuedAt) < 600) {
+                return _vaultTransitState;
+            }
+            const res = await fetch('/admin/api/vault/handshake', { method: 'POST' });
+            const j = await res.json();
+            if (!j.ok || !j.handshake) throw new Error(j.error || 'Transit handshake failed');
+            const hs = j.handshake;
+            const subtle = (window.crypto && window.crypto.subtle) ? window.crypto.subtle : null;
+            const seedStr = hs.seed || hs.seed_b64 || '';
+            if (!subtle || !seedStr) {
+                _vaultTransitState = {
+                    keyId: hs.key_id,
+                    aesKey: null,
+                    subtleAvailable: false,
+                    issuedAt: now
+                };
+                const badge = document.getElementById('vault-transit-badge');
+                if (badge) badge.textContent = '🔒 IN-TRANSIT: SESSION AUTH (' + hs.key_id.slice(0, 8) + ')';
+                return _vaultTransitState;
+            }
+            const enc = new TextEncoder();
+            const baseKey = await subtle.importKey(
+                'raw', enc.encode(seedStr), { name: 'PBKDF2' }, false, ['deriveKey']
+            );
+            const aesKey = await subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: _b64ToBytes(hs.salt_b64),
+                    iterations: hs.iterations || 100000,
+                    hash: 'SHA-256'
+                },
+                baseKey,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+            _vaultTransitState = {
+                keyId: hs.key_id,
+                aesKey: aesKey,
+                subtleAvailable: true,
+                issuedAt: now
+            };
+            const badge = document.getElementById('vault-transit-badge');
+            if (badge) badge.textContent = '🔒 IN-TRANSIT: AES-256-GCM (' + hs.key_id.slice(0, 8) + ')';
+            return _vaultTransitState;
+        }
+
+        async function vaultEncryptedPost(url, payloadObj) {
+            const st = await ensureVaultTransitKey();
+            const subtle = (window.crypto && window.crypto.subtle) ? window.crypto.subtle : null;
+            if (!st.subtleAvailable || !st.aesKey || !subtle) {
+                const directRes = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadObj || {})
+                });
+                return await directRes.json();
+            }
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const nonceBytes = window.crypto.getRandomValues(new Uint8Array(8));
+            const nonce = Array.from(nonceBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+            const ts = Math.floor(Date.now() / 1000);
+            const enc = new TextEncoder();
+            const aad = enc.encode(`${st.keyId}:${ts}:${nonce}`);
+            const bodyBytes = enc.encode(JSON.stringify({ ts, nonce, data: payloadObj }));
+            const ctBuf = await subtle.encrypt(
+                { name: 'AES-GCM', iv: iv, additionalData: aad },
+                st.aesKey,
+                bodyBytes
+            );
+            const envelope = {
+                enc_envelope: true,
+                key_id: st.keyId,
+                iv_b64: _bytesToB64(iv),
+                ciphertext_b64: _bytesToB64(ctBuf),
+                ts: ts,
+                nonce: nonce
+            };
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(envelope)
+            });
+            return await res.json();
+        }
+
+        async function vaultDecryptEnvelope(env) {
+            const st = await ensureVaultTransitKey();
+            const subtle = (window.crypto && window.crypto.subtle) ? window.crypto.subtle : null;
+            if (!st.subtleAvailable || !st.aesKey || !subtle) {
+                return env.data || env;
+            }
+            const enc = new TextEncoder();
+            const aad = enc.encode(`${env.key_id}:${env.ts}:${env.nonce}`);
+            const ptBuf = await subtle.decrypt(
+                { name: 'AES-GCM', iv: _b64ToBytes(env.iv_b64), additionalData: aad },
+                st.aesKey,
+                _b64ToBytes(env.ciphertext_b64)
+            );
+            const parsed = JSON.parse(new TextDecoder().decode(ptBuf));
+            return parsed.data || parsed;
+        }
+
+        async function vaultRefreshStatus() {
+            try {
+                const res = await fetch('/admin/api/vault/status');
+                const d = await res.json();
+                if (!d.ok) return;
+                window._epLastVaultStatus = d;
+                const bwPill = document.getElementById('vault-bw-status-pill');
+                const bwMeta = document.getElementById('vault-bw-meta');
+                if (bwPill && d.bitwarden) {
+                    bwPill.textContent = d.bitwarden.installed
+                        ? `CLI DETECTED (${(d.bitwarden.status || 'unknown').toUpperCase()})`
+                        : 'CLI UNAVAILABLE (FALLBACK ACTIVE)';
+                    bwPill.style.color = d.bitwarden.session_active ? '#00ff88' : 'var(--amber)';
+                }
+                if (bwMeta && d.bitwarden) {
+                    bwMeta.textContent = d.bitwarden.installed
+                        ? `Binary: ${d.bitwarden.binary_path} | Session TTL: ${d.bitwarden.remaining_ttl_seconds || 0}s`
+                        : 'Host lacks bw binary — routing automatically to Local X_SHI3LD_X .vault engine.';
+                }
+                const shPill = document.getElementById('vault-shield-status-pill');
+                const shMeta = document.getElementById('vault-shield-meta');
+                if (shPill && d.shield_vault) {
+                    if (d.shield_vault.unlocked) {
+                        shPill.textContent = `UNLOCKED (${d.shield_vault.unlocked_user} · ${d.shield_vault.remaining_ttl_seconds}s)`;
+                        shPill.style.color = '#00ff88';
+                    } else if (d.shield_vault.exists) {
+                        shPill.textContent = 'LOCKED AT REST (MRSV ||X_SHI3LD_X||)';
+                        shPill.style.color = 'var(--cyan)';
+                    } else {
+                        shPill.textContent = 'READY TO INITIALIZE';
+                        shPill.style.color = 'var(--amber)';
+                    }
+                }
+                if (shMeta && d.shield_vault && d.shield_vault.header) {
+                    const users = (d.shield_vault.header.users || []).join(', ') || 'none';
+                    shMeta.textContent = `Users: ${users} | Updated: ${d.shield_vault.header.last_updated || 'N/A'}`;
+                }
+                const kmsPill = document.getElementById('vault-kms-status-pill');
+                if (kmsPill && d.kms_keychain) {
+                    kmsPill.textContent = `ACTIVE DEK: ${(d.kms_keychain.active_key_id || '').toUpperCase()} (${d.kms_keychain.key_count || 0} KEYS)`;
+                }
+                await vaultLoadItems();
+            } catch (e) {
+                vaultAlert(e.message || String(e), true);
+            }
+        }
+
+        async function vaultBwLogin() {
+            const email = document.getElementById('bw-email-input').value.trim();
+            const password = document.getElementById('bw-pass-input').value;
+            const code = document.getElementById('bw-2fa-input').value.trim();
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/bw/login', { email, password, code });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) document.getElementById('bw-pass-input').value = '';
+                await vaultRefreshStatus();
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultBwUnlock() {
+            const email = (document.getElementById('bw-email-input')?.value || '').trim();
+            const password = document.getElementById('bw-pass-input').value;
+            const code = (document.getElementById('bw-2fa-input')?.value || '').trim();
+            try {
+                const endpoint = email ? '/admin/api/vault/bw/login' : '/admin/api/vault/bw/unlock';
+                const j = await vaultEncryptedPost(endpoint, { email, password, code });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) document.getElementById('bw-pass-input').value = '';
+                await vaultRefreshStatus();
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultBwSync() {
+            const res = await fetch('/admin/api/vault/bw/sync', { method: 'POST' });
+            const j = await res.json();
+            vaultAlert(j.message || j.error, !j.ok);
+            await vaultRefreshStatus();
+        }
+
+        async function vaultBwLock() {
+            const res = await fetch('/admin/api/vault/bw/lock', { method: 'POST' });
+            const j = await res.json();
+            vaultAlert(j.message || j.error, !j.ok);
+            await vaultRefreshStatus();
+        }
+
+        async function vaultLocalInit() {
+            const username = document.getElementById('sv-user-input').value.trim();
+            const password = document.getElementById('sv-pass-input').value;
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/local/init', { username, password });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) document.getElementById('sv-pass-input').value = '';
+                await vaultRefreshStatus();
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultLocalUnlock() {
+            const username = document.getElementById('sv-user-input').value.trim();
+            const password = document.getElementById('sv-pass-input').value;
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/local/unlock', { username, password });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) document.getElementById('sv-pass-input').value = '';
+                await vaultRefreshStatus();
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultLocalLock() {
+            const res = await fetch('/admin/api/vault/local/lock', { method: 'POST' });
+            const j = await res.json();
+            vaultAlert(j.message || j.error, !j.ok);
+            await vaultRefreshStatus();
+        }
+
+        async function vaultRotateKms() {
+            const res = await fetch('/admin/api/vault/local/rotate-kms', { method: 'POST' });
+            const j = await res.json();
+            vaultAlert(j.message || j.error, !j.ok);
+            await vaultRefreshStatus();
+        }
+
+        async function vaultProtectFileAtRest() {
+            const target = document.getElementById('sv-protect-file-select').value;
+            const username = document.getElementById('sv-user-input').value.trim();
+            const password = document.getElementById('sv-pass-input').value;
+            if (!password) {
+                vaultAlert('Enter your Local .vault Password first to seal ' + target + ' at rest.', true);
+                document.getElementById('sv-pass-input').focus();
+                return;
+            }
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/local/protect-file', { target, username, password });
+                vaultAlert(j.message || j.error, !j.ok);
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        function vaultToggleRecoveryDrawer() {
+            const d = document.getElementById('vault-recovery-drawer');
+            if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function vaultLoadRecoveryChallenge() {
+            const username = document.getElementById('sv-user-input').value.trim();
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/local/recovery-challenge', { username });
+                if (!j.ok) { vaultAlert(j.error, true); return; }
+                const c = j.challenge;
+                const el = document.getElementById('vault-recovery-manifest');
+                el.innerHTML = `<div><strong>FILE_UUID:</strong> ${c.file_uuid}</div>` +
+                    `<div><strong>LAST_SAVED:</strong> ${c.last_updated}</div>` +
+                    `<div><strong>CIPHER:</strong> ${c.recovery_cipher}</div>` +
+                    `<div><strong>SECRET_KEY (INDEX MAP):</strong> <span style="color:var(--amber);">${c.recovery_map}</span></div>`;
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultExecuteRecovery() {
+            const username = document.getElementById('sv-user-input').value.trim();
+            const recovery_token = document.getElementById('sv-rec-token').value.trim();
+            const new_password = document.getElementById('sv-rec-newpass').value;
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/local/recover', { username, recovery_token, new_password });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) {
+                    document.getElementById('sv-rec-token').value = '';
+                    document.getElementById('sv-rec-newpass').value = '';
+                    await vaultRefreshStatus();
+                }
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultScanMachineSecrets() {
+            const box = document.getElementById('vault-harvest-preview');
+            box.style.display = 'block';
+            box.innerHTML = '<div style="padding:10px;color:var(--cyan);">Scanning machine for tokens and credentials...</div>';
+            try {
+                const res = await fetch('/admin/api/vault/harvest/scan');
+                const j = await res.json();
+                if (!j.ok) { vaultAlert(j.error, true); return; }
+                const rows = (j.discovered || []).map(it => `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                        <td style="padding: 6px 8px; color: #00ff88; font-weight: bold;">${it.name}</td>
+                        <td style="padding: 6px 8px; color: var(--cyan);">${it.category}</td>
+                        <td style="padding: 6px 8px; color: var(--text-dim); font-family: monospace;">${it.source}</td>
+                        <td style="padding: 6px 8px; color: var(--amber); font-family: monospace;">${it.masked}</td>
+                    </tr>
+                `).join('');
+                box.innerHTML = `<table style="width:100%; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
+                    <thead><tr style="border-bottom: 1px solid var(--cyan); color: var(--cyan);">
+                        <th style="padding:6px 8px;">CREDENTIAL</th><th style="padding:6px 8px;">CATEGORY</th><th style="padding:6px 8px;">SOURCE PATH</th><th style="padding:6px 8px;">MASKED PREVIEW</th>
+                    </tr></thead><tbody>${rows}</tbody></table>`;
+                vaultAlert(`Discovered ${j.count} local secrets. Unlock your vault and click "Auto-Import All" to secure them.`);
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultImportHarvestedSecrets() {
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/harvest/import', { target_engine: 'auto' });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) await vaultLoadItems();
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultAddItem() {
+            const name = document.getElementById('vi-name').value.trim();
+            const category = document.getElementById('vi-category').value;
+            const username = document.getElementById('vi-username').value.trim();
+            const secret = document.getElementById('vi-secret').value;
+            if (!name || !secret) {
+                vaultAlert('Credential name and secret value are required.', true);
+                return;
+            }
+            try {
+                const j = await vaultEncryptedPost('/admin/api/vault/items', { name, category, username, secret, target_engine: 'auto' });
+                vaultAlert(j.message || j.error, !j.ok);
+                if (j.ok) {
+                    document.getElementById('vi-name').value = '';
+                    document.getElementById('vi-secret').value = '';
+                    await vaultLoadItems();
+                }
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultLoadItems() {
+            const q = (document.getElementById('vi-search')?.value || '').trim();
+            const container = document.getElementById('vault-items-container');
+            if (!container) return;
+            try {
+                const res = await fetch('/admin/api/vault/items?q=' + encodeURIComponent(q));
+                const j = await res.json();
+                if (!j.ok || !j.items || j.items.length === 0) {
+                    const bwActive = window._epLastVaultStatus && window._epLastVaultStatus.bitwarden && window._epLastVaultStatus.bitwarden.session_active;
+                    const shActive = window._epLastVaultStatus && window._epLastVaultStatus.shield_vault && window._epLastVaultStatus.shield_vault.unlocked;
+                    if ((bwActive || shActive) && !q && !window._epAutoHarvesting) {
+                        window._epAutoHarvesting = true;
+                        container.innerHTML = '<span style="color: var(--amber);">⚡ Auto-harvesting discovered machine secrets into unlocked vault...</span>';
+                        vaultImportHarvestedSecrets().finally(() => { window._epAutoHarvesting = false; });
+                        return;
+                    }
+                    container.innerHTML = '<span style="color: var(--text-dim);">No unlocked vault items found (or vault is currently locked).</span>';
+                    return;
+                }
+                const rows = j.items.map(it => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid rgba(255,255,255,0.08); gap:10px; flex-wrap:wrap;">
+                        <div>
+                            <strong style="color:#00ff88;">${it.name}</strong>
+                            <span style="font-size:0.68rem; padding:2px 6px; border:1px solid var(--cyan); color:var(--cyan); margin-left:6px;">${it.category}</span>
+                            <span style="font-size:0.65rem; padding:2px 6px; border:1px solid var(--magenta); color:var(--magenta); margin-left:4px;">${it.engine === 'bitwarden_cli' ? 'BW_CLI' : 'X_SHI3LD_X'}</span>
+                            <div style="font-size:0.72rem; color:var(--text-dim); margin-top:3px;">
+                                ID/User: ${it.username || 'N/A'} | Secret: <code id="sec-val-${it.id}" style="color:var(--amber);">${it.secret_masked}</code>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" onclick="vaultRevealItem('${it.id}')" class="cyber-btn" style="padding:4px 8px; font-size:0.68rem; border-color:var(--cyan); color:var(--cyan);">👁️ Reveal</button>
+                            <button type="button" onclick="vaultDeleteItem('${it.id}')" class="cyber-btn" style="padding:4px 8px; font-size:0.68rem; border-color:#ff4d4d; color:#ff4d4d;">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+                container.innerHTML = rows;
+            } catch (e) {
+                container.innerHTML = '<span style="color:#ff4d4d;">Error loading items.</span>';
+            }
+        }
+
+        async function vaultRevealItem(itemId) {
+            try {
+                const st = await ensureVaultTransitKey();
+                const useKeyId = (st.subtleAvailable && st.aesKey) ? st.keyId : '';
+                const res = await fetch('/admin/api/vault/items/' + encodeURIComponent(itemId) + '/reveal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key_id: useKeyId })
+                });
+                const j = await res.json();
+                if (!j.ok) { vaultAlert(j.error || 'Reveal denied', true); return; }
+                const item = j.envelope ? await vaultDecryptEnvelope(j.envelope) : j.item;
+                const codeEl = document.getElementById('sec-val-' + itemId);
+                if (codeEl && item) {
+                    codeEl.textContent = item.secret;
+                    navigator.clipboard?.writeText(item.secret).catch(() => {});
+                    vaultAlert(`Decrypted '${item.name}' via AES-256-GCM transit envelope (auto-hiding in 10s).`);
+                    setTimeout(() => { codeEl.textContent = '••••••••'; }, 10000);
+                }
+            } catch (e) {
+                vaultAlert(e.message, true);
+            }
+        }
+
+        async function vaultDeleteItem(itemId) {
+            if (!confirm('Remove this credential from the local .vault?')) return;
+            const res = await fetch('/admin/api/vault/items/' + encodeURIComponent(itemId), { method: 'DELETE' });
+            const j = await res.json();
+            if (j.ok) await vaultLoadItems();
         }
     </script>
 </body>

@@ -144,12 +144,65 @@ class LocalBridgeWorker:
         task_id = task["id"]
         payload = task.get("payload", {})
         prompt = payload.get("prompt", "")
-        model = payload.get("model", "Gemini 3.8 Flash (High)")
+        model = payload.get("model", "Claude Opus 5.5 (Low)")
+        project = payload.get("project", "root")
+        mode = payload.get("mode", "normal")
 
-        print(f"[TASK:{task_id}] Executing chat prompt ({len(prompt)} chars) with model {model}...")
-        self.stream_chunk(task_id, 1, f"🛰️ [Workstation Core] Processing prompt on local engine...\n")
+        print(f"[TASK:{task_id}] Executing chat prompt ({len(prompt)} chars) for project '{project}'...")
+        self.stream_chunk(task_id, 1, f"🛰️ [Siraugga Workstation Core] Connected to local engine.\n")
 
-        # Dispatches via Claude / AGY or direct local engine
+        # 1. Forward directly to live local DevCore server (http://127.0.0.1:5000)
+        try:
+            hb_check = requests.get("http://127.0.0.1:5000/api/heartbeat", timeout=2)
+            if hb_check.status_code == 200:
+                print(f"[TASK:{task_id}] Forwarding prompt to local Siraugga server (http://127.0.0.1:5000)...")
+                last_seq_start = hb_check.json().get("current_seq", 0)
+
+                chat_res = requests.post(
+                    "http://127.0.0.1:5000/api/chat",
+                    json={"prompt": prompt, "model": model, "project": project, "mode": mode},
+                    timeout=5
+                )
+                if chat_res.status_code == 200:
+                    curr_seq = last_seq_start
+                    full_output = []
+                    t_start = time.time()
+                    bridge_seq = 2
+                    is_running = True
+
+                    while (time.time() - t_start) < 180 and is_running:
+                        time.sleep(0.4)
+                        try:
+                            s_res = requests.get(f"http://127.0.0.1:5000/api/stream?since_seq={curr_seq}", timeout=4)
+                            if s_res.status_code == 200:
+                                s_data = s_res.json()
+                                msgs = s_data.get("messages", [])
+                                is_running = s_data.get("is_running", False)
+                                for m in msgs:
+                                    m_seq = m.get("seq", 0)
+                                    if m_seq > curr_seq:
+                                        curr_seq = m_seq
+                                    if m.get("type") == "agent_chunk" and m.get("chunk"):
+                                        chunk_txt = m.get("chunk")
+                                        full_output.append(chunk_txt)
+                                        self.stream_chunk(task_id, bridge_seq, chunk_txt)
+                                        bridge_seq += 1
+                                    elif m.get("type") == "agent_done":
+                                        is_running = False
+
+                                if not is_running and (time.time() - t_start) > 2.0:
+                                    break
+                        except Exception:
+                            break
+
+                    self.stream_chunk(task_id, bridge_seq, "", done=True)
+                    self.complete_task(task_id, {"response": "".join(full_output), "task_id": task_id}, status="completed")
+                    print(f"[TASK:{task_id}] Successfully streamed local DevCore response ({len(full_output)} chunks).")
+                    return
+        except Exception as e:
+            print(f"[TASK:{task_id}] Local DevCore forward bypassed: {e}. Executing via direct local CLI...")
+
+        # 2. Fallback to direct Claude CLI / AGY execution
         try:
             from story_agent_dispatcher import generate_story_with_claude, generate_story_with_antigravity
             output = None
@@ -162,7 +215,7 @@ class LocalBridgeWorker:
 
             self.stream_chunk(task_id, 2, output + "\n", done=True)
             self.complete_task(task_id, {"response": output, "task_id": task_id}, status="completed")
-            print(f"[TASK:{task_id}] Completed chat task successfully.")
+            print(f"[TASK:{task_id}] Completed chat task via direct local CLI.")
         except Exception as e:
             err_msg = f"Chat execution error: {e}"
             print(f"[TASK:{task_id}] Error: {err_msg}")

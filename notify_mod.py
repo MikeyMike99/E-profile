@@ -13,6 +13,7 @@ import json
 import re
 import secrets
 import threading
+import time
 from datetime import datetime
 from typing import Optional, Dict, Any, List
 from urllib.parse import urlparse
@@ -30,6 +31,7 @@ NOTIFY_STATE_FILE = CACHE_DIR / "notify_state.json"
 TOPICS = ("releases", "downloads", "newsletter")
 VALID_FORMATS = ("headlines", "briefs", "deep_dive", "reconstruction", "cyber_thriller", "hybrid_brief", "full_story_daily", "quick_threat_wire", "weekly_digest")
 VALID_APPETITES = ("headlines", "briefs", "deep_dive", "reconstruction", "cyber_thriller", "defense_playbook", "executive_espresso", "snarky_hacker")
+VALID_CADENCES = ("daily", "weekly", "monthly")
 VALID_TOPICS = ("zero_days", "ransomware", "cisa_kev", "supply_chain", "cloud_infra")
 METRICS_FILE = config.ROOT_DIR / "traffic_metrics.json"
 
@@ -101,7 +103,14 @@ def normalize_subscriber(entry: dict) -> dict:
         entry["delivery"] = delivery
     if delivery.get("format") not in VALID_FORMATS:
         delivery["format"] = "hybrid_brief"
-    delivery["cadence"] = "weekly" if delivery["format"] == "weekly_digest" else "daily"
+
+    current_cadence = delivery.get("cadence") or delivery.get("frequency") or entry.get("cadence") or entry.get("frequency")
+    if current_cadence not in VALID_CADENCES:
+        current_cadence = "weekly" if delivery.get("format") == "weekly_digest" else "daily"
+    delivery["cadence"] = current_cadence
+    delivery["frequency"] = current_cadence
+    entry["cadence"] = current_cadence
+    entry["frequency"] = current_cadence
 
     content = entry.setdefault("content", {})
     if not isinstance(content, dict):
@@ -218,7 +227,9 @@ def subscribe_newsletter(
     engagement_modules: dict = None,
     send_welcome: bool = False,
     base_url: str = None,
-    sync_welcome: bool = None
+    sync_welcome: bool = None,
+    cadence: str = None,
+    frequency: str = None
 ) -> dict:
     address = (email or "").strip().lower()
     if len(address) > 254 or not EMAIL_PATTERN.match(address):
@@ -227,6 +238,10 @@ def subscribe_newsletter(
     chosen_format = delivery_format if delivery_format in VALID_FORMATS else "hybrid_brief"
     chosen_appetite = primary_appetite if primary_appetite in VALID_APPETITES else "cyber_thriller"
     chosen_topics = [t for t in (topics or ["zero_days", "cisa_kev"]) if t in VALID_TOPICS] or ["zero_days", "cisa_kev"]
+
+    chosen_cadence = cadence or frequency
+    if chosen_cadence not in VALID_CADENCES:
+        chosen_cadence = "weekly" if chosen_format == "weekly_digest" else "daily"
 
     default_engagement = {"alt_appetite_teaser": True, "audio_link": True, "zero_day_radar": True}
     if isinstance(engagement_modules, dict):
@@ -250,7 +265,8 @@ def subscribe_newsletter(
         entry["last_active_at"] = _now()
         entry["delivery"] = {
             "format": chosen_format,
-            "cadence": "weekly" if chosen_format == "weekly_digest" else "daily"
+            "cadence": chosen_cadence,
+            "frequency": chosen_cadence
         }
         entry["content"] = {
             "primary_appetite": chosen_appetite,
@@ -297,7 +313,9 @@ def update_subscriber_preferences(
     primary_appetite: str = None,
     topics: list = None,
     engagement_modules: dict = None,
-    status: str = None
+    status: str = None,
+    cadence: str = None,
+    frequency: str = None
 ):
     if not token or not isinstance(token, str):
         return None
@@ -310,7 +328,15 @@ def update_subscriber_preferences(
         normalize_subscriber(entry)
         if delivery_format and delivery_format in VALID_FORMATS:
             entry["delivery"]["format"] = delivery_format
-            entry["delivery"]["cadence"] = "weekly" if delivery_format == "weekly_digest" else "daily"
+            if not cadence and not frequency:
+                entry["delivery"]["cadence"] = "weekly" if delivery_format == "weekly_digest" else "daily"
+                entry["delivery"]["frequency"] = entry["delivery"]["cadence"]
+        chosen_c = cadence or frequency
+        if chosen_c and chosen_c in VALID_CADENCES:
+            entry["delivery"]["cadence"] = chosen_c
+            entry["delivery"]["frequency"] = chosen_c
+            entry["cadence"] = chosen_c
+            entry["frequency"] = chosen_c
         if primary_appetite and primary_appetite in VALID_APPETITES:
             entry["content"]["primary_appetite"] = primary_appetite
         if topics is not None and isinstance(topics, list):
@@ -568,12 +594,8 @@ def notify_download(package_id: str) -> int:
     )
 
 
-def notify_newsletter(base_url: str = None) -> dict:
-    """Dispatches personalized threat intelligence briefs to all active subscribers.
-    
-    Generates tailored multi-cadence emails with subscriber-selected appetites,
-    safe alt-appetite curiosity teasers, audio CTA hooks, and zero-day radar cards.
-    """
+def notify_newsletter(base_url: str = None, cadence: Optional[str] = None) -> dict:
+    """Dispatches personalized threat intelligence briefs to active subscribers, optionally filtered by cadence."""
     from newsletter_mod import load_active_manifest
     from email_engine import build_personalized_newsletter_email, send_email
 
@@ -586,6 +608,12 @@ def notify_newsletter(base_url: str = None) -> dict:
         s for s in load_subscribers()
         if s.get("email") and s.get("status") == "active"
     ]
+    if cadence and cadence in VALID_CADENCES:
+        subscribers = [
+            s for s in subscribers
+            if s.get("delivery", {}).get("cadence") == cadence
+            or s.get("delivery", {}).get("frequency") == cadence
+        ]
     if not subscribers:
         return {"sent": 0, "message": "No active newsletter subscribers found."}
 
@@ -633,6 +661,35 @@ def notify_newsletter(base_url: str = None) -> dict:
         "message": status_msg,
         "errors": errors
     }
+
+
+def check_and_dispatch_scheduled_newsletters(base_url: str = None) -> dict:
+    """Checks whether automated daily or weekly newsletters should be dispatched in the background."""
+    now_ts = time.time()
+    state = _read_json(NOTIFY_STATE_FILE, {})
+    last_daily = state.get("last_daily_dispatch", 0)
+    last_weekly = state.get("last_weekly_dispatch", 0)
+    results = {}
+
+    # Check daily (24 hours = 86400s)
+    if (now_ts - last_daily) >= 86400:
+        res = notify_newsletter(base_url=base_url, cadence="daily")
+        results["daily"] = res
+        if res.get("sent", 0) > 0 or "No active" in res.get("message", ""):
+            state["last_daily_dispatch"] = now_ts
+            state["updated_at"] = _now()
+            _write_json(NOTIFY_STATE_FILE, state)
+
+    # Check weekly (7 days = 604800s)
+    if (now_ts - last_weekly) >= 604800:
+        res = notify_newsletter(base_url=base_url, cadence="weekly")
+        results["weekly"] = res
+        if res.get("sent", 0) > 0 or "No active" in res.get("message", ""):
+            state["last_weekly_dispatch"] = now_ts
+            state["updated_at"] = _now()
+            _write_json(NOTIFY_STATE_FILE, state)
+
+    return results
 
 
 def _download_succeeded(response) -> bool:

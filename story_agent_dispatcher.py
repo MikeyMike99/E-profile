@@ -18,10 +18,12 @@ import re
 import html
 import json
 import time
+import secrets
+import threading
 import subprocess
 import unicodedata
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List, Tuple
 
 try:
     from config import Config
@@ -38,8 +40,32 @@ except Exception:
 
 CACHE_DIR = BASE_DIR / "cache"
 TEMP_DOCS_DIR = CACHE_DIR / "temp_docs"
+PENDING_DELIVERIES_FILE = CACHE_DIR / "pending_appetite_deliveries.json"
+STORY_STATUS_FILE = CACHE_DIR / "story_status.json"
+
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 TEMP_DOCS_DIR.mkdir(parents=True, exist_ok=True)
+
+_dispatcher_lock = threading.Lock()
+_bg_generator_lock = threading.Lock()
+_bg_generator_running = False
+
+# Circuit Breaker & Free-Tier Rate Limiting State
+_api_circuit_breaker_until = 0.0
+_last_api_call_ts = 0.0
+MIN_API_INTERVAL_SEC = 6.0  # Pacing between free-tier API calls
+
+def _trip_circuit_breaker(reason: str = "", cooldown_sec: int = 600):
+    global _api_circuit_breaker_until
+    _api_circuit_breaker_until = time.time() + cooldown_sec
+
+def _pace_api_call():
+    global _last_api_call_ts
+    now = time.time()
+    elapsed = now - _last_api_call_ts
+    if elapsed < MIN_API_INTERVAL_SEC:
+        time.sleep(MIN_API_INTERVAL_SEC - elapsed)
+    _last_api_call_ts = time.time()
 
 # CLI Discovery
 CLAUDE_BIN = "/home/michael/.local/bin/claude"
@@ -214,12 +240,15 @@ Tone: Sarcastic, funny, technically razor-sharp, respectful to victims but merci
 
 
 def generate_story_with_claude(prompt: str, timeout_sec: int = 40) -> Optional[str]:
-    """Invokes Claude Code non-interactively with security guardrails."""
+    """Invokes Claude Code non-interactively with security guardrails and free-tier rate limits."""
     if is_production_server():
+        return None
+    if time.time() < _api_circuit_breaker_until:
         return None
     if not (os.path.exists(CLAUDE_BIN) and os.access(CLAUDE_BIN, os.X_OK)):
         return None
 
+    _pace_api_call()
     # Scrub feed secrets from child environment
     safe_env = {
         "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),
@@ -244,20 +273,34 @@ def generate_story_with_claude(prompt: str, timeout_sec: int = 40) -> Optional[s
             timeout=timeout_sec,
             env=safe_env
         )
-        if proc.returncode == 0 and proc.stdout.strip():
-            return proc.stdout.strip()
+        out = (proc.stdout or "").strip()
+        err = (proc.stderr or "").strip()
+        combined = (out + " " + err).lower()
+
+        # Check for free-tier quota limits or rate limiting
+        if any(k in combined for k in ("rate limit", "429", "quota exceeded", "too many requests", "overloaded", "credit limit")):
+            _trip_circuit_breaker("Claude rate limit or quota exceeded")
+            return None
+
+        if proc.returncode == 0 and out:
+            return out
+    except subprocess.TimeoutExpired:
+        _trip_circuit_breaker("Claude CLI timed out")
     except Exception:
         pass
     return None
 
 
 def generate_story_with_antigravity(prompt: str, timeout_sec: int = 40) -> Optional[str]:
-    """Invokes Antigravity CLI non-interactively with sandbox protection."""
+    """Invokes Antigravity CLI non-interactively with sandbox protection and free-tier rate limits."""
     if is_production_server():
+        return None
+    if time.time() < _api_circuit_breaker_until:
         return None
     if not (os.path.exists(AGY_BIN) and os.access(AGY_BIN, os.X_OK)):
         return None
 
+    _pace_api_call()
     cmd = [
         AGY_BIN,
         "-p", prompt,
@@ -273,8 +316,18 @@ def generate_story_with_antigravity(prompt: str, timeout_sec: int = 40) -> Optio
             timeout=timeout_sec,
             cwd="/mnt/c/Users/michael/Documents/DevCore/playground"
         )
-        if proc.returncode == 0 and proc.stdout.strip():
-            return proc.stdout.strip()
+        out = (proc.stdout or "").strip()
+        err = (proc.stderr or "").strip()
+        combined = (out + " " + err).lower()
+
+        if any(k in combined for k in ("rate limit", "429", "quota exceeded", "too many requests", "overloaded", "resource_exhausted")):
+            _trip_circuit_breaker("Antigravity rate limit or quota exceeded")
+            return None
+
+        if proc.returncode == 0 and out:
+            return out
+    except subprocess.TimeoutExpired:
+        _trip_circuit_breaker("Antigravity CLI timed out")
     except Exception:
         pass
     return None
@@ -429,6 +482,250 @@ Every year the industry promises "shift left" and "secure by design," and every 
 3. **Verify offline backups**: Because if you skip step 1, you'll need them."""
 
 
+def _read_json_file(path: Path, default: Any) -> Any:
+    if not path.exists():
+        return default
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+
+def _write_json_file(path: Path, data: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    tmp.replace(path)
+
+
+def get_story_appetite_status(story_id: str, appetite: str) -> Dict[str, Any]:
+    """Returns the current synthesis status of a story's appetite ('ready', 'generating', or 'pending')."""
+    cached = get_cached_story(story_id, appetite)
+    if cached and cached.get("markdown"):
+        return {"status": "ready", "story": cached, "story_id": story_id, "appetite": appetite}
+
+    with _dispatcher_lock:
+        state = _read_json_file(STORY_STATUS_FILE, {})
+        key = f"{story_id}_{appetite}"
+        entry = state.get(key, {})
+        status_val = entry.get("status", "pending")
+        # Reset stale 'generating' states if older than 5 minutes (e.g. after worker crash/restart)
+        if status_val == "generating":
+            updated_ts = entry.get("updated_ts", 0)
+            if updated_ts and (time.time() - updated_ts > 300):
+                status_val = "pending"
+                entry["status"] = "pending"
+                _write_json_file(STORY_STATUS_FILE, state)
+
+        return {
+            "status": status_val if status_val in ("generating", "ready") else "pending",
+            "story_id": story_id,
+            "appetite": appetite
+        }
+
+
+def set_story_appetite_status(story_id: str, appetite: str, status: str):
+    """Sets the status ('pending', 'generating', 'ready') for an appetite."""
+    with _dispatcher_lock:
+        state = _read_json_file(STORY_STATUS_FILE, {})
+        key = f"{story_id}_{appetite}"
+        state[key] = {
+            "status": status,
+            "updated_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+            "updated_ts": time.time()
+        }
+        _write_json_file(STORY_STATUS_FILE, state)
+
+
+def record_pending_appetite_delivery(
+    email: str,
+    story_id: str,
+    appetite: str,
+    token: str = ""
+) -> Dict[str, Any]:
+    """Records a subscriber request to receive an appetite email as soon as generation completes."""
+    clean_email = (email or "").strip().lower()
+    if not clean_email or "@" not in clean_email:
+        return {"status": "error", "message": "A valid email address is required."}
+
+    appetite = appetite if appetite in APPETITE_CONFIG else "briefs"
+
+    with _dispatcher_lock:
+        queue = _read_json_file(PENDING_DELIVERIES_FILE, [])
+        existing = next(
+            (it for it in queue if it.get("email") == clean_email and it.get("story_id") == story_id and it.get("appetite") == appetite and it.get("status") == "pending"),
+            None
+        )
+        if existing:
+            return {
+                "status": "already_registered",
+                "message": f"Your request is already queued. We will email {clean_email} as soon as this dossier is ready.",
+                "entry": existing
+            }
+
+        entry = {
+            "id": f"pend_{secrets.token_hex(4)}",
+            "email": clean_email,
+            "token": token,
+            "story_id": story_id,
+            "appetite": appetite,
+            "status": "pending",
+            "requested_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
+        }
+        queue.append(entry)
+        _write_json_file(PENDING_DELIVERIES_FILE, queue)
+
+    cached = get_cached_story(story_id, appetite)
+    if cached and cached.get("markdown"):
+        deliver_pending_appetites_for_story(story_id, appetite)
+
+    return {
+        "status": "success",
+        "message": f"Registered! You will receive the {APPETITE_CONFIG.get(appetite, {}).get('title', appetite)} analysis at {clean_email} as soon as synthesis completes.",
+        "entry": entry
+    }
+
+
+def deliver_pending_appetites_for_story(story_id: str, appetite: str, base_url: str = "") -> int:
+    """Delivers pending appetite emails for a story once synthesis reaches 'ready'."""
+    cached = get_cached_story(story_id, appetite)
+    if not cached or not cached.get("markdown"):
+        return 0
+
+    pending_to_send = []
+    with _dispatcher_lock:
+        queue = _read_json_file(PENDING_DELIVERIES_FILE, [])
+        for item in queue:
+            if item.get("story_id") == story_id and item.get("appetite") == appetite and item.get("status") == "pending":
+                pending_to_send.append(dict(item))
+                item["status"] = "delivered"
+                item["delivered_at"] = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
+        if pending_to_send:
+            _write_json_file(PENDING_DELIVERIES_FILE, queue)
+
+    if not pending_to_send:
+        return 0
+
+    delivered_count = 0
+    try:
+        from email_engine import send_ready_appetite_email
+        for item in pending_to_send:
+            try:
+                ok, _, _ = send_ready_appetite_email(
+                    to_address=item["email"],
+                    story_id=story_id,
+                    appetite=appetite,
+                    story_data=cached,
+                    token=item.get("token", ""),
+                    base_url=base_url
+                )
+                if ok:
+                    delivered_count += 1
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    return delivered_count
+
+
+def process_pending_email_backlog(base_url: str = "") -> int:
+    """Scans pending_appetite_deliveries.json and delivers or synthesizes backlogged requests in the background."""
+    queue = _read_json_file(PENDING_DELIVERIES_FILE, [])
+    pending_items = [it for it in queue if it.get("status") == "pending"]
+    if not pending_items:
+        return 0
+
+    delivered_total = 0
+    for item in pending_items:
+        s_id = item.get("story_id")
+        app = item.get("appetite", "briefs")
+        if not s_id:
+            continue
+        cached = get_cached_story(s_id, app)
+        if not cached or not cached.get("markdown"):
+            try:
+                # Synthesize on server in background without requiring browser open
+                choice = "builtin" if time.time() < _api_circuit_breaker_until else "claude"
+                dispatch_story_generation(
+                    story_id=s_id,
+                    appetite=app,
+                    engine_choice=choice
+                )
+            except Exception:
+                pass
+        # Deliver completed story to subscriber's inbox if not already delivered by save_cached_story
+        delivered_total += deliver_pending_appetites_for_story(s_id, app, base_url=base_url)
+
+    # Return total delivered count
+    updated_queue = _read_json_file(PENDING_DELIVERIES_FILE, [])
+    now_delivered = sum(
+        1 for p in pending_items
+        if any(it.get("id") == p.get("id") and it.get("status") == "delivered" for it in updated_queue)
+    )
+    return max(delivered_total, now_delivered)
+
+
+def auto_generate_manifest_stories(manifest: Dict[str, Any], force: bool = False, max_items: int = 3, background: bool = True):
+    """Automatically generates stories across arriving headlines with respectful free-tier pacing."""
+    global _bg_generator_running
+
+    items = manifest.get("items", [])[:max_items]
+    if not items:
+        return
+
+    def _worker():
+        global _bg_generator_running
+        with _bg_generator_lock:
+            _bg_generator_running = True
+        try:
+            # 1. Prioritize any pending delivery requests from subscribers first
+            process_pending_email_backlog()
+
+            # 2. For the top arriving headline, generate essential reading appetites
+            for idx, item in enumerate(items):
+                story_id = item.get("story_id")
+                if not story_id:
+                    continue
+                # For top headline: generate briefs and headlines; for others: briefs
+                target_appetites = ["briefs", "headlines"] if idx == 0 else ["briefs"]
+                for app_key in target_appetites:
+                    cached = get_cached_story(story_id, app_key)
+                    if cached and cached.get("markdown") and not force:
+                        continue
+                    try:
+                        set_story_appetite_status(story_id, app_key, "generating")
+                        choice = "builtin" if time.time() < _api_circuit_breaker_until else "claude"
+                        dispatch_story_generation(
+                            story_id=story_id,
+                            appetite=app_key,
+                            engine_choice=choice,
+                            item_metadata=item
+                        )
+                    except Exception:
+                        set_story_appetite_status(story_id, app_key, "pending")
+                    time.sleep(2.0)
+        finally:
+            with _bg_generator_lock:
+                _bg_generator_running = False
+
+    if background:
+        with _bg_generator_lock:
+            if _bg_generator_running:
+                return
+            _bg_generator_running = True
+        t = threading.Thread(target=_worker, name="auto-story-gen", daemon=True)
+        t.start()
+    else:
+        with _bg_generator_lock:
+            if _bg_generator_running:
+                return
+            _bg_generator_running = True
+        _worker()
+
+
 def get_cached_story(story_id: str, appetite: str) -> Optional[Dict[str, Any]]:
     """Checks the temporary disk cache for a previously synthesized story."""
     safe_story = re.sub(r"[^a-zA-Z0-9_-]", "-", story_id).strip("-")
@@ -443,7 +740,7 @@ def get_cached_story(story_id: str, appetite: str) -> Optional[Dict[str, Any]]:
 
 
 def save_cached_story(story_id: str, appetite: str, data: Dict[str, Any]):
-    """Caches generated story payload to temporary disk cache."""
+    """Caches generated story payload to temporary disk cache, updates status, and dispatches pending deliveries."""
     safe_story = re.sub(r"[^a-zA-Z0-9_-]", "-", story_id).strip("-")
     target_file = TEMP_DOCS_DIR / f"{safe_story}_{appetite}.json"
     try:
@@ -451,6 +748,8 @@ def save_cached_story(story_id: str, appetite: str, data: Dict[str, Any]):
             json.dump(data, f, indent=2)
     except Exception:
         pass
+    set_story_appetite_status(story_id, appetite, "ready")
+    deliver_pending_appetites_for_story(story_id, appetite)
 
 
 def dispatch_story_generation(
@@ -470,6 +769,8 @@ def dispatch_story_generation(
     if cached:
         cached["is_instant_cache"] = True
         return cached
+
+    set_story_appetite_status(story_id, appetite, "generating")
 
     # 2. Resolve feed metadata
     item = item_metadata or {}
@@ -530,28 +831,29 @@ def dispatch_story_generation(
 
     # 3. Attempt selected engine
     if engine_choice == "claude":
-        story_text = generate_story_with_claude(prompt)
-        if story_text:
-            used_engine = "claude"
-        else:
-            # Fallback to Antigravity
-            story_text = generate_story_with_antigravity(prompt)
-            if story_text:
-                used_engine = "antigravity"
-
-    elif engine_choice == "antigravity":
-        story_text = generate_story_with_antigravity(prompt)
-        if story_text:
-            used_engine = "antigravity"
-        else:
+        if time.time() >= _api_circuit_breaker_until:
             story_text = generate_story_with_claude(prompt)
             if story_text:
                 used_engine = "claude"
+            else:
+                story_text = generate_story_with_antigravity(prompt)
+                if story_text:
+                    used_engine = "antigravity"
 
-    # 4. Fallback to rich builtin synthesis if CLI models are unavailable
+    elif engine_choice == "antigravity":
+        if time.time() >= _api_circuit_breaker_until:
+            story_text = generate_story_with_antigravity(prompt)
+            if story_text:
+                used_engine = "antigravity"
+            else:
+                story_text = generate_story_with_claude(prompt)
+                if story_text:
+                    used_engine = "claude"
+
+    # 4. Fallback to rich builtin synthesis if CLI models are unavailable or rate-limited
     if not story_text:
         story_text = generate_builtin_appetite_story(appetite, item)
-        used_engine = "builtin"
+        used_engine = "builtin (quota-safe)" if (engine_choice in ("claude", "antigravity")) else "builtin"
 
     config_info = APPETITE_CONFIG.get(appetite, {})
     result = {

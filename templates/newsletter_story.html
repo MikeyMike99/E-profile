@@ -369,11 +369,46 @@
                     {% if initial_rendered_story %}
                         {{ initial_rendered_story|safe }}
                     {% else %}
-                        <div style="text-align: center; padding: 40px; color: rgba(234, 242, 255, 0.6);">
-                            <p style="margin-bottom: 15px;">Click any perspective button above to synthesize a customized narrative adaptation.</p>
-                            <button type="button" onclick="loadAppetiteStory('cyber_thriller')" style="padding: 10px 20px; background: #19e6ff; color: #000; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; font-family: monospace;">
-                                🍿 Generate Cyber Thriller Adaptation →
-                            </button>
+                        <!-- Accessible Live Progress Notice -->
+                        <div id="story-pending-notice" role="status" aria-live="polite" style="background: rgba(25, 230, 255, 0.04); border: 1px solid rgba(25, 230, 255, 0.3); border-radius: 8px; padding: 26px; text-align: center; margin: 15px 0;">
+                            <div style="font-size: 1.6rem; margin-bottom: 10px; color: #19e6ff;">
+                                ⏳ Threat Intelligence Analysis in Progress
+                            </div>
+                            <h4 style="color: #ffffff; font-size: 1.2rem; margin: 0 0 10px 0;">
+                                Synthesizing <em>{{ story_obj.title|default(story.story_id) }}</em> ({{ initial_appetite|replace('_', ' ')|title }})
+                            </h4>
+                            <p style="color: rgba(234, 242, 255, 0.8); font-size: 0.95rem; max-width: 650px; margin: 0 auto 16px auto; line-height: 1.5;">
+                                Our autonomous threat engine is currently analyzing telemetry, exploit primitives, and blue-team remediation playbooks for this incident.
+                            </p>
+                            
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); color: #00ff88; padding: 6px 14px; border-radius: 20px; font-family: monospace; font-size: 0.85rem; margin-bottom: 18px;">
+                                <span style="display: inline-block; width: 8px; height: 8px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 8px #00ff88;"></span>
+                                ⚡ Autonomous Server-Side Synthesis Active
+                            </div>
+
+                            <div style="background: rgba(25, 230, 255, 0.05); border: 1px dashed rgba(25, 230, 255, 0.25); border-radius: 6px; padding: 12px 16px; max-width: 540px; margin: 0 auto 18px auto; font-size: 0.88rem; color: #a0aec0; text-align: left; line-height: 1.5;">
+                                <strong style="color: #19e6ff;">💡 Headless Background Execution:</strong> You do <strong>not</strong> need to keep this browser tab open. Our server runs synthesis completely in the background. If you enter your email below, our server email daemon will automatically deliver the full analysis straight to your inbox as soon as it's ready.
+                            </div>
+
+                            {% if pending_registered %}
+                            <div style="background: rgba(0, 255, 136, 0.08); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 6px; padding: 12px 16px; max-width: 520px; margin: 0 auto; color: #00ff88; font-size: 0.9rem;">
+                                📬 <strong>Delivery Scheduled:</strong> We have recorded your visit! A completed copy will be automatically emailed to <strong>{{ registered_email }}</strong> as soon as synthesis finishes.
+                            </div>
+                            {% else %}
+                            <!-- Deliver to inbox form -->
+                            <div id="pending-deliver-box" style="margin-top: 10px; background: rgba(5, 7, 10, 0.7); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 16px; max-width: 520px; margin-left: auto; margin-right: auto;">
+                                <label for="pending-email-input" style="display: block; font-size: 0.8rem; font-family: monospace; color: #19e6ff; margin-bottom: 8px; text-transform: uppercase;">
+                                    📬 Want this dossier sent to your inbox when ready?
+                                </label>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                                    <input type="email" id="pending-email-input" value="{{ registered_email }}" placeholder="your-email@security-team.org" style="flex: 1; min-width: 240px; background: #05070a; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; padding: 8px 12px; color: #fff; font-size: 0.9rem;">
+                                    <button type="button" onclick="recordPendingDelivery()" style="background: #19e6ff; color: #000; font-family: monospace; font-size: 0.85rem; font-weight: bold; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer;">
+                                        🔔 Send When Ready
+                                    </button>
+                                </div>
+                                <div id="pending-email-feedback" style="font-size: 0.85rem; margin-top: 8px; font-family: monospace;"></div>
+                            </div>
+                            {% endif %}
                         </div>
                     {% endif %}
                 </div>
@@ -684,8 +719,106 @@ function switchPillar(pillarKey) {
     }
 }
 
+let pollTimeout = null;
+let pollCount = 0;
+const MAX_POLLS = 10;
+
+function startStatusPolling(storyId, appetite) {
+    if (pollTimeout) {
+        clearTimeout(pollTimeout);
+        pollTimeout = null;
+    }
+    pollCount = 0;
+
+    function getNextDelay(count) {
+        if (count < 2) return 10000;  // 10s
+        if (count < 5) return 15000;  // 15s
+        return 20000;                 // 20s
+    }
+
+    function scheduleNext() {
+        if (pollCount >= MAX_POLLS) return;
+        const delay = getNextDelay(pollCount);
+        pollTimeout = setTimeout(checkStatus, delay);
+    }
+
+    function checkStatus() {
+        if (document.hidden) {
+            return;
+        }
+        pollCount++;
+        fetch(`/api/newsletter/story/status/${storyId}/${appetite}`)
+            .then(r => r.json())
+            .then(res => {
+                if (res.status === 'ready' && res.html) {
+                    if (pollTimeout) clearTimeout(pollTimeout);
+                    pollTimeout = null;
+                    const renderedDiv = document.getElementById('story-rendered-markdown');
+                    if (renderedDiv) renderedDiv.innerHTML = res.html;
+                    const cachedBadge = document.getElementById('story-cached-badge');
+                    if (cachedBadge) cachedBadge.textContent = '✨ Synthesis Complete';
+                    const announcer = document.getElementById('story-live-announcer');
+                    if (announcer) announcer.textContent = 'Threat intelligence analysis completed and loaded.';
+                } else if (pollCount < MAX_POLLS) {
+                    scheduleNext();
+                }
+            })
+            .catch(() => {
+                if (pollCount < MAX_POLLS) scheduleNext();
+            });
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && pollCount < MAX_POLLS && !pollTimeout) {
+            checkStatus();
+        }
+    });
+
+    scheduleNext();
+}
+
+function recordPendingDelivery() {
+    const emailInput = document.getElementById('pending-email-input');
+    const feedback = document.getElementById('pending-email-feedback');
+    const email = (emailInput ? emailInput.value : '').trim();
+    if (!email || !email.includes('@')) {
+        if (feedback) {
+            feedback.style.color = '#ff7878';
+            feedback.textContent = 'Please enter a valid email address.';
+        }
+        return;
+    }
+    fetch('/api/newsletter/record-pending-delivery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            story_id: STORY_ID,
+            appetite: activeAppetite,
+            email: email,
+            token: '{{ token|default("") }}'
+        })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (feedback) {
+            feedback.style.color = '#00ff88';
+            feedback.textContent = '✅ ' + (res.message || 'Subscribed! We will email you the dossier when ready.');
+        }
+    })
+    .catch(err => {
+        if (feedback) {
+            feedback.style.color = '#ff7878';
+            feedback.textContent = 'Failed to queue request: ' + err;
+        }
+    });
+}
+
 function loadAppetiteStory(appetite) {
     activeAppetite = appetite;
+    if (pollTimeout) {
+        clearTimeout(pollTimeout);
+        pollTimeout = null;
+    }
     const engine = document.getElementById('ai-engine-select').value;
     const renderedDiv = document.getElementById('story-rendered-markdown');
     const badge = document.getElementById('story-appetite-badge');
@@ -767,10 +900,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     setReadingMode(savedMode);
 
-    const params = new URLSearchParams(window.location.search);
-    const requestedAppetite = params.get('appetite');
-    if (requestedAppetite) {
-        loadAppetiteStory(requestedAppetite);
+    const initialStatus = "{{ initial_status|default('ready') }}";
+    if (initialStatus !== 'ready') {
+        startStatusPolling(STORY_ID, activeAppetite);
     }
 });
 </script>

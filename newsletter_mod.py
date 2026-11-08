@@ -15,6 +15,7 @@ Enforces the Transient Disk Cache Architecture:
 import os
 import json
 import re
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -220,21 +221,55 @@ def newsletter_story(story_id: str):
     if initial_appetite not in APPETITE_CONFIG:
         initial_appetite = "briefs"
 
-    initial_story = get_cached_story(story_id, initial_appetite)
-    if not initial_story:
-        # Generate on first view for the requested appetite
-        initial_story = dispatch_story_generation(
-            story_id=story_id,
-            appetite=initial_appetite,
-            item_metadata=found_intel if not is_instant_cache else bundle.get("story")
-        )
+    token = (request.args.get("token") or request.args.get("sub") or "").strip()
+    incoming_email = (request.args.get("email") or "").strip().lower()
+    if not incoming_email and token:
+        try:
+            from notify_mod import get_subscriber_by_token
+            sub_rec = get_subscriber_by_token(token)
+            if sub_rec:
+                incoming_email = sub_rec.get("email", "")
+        except Exception:
+            pass
 
+    from story_agent_dispatcher import get_story_appetite_status, record_pending_appetite_delivery, set_story_appetite_status
+
+    initial_story = get_cached_story(story_id, initial_appetite)
     initial_rendered_story = None
-    if initial_story and initial_story.get("markdown"):
+    initial_status = "ready" if (initial_story and initial_story.get("markdown")) else "pending"
+    pending_registered = False
+
+    if initial_status == "ready":
         initial_rendered_story = markdown.markdown(
             initial_story.get("markdown", ""),
             extensions=['tables', 'fenced_code']
         )
+    else:
+        # Synthesis is not ready or in progress
+        initial_status = "generating"
+        set_story_appetite_status(story_id, initial_appetite, "generating")
+
+        if incoming_email:
+            record_pending_appetite_delivery(
+                email=incoming_email,
+                story_id=story_id,
+                appetite=initial_appetite,
+                token=token
+            )
+            pending_registered = True
+
+        # Trigger background synthesis non-blockingly so user sees the progress notice immediately
+        item_meta = found_intel if not is_instant_cache else bundle.get("story")
+        def _bg_generate():
+            try:
+                dispatch_story_generation(
+                    story_id=story_id,
+                    appetite=initial_appetite,
+                    item_metadata=item_meta
+                )
+            except Exception:
+                pass
+        threading.Thread(target=_bg_generate, name=f"bg-gen-{story_id}-{initial_appetite}", daemon=True).start()
 
     return render_template(
         'newsletter_story.html',
@@ -247,7 +282,11 @@ def newsletter_story(story_id: str):
         appetites=APPETITE_CONFIG,
         initial_appetite=initial_appetite,
         initial_story=initial_story,
-        initial_rendered_story=initial_rendered_story
+        initial_rendered_story=initial_rendered_story,
+        initial_status=initial_status,
+        pending_registered=pending_registered,
+        registered_email=incoming_email,
+        token=token
     )
 
 
@@ -327,6 +366,55 @@ def api_generate_appetite_story():
         "data": result,
         "html": rendered_html
     })
+
+
+@newsletter_bp.route('/api/newsletter/story/status/<story_id>/<appetite>')
+def api_newsletter_story_appetite_status(story_id: str, appetite: str):
+    """Returns the live status of an appetite for a story ('ready', 'generating', 'pending')."""
+    from story_agent_dispatcher import get_story_appetite_status, get_cached_story
+    status_info = get_story_appetite_status(story_id, appetite)
+    if status_info.get("status") == "ready":
+        cached = status_info.get("story") or get_cached_story(story_id, appetite)
+        rendered_html = ""
+        if cached and cached.get("markdown"):
+            rendered_html = markdown.markdown(cached["markdown"], extensions=['tables', 'fenced_code'])
+        return jsonify({
+            "status": "ready",
+            "story_id": story_id,
+            "appetite": appetite,
+            "data": cached,
+            "html": rendered_html
+        })
+    return jsonify({
+        "status": status_info.get("status", "pending"),
+        "story_id": story_id,
+        "appetite": appetite
+    })
+
+
+@newsletter_bp.route('/api/newsletter/record-pending-delivery', methods=['POST'])
+def api_record_pending_delivery():
+    """Queues a subscriber to receive an email as soon as an appetite finishes synthesizing."""
+    from story_agent_dispatcher import record_pending_appetite_delivery
+    data = request.get_json(silent=True) or request.form.to_dict() or {}
+    email = data.get("email", "").strip()
+    story_id = data.get("story_id", "").strip()
+    appetite = data.get("appetite", "briefs").strip()
+    token = data.get("token", "").strip()
+
+    if not email:
+        return jsonify({"status": "error", "message": "Email is required."}), 400
+    if not story_id:
+        return jsonify({"status": "error", "message": "Story ID is required."}), 400
+
+    result = record_pending_appetite_delivery(
+        email=email,
+        story_id=story_id,
+        appetite=appetite,
+        token=token
+    )
+    status_code = 200 if result.get("status") in ("success", "already_registered") else 400
+    return jsonify(result), status_code
 
 
 @newsletter_bp.route('/api/newsletter/refresh', methods=['POST'])
@@ -421,6 +509,7 @@ def api_newsletter_subscribe():
     if isinstance(topics, str):
         topics = [t.strip() for t in topics.split(",") if t.strip()]
     engagement_modules = data.get("engagement_modules")
+    sub_cadence = data.get("cadence") or data.get("sub_frequency") or data.get("frequency") or "daily"
 
     if not email:
         return jsonify({"status": "error", "message": "Please enter a valid email address."}), 400
@@ -432,7 +521,8 @@ def api_newsletter_subscribe():
             primary_appetite=primary_appetite,
             topics=topics,
             engagement_modules=engagement_modules,
-            send_welcome=True
+            send_welcome=True,
+            cadence=sub_cadence
         )
         return jsonify({
             "status": "success",
@@ -449,7 +539,7 @@ def api_newsletter_subscribe():
 
 @newsletter_bp.route('/newsletter/preferences', methods=['GET'])
 def newsletter_preferences_view():
-    from notify_mod import get_subscriber_by_token, touch_subscriber_activity, VALID_FORMATS, VALID_APPETITES, VALID_TOPICS
+    from notify_mod import get_subscriber_by_token, touch_subscriber_activity, VALID_FORMATS, VALID_APPETITES, VALID_TOPICS, VALID_CADENCES
     token = request.args.get("token", "").strip()
     subscriber = get_subscriber_by_token(token) if token else None
     if subscriber and token:
@@ -462,7 +552,8 @@ def newsletter_preferences_view():
         token=token,
         appetites=APPETITE_CONFIG,
         valid_formats=VALID_FORMATS,
-        valid_topics=VALID_TOPICS
+        valid_topics=VALID_TOPICS,
+        valid_cadences=VALID_CADENCES
     )
 
 
@@ -477,6 +568,7 @@ def newsletter_preferences_update():
 
     delivery_format = data.get("format")
     primary_appetite = data.get("appetite")
+    cadence = data.get("cadence") or data.get("frequency")
     topics = data.get("topics")
     if isinstance(topics, str):
         topics = [t.strip() for t in topics.split(",") if t.strip()]
@@ -487,6 +579,7 @@ def newsletter_preferences_update():
         token=token,
         delivery_format=delivery_format,
         primary_appetite=primary_appetite,
+        cadence=cadence,
         topics=topics,
         engagement_modules=engagement_modules,
         status=status

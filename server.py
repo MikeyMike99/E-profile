@@ -67,6 +67,9 @@ app.register_blueprint(notify_bp)
 
 from diagnostics_mod import diagnostics_bp, get_system_diagnostic_summary
 app.register_blueprint(diagnostics_bp)
+
+from vault_mod import vault_bp, vault_service
+app.register_blueprint(vault_bp)
 import sys
 import devcore_locator
 # DevCore discovery is centralized in devcore_locator (single source of truth).
@@ -129,6 +132,8 @@ def log_traffic():
     # Skip tracking for assets, api, and admin routes
     if request.path.startswith('/static') or request.path.startswith('/api') or request.path.startswith('/admin'):
         return
+    if request.path in ('/robots.txt', '/favicon.ico'):
+        return
         
     # Generate daily anonymous hash for unique visitor counting (No cookies used)
     raw_id = f"{request.remote_addr}-{request.user_agent.string}-{datetime.now().strftime('%Y-%m-%d')}"
@@ -158,8 +163,15 @@ sys_log = SystemLogger()
 import data_migrator
 
 PROFILES_FILE = config.ROOT_DIR / "profiles.json"
+PROFILES_KMS_FILE = config.ROOT_DIR / "cache" / "profiles.json.kms"
 
 def load_profiles():
+    if not PROFILES_FILE.exists() and PROFILES_KMS_FILE.exists():
+        try:
+            decrypted = vault_service.keychain.decrypt_bytes(PROFILES_KMS_FILE.read_bytes())
+            PROFILES_FILE.write_bytes(decrypted)
+        except Exception:
+            pass
     envelope = data_migrator.verify_and_migrate_profiles(PROFILES_FILE, sys_log)
     return envelope.get('data', {})
 
@@ -171,12 +183,18 @@ def save_profiles(profiles):
         },
         "data": profiles
     }
-    PROFILES_FILE.write_text(json.dumps(envelope, indent=4), encoding='utf-8')
+    raw_bytes = json.dumps(envelope, indent=4).encode('utf-8')
+    PROFILES_FILE.write_bytes(raw_bytes)
+    try:
+        PROFILES_KMS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        PROFILES_KMS_FILE.write_bytes(vault_service.keychain.encrypt_bytes(raw_bytes))
+    except Exception:
+        pass
 
 @app.before_request
 def restrict_access():
     """Security Layer: Handles handshake keys and session verification."""
-    public_endpoints = ['login', 'static', 'certifications.get_cert_file', 'dynamic_route']
+    public_endpoints = ['login', 'static', 'certifications.get_cert_file', 'dynamic_route', 'robots_txt', 'favicon']
     if request.endpoint in public_endpoints:
         return
 
@@ -221,6 +239,26 @@ def inject_system():
     )
 
 # --- 5. PRIMARY ROUTING ---
+
+# Cheap answers for files every browser/crawler asks for. Without these they fell
+# through to dynamic_route and rendered the full home page (and, for crawlers,
+# led them on to the expensive /newsletter/story and /download pages).
+ROBOTS_TXT = """User-agent: *
+Disallow: /newsletter/story/
+Disallow: /newsletter/download/
+Disallow: /api/
+Disallow: /ai_agent/
+Disallow: /admin
+"""
+
+@app.route('/robots.txt')
+def robots_txt():
+    return app.response_class(ROBOTS_TXT, mimetype='text/plain',
+                              headers={'Cache-Control': 'public, max-age=86400'})
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204, {'Cache-Control': 'public, max-age=604800'}
 
 @app.route('/', defaults={'path': 'home'})
 @app.route('/<path:path>')
@@ -487,6 +525,7 @@ def admin():
 
     analytics_data = get_analytics()
     diagnostics_data = get_system_diagnostic_summary()
+    vault_overview = vault_service.get_overview()
 
     return render_template('manage_profiles.html',
         profiles=profiles,
@@ -502,6 +541,7 @@ def admin():
         quarantined_files=quarantined_files,
         analytics_data=analytics_data,
         diagnostics_data=diagnostics_data,
+        vault_overview=vault_overview,
         is_admin=session.get('admin', False)
     )
 
@@ -1351,23 +1391,55 @@ def page_not_found(e):
     return render_template('base.html', active_tab='error', content="<h2>404 - Page Not Found</h2>"), 404
 
 
-# --- THREAT INTELLIGENCE BACKGROUND SCHEDULER ---
+# --- AUTONOMOUS HEADLESS BACKGROUND DAEMON ---
 import threading
 
-def _run_threat_feed_scheduler():
-    time.sleep(10)
+def _run_autonomous_background_daemon():
+    """Runs autonomous headless tasks on the server in the background with zero browser dependency:
+    1. Pending email queue delivery & on-demand story synthesis (every 20s).
+    2. Threat intelligence feed refresh (every 30m).
+    3. Inactive subscriber registry cleanup & scheduled cadence dispatches (daily).
+    """
+    time.sleep(5)
+    last_feed_refresh = 0.0
+    last_cleanup = 0.0
+
     while True:
+        now = time.time()
+
+        # 1. Backlog pending email delivery worker (every 20s) - no browser needed
         try:
-            from threat_intel_engine import ThreatIntelEngine
-            engine = ThreatIntelEngine()
-            engine.refresh_feed(force=False)
+            from story_agent_dispatcher import process_pending_email_backlog
+            process_pending_email_backlog()
         except Exception:
             pass
-        time.sleep(1800)
 
-if os.environ.get("WERKZEUG_RUN_MAIN") in ("true", None) and not app.config.get("TESTING"):
-    _threat_thread = threading.Thread(target=_run_threat_feed_scheduler, daemon=True, name="ThreatFeedScheduler")
-    _threat_thread.start()
+        # 2. Threat feed refresh (every 30 mins)
+        if (now - last_feed_refresh) >= 1800:
+            try:
+                from threat_intel_engine import ThreatIntelEngine
+                engine = ThreatIntelEngine()
+                engine.refresh_feed(force=False)
+                last_feed_refresh = now
+            except Exception:
+                pass
+
+        # 3. Scheduled dispatches and subscriber inactivity cleanup (every 24h)
+        if (now - last_cleanup) >= 86400:
+            try:
+                from notify_mod import purge_inactive_subscribers, check_and_dispatch_scheduled_newsletters
+                purge_inactive_subscribers(inactivity_days=30)
+                check_and_dispatch_scheduled_newsletters()
+                last_cleanup = now
+            except Exception:
+                pass
+
+        time.sleep(20)
+
+is_testing_env = bool(app.config.get("TESTING") or os.environ.get("TESTING") or "unittest" in sys.modules or "pytest" in sys.modules)
+if not is_testing_env and os.environ.get("WERKZEUG_RUN_MAIN") in ("true", None):
+    _daemon_thread = threading.Thread(target=_run_autonomous_background_daemon, daemon=True, name="AutonomousBackgroundDaemon")
+    _daemon_thread.start()
 
 
 if __name__ == '__main__':

@@ -117,7 +117,7 @@
     "category": "eprofile",
     "title": "E-Profile: Engineering a Resilient, Zero-Trust Cybersecurity Portfolio Portal",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 6881,
+    "word_count": 7669,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -388,8 +388,56 @@
       {
         "id": "EPRF-PORT-LOG-SEC-24",
         "num": "26",
-        "title": "Chapter 12: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 12: Admin-Gated Bootstrap Diagnostics, Storage Sentinel & Break-Glass Emergency Console",
         "anchor": "#EPRF-PORT-LOG-SEC-24"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-27",
+        "num": "27",
+        "title": "Locking Down Bootstrap Diagnostics & Eradicating Request Blocking (`7f0c85b0`, `34257356`, `678c87c1`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-27"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-26",
+        "num": "28",
+        "title": "Chapter 13: Cyber Threat Intelligence Feed, 5-Appetite Narrative Synthesis & Delivery Honesty Protocol",
+        "anchor": "#EPRF-PORT-LOG-SEC-26"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-29",
+        "num": "29",
+        "title": "The Delivery Honesty Protocol & Live SMTP Enforcement (`4d17c5cb`, `73618e9d`, `fca62417`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-29"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-30",
+        "num": "30",
+        "title": "Publication-Grade 5-Appetite Dossiers, Continuous Single-Read UX & Free-Tier Polling (`940df080`, `1a17c820`, `b4de4024`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-30"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-29",
+        "num": "31",
+        "title": "Chapter 14: Split-Brain Agent Architecture, Claude Brain Integration & Unified Bitwarden + `X_SHI3LD_X` Vault",
+        "anchor": "#EPRF-PORT-LOG-SEC-29"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-32",
+        "num": "32",
+        "title": "Split-Brain (Thin Edge / Thick Core) Agent Bridge & Claude Auth (`e0b64113`, `1366e23c`, `f5095e64`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-32"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-33",
+        "num": "33",
+        "title": "Unified Bitwarden CLI & `||X_SHI3LD_X||` Vault Manager (`vault_mod.py`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-33"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-32",
+        "num": "34",
+        "title": "Chapter 15: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-32"
       }
     ],
     "topics": [
@@ -1250,7 +1298,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 33498,
+    "word_count": 35939,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2627,6 +2675,156 @@
         "num": "215",
         "title": "Automated Git Pull Synchronization & Worker Startup Self-Healing",
         "anchor": "#SIRA-DEV-DEVLOG-SEC-215"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-216",
+        "num": "216",
+        "title": "Chapter 91: Root Agent Self-Service CLI Authorization, Non-Blocking Git Sync & Bootstrap Admin Gate",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-216"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-217",
+        "num": "217",
+        "title": "Category: Authentication & RBAC | Non-Blocking Concurrency | Zero-Trust Hardening",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-217"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-218",
+        "num": "218",
+        "title": "Header CLI Authorization Status Badge & 1-Click Root Reset (`dc40de8`, `aff7b94`, `fd4894f9`, `cbdc6596`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-218"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-219",
+        "num": "219",
+        "title": "Non-Blocking Git Synchronization & Bootstrap Login Gate (`7f0c85b0`, `34257356`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-219"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-220",
+        "num": "220",
+        "title": "Chapter 92: Claude Agent Brain Integration, Governed Raugus Resolver Write Paths & Host-Owner Authority",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-220"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-221",
+        "num": "221",
+        "title": "Category: Multi-Brain Orchestration | MCP Governance | Non-Interactive Execution",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-221"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-222",
+        "num": "222",
+        "title": "In-UI Subscription Sign-In, Vault-Backed API Keys & Dynamic Model Picker (`efda0cb`\u2013`56aed33`, `d7876aa`, `f8e5c52`, `a2fa94c`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-222"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-223",
+        "num": "223",
+        "title": "Non-Interactive Brain Execution, `Edit()` Rule Normalization & Raugus Resolver Governance (`440f0ef`\u2013`a056580`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-223"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-224",
+        "num": "224",
+        "title": "Chapter 93: Two-Tiered Offline Chunk-Summarize-Handoff Digest Pipeline, Reasoning Heartbeats & Break-Glass Console",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-224"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-225",
+        "num": "225",
+        "title": "Category: Token Conservation | Stream Continuity | Disaster Recovery",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-225"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-226",
+        "num": "226",
+        "title": "Resumable Two-Tiered Digest Pipeline (`core/digest_pipeline.py`, `78a78fc`, `1366e23c`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-226"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-227",
+        "num": "227",
+        "title": "PythonAnywhere Reasoning Heartbeats, Storage Sentinel & Break-Glass Emergency Console (`8741d9d`, `8c79226a`, `678c87c1`, `f5095e64`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-227"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-228",
+        "num": "228",
+        "title": "Chapter 94: Cyber Threat Intelligence Feed, 5-Appetite Narrative Synthesis, Delivery Honesty & Headless Free-Tier Polling",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-228"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-229",
+        "num": "229",
+        "title": "Category: Threat Intelligence | Email Engineering | Content Synthesis | Quota Governance",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-229"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-230",
+        "num": "230",
+        "title": "The Delivery Honesty Protocol & Eradicating Mock Mailbox Intercepts (`4d17c5cb`, `73618e9d`, `fca62417`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-230"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-231",
+        "num": "231",
+        "title": "Publication-Grade 5-Appetite Synthesis & Continuous Single-Read UX (`940df080`, `1a17c820`, `b4de4024`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-231"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-232",
+        "num": "232",
+        "title": "Chapter 95: Split-Brain (Thin Edge / Thick Core) Cloud-to-Local Agent Bridge",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-232"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-233",
+        "num": "233",
+        "title": "Category: Distributed Architecture | Edge-to-Core Routing | Real-Time Streaming",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-233"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-234",
+        "num": "234",
+        "title": "Decoupling `e_profile` into Thin Edge and Thick Core (`e0b64113`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-234"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-235",
+        "num": "235",
+        "title": "Chapter 96: Domain Strategy (`mikeytech.dev`), Unified Bitwarden CLI + `X_SHI3LD_X` Vault, Machine Secret Harvester & Raugus Vault Isolation",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-235"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-236",
+        "num": "236",
+        "title": "Category: Cryptographic Vaults | Secret Harvesting | Raugus VFS Security | WebAuthn & CLI Bridge",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-236"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-237",
+        "num": "237",
+        "title": "Production Domain Onboarding (`mikeytech.dev`) & Cloudflare DNSSEC Architecture",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-237"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-238",
+        "num": "238",
+        "title": "Unified Bitwarden CLI (`bw`) & Local `||X_SHI3LD_X||` (`.vault`) Manager (`vault_mod.py`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-238"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-239",
+        "num": "239",
+        "title": "Raugus Resolver Credential Vault Isolation (`DENIED_VAULT_ACCESS`) & Red Team Verification",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-239"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-240",
+        "num": "240",
+        "title": "Web-to-CLI Setup Bridge (`cli_bridge_ui.py` & `passkey_setup_wizard.py`) & Linux Host Ergonomics",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-240"
       }
     ],
     "topics": [
@@ -4468,7 +4666,7 @@
     "category": "devlog",
     "title": "E-Profile Architecture & Cybersecurity Devlog",
     "summary": "The **E-Profile Portal** is an accessible, high-assurance web platform engineered to showcase cybersecurity capabilities, architectural design patterns, zero-trust infrastructure, and screen reader sovereignty. What bega...",
-    "word_count": 6881,
+    "word_count": 7669,
     "project": "eprofile",
     "project_label": "E-Profile Portal",
     "project_code": "EPRF",
@@ -4739,8 +4937,56 @@
       {
         "id": "EPRF-PORT-LOG-SEC-24",
         "num": "26",
-        "title": "Chapter 12: Conclusion & The Sovereignty Dividend",
+        "title": "Chapter 12: Admin-Gated Bootstrap Diagnostics, Storage Sentinel & Break-Glass Emergency Console",
         "anchor": "#EPRF-PORT-LOG-SEC-24"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-27",
+        "num": "27",
+        "title": "Locking Down Bootstrap Diagnostics & Eradicating Request Blocking (`7f0c85b0`, `34257356`, `678c87c1`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-27"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-26",
+        "num": "28",
+        "title": "Chapter 13: Cyber Threat Intelligence Feed, 5-Appetite Narrative Synthesis & Delivery Honesty Protocol",
+        "anchor": "#EPRF-PORT-LOG-SEC-26"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-29",
+        "num": "29",
+        "title": "The Delivery Honesty Protocol & Live SMTP Enforcement (`4d17c5cb`, `73618e9d`, `fca62417`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-29"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-30",
+        "num": "30",
+        "title": "Publication-Grade 5-Appetite Dossiers, Continuous Single-Read UX & Free-Tier Polling (`940df080`, `1a17c820`, `b4de4024`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-30"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-29",
+        "num": "31",
+        "title": "Chapter 14: Split-Brain Agent Architecture, Claude Brain Integration & Unified Bitwarden + `X_SHI3LD_X` Vault",
+        "anchor": "#EPRF-PORT-LOG-SEC-29"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-32",
+        "num": "32",
+        "title": "Split-Brain (Thin Edge / Thick Core) Agent Bridge & Claude Auth (`e0b64113`, `1366e23c`, `f5095e64`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-32"
+      },
+      {
+        "id": "EPRF-PORT-DEVLOG-SEC-33",
+        "num": "33",
+        "title": "Unified Bitwarden CLI & `||X_SHI3LD_X||` Vault Manager (`vault_mod.py`)",
+        "anchor": "#EPRF-PORT-DEVLOG-SEC-33"
+      },
+      {
+        "id": "EPRF-PORT-LOG-SEC-32",
+        "num": "34",
+        "title": "Chapter 15: Conclusion & The Sovereignty Dividend",
+        "anchor": "#EPRF-PORT-LOG-SEC-32"
       }
     ],
     "topics": [
