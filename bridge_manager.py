@@ -152,6 +152,16 @@ class BridgeManager:
             }
 
             tasks = state.setdefault("tasks", [])
+            # Priority 1: Interactive chat prompts from projects tab
+            for task in tasks:
+                if task.get("status") == "pending" and task.get("type") == "chat":
+                    task["status"] = "processing"
+                    task["started_at"] = time.time()
+                    task["worker_id"] = worker_id
+                    self._write_state(state)
+                    return task
+
+            # Priority 2: General pending tasks (stories, etc.)
             for task in tasks:
                 if task.get("status") == "pending":
                     task["status"] = "processing"
@@ -198,13 +208,29 @@ class BridgeManager:
             events.append({
                 "seq": seq,
                 "task_id": task_id,
-                "msg": {"type": "done" if done else "chunk", "content": chunk}
+                "msg": {
+                    "type": "agent_done" if done else "agent_chunk",
+                    "chunk": chunk,
+                    "content": chunk,
+                    "done": done
+                }
             })
             if len(events) > 500:
                 events = events[-500:]
             runtime_stream.write_text(json.dumps(events), encoding="utf-8")
         except Exception:
             pass
+
+    def cancel_task(self, task_id: Optional[str] = None) -> bool:
+        with self._lock:
+            state = self._read_state()
+            tasks = state.setdefault("tasks", [])
+            for t in tasks:
+                if (task_id and t.get("id") == task_id) or (not task_id and t.get("status") == "processing"):
+                    t["status"] = "cancelled"
+                    t["completed_at"] = time.time()
+            self._write_state(state)
+        return True
 
     def complete_task(self, task_id: str, result: Dict[str, Any], status: str = "completed") -> bool:
         with self._lock:

@@ -2,6 +2,8 @@ import io
 import os
 import subprocess
 import zipfile
+import json
+import time
 from pathlib import Path
 from flask import Blueprint, jsonify, request, session
 
@@ -243,3 +245,107 @@ def handle_bridge_enqueue():
 
     task = bridge_mgr.enqueue_task(task_type, payload)
     return jsonify({"status": "enqueued", "task": task})
+
+
+# --- PROJECTS TAB / REVERSE SPLIT-BRAIN AGENT TRANSPORTS ---
+
+@sync_bp.route('/heartbeat', methods=['GET'])
+@sync_bp.route('/ping', methods=['GET'])
+def handle_projects_heartbeat():
+    st = bridge_mgr.get_status()
+    is_online = bool(st.get("bridge_online", False))
+    return jsonify({
+        "status": "alive" if is_online else "standby",
+        "bridge_online": is_online,
+        "status_label": st.get("status_label", "Offline"),
+        "worker_id": st.get("worker_id", ""),
+        "last_seen_sec_ago": st.get("last_seen_sec_ago", 999999.0),
+        "is_running": (st.get("processing_tasks_count", 0) > 0),
+        "pending_tasks": st.get("pending_tasks_count", 0),
+        "time": time.time()
+    })
+
+
+@sync_bp.route('/chat', methods=['POST'])
+def handle_projects_chat():
+    data = request.get_json(silent=True) or {}
+    prompt = data.get("prompt", "").strip()
+    if not prompt:
+        return jsonify({"status": "error", "message": "Empty prompt"}), 400
+
+    model = data.get("model", "Claude Opus 5.5 (Low)")
+    project = data.get("project", "root")
+    mode = data.get("mode", "normal")
+    conversation_id = data.get("conversation_id", "")
+
+    task = bridge_mgr.enqueue_task("chat", {
+        "prompt": prompt,
+        "model": model,
+        "project": project,
+        "mode": mode,
+        "conversation_id": conversation_id,
+        "timestamp": time.time(),
+        "source": "projects_tab"
+    })
+    return jsonify({
+        "success": True,
+        "task_id": task["id"],
+        "status": "enqueued",
+        "message": "Task queued for local Siraugga execution via Bridge"
+    })
+
+
+@sync_bp.route('/stream', methods=['GET'])
+def handle_projects_stream_read():
+    since_seq = request.args.get("since_seq", type=int, default=0)
+    task_id = request.args.get("task_id")
+    st = bridge_mgr.get_status()
+    is_running = (st.get("processing_tasks_count", 0) > 0)
+
+    messages = []
+    max_seq = since_seq
+
+    runtime_stream = config.ROOT_DIR / "cache" / "stream_events.json"
+    if runtime_stream.is_file():
+        try:
+            events = json.loads(runtime_stream.read_text(encoding="utf-8"))
+            if isinstance(events, list):
+                for ev in events:
+                    if not isinstance(ev, dict):
+                        continue
+                    if task_id and ev.get("task_id") != task_id:
+                        continue
+                    seq_val = ev.get("seq", 0)
+                    if seq_val > since_seq:
+                        raw_msg = ev.get("msg", {})
+                        if isinstance(raw_msg, dict):
+                            msg_obj = dict(raw_msg)
+                        else:
+                            msg_obj = {"content": str(raw_msg)}
+
+                        if msg_obj.get("type") in ("chunk", "agent_chunk"):
+                            msg_obj["type"] = "agent_chunk"
+                            msg_obj["chunk"] = msg_obj.get("chunk") or msg_obj.get("content", "")
+                        elif msg_obj.get("type") in ("done", "agent_done"):
+                            msg_obj["type"] = "agent_done"
+
+                        msg_obj["seq"] = seq_val
+                        messages.append(msg_obj)
+                        if seq_val > max_seq:
+                            max_seq = seq_val
+        except Exception:
+            pass
+
+    return jsonify({
+        "messages": messages,
+        "last_seq": max_seq,
+        "is_running": is_running
+    })
+
+
+@sync_bp.route('/kill', methods=['POST'])
+def handle_projects_kill():
+    data = request.get_json(silent=True) or {}
+    task_id = data.get("task_id")
+    bridge_mgr.cancel_task(task_id)
+    return jsonify({"success": True, "message": "Task cancellation queued"})
