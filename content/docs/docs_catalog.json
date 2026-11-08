@@ -1298,7 +1298,7 @@
     "category": "story",
     "title": "The Antigravity Dev Portal: A Development Story (73 Chapters)",
     "summary": "It started, as all great projects do, with an itch in the back of the mind\u2014a persistent thought that wouldn't let go.",
-    "word_count": 35939,
+    "word_count": 37702,
     "project": "siraugga",
     "project_label": "Siraugga / DevCore Framework",
     "project_code": "SIRA",
@@ -2825,6 +2825,48 @@
         "num": "240",
         "title": "Web-to-CLI Setup Bridge (`cli_bridge_ui.py` & `passkey_setup_wizard.py`) & Linux Host Ergonomics",
         "anchor": "#SIRA-DEV-DEVLOG-SEC-240"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-241",
+        "num": "241",
+        "title": "Chapter 97: Windows Hello Unlock for the Bitwarden CLI & Identity Compromise Detection",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-241"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-242",
+        "num": "242",
+        "title": "Category: WebAuthn PRF | Bitwarden CLI | Breach Intelligence | Identity Monitoring | Audit Trails",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-242"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-243",
+        "num": "243",
+        "title": "Windows Hello Unlock via WebAuthn PRF (`cli_bridge_ui.py`, Port `5050`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-243"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-244",
+        "num": "244",
+        "title": "Identity Compromise Detection, Layer 1: Vault Health (`scripts/setup/vault_health.py`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-244"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-245",
+        "num": "245",
+        "title": "Identity Compromise Detection, Layer 2: DevCore Account Integrity (`security/identity_monitor.py`)",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-245"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-246",
+        "num": "246",
+        "title": "Identity Compromise Detection, Layer 3: Unlock Audit Trail & Session Expiry",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-246"
+      },
+      {
+        "id": "SIRA-DEV-DEVLOG-SEC-247",
+        "num": "247",
+        "title": "Red Team Audit Expansion (`scripts/audit_vault_isolation.py`, Stages 5\u20137) & Closing the Bridge-Secret Gap",
+        "anchor": "#SIRA-DEV-DEVLOG-SEC-247"
       }
     ],
     "topics": [
