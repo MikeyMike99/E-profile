@@ -316,17 +316,8 @@ def cleanup_storage(base_dir: Path, verbose: bool = True) -> dict:
 
         # Enforce shallow history boundary if .git exceeds 30 MB
         if git_size_mb > 30.0:
-            token = ""
-            token_file = base_dir / "gethub_token.txt"
-            if not token_file.exists():
-                token_file = home / "gethub_token.txt"
-            if token_file.exists():
-                try:
-                    token = token_file.read_text(encoding="utf-8").strip()
-                except Exception:
-                    pass
-            if not token:
-                token = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GIT_TOKEN", "").strip()
+            from secret_source import github_token   # Bitwarden / environment, never a plain-text file
+            token = github_token()
             auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
             try:
                 subprocess.run([git_bin, "-c", "credential.helper=", "fetch", "--depth", "1", auth_url, "main"], cwd=str(base_dir), capture_output=True, timeout=35)
@@ -464,17 +455,8 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
         except Exception:
             pass
 
-        token = ""
-        token_file = base_dir / "gethub_token.txt"
-        if not token_file.exists():
-            token_file = Path.home() / "gethub_token.txt"
-        if token_file.exists():
-            try:
-                token = token_file.read_text(encoding="utf-8").strip()
-            except Exception:
-                pass
-        if not token:
-            token = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GIT_TOKEN", "").strip()
+        from secret_source import github_token   # Bitwarden / environment, never a plain-text file
+        token = github_token()
 
         authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
 
@@ -518,23 +500,8 @@ def auto_sync_git(base_dir: Path, force: bool = False) -> bool:
 
         has_new_commits = bool(old_head and new_head and old_head != new_head)
 
-        import devcore_locator
-        devcore_dir = devcore_locator.find_devcore(require_marker=False) or devcore_locator.default_clone_target()
-
-        if token:
-            devcore_auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/DevCore.git"
-            if not devcore_dir.is_dir():
-                target_clone = base_dir.parent / "DevCore"
-                _git(["clone", "--depth", "1", devcore_auth_url, str(target_clone)], timeout=45)
-            elif (devcore_dir / ".git").is_dir():
-                def _git_dc(args, timeout=30):
-                    cmd = [git_bin, "-c", "credential.helper="] + args
-                    try:
-                        res = subprocess.run(cmd, cwd=str(devcore_dir), capture_output=True, text=True, timeout=timeout)
-                        return res.returncode == 0
-                    except Exception:
-                        return False
-                _git_dc(["pull", devcore_auth_url, "main", "--no-edit", "-X", "ours"], timeout=30)
+        # DevCore (the Siraugga agent) is no longer cloned or mounted here: it runs once, at its
+        # own domain (https://mikeytech.dev), and e_profile links to it.
 
         post_sync_script = base_dir / "post_sync.py"
         if post_sync_script.exists():
@@ -709,16 +676,8 @@ def authenticate_bootstrap_admin(base_dir: Path, params: dict, post_params: dict
         if s and not s.startswith("INSERT_"):
             admin_hashes[hashlib.sha256(s.encode("utf-8")).hexdigest()] = "Root (GitHub Token)"
 
-    token_file = base_dir / "gethub_token.txt"
-    if not token_file.exists():
-        token_file = Path.home() / "gethub_token.txt"
-    if token_file.exists():
-        try:
-            gt = token_file.read_text(encoding="utf-8").strip()
-            if gt:
-                admin_hashes[hashlib.sha256(gt.encode("utf-8")).hexdigest()] = "Root (GitHub Token)"
-        except Exception:
-            pass
+    # The GitHub token is NOT an admin login any more: it only talks to GitHub. (It used to be
+    # accepted here as "Root (GitHub Token)", so a leaked GitHub token also unlocked e_profile.)
 
     master_key_file = base_dir / ".devcore_master.key"
     if master_key_file.exists():

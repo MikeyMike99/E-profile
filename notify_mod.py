@@ -177,13 +177,8 @@ def dispatch_welcome_email(subscriber: dict, base_url: str = None, sync: bool = 
     from email_engine import send_welcome_email
     import os
 
-    resolved_base = base_url
-    if not resolved_base:
-        try:
-            from flask import request
-            resolved_base = request.host_url.rstrip("/")
-        except Exception:
-            resolved_base = getattr(config, "BASE_URL", "https://mikeymike.pythonanywhere.com").rstrip("/")
+    # Email links always use the public site address (never the sending page's own host).
+    resolved_base = base_url or config.BASE_URL
 
     is_pa = bool(os.environ.get("PYTHONANYWHERE_DOMAIN") or os.environ.get("PYTHONANYWHERE_SITE"))
     is_smtp = getattr(config, "MAIL_BACKEND", "").lower() == "smtp"
@@ -618,10 +613,8 @@ def notify_newsletter(base_url: str = None, cadence: Optional[str] = None) -> di
         return {"sent": 0, "message": "No active newsletter subscribers found."}
 
     if not base_url:
-        try:
-            base_url = request.host_url.rstrip("/")
-        except Exception:
-            base_url = getattr(config, "BASE_URL", "http://127.0.0.1:5001")
+        # The public site, never the local address of whoever pressed "send" (or 127.0.0.1).
+        base_url = config.BASE_URL
 
     sent_count = 0
     errors = []
@@ -638,6 +631,7 @@ def notify_newsletter(base_url: str = None, cadence: Optional[str] = None) -> di
                 subject=subject,
                 html_content=html_body,
                 text_content=text_body,
+                sender=config.NEWSLETTER_SENDER,
                 headers=headers
             )
             if ok:

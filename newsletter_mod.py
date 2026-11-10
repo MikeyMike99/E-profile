@@ -735,8 +735,8 @@ def api_newsletter_dispatch():
     if not is_admin and not valid_cron:
         return jsonify({"status": "error", "message": "Authentication required."}), 403
 
-    base_url = request.host_url.rstrip("/")
-    result = notify_newsletter(base_url=base_url)
+    # Links in the emails always point at the public site, not at wherever "send" was pressed.
+    result = notify_newsletter(base_url=config.BASE_URL)
     return jsonify({
         "status": "success",
         **result

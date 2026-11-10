@@ -1,11 +1,48 @@
 {
-  "total_downloads": 20,
+  "total_downloads": 24,
   "packages": {
-    "installer": 9,
-    "portable": 6,
-    "git_source": 5
+    "installer": 11,
+    "portable": 7,
+    "git_source": 6
   },
   "events": [
+    {
+      "timestamp": 1794346489,
+      "formatted_time": "2026-11-10 23:34:49",
+      "package_id": "installer",
+      "filename": "installer",
+      "version": "1.0.1",
+      "client_hash": "e033d2a0",
+      "user_agent": "claude-deploy-check",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794339613,
+      "formatted_time": "2026-11-10 21:40:13",
+      "package_id": "git_source",
+      "filename": "source-code.zip",
+      "version": "1.0.0",
+      "client_hash": "9ccad687",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1794339612,
+      "formatted_time": "2026-11-10 21:40:12",
+      "package_id": "portable",
+      "filename": "JOSHY.exe",
+      "version": "1.0.0",
+      "client_hash": "9ccad687",
+      "user_agent": "Unknown"
+    },
+    {
+      "timestamp": 1794339611,
+      "formatted_time": "2026-11-10 21:40:11",
+      "package_id": "installer",
+      "filename": "JOSHY-Setup.exe",
+      "version": "1.0.0",
+      "client_hash": "9ccad687",
+      "user_agent": "Unknown"
+    },
     {
       "timestamp": 1793476434,
       "formatted_time": "2026-10-31 19:53:54",

@@ -2,11 +2,11 @@
   "test-hwid-check-1234": {
     "hwid": "test-hwid-check-1234",
     "first_run": 1792781983,
-    "last_seen": 1793009637,
+    "last_seen": 1794343515,
     "duration_days": 14,
-    "app_version": "1.0.0",
+    "app_version": "1.0.1",
     "remote_revoked": false,
-    "status": "ACTIVE"
+    "status": "EXPIRED"
   },
   "1be18627022a5e68b080fec4390f2863": {
     "hwid": "1be18627022a5e68b080fec4390f2863",

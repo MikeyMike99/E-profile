@@ -142,17 +142,8 @@ def handle_remote_git_pull():
         git_env["GIT_TERMINAL_PROMPT"] = "0"
         git_env["GIT_EDITOR"] = "true"
 
-        token = ""
-        for t_file in (config.ROOT_DIR / "gethub_token.txt", Path.home() / "gethub_token.txt"):
-            if t_file.is_file():
-                try:
-                    token = t_file.read_text(encoding="utf-8").strip()
-                    if token:
-                        break
-                except Exception:
-                    pass
-        if not token:
-            token = os.environ.get("GITHUB_TOKEN", "").strip()
+        from secret_source import github_token   # Bitwarden / environment, never a plain-text file
+        token = github_token()
 
         auth_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
 

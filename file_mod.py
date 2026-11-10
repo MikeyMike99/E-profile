@@ -112,12 +112,10 @@ def terminal_command():
     if raw_cmd == 'clear':
         return jsonify({"output": "", "action": "clear"})
 
-    # Load token for auto-auth
-    token = ""
-    token_file = Path.cwd() / "gethub_token.txt"
-    if token_file.exists():
-        token = token_file.read_text().strip()
-        
+    # Load token for auto-auth (Bitwarden / environment, never a plain-text file)
+    from secret_source import github_token
+    token = github_token()
+
     remote_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/ECHOS_OF_THE_WORLD.git" if token else "origin"
 
     def run_safe_cmd(cmd_list):
@@ -256,17 +254,9 @@ def git_sync():
     output_log = "[System] Starting Single-Branch (main) Git Sync...\n"
     target_branch = 'main'
 
-    # Load authentication token
-    token = ""
-    token_file = target / "gethub_token.txt"
-    if not token_file.exists():
-        token_file = Path.cwd() / "gethub_token.txt"
-        
-    if token_file.exists():
-        token = token_file.read_text().strip()
-    
-    if not token:
-        token = os.environ.get("GITHUB_TOKEN", "").strip()
+    # Load authentication token (Bitwarden / environment, never a plain-text file)
+    from secret_source import github_token
+    token = github_token()
 
     authenticated_url = f"https://MikeyMike99:{token}@github.com/MikeyMike99/E-profile.git" if token else "origin"
 

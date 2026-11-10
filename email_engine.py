@@ -1281,6 +1281,7 @@ def send_ready_appetite_email(
         subject=subject,
         html_content=html_content,
         text_content=text_content,
+        sender=config.NEWSLETTER_SENDER,
         headers=headers
     )
 
@@ -1300,6 +1301,7 @@ def send_welcome_email(
         subject=subject,
         html_content=html_content,
         text_content=text_content,
+        sender=config.NEWSLETTER_SENDER,
         headers=headers
     )
 

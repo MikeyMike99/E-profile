@@ -25,3 +25,7 @@ cache/
 *.key
 content/projects/**/antigravity-oauth-token
 
+
+cloudflare_pages/public/
+cloudflare_pages/.wrangler/
+backups/usage_before_pa_sync_20261110/

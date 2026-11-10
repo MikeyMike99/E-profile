@@ -230,20 +230,14 @@ let isAgentTaskRunning = false;
 let currentAgentBubble = null;
 let activeAgentBaseUrl = null;
 
+// e_profile is only a front end: the agent's brain and back end run at Siraugga's domain, and this
+// console talks to it there directly. credentials:'include' sends mikeytech.dev's own cookies, so a
+// visitor is the same person here as on mikeytech.dev.
+const SIRAUGGA_URL = 'https://mikeytech.dev';
+
 async function resolveAgentBaseUrl() {
-    if (activeAgentBaseUrl) return activeAgentBaseUrl;
-    const candidates = ['', '/ai_agent', 'http://127.0.0.1:5000'];
-    for (const base of candidates) {
-        try {
-            const res = await fetch(`${base}/api/heartbeat`, { method: 'GET', headers: { 'Accept': 'application/json' } });
-            if (res.ok) {
-                activeAgentBaseUrl = base;
-                return base;
-            }
-        } catch (e) {}
-    }
-    activeAgentBaseUrl = '';
-    return '';
+    activeAgentBaseUrl = SIRAUGGA_URL;
+    return SIRAUGGA_URL;
 }
 
 function openAgent(name) {
@@ -294,10 +288,7 @@ function closeAgentDrawer() {
 }
 
 function openFullAgentPortal() {
-    const target = encodeURIComponent(currentAgentProject || 'root');
-    const base = activeAgentBaseUrl || '';
-    const url = `${base}/ai_agent/?mode=root&project=${target}`;
-    window.open(url, '_blank');
+    window.open(SIRAUGGA_URL + '/', '_blank', 'noopener');   // the full Siraugga Command Center
 }
 
 function initAgentInputKeyHandler() {
@@ -375,6 +366,7 @@ async function submitAgentPrompt(mode) {
     try {
         const res = await fetch(`${base}/api/chat`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token ? `Bearer ${token}` : ''
@@ -390,7 +382,15 @@ async function submitAgentPrompt(mode) {
 
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
-            if (currentAgentBubble) {
+            if (currentAgentBubble && err.terms_required) {
+                currentAgentBubble.textContent = '⚠️ Please accept Siraugga\'s Terms & Privacy first, then try again: ';
+                const link = document.createElement('a');
+                link.href = SIRAUGGA_URL + '/';
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.textContent = 'open Siraugga';
+                currentAgentBubble.appendChild(link);
+            } else if (currentAgentBubble) {
                 currentAgentBubble.textContent = `⚠️ Error starting task: ${err.error || res.statusText}`;
             }
             setAgentRunningState(false);
@@ -409,7 +409,11 @@ async function submitAgentPrompt(mode) {
 async function cancelAgentTask() {
     const base = await resolveAgentBaseUrl();
     try {
-        await fetch(`${base}/api/kill`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const token = localStorage.getItem('agy_auth_token') || '';
+        await fetch(`${base}/api/kill`, {
+            method: 'POST', credentials: 'include',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, token ? { 'Authorization': `Bearer ${token}` } : {})
+        });
         appendAgentMessage('[Task Cancel Requested by User]', 'agent');
         setAgentRunningState(false);
     } catch (e) {}
@@ -441,12 +445,20 @@ function startAgentHeartbeatAndPolling() {
     const hbBadge = document.getElementById('agent-heartbeat-badge');
     let consecutiveFailures = 0;
 
+    let pollInFlight = false;
+    let primed = false;                      // first poll only notes where the stream is
     const poll = async () => {
+        if (pollInFlight) return;            // a slow round trip must not start a second poll
+        pollInFlight = true;
+        try { await pollOnce(); } finally { pollInFlight = false; }
+    };
+    const pollOnce = async () => {
         const base = await resolveAgentBaseUrl();
         const token = localStorage.getItem('agy_auth_token') || '';
 
         try {
             const hbRes = await fetch(`${base}/api/heartbeat`, {
+                credentials: 'include',
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
             if (hbRes.ok) {
@@ -481,16 +493,27 @@ function startAgentHeartbeatAndPolling() {
 
         try {
             const streamRes = await fetch(`${base}/api/stream?since_seq=${encodeURIComponent(agentLastSeq || 0)}`, {
+                credentials: 'include',
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
             if (streamRes.ok) {
                 const streamData = await streamRes.json();
+                if (!primed) {
+                    // Opening the console starts from "now": earlier replies from Siraugga's
+                    // stream are not replayed into a new answer.
+                    primed = true;
+                    if (typeof streamData.last_seq === 'number' && streamData.last_seq > agentLastSeq) {
+                        agentLastSeq = streamData.last_seq;
+                    }
+                    return;
+                }
                 if (streamData.is_running !== undefined && streamData.is_running !== isAgentTaskRunning) {
                     setAgentRunningState(streamData.is_running);
                 }
                 if (Array.isArray(streamData.messages) && streamData.messages.length > 0) {
                     streamData.messages.forEach(msg => {
-                        if (typeof msg.seq === 'number' && msg.seq > agentLastSeq) {
+                        if (typeof msg.seq === 'number') {
+                            if (msg.seq <= agentLastSeq) return;   // already shown (overlapping polls)
                             agentLastSeq = msg.seq;
                         }
                         handleAgentStreamMessage(msg);

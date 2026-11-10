@@ -432,224 +432,113 @@ class SecurityAuditor:
         self.record("Stage 6", "SYNC-02", "Central Docs synchronization script compiles without AST syntax errors", script_ok, f"Script path: {sync_script}")
 
     # =========================================================================
-    # STAGE 7: SIRAUGGA AGENT BUTTON vs TEST DEMO ROUTING & SUBMODULE INTEGRITY
+    # STAGE 7: SIRAUGGA AGENT LIVES AT ITS OWN DOMAIN (NO EMBEDDED COPY)
     # =========================================================================
     def audit_stage_7_agent_and_demo_routing(self):
+        """The agent is not doubled: e_profile embeds no DevCore copy and links to Siraugga's domain."""
         if not self.json_output:
-            print("\n\033[94m--- STAGE 7: Siraugga Agent Button vs Test Demo Routing & Submodule Integrity ---\033[0m")
+            print("\n\033[94m--- STAGE 7: Siraugga Agent at its own domain (no embedded copy) ---\033[0m")
 
-        submod_root = Path(getattr(server, "ai_path", EPROFILE_ROOT.parent / "DevCore"))
-        submod_plugin = submod_root / "ai_plugin.py"
-        file_mod_src = (EPROFILE_ROOT / "file_mod.py").read_text(encoding="utf-8", errors="ignore")
-        post_sync_src = (EPROFILE_ROOT / "post_sync.py").read_text(encoding="utf-8", errors="ignore")
-        submod_preserved = (
-            submod_plugin.exists()
-            and "ai" in app.blueprints
-            and '"deinit"' not in post_sync_src
+        siraugga = getattr(server, "SIRAUGGA_URL", "https://mikeytech.dev").rstrip("/")
+        vendored = EPROFILE_ROOT / "content" / "projects" / "engines" / "antigravity_agent"
+        no_copy = (
+            "ai" not in app.blueprints
+            and not vendored.exists()
+            and not (EPROFILE_ROOT / "devcore_locator.py").exists()
+            and not (EPROFILE_ROOT / "test_ai_agent.py").exists()
         )
         self.record(
-            "Stage 7",
-            "AGENT-01",
-            "Siraugga DevCore engine ai_plugin.py exists, Blueprint is mounted, and engine is centrally managed",
-            submod_preserved,
-            f"submod_plugin={submod_plugin.exists()}, ai_bp={'ai' in app.blueprints}, engine_path={submod_root}",
+            "Stage 7", "AGENT-01",
+            "No embedded agent: no ai_bp blueprint, no vendored DevCore copy, no DevCore locator",
+            no_copy,
+            f"ai_bp={'ai' in app.blueprints}, vendored_copy={vendored.exists()}",
         )
-
-        with self.client.session_transaction() as sess:
-            sess.clear()
-            sess["admin"] = True
-            sess["is_admin"] = True
-            sess["username"] = "admin"
 
         r_agent = self.client.get("/ai_agent/?mode=root&project=root", follow_redirects=False)
-        html_agent = r_agent.get_data(as_text=True)
-        with self.client.session_transaction() as sess:
-            scope_after_agent = sess.get("agent_token_scope")
-            auth_after_agent = sess.get("agent_authenticated")
+        agent_ok = r_agent.status_code == 404
+        self.record(
+            "Stage 7", "AGENT-02",
+            "No agent back end here: /ai_agent is not served (and not swallowed by the home route)",
+            agent_ok,
+            f"HTTP {r_agent.status_code}",
+        )
 
-        agent_btn_ok = (
-            r_agent.status_code == 200
-            and scope_after_agent == "root"
-            and auth_after_agent is True
-            and "Siraugga Command Center" in html_agent
+        js_src = (EPROFILE_ROOT / "static" / "js" / "projects.js").read_text(encoding="utf-8", errors="ignore")
+        direct_ok = (
+            f"const SIRAUGGA_URL = '{siraugga}'" in js_src
+            and js_src.count("credentials: 'include'") >= 4
+            and "'/ai_agent'" not in js_src
+            and "127.0.0.1:5000" not in js_src
         )
         self.record(
-            "Stage 7",
-            "AGENT-02",
-            "Admin AGENT button (/ai_agent/?mode=root&project=root) launches Siraugga Command Center in root scope (HTTP 200, never redirects to Home)",
-            agent_btn_ok,
-            f"HTTP {r_agent.status_code}, scope={scope_after_agent}, location={r_agent.headers.get('Location')}",
-        )
-
-        r_demo = self.client.get("/ai_agent/login?demo=1", follow_redirects=False)
-        html_demo = r_demo.get_data(as_text=True)
-        with self.client.session_transaction() as sess:
-            scope_after_demo = sess.get("agent_token_scope")
-            auth_after_demo = sess.get("agent_authenticated")
-
-        demo_btn_ok = (
-            r_demo.status_code == 200
-            and scope_after_demo == "demo"
-            and not auth_after_demo
-            and "Siraugga Agent • Google OAuth Authentication" in html_demo
-            and "SECURE_GATE | ACCESS_RESTRICTED" not in html_demo
-        )
-        self.record(
-            "Stage 7",
-            "AGENT-03",
-            "Test Demo button (/ai_agent/login?demo=1) isolates demo scope and renders Siraugga Google OAuth login (never E-Profile SECURE_GATE)",
-            demo_btn_ok,
-            f"HTTP {r_demo.status_code}, scope={scope_after_demo}, auth={auth_after_demo}",
-        )
-
-        r_switch = self.client.get("/ai_agent/?mode=root&project=antigravity_agent", follow_redirects=False)
-        html_switch = r_switch.get_data(as_text=True)
-        with self.client.session_transaction() as sess:
-            scope_after_switch = sess.get("agent_token_scope")
-            auth_after_switch = sess.get("agent_authenticated")
-
-        switch_ok = (
-            r_switch.status_code == 200
-            and scope_after_switch == "root"
-            and auth_after_switch is True
-            and "Siraugga Command Center" in html_switch
-        )
-        self.record(
-            "Stage 7",
-            "AGENT-04",
-            "Clicking AGENT button after Test Demo immediately restores root scope and loads Siraugga Command Center",
-            switch_ok,
-            f"HTTP {r_switch.status_code}, scope={scope_after_switch}",
-        )
-
-        with self.client.session_transaction() as sess:
-            sess.clear()
-
-        r_unauth = self.client.get("/ai_agent/?mode=root&project=root", follow_redirects=False)
-        unauth_loc = r_unauth.headers.get("Location", "")
-        unauth_ok = r_unauth.status_code in (301, 302) and "login" in unauth_loc and "/home" not in unauth_loc
-        self.record(
-            "Stage 7",
-            "AGENT-05",
-            "Unauthenticated visitor hitting AGENT route is redirected to relative login (never to /home)",
-            unauth_ok,
-            f"HTTP {r_unauth.status_code}, Location={unauth_loc}",
+            "Stage 7", "AGENT-03",
+            "The agent console talks to Siraugga's domain directly (chat, stream, heartbeat, cancel)",
+            direct_ok,
+            f"SIRAUGGA_URL={siraugga}",
         )
 
         projects_tpl = (EPROFILE_ROOT / "templates" / "projects.html").read_text(encoding="utf-8", errors="ignore")
         projects_js = (EPROFILE_ROOT / "static" / "js" / "projects.js").read_text(encoding="utf-8", errors="ignore")
         server_src = (EPROFILE_ROOT / "server.py").read_text(encoding="utf-8", errors="ignore")
-        ui_contract_ok = (
+        ui_ok = (
             "openAgent('root')" in projects_tpl
-            and "openAgent('{{ project.name }}')" in projects_tpl
-            and 'href="/ai_agent/login?demo=1"' in projects_tpl
-            and "/ai_agent/?mode=root&project=" in projects_js
+            and 'href="https://mikeytech.dev/?demo=1"' in projects_tpl
+            and "toggleAgentDrawer(name, true)" in projects_js
+            and "/ai_agent/?mode=root" not in projects_js
             and "path.startswith('ai_agent')" in server_src
         )
         self.record(
-            "Stage 7",
-            "AGENT-06",
-            "UI templates & server router enforce distinct AGENT (?mode=root) vs Test Demo (/login?demo=1) bindings and block Home fallback redirects",
-            ui_contract_ok,
-            "Verified projects.html, projects.js, and server.py dynamic_route guard",
+            "Stage 7", "AGENT-04",
+            "AGENT opens the console here; Test Demo and pop-out open Siraugga's domain; home never swallows /ai_agent",
+            ui_ok,
+            "Verified projects.html, projects.js and the server.py dynamic_route guard",
         )
 
-        submod_root = Path(getattr(server, "ai_path", EPROFILE_ROOT.parent / "DevCore"))
-        ai_plugin_src = (submod_root / "ai_plugin.py").read_text(encoding="utf-8", errors="ignore")
-        index_tpl_src = (submod_root / "sandbox" / "templates" / "index.html").read_text(encoding="utf-8", errors="ignore")
-        exec_mixin_src = (submod_root / "agents" / "mixins" / "execution_mixin.py").read_text(encoding="utf-8", errors="ignore")
+        import subprocess as _sp
+        try:
+            hits = _sp.run(["git", "grep", "-l", "-I", "-E", r"ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}"],
+                           cwd=str(EPROFILE_ROOT), capture_output=True, text=True, timeout=60).stdout.split()
+        except Exception as e:
+            hits = [f"(git grep failed: {e})"]
+        self.record(
+            "Stage 7", "AGENT-05",
+            "No GitHub access tokens in tracked e_profile files",
+            not hits,
+            f"files with tokens: {', '.join(hits) if hits else 'none'}",
+        )
 
-        rel_path_ok = (
-            "_render_ai_template" in ai_plugin_src
-            and 'window.location.href = "/login"' not in index_tpl_src
-            and "/mnt/c/Users/michael" not in ai_plugin_src
-            and "/mnt/c/Users/michael" not in exec_mixin_src
+        # DevCore is the root: e_profile carries its web-side protections.
+        r_home = self.client.get("/", base_url="https://localhost")
+        hd = r_home.headers
+        csp = hd.get("Content-Security-Policy", "")
+        headers_ok = (
+            hd.get("X-Frame-Options") == "SAMEORIGIN"
+            and hd.get("X-Content-Type-Options") == "nosniff"
+            and "default-src 'self'" in csp and "object-src 'none'" in csp and "frame-ancestors 'self'" in csp
+            and f"connect-src 'self' {siraugga}" in csp
+            and "microphone=()" in hd.get("Permissions-Policy", "")
+            and bool(hd.get("Strict-Transport-Security"))
+            and bool(hd.get("Referrer-Policy"))
         )
         self.record(
-            "Stage 7",
-            "AGENT-07",
-            "Plugin templates and execution engine enforce relative path resolution and isolated blueprint template rendering",
-            rel_path_ok,
-            "Verified _render_ai_template, relative login redirects, and zero hardcoded /mnt/c host paths",
+            "Stage 7", "SEC-01",
+            "DevCore's security headers on every page (frame, sniffing, CSP, permissions, HSTS, referrer)",
+            headers_ok,
+            f"XFO={hd.get('X-Frame-Options')}, CSP={'set' if csp else 'missing'}, HSTS={'set' if hd.get('Strict-Transport-Security') else 'missing'}",
         )
 
-        stream_and_model_ok = (
-            "is not recognized as a known model" in exec_mixin_src
-            and '"output": full_output' in exec_mixin_src
-            and "since_seq" in ai_plugin_src
-            and "since_seq=" in index_tpl_src
-        )
+        import security_headers as _sh
+        saved = list(_sh._login_failures)
+        try:
+            _sh._login_failures[:] = [time.time()] * _sh.LOGIN_FAIL_LIMIT
+            r_lock = self.client.post("/login", data={"action": "login", "token": "audit-wrong-token"})
+        finally:
+            _sh._login_failures[:] = saved
         self.record(
-            "Stage 7",
-            "AGENT-08",
-            "Execution engine auto-recovers from unsupported CLI models and preserves response chunks via sequence-cursor stream polling",
-            stream_and_model_ok,
-            "Verified CLI model fallback retry, agent_done output payload, and non-destructive since_seq cursor polling",
-        )
-
-        import io
-        import unittest
-        import test_ai_agent
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_ai_agent.TestEProfileAIAgent)
-        stream = io.StringIO()
-        runner = unittest.TextTestRunner(stream=stream)
-        res = runner.run(suite)
-        test_suite_ok = (res.wasSuccessful() and res.testsRun >= 20)
-        self.record(
-            "Stage 7",
-            "AGENT-09",
-            "Automated unit test suite test_ai_agent.py passes with zero errors or regressions",
-            test_suite_ok,
-            f"Executed {res.testsRun} tests, failures={len(res.failures)}, errors={len(res.errors)}",
-        )
-
-        r_auth_demo = self.client.post("/ai_agent/api/auth_demo")
-        demo_data = r_auth_demo.get_json() or {}
-        demo_mint_ok = (
-            r_auth_demo.status_code == 200
-            and demo_data.get("success") is True
-            and demo_data.get("scope") == "demo"
-            and demo_data.get("user", {}).get("role") == "gamedev"
-            and bool(demo_data.get("token"))
-        )
-        self.record(
-            "Stage 7",
-            "AGENT-10",
-            "Demo visitor authentication & token minting (/ai_agent/api/auth_demo) isolates role to gamedev",
-            demo_mint_ok,
-            f"HTTP {r_auth_demo.status_code}, role={demo_data.get("user", {}).get("role")}",
-        )
-
-        r_stream = self.client.get("/ai_agent/api/stream?since_seq=0")
-        stream_data = r_stream.get_json() or {}
-        stream_api_ok = (
-            r_stream.status_code == 200
-            and "messages" in stream_data
-            and "last_seq" in stream_data
-            and isinstance(stream_data["messages"], list)
-        )
-        self.record(
-            "Stage 7",
-            "AGENT-11",
-            "Sequence-cursor stream API (/ai_agent/api/stream?since_seq=N) returns valid packet payload and cursor",
-            stream_api_ok,
-            f"HTTP {r_stream.status_code}, last_seq={stream_data.get("last_seq")}",
-        )
-
-        with self.client.session_transaction() as sess:
-            sess.clear()
-            sess["admin"] = False
-            sess["is_admin"] = False
-            sess["agent_token_scope"] = "demo"
-        r_art_get = self.client.get("/ai_agent/api/artifacts?path=test.md")
-        r_art_save = self.client.post("/ai_agent/api/artifacts/save", json={"path": "test.md", "content": "x"})
-        art_rbac_ok = (r_art_get.status_code == 403 and r_art_save.status_code == 403)
-        self.record(
-            "Stage 7",
-            "AGENT-12",
-            "Artifact API endpoints (/api/artifacts, /api/artifacts/save) reject unprivileged visitors with HTTP 403",
-            art_rbac_ok,
-            f"GET={r_art_get.status_code}, POST={r_art_save.status_code}",
+            "Stage 7", "SEC-02",
+            "Login refuses further tries after repeated wrong tokens (guessing limit, like DevCore)",
+            r_lock.status_code == 429,
+            f"HTTP {r_lock.status_code} after {_sh.LOGIN_FAIL_LIMIT} wrong tokens",
         )
 
     # =========================================================================

@@ -320,15 +320,8 @@ def clean_markdown_text(raw_text: str) -> str:
     return text
 
 def get_github_token():
-    token = os.environ.get("GIT_TOKEN") or os.environ.get("GITHUB_TOKEN")
-    if not token:
-        token_file = config.ROOT_DIR / "gethub_token.txt"
-        if token_file.exists():
-            try:
-                token = token_file.read_text(encoding="utf-8").strip()
-            except Exception:
-                pass
-    return token
+    from secret_source import github_token   # Bitwarden / environment, never a plain-text file
+    return github_token()
 
 def _check_pa_proxy():
     try:

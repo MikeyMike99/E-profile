@@ -71,29 +71,14 @@ app.register_blueprint(diagnostics_bp)
 from vault_mod import vault_bp, vault_service
 app.register_blueprint(vault_bp)
 import sys
-import devcore_locator
-# DevCore discovery is centralized in devcore_locator (single source of truth).
-_devcore_dir = devcore_locator.mount() or devcore_locator.resolve_devcore()
-ai_path = str(_devcore_dir)
 
-try:
-    from ai_plugin import ai_bp
-    app.register_blueprint(ai_bp, url_prefix='/ai_agent')
-except Exception as e:
-    app.logger.error(f"Failed to load AI Blueprint: {e}")
+# e_profile is a front end only: the agent's brain and back end run once, at Siraugga's domain,
+# and the pages here call it there directly (see static/js/projects.js).
+SIRAUGGA_URL = (os.environ.get("SIRAUGGA_URL") or "https://mikeytech.dev").rstrip("/")
 
-@app.route('/api/sounds/<sound_name>', methods=['GET'])
-def play_sound(sound_name):
-    sounds_dir = Path(ai_path) / "sandbox" / "static" / "sounds"
-    for ext in [".wav", ".mp3", ".ogg"]:
-        file_path = sounds_dir / f"{sound_name}{ext}"
-        if file_path.is_file():
-            return send_file(str(file_path))
-    if sound_name == "notification":
-        fallback_path = sounds_dir / "incoming.wav"
-        if fallback_path.is_file():
-            return send_file(str(fallback_path))
-    return jsonify({"error": f"No custom {sound_name} audio file found in {sounds_dir}"}), 404
+# DevCore is the root: e_profile gets the same web-side protections (headers, login limit).
+import security_headers
+security_headers.init_security(app)
 
 class SystemLogger:
     def __init__(self):
@@ -391,6 +376,11 @@ def login():
         if not token:
             return render_template('login.html', error="TOKEN_REQUIRED", is_setup=is_setup)
 
+        locked = security_headers.login_locked()
+        if locked:
+            sys_log.error("Login refused: too many wrong tokens recently.")
+            return render_template('login.html', error=locked, is_setup=is_setup), 429
+
         hashed_token = hash_token(token)
 
         if is_setup and action == 'setup':
@@ -450,6 +440,7 @@ def login():
                 else:
                     return redirect(url_for('dynamic_route', path='home'))
             
+            security_headers.record_login_failure()
             sys_log.error(f"Failed login attempt with invalid token.")
             return render_template('login.html', error="ACCESS_DENIED", is_setup=is_setup)
 
@@ -919,11 +910,7 @@ def admin_impersonate(token_hash):
 
 @app.route('/api/sounds/<sound_name>', methods=['GET'])
 def serve_sound(sound_name):
-    sounds_dirs = [
-        Path(ai_path) / "sandbox" / "static" / "sounds",
-        config.ROOT_DIR.parent / "DevCore" / "sandbox" / "static" / "sounds",
-        config.STATIC_DIR / "sounds",
-    ]
+    sounds_dirs = [config.STATIC_DIR / "sounds"]   # DevCore's sounds stay with DevCore (its own domain)
     for s_dir in sounds_dirs:
         for ext in ('.wav', '.mp3', '.ogg'):
             sf = s_dir / f"{sound_name}{ext}"
@@ -1437,7 +1424,17 @@ def _run_autonomous_background_daemon():
         time.sleep(20)
 
 is_testing_env = bool(app.config.get("TESTING") or os.environ.get("TESTING") or "unittest" in sys.modules or "pytest" in sys.modules)
-if not is_testing_env and os.environ.get("WERKZEUG_RUN_MAIN") in ("true", None):
+# When e-profile runs locally next to DevCore, the newsletter (feed refresh, queued story
+# emails, scheduled dispatches) belongs to CyberBrief inside DevCore. Set
+# EPROFILE_BACKGROUND_DAEMON=off so this copy never sends newsletters a second time.
+daemon_enabled = os.environ.get("EPROFILE_BACKGROUND_DAEMON", "on").lower() not in ("off", "0", "false", "no")
+
+# Local copy only: pull JOSHY usage/feedback/download data from PythonAnywhere, where
+# installed apps report (see pa_usage_sync.py). Enabled by scripts/eprofile_server.sh.
+if os.environ.get("EPROFILE_PA_USAGE_SYNC", "off").lower() in ("on", "1", "true", "yes") and not is_testing_env:
+    import pa_usage_sync
+    pa_usage_sync.start()
+if daemon_enabled and not is_testing_env and os.environ.get("WERKZEUG_RUN_MAIN") in ("true", None):
     _daemon_thread = threading.Thread(target=_run_autonomous_background_daemon, daemon=True, name="AutonomousBackgroundDaemon")
     _daemon_thread.start()
 

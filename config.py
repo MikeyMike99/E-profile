@@ -32,6 +32,11 @@ class Config:
     TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "")
     THREAT_FEED_REFRESH_HOURS = int(os.environ.get("THREAT_FEED_REFRESH_HOURS", 6))
 
+    # --- Public address used in every email link (newsletter "read more", welcome, unsubscribe) ---
+    # Never the address of the page that pressed "send": sending from this computer used to put
+    # http://127.0.0.1:5001 links into subscribers' emails.
+    BASE_URL = (os.environ.get("PUBLIC_BASE_URL") or "https://mikeymike.pythonanywhere.com").rstrip("/")
+
     # --- Email Service Configuration ---
     MAIL_BACKEND = os.environ.get("MAIL_BACKEND", "smtp")  # 'smtp' (live), 'local' (mock)
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
@@ -40,6 +45,9 @@ class Config:
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
     MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "notifications@eprofile.local")
+    # Newsletter goes out as CyberBrief. It is a verified Gmail "Send mail as" alias of
+    # MAIL_USERNAME; mail sent TO it is dropped by Cloudflare Email Routing (no replies).
+    NEWSLETTER_SENDER = os.environ.get("NEWSLETTER_SENDER", "CyberBrief <cyberbrief@mikeytech.dev>")
     MAILBOX_FILE = ROOT_DIR / "cache" / "mailbox.json"
 
     # --- UI & Theme Configuration ---
