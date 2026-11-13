@@ -88,6 +88,8 @@ def main() -> int:
     shutil.copytree(ROOT / "static", OUT / "static")
     (OUT / "robots.txt").write_text(client.get("/robots.txt").get_data(as_text=True))
     (OUT / "_redirects").write_text("/home / 301\n")
+    # Hand-written page (private Mesh access: install the client / open Siraugga).
+    shutil.copyfile(ROOT / "cloudflare_pages" / "chat.html", OUT / "chat.html")
     # A 404.html stops Pages' SPA fallback (serving home for every unknown path).
     (OUT / "404.html").write_text(
         '<!doctype html><html lang="en"><meta charset="utf-8">'

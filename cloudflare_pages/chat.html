@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Siraugga Chat</title>
+<style>
+  :root { --bg:#f7f8fa; --fg:#14181f; --muted:#4a5568; --card:#fff; --line:#d5dae3; --accent:#0b6bcb; --accent-fg:#fff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0e1116; --fg:#e8ecf2; --muted:#a3adbd; --card:#171b22; --line:#2b323d; --accent:#4da3ff; --accent-fg:#06121f; }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width:36rem; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.6rem; margin:0 0 4px; }
+  p.lead { color:var(--muted); margin:0 0 24px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin:0 0 16px; }
+  h2 { font-size:1.1rem; margin:0 0 8px; }
+  a.btn { display:inline-block; background:var(--accent); color:var(--accent-fg); text-decoration:none; font-weight:600;
+          padding:12px 18px; border-radius:10px; margin:4px 0; }
+  a.btn:focus-visible, a:focus-visible { outline:3px solid var(--fg); outline-offset:2px; }
+  ol { padding-left:1.2rem; margin:8px 0 0; }
+  code { background:var(--bg); border:1px solid var(--line); padding:1px 6px; border-radius:6px; }
+  .note { color:var(--muted); font-size:.92rem; margin-top:8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Siraugga Chat</h1>
+  <p class="lead">Private access to Siraugga. It needs the Cloudflare One app on your device.</p>
+
+  <section aria-labelledby="open">
+    <h2 id="open">1. Open Siraugga</h2>
+    <p>If the app is already installed and switched on, this opens Siraugga.</p>
+    <a class="btn" href="http://100.96.0.1:5000/">Open Siraugga</a>
+    <p class="note">If it does not load, the app is missing or switched off. Do steps 2 and 3.</p>
+  </section>
+
+  <section aria-labelledby="install">
+    <h2 id="install">2. Install the app (first time only)</h2>
+    <a class="btn" id="dl" href="https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/">Download Cloudflare One</a>
+    <p class="note" id="dl-note">Opens the download page for all devices.</p>
+  </section>
+
+  <section aria-labelledby="join">
+    <h2 id="join">3. Sign in (first time only)</h2>
+    <ol>
+      <li>Open the Cloudflare One app and choose <strong>Login with Cloudflare Zero Trust</strong>.</li>
+      <li>Enter the team name <code>frosty-grass-595c</code>.</li>
+      <li>Enter your email and the code that is sent to it.</li>
+      <li>Switch the app on, then go back to step 1.</li>
+    </ol>
+    <p class="note">Only the owner's email is allowed to join.</p>
+  </section>
+</main>
+<script>
+(function () {
+  var ua = navigator.userAgent || "";
+  var link = null, label = null;
+  if (/iPhone|iPad|iPod/i.test(ua)) { link = "https://apps.apple.com/app/cloudflare-one-agent/id6443476492"; label = "iPhone / iPad"; }
+  else if (/Android/i.test(ua)) { link = "https://play.google.com/store/apps/details?id=com.cloudflare.cloudflareoneagent"; label = "Android"; }
+  else if (/Windows/i.test(ua)) { link = "https://downloads.cloudflareclient.com/v1/download/windows/ga"; label = "Windows"; }
+  else if (/Macintosh|Mac OS X/i.test(ua)) { link = "https://downloads.cloudflareclient.com/v1/download/macos/ga"; label = "macOS"; }
+  if (link) {
+    document.getElementById("dl").href = link;
+    document.getElementById("dl").textContent = "Download Cloudflare One for " + label;
+    document.getElementById("dl-note").textContent = "Picked for your device. Other devices: developers.cloudflare.com/cloudflare-one";
+  }
+})();
+</script>
+</body>
+</html>

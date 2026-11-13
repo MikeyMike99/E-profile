@@ -19,7 +19,8 @@ const page = (title, body, status) => new Response(
 
 const offline = () => page("Temporarily offline",
   "<h1>This part is offline right now</h1><p>Sign-in and interactive features run on a private " +
-  "server that is currently unavailable. The public pages still work.</p>", 503);
+  "server that is currently unavailable. The public pages still work.</p>" +
+  '<p><a href="https://rescue.mikeytech.dev">Super Admin: break glass</a></p>', 503);
 
 // Pages whose content changes often: always try live first (new stories, download counts,
 // usage numbers), falling back to the snapshot when the PC is offline.
