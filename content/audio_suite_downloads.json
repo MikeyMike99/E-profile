@@ -1,11 +1,141 @@
 {
-  "total_downloads": 24,
+  "total_downloads": 37,
   "packages": {
-    "installer": 11,
-    "portable": 7,
-    "git_source": 6
+    "installer": 15,
+    "portable": 13,
+    "git_source": 9
   },
   "events": [
+    {
+      "timestamp": 1794726609,
+      "formatted_time": "2026-11-15 07:10:09",
+      "package_id": "installer",
+      "filename": "JOSHY-Setup.exe",
+      "version": "1.0.1",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown",
+      "source": "pythonanywhere"
+    },
+    {
+      "timestamp": 1794726608,
+      "formatted_time": "2026-11-15 07:10:08",
+      "package_id": "git_source",
+      "filename": "source-code.zip",
+      "version": "1.0.1",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown",
+      "source": "pythonanywhere"
+    },
+    {
+      "timestamp": 1794726608,
+      "formatted_time": "2026-11-15 07:10:08",
+      "package_id": "portable",
+      "filename": "JOSHY.exe",
+      "version": "1.0.1",
+      "client_hash": "e392bbeb",
+      "user_agent": "Unknown",
+      "source": "pythonanywhere"
+    },
+    {
+      "timestamp": 1794423045,
+      "formatted_time": "2026-11-11 20:50:45",
+      "package_id": "portable",
+      "filename": "portable",
+      "version": "1.0.1",
+      "client_hash": "68f5157d",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.3",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794422864,
+      "formatted_time": "2026-11-11 20:47:44",
+      "package_id": "portable",
+      "filename": "portable",
+      "version": "1.0.1",
+      "client_hash": "68f5157d",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.3",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794422847,
+      "formatted_time": "2026-11-11 20:47:27",
+      "package_id": "portable",
+      "filename": "portable",
+      "version": "1.0.1",
+      "client_hash": "68f5157d",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.3",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794422228,
+      "formatted_time": "2026-11-11 20:37:08",
+      "package_id": "installer",
+      "filename": "installer",
+      "version": "1.0.1",
+      "client_hash": "68f5157d",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.3",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794420635,
+      "formatted_time": "2026-11-11 20:10:35",
+      "package_id": "portable",
+      "filename": "portable",
+      "version": "1.0.1",
+      "client_hash": "e8e8aaf5",
+      "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794420631,
+      "formatted_time": "2026-11-11 20:10:31",
+      "package_id": "installer",
+      "filename": "installer",
+      "version": "1.0.1",
+      "client_hash": "e8e8aaf5",
+      "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794420629,
+      "formatted_time": "2026-11-11 20:10:29",
+      "package_id": "git_source",
+      "filename": "git_source",
+      "version": "1.0.1",
+      "client_hash": "e8e8aaf5",
+      "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794412713,
+      "formatted_time": "2026-11-11 17:58:33",
+      "package_id": "git_source",
+      "filename": "git_source",
+      "version": "1.0.1",
+      "client_hash": "4c05864c",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794412712,
+      "formatted_time": "2026-11-11 17:58:32",
+      "package_id": "portable",
+      "filename": "portable",
+      "version": "1.0.1",
+      "client_hash": "4c05864c",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge",
+      "source": "cloudflare"
+    },
+    {
+      "timestamp": 1794412711,
+      "formatted_time": "2026-11-11 17:58:31",
+      "package_id": "installer",
+      "filename": "installer",
+      "version": "1.0.1",
+      "client_hash": "4c05864c",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge",
+      "source": "cloudflare"
+    },
     {
       "timestamp": 1794346489,
       "formatted_time": "2026-11-10 23:34:49",

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Siraugga Chat</title>
+<style>
+  :root { --bg:#f7f8fa; --fg:#14181f; --muted:#4a5568; --card:#fff; --line:#d5dae3; --accent:#0b6bcb; --accent-fg:#fff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0e1116; --fg:#e8ecf2; --muted:#a3adbd; --card:#171b22; --line:#2b323d; --accent:#4da3ff; --accent-fg:#06121f; }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width:36rem; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.6rem; margin:0 0 4px; }
+  p.lead { color:var(--muted); margin:0 0 24px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin:0 0 16px; }
+  h2 { font-size:1.1rem; margin:0 0 8px; }
+  a.btn { display:inline-block; background:var(--accent); color:var(--accent-fg); text-decoration:none; font-weight:600;
+          padding:12px 18px; border-radius:10px; margin:4px 8px 4px 0; }
+  a.btn.secondary { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+  a.btn:focus-visible, a:focus-visible { outline:3px solid var(--fg); outline-offset:2px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Siraugga Chat</h1>
+  <p class="lead">Siraugga runs on its dedicated frontend at mikeytech.dev.</p>
+  <section aria-labelledby="open">
+    <h2 id="open">Open Siraugga</h2>
+    <p>Launch the full Siraugga Command Center or jump straight into demo mode.</p>
+    <a class="btn" href="https://mikeytech.dev/">Open Siraugga</a>
+    <a class="btn secondary" href="https://mikeytech.dev/?demo=1">Try Demo Mode</a>
+  </section>
+</main>
+</body>
+</html>

@@ -466,7 +466,7 @@ class SecurityAuditor:
         js_src = (EPROFILE_ROOT / "static" / "js" / "projects.js").read_text(encoding="utf-8", errors="ignore")
         direct_ok = (
             f"const SIRAUGGA_URL = '{siraugga}'" in js_src
-            and js_src.count("credentials: 'include'") >= 4
+            and ("openAgent(" in js_src or js_src.count("credentials: 'include'") >= 4)
             and "'/ai_agent'" not in js_src
             and "127.0.0.1:5000" not in js_src
         )
@@ -483,13 +483,13 @@ class SecurityAuditor:
         ui_ok = (
             "openAgent('root')" in projects_tpl
             and 'href="https://mikeytech.dev/?demo=1"' in projects_tpl
-            and "toggleAgentDrawer(name, true)" in projects_js
+            and ("window.open(`${SIRAUGGA_URL}/" in projects_js or "toggleAgentDrawer(name, true)" in projects_js)
             and "/ai_agent/?mode=root" not in projects_js
             and "path.startswith('ai_agent')" in server_src
         )
         self.record(
             "Stage 7", "AGENT-04",
-            "AGENT opens the console here; Test Demo and pop-out open Siraugga's domain; home never swallows /ai_agent",
+            "AGENT opens Siraugga's domain; Test Demo and pop-out open Siraugga's domain; home never swallows /ai_agent",
             ui_ok,
             "Verified projects.html, projects.js and the server.py dynamic_route guard",
         )
